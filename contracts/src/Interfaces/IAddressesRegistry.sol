@@ -65,6 +65,18 @@ interface IAddressesRegistry {
     function collateralRegistry() external view returns (ICollateralRegistry);
     function boldToken() external view returns (IBoldToken);
     function WETH() external returns (IWETH);
+    
+    function whitelist() external returns (IWhitelist);
+    function initializeWhitelist(address _whitelist) external;
+    function proposeNewWhitelist(address _newWhitelist) external;
+    function acceptNewWhitelist() external;
 
+    function proposeNewCollateralValues(uint256 newCCR, uint256 newSCR, uint256 newMCR) external;
+    function acceptNewCollateralValues() external; 
+
+    function proposeNewLiquidationValues(uint256 newLiquidationPenaltySP, uint256 newliquidationPenaltyRedistribution) external;
+    function acceptNewLiquidationValues() external;
+
+    function getOwner() external returns (address);
     function setAddresses(AddressVars memory _vars) external;
 }

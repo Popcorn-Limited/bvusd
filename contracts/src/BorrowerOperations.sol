@@ -22,6 +22,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
 
     IERC20 internal immutable collToken;
     ITroveManager internal troveManager;
+    IAddressesRegistry internal addressRegistry; 
     address internal gasPoolAddress;
     ICollSurplusPool internal collSurplusPool;
     IBoldToken internal boldToken;
@@ -31,15 +32,15 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     IWETH internal immutable WETH;
 
     // Critical system collateral ratio. If the system's total collateral ratio (TCR) falls below the CCR, some borrowing operation restrictions are applied
-    uint256 public immutable CCR;
+    uint256 public CCR;
 
     // Shutdown system collateral ratio. If the system's total collateral ratio (TCR) for a given collateral falls below the SCR,
     // the protocol triggers the shutdown of the borrow market and permanently disables all borrowing operations except for closing Troves.
-    uint256 public immutable SCR;
+    uint256 public SCR;
     bool public hasBeenShutDown;
 
     // Minimum collateral ratio for individual troves
-    uint256 public immutable MCR;
+    uint256 public MCR;
 
     // Extra buffer of collateral ratio to join a batch or adjust a trove inside a batch (on top of MCR)
     uint256 public immutable BCR;
@@ -153,12 +154,14 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     error AnnualManagementFeeTooHigh();
     error MinInterestRateChangePeriodTooLow();
     error NewOracleFailureDetected();
+    error NotWhitelisted();
 
     event TroveManagerAddressChanged(address _newTroveManagerAddress);
     event GasPoolAddressChanged(address _gasPoolAddress);
     event CollSurplusPoolAddressChanged(address _collSurplusPoolAddress);
     event SortedTrovesAddressChanged(address _sortedTrovesAddress);
     event BoldTokenAddressChanged(address _boldTokenAddress);
+    event CRsChanged(uint256 newCCR, uint256 newSCR, uint256 newMCR);
 
     event ShutDown(uint256 _tcr);
 
@@ -183,6 +186,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         collSurplusPool = _addressesRegistry.collSurplusPool();
         sortedTroves = _addressesRegistry.sortedTroves();
         boldToken = _addressesRegistry.boldToken();
+        addressRegistry = _addressesRegistry;
 
         emit TroveManagerAddressChanged(address(troveManager));
         emit GasPoolAddressChanged(gasPoolAddress);
@@ -192,6 +196,22 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
 
         // Allow funds movements between Liquity contracts
         collToken.approve(address(activePool), type(uint256).max);
+    }
+
+    // --- Contracts update logic ---
+    function updatePriceFeed(IPriceFeed _newPriceFeed) external override {
+        _requireCallerIsTroveManager();
+        _updatePriceFeed(_newPriceFeed);
+    }
+
+    function updateCRs(uint256 newCCR, uint256 newSCR, uint256 newMCR) external override {
+        _requireCallerIsTroveManager();
+       
+        MCR = newMCR;        
+        CCR = newCCR;
+        SCR = newSCR;
+
+        emit CRsChanged(newCCR, newSCR, newMCR);
     }
 
     // --- Borrower Trove Operations ---
@@ -210,6 +230,13 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         address _receiver
     ) external override returns (uint256) {
         _requireValidAnnualInterestRate(_annualInterestRate);
+        
+        IWhitelist whitelist = troveManager.whitelist();
+        _requireWhitelisted(whitelist, _owner);
+        _requireWhitelisted(whitelist, msg.sender);
+        
+        if(_receiver != address(0))
+            _requireWhitelisted(whitelist, _receiver);
 
         OpenTroveVars memory vars;
 
@@ -243,6 +270,13 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         returns (uint256)
     {
         _requireValidInterestBatchManager(_params.interestBatchManager);
+        
+        IWhitelist whitelist = troveManager.whitelist();
+        _requireWhitelisted(whitelist, _params.owner);
+        _requireWhitelisted(whitelist, msg.sender);
+        
+        if(_params.receiver != address(0))
+            _requireWhitelisted(whitelist, _params.receiver);
 
         OpenTroveVars memory vars;
         vars.troveManager = troveManager;
@@ -1179,9 +1213,12 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         // If the oracle failed, the above call to PriceFeed will have shut this branch down
         if (newOracleFailureDetected) return;
 
+        // check if caller is branch owner 
+        bool isBranchOwner = msg.sender == addressRegistry.getOwner();
+
         // Otherwise, proceed with the TCR check:
         uint256 TCR = LiquityMath._computeCR(totalColl, totalDebt, price);
-        if (TCR >= SCR) revert TCRNotBelowSCR();
+        if (TCR >= SCR && !isBranchOwner) revert TCRNotBelowSCR();
 
         _applyShutdown();
 
@@ -1260,6 +1297,21 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     }
 
     // --- 'Require' wrapper functions ---
+    function _requireWhitelisted(IWhitelist whitelist, address user) internal view {
+        bool whitelisted = true;
+        
+        if(address(whitelist) != address(0)) {
+            try whitelist.isWhitelisted(user) returns (bool w) {
+                whitelisted = w;
+            } catch {
+                whitelisted = false;
+            }
+        }
+
+        if(!whitelisted)
+            revert NotWhitelisted();
+    }
+
 
     function _requireIsNotShutDown() internal view {
         if (hasBeenShutDown) {
