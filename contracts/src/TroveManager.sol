@@ -877,9 +877,9 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         _requireAmountGreaterThanZero(_boldAmount);
         _requireBoldBalanceCoversRedemption(boldToken, msg.sender, _boldAmount);
 
-        IWhitelist whitelist = whitelist;
-        if (address(whitelist) != address(0)) {
-            _requireWhitelisted(whitelist, msg.sender);
+        IWhitelist _whitelist = addressesRegistry.whitelist();
+        if (address(_whitelist) != address(0)) {
+            _requireWhitelisted(_whitelist, msg.sender);
         }
 
         IActivePool activePoolCached = activePool;
@@ -1161,7 +1161,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     }
 
     function isWhitelisted(address user) external view override returns (bool) {
-        IWhitelist _whitelist = whitelist;
+        IWhitelist _whitelist = addressesRegistry.whitelist();
         if (address(_whitelist) != address(0)) {
             return _whitelist.isWhitelisted(address(this), user);
         }

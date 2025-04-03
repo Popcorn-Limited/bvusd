@@ -165,10 +165,6 @@ contract AddressesRegistry is Owned, IAddressesRegistry {
     function setWhitelist(IWhitelist _newWhitelist) external override onlyOwner {
         whitelist = _newWhitelist;
 
-        troveManager.setWhitelist(_newWhitelist);
-        borrowerOperations.setWhitelist(_newWhitelist);
-        stabilityPool.setWhitelist(_newWhitelist);
-
         emit WhitelistChanged(address(_newWhitelist));
     }
 

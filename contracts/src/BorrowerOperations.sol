@@ -224,12 +224,12 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     ) external override returns (uint256) {
         _requireValidAnnualInterestRate(_annualInterestRate);
 
-        IWhitelist _whitelist = whitelist;
+        IWhitelist _whitelist = addressesRegistry.whitelist();
         if (address(_whitelist) != address(0)) {
             _requireWhitelisted(_whitelist, _owner);
             _requireWhitelisted(_whitelist, msg.sender);
             if (_receiver != address(0)) {
-                _requireWhitelisted(whitelist, _receiver);
+                _requireWhitelisted(_whitelist, _receiver);
             }
         }
 
@@ -266,7 +266,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     {
         _requireValidInterestBatchManager(_params.interestBatchManager);
 
-        IWhitelist _whitelist = whitelist;
+        IWhitelist _whitelist = addressesRegistry.whitelist();
         if (address(_whitelist) != address(0)) {
             _requireWhitelisted(_whitelist, _params.owner);
             _requireWhitelisted(_whitelist, msg.sender);
