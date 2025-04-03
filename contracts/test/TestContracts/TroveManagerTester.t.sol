@@ -28,27 +28,27 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
     }
 
     function get_CCR() external view returns (uint256) {
-        return CCR;
+        return addressesRegistry.CCR();
     }
 
     function get_MCR() external view returns (uint256) {
-        return MCR;
+        return addressesRegistry.MCR();
     }
 
     function get_BCR() external view returns (uint256) {
-        return BCR;
+        return addressesRegistry.BCR();
     }
 
     function get_SCR() external view returns (uint256) {
-        return SCR;
+        return addressesRegistry.SCR();
     }
 
     function get_LIQUIDATION_PENALTY_SP() external view returns (uint256) {
-        return LIQUIDATION_PENALTY_SP;
+        return addressesRegistry.LIQUIDATION_PENALTY_SP();
     }
 
     function get_LIQUIDATION_PENALTY_REDISTRIBUTION() external view returns (uint256) {
-        return LIQUIDATION_PENALTY_REDISTRIBUTION;
+        return addressesRegistry.LIQUIDATION_PENALTY_REDISTRIBUTION();
     }
 
     function getBoldToken() external view returns (IBoldToken) {
@@ -96,7 +96,7 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
     }
 
     function checkBelowCriticalThreshold(uint256 _price) external view override returns (bool) {
-        return _checkBelowCriticalThreshold(_price, CCR);
+        return _checkBelowCriticalThreshold(_price, addressesRegistry.CCR());
     }
 
     function computeICR(uint256 _coll, uint256 _debt, uint256 _price) external pure returns (uint256) {

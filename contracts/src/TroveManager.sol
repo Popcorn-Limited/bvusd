@@ -31,20 +31,6 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     // Wrapped ETH for liquidation reserve (gas compensation)
     IWETH internal immutable WETH;
 
-    // Critical system collateral ratio. If the system's total collateral ratio (TCR) falls below the CCR, some borrowing operation restrictions are applied
-    uint256 public CCR;
-
-    // Minimum collateral ratio for individual troves
-    uint256 public MCR;
-    // Shutdown system collateral ratio. If the system's total collateral ratio (TCR) for a given collateral falls below the SCR,
-    // the protocol triggers the shutdown of the borrow market and permanently disables all borrowing operations except for closing Troves.
-    uint256 public SCR;
-
-    // Liquidation penalty for troves offset to the SP
-    uint256 public LIQUIDATION_PENALTY_SP;
-    // Liquidation penalty for troves redistributed
-    uint256 public LIQUIDATION_PENALTY_REDISTRIBUTION;
-
     // --- Data structures ---
 
     // Store the necessary data for a trove
@@ -180,16 +166,8 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     event CollSurplusPoolAddressChanged(address _collSurplusPoolAddress);
     event SortedTrovesAddressChanged(address _sortedTrovesAddress);
     event CollateralRegistryAddressChanged(address _collateralRegistryAddress);
-    event CRsChanged(uint256 newCCR, uint256 newSCR, uint256 newMCR);
-    event LiquidationValuesChanged(uint256 newLiquidationPenaltySP, uint256 newliquidationPenaltyRedistribution);
 
     constructor(IAddressesRegistry _addressesRegistry) LiquityBase(_addressesRegistry) {
-        CCR = _addressesRegistry.CCR();
-        MCR = _addressesRegistry.MCR();
-        SCR = _addressesRegistry.SCR();
-        LIQUIDATION_PENALTY_SP = _addressesRegistry.LIQUIDATION_PENALTY_SP();
-        LIQUIDATION_PENALTY_REDISTRIBUTION = _addressesRegistry.LIQUIDATION_PENALTY_REDISTRIBUTION();
-
         troveNFT = _addressesRegistry.troveNFT();
         borrowerOperations = _addressesRegistry.borrowerOperations();
         stabilityPool = _addressesRegistry.stabilityPool();
@@ -218,29 +196,6 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
     function getTroveFromTroveIdsArray(uint256 _index) external view override returns (uint256) {
         return TroveIds[_index];
-    }
-
-    // --- Contracts update logic ---
-    function updateCRs(uint256 newCCR, uint256 newSCR, uint256 newMCR) external override {
-        _requireCallerIsAddressesRegistry();
-
-        CCR = newCCR;
-        SCR = newSCR;
-        MCR = newMCR;
-
-        emit CRsChanged(newCCR, newSCR, newMCR);
-    }
-
-    function updateLiquidationValues(uint256 newLiquidationPenaltySP, uint256 newliquidationPenaltyRedistribution)
-        external
-        override
-    {
-        _requireCallerIsAddressesRegistry();
-
-        LIQUIDATION_PENALTY_SP = newLiquidationPenaltySP;
-        LIQUIDATION_PENALTY_REDISTRIBUTION = newliquidationPenaltyRedistribution;
-
-        emit LiquidationValuesChanged(newLiquidationPenaltySP, newliquidationPenaltyRedistribution);
     }
 
     // --- Trove Liquidation functions ---
@@ -388,7 +343,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             debtToOffset = LiquityMath._min(_entireTroveDebt, _boldInSPForOffsets);
             collSPPortion = _collToLiquidate * debtToOffset / _entireTroveDebt;
             (collToSendToSP, collSurplus) =
-                _getCollPenaltyAndSurplus(collSPPortion, debtToOffset, LIQUIDATION_PENALTY_SP, _price);
+                _getCollPenaltyAndSurplus(collSPPortion, debtToOffset, addressesRegistry.LIQUIDATION_PENALTY_SP(), _price);
         }
 
         // Redistribution
@@ -399,7 +354,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 (collToRedistribute, collSurplus) = _getCollPenaltyAndSurplus(
                     collRedistributionPortion + collSurplus, // Coll surplus from offset can be eaten up by red. penalty
                     debtToRedistribute,
-                    LIQUIDATION_PENALTY_REDISTRIBUTION, // _penaltyRatio
+                    addressesRegistry.LIQUIDATION_PENALTY_REDISTRIBUTION(), // _penaltyRatio
                     _price
                 );
             }
@@ -509,7 +464,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
             uint256 ICR = getCurrentICR(troveId, _price);
 
-            if (ICR < MCR) {
+            if (ICR < addressesRegistry.MCR()) {
                 LiquidationValues memory singleLiquidation;
                 LatestTroveData memory trove;
 
@@ -1235,7 +1190,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         (uint256 price,) = priceFeed.fetchRedemptionPrice();
         // It's redeemable if the TCR is above the shutdown threshold, and branch has not been shut down
-        bool redeemable = _getTCR(price) >= SCR && shutdownTime == 0;
+        bool redeemable = _getTCR(price) >= addressesRegistry.SCR() && shutdownTime == 0;
 
         return (unbackedPortion, price, redeemable);
     }

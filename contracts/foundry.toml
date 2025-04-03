@@ -4,8 +4,8 @@ out = "out"
 libs = ["lib"]
 evm_version = 'cancun'
 optimizer = true
-optimizer_runs = 200
-ignored_error_codes = [3860, 5574] # contract-size
+optimizer_runs = 1
+# ignored_error_codes = [3860, 5574] # contract-size
 fs_permissions = [
     { access = "read", path = "./script/DeploymentConfig.json" },
     { access = "read", path = "./utils/assets/" },

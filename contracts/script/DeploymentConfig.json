@@ -1,19 +1,36 @@
 {
-    "numBranches": "1",
+    "numBranches": "2",
     "branches": [
         {
-            "collateralName": "btc",
-            "collateralSymbol": "btc",
+            "collateralName": "wbtc",
+            "collateralSymbol": "wbtc",
             "config": {
                 "bcr": 10e16,
                 "ccr": 150e16,
-                "collateralAddress": "0xf8Fb3713D459D7C1018BD0A49D19b4C44290EBE5",
+                "collateralAddress": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
                 "collateralIndex" : 0,
                 "createWrapper": true,
                 "liqPenaltyDistr": 10e16,
                 "liqPenaltySP": 5e16,
                 "mcr": 120e16,         
-                "oracleAddress": "0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43",
+                "oracleAddress": "0x6ce185860a4963106506C203335A2910413708e9",
+                "oracleStalenessThreshold": 10000000000,
+                "scr": 110e16
+            }
+        },
+        {
+            "collateralName": "eth",
+            "collateralSymbol": "eth",
+            "config": {
+                "bcr": 10e16,
+                "ccr": 150e16,
+                "collateralAddress": "0x0000000000000000000000000000000000000000",
+                "collateralIndex" : 0,
+                "createWrapper": false,
+                "liqPenaltyDistr": 10e16,
+                "liqPenaltySP": 5e16,
+                "mcr": 120e16,         
+                "oracleAddress": "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612",
                 "oracleStalenessThreshold": 10000000000,
                 "scr": 110e16
             }
@@ -22,7 +39,7 @@
     "globalContracts": {
         "bvUSD": "0x0000000000000000000000000000000000000000",
         "collateralRegistry": "0x0000000000000000000000000000000000000000",
-        "gasToken": "0x7b79995e5f793a07bc00c21412e50ecae098e7f9",
+        "gasToken": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
         "hintHelpers": "0x0000000000000000000000000000000000000000",
         "multiTroveGetter": "0x0000000000000000000000000000000000000000"
     }

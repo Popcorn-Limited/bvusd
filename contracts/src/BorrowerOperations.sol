@@ -19,7 +19,6 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     using SafeERC20 for IERC20;
 
     // --- Connected contract declarations ---
-
     IERC20 internal immutable collToken;
     ITroveManager internal troveManager;
     address internal gasPoolAddress;
@@ -30,18 +29,8 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     // Wrapped ETH for liquidation reserve (gas compensation)
     IWETH internal immutable WETH;
 
-    // Critical system collateral ratio. If the system's total collateral ratio (TCR) falls below the CCR, some borrowing operation restrictions are applied
-    uint256 public CCR;
-
-    // Minimum collateral ratio for individual troves
-    uint256 public MCR;
-
-    // Extra buffer of collateral ratio to join a batch or adjust a trove inside a batch (on top of MCR)
-    uint256 public BCR;
-
     // Shutdown system collateral ratio. If the system's total collateral ratio (TCR) for a given collateral falls below the SCR,
     // the protocol triggers the shutdown of the borrow market and permanently disables all borrowing operations except for closing Troves.
-    uint256 public SCR;
     bool public hasBeenShutDown;
 
     /*
@@ -159,7 +148,6 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     event CollSurplusPoolAddressChanged(address _collSurplusPoolAddress);
     event SortedTrovesAddressChanged(address _sortedTrovesAddress);
     event BoldTokenAddressChanged(address _boldTokenAddress);
-    event CRsChanged(uint256 newCCR, uint256 newSCR, uint256 newMCR, uint256 newBCR);
 
     event ShutDown(uint256 _tcr);
 
@@ -173,11 +161,6 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         collToken = _addressesRegistry.collToken();
 
         WETH = _addressesRegistry.WETH();
-
-        CCR = _addressesRegistry.CCR();
-        SCR = _addressesRegistry.SCR();
-        MCR = _addressesRegistry.MCR();
-        BCR = _addressesRegistry.BCR();
 
         troveManager = _addressesRegistry.troveManager();
         gasPoolAddress = _addressesRegistry.gasPoolAddress();
@@ -193,18 +176,6 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
 
         // Allow funds movements between Liquity contracts
         collToken.approve(address(activePool), type(uint256).max);
-    }
-
-    // --- Contracts update logic ---
-    function updateCRs(uint256 newCCR, uint256 newSCR, uint256 newMCR, uint256 newBCR) external override {
-        _requireCallerIsAddressesRegistry();
-
-        MCR = newMCR;
-        CCR = newCCR;
-        SCR = newSCR;
-        BCR = newBCR;
-
-        emit CRsChanged(newCCR, newSCR, newMCR, newBCR);
     }
 
     // --- Borrower Trove Operations ---
@@ -596,7 +567,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         vars.boldToken = boldToken;
 
         vars.price = _requireOraclesLive();
-        vars.isBelowCriticalThreshold = _checkBelowCriticalThreshold(vars.price, CCR);
+        vars.isBelowCriticalThreshold = _checkBelowCriticalThreshold(vars.price, addressesRegistry.CCR());
 
         // --- Checks ---
 
@@ -1221,7 +1192,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
 
         // Otherwise, proceed with the TCR check:
         uint256 TCR = LiquityMath._computeCR(totalColl, totalDebt, price);
-        if (TCR >= SCR && !isBranchOwner) revert TCRNotBelowSCR();
+        if (TCR >= addressesRegistry.SCR() && !isBranchOwner) revert TCRNotBelowSCR();
 
         _applyShutdown();
 
@@ -1435,19 +1406,19 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     }
 
     function _requireICRisAboveMCR(uint256 _newICR) internal view {
-        if (_newICR < MCR) {
+        if (_newICR < addressesRegistry.MCR()) {
             revert ICRBelowMCR();
         }
     }
 
     function _requireICRisAboveMCRPlusBCR(uint256 _newICR) internal view {
-        if (_newICR < MCR + BCR) {
+        if (_newICR < addressesRegistry.MCR() + addressesRegistry.BCR()) {
             revert ICRBelowMCRPlusBCR();
         }
     }
 
     function _requireNoBorrowingUnlessNewTCRisAboveCCR(uint256 _debtIncrease, uint256 _newTCR) internal view {
-        if (_debtIncrease > 0 && _newTCR < CCR) {
+        if (_debtIncrease > 0 && _newTCR < addressesRegistry.CCR()) {
             revert TCRBelowCCR();
         }
     }
@@ -1459,7 +1430,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
     }
 
     function _requireNewTCRisAboveCCR(uint256 _newTCR) internal view {
-        if (_newTCR < CCR) {
+        if (_newTCR < addressesRegistry.CCR()) {
             revert TCRBelowCCR();
         }
     }

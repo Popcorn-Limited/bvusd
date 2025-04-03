@@ -87,19 +87,6 @@ contract AddressesRegistryWhitelist is WhitelistTestSetup {
         assertEq(addressesRegistry.MCR(), newMCR);
         assertEq(addressesRegistry.SCR(), newSCR);
         assertEq(addressesRegistry.BCR(), newBCR);
-
-        // values are updated in trove manager
-        TroveManager managerContract = TroveManager(address(troveManager));
-        assertEq(managerContract.CCR(), newCCR);
-        assertEq(managerContract.MCR(), newMCR);
-        assertEq(managerContract.SCR(), newSCR);
-
-        // values are updated in borrower operation
-        BorrowerOperations borrowerContract = BorrowerOperations(address(borrowerOperations));
-        assertEq(borrowerContract.CCR(), newCCR);
-        assertEq(borrowerContract.MCR(), newMCR);
-        assertEq(borrowerContract.SCR(), newSCR);
-        assertEq(borrowerContract.BCR(), newBCR);
     }
 
     function test_liquidationValuesUpdate_onlyOwner() public {
@@ -144,11 +131,6 @@ contract AddressesRegistryWhitelist is WhitelistTestSetup {
         // values are updated
         assertEq(addressesRegistry.LIQUIDATION_PENALTY_SP(), newLiquidationPenaltySP);
         assertEq(addressesRegistry.LIQUIDATION_PENALTY_REDISTRIBUTION(), newLiquidationPenaltyRedistribution);
-
-        // values are updated in trove manager
-        TroveManager managerContract = TroveManager(address(troveManager));
-        assertEq(managerContract.LIQUIDATION_PENALTY_SP(), newLiquidationPenaltySP);
-        assertEq(managerContract.LIQUIDATION_PENALTY_REDISTRIBUTION(), newLiquidationPenaltyRedistribution);
     }
 
     function test_liquidationValuesUpdate_invalidValues() public {
@@ -163,14 +145,5 @@ contract AddressesRegistryWhitelist is WhitelistTestSetup {
         vm.prank(owner);
         vm.expectRevert(AddressesRegistry.RedistPenaltyTooHigh.selector);
         addressesRegistry.proposeNewLiquidationValues(11e16, 25e16);
-    }
-
-    // only addressesRegistry can trigger CR, Liquidation and Whitelist values update in trove manager
-    function test_troveManagerUpdate_onlyAddressesRegistry() public {
-        vm.expectRevert(LiquityBase.CallerNotAddressesRegistry.selector);
-        troveManager.updateCRs(100e16, 100e16, 100e16);
-
-        vm.expectRevert(LiquityBase.CallerNotAddressesRegistry.selector);
-        troveManager.updateLiquidationValues(10e16, 10e16);
     }
 }

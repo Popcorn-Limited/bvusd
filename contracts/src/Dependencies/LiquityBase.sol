@@ -79,12 +79,4 @@ contract LiquityBase is ILiquityBase {
             revert NotWhitelisted(_user);
         }
     }
-
-    // --- AddressesRegistry functions ---
-
-    function _requireCallerIsAddressesRegistry() internal view {
-        if (msg.sender != address(addressesRegistry)) {
-            revert CallerNotAddressesRegistry();
-        }
-    }
 }

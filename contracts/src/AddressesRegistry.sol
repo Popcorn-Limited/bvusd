@@ -199,10 +199,6 @@ contract AddressesRegistry is Owned, IAddressesRegistry {
         MCR = proposedCR.MCR;
         BCR = proposedCR.BCR;
 
-        // trigger update in trove manager
-        troveManager.updateCRs(CCR, SCR, MCR);
-        borrowerOperations.updateCRs(CCR, SCR, MCR, BCR);
-
         // reset proposal
         delete proposedCR;
 
@@ -241,9 +237,6 @@ contract AddressesRegistry is Owned, IAddressesRegistry {
 
         LIQUIDATION_PENALTY_SP = proposedLiquidationValues.liquidationPenaltySP;
         LIQUIDATION_PENALTY_REDISTRIBUTION = proposedLiquidationValues.liquidationPenaltyRedistribution;
-
-        // trigger update in trove manager
-        troveManager.updateLiquidationValues(LIQUIDATION_PENALTY_SP, LIQUIDATION_PENALTY_REDISTRIBUTION);
 
         // reset proposal
         delete proposedLiquidationValues;

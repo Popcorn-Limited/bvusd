@@ -12,13 +12,6 @@ import "./IWETH.sol";
 
 // Common interface for the Borrower Operations.
 interface IBorrowerOperations is ILiquityBase, IAddRemoveManagers {
-    function CCR() external view returns (uint256);
-    function MCR() external view returns (uint256);
-    function SCR() external view returns (uint256);
-    function BCR() external view returns (uint256);
-
-    function updateCRs(uint256 newCCR, uint256 newSCR, uint256 newMCR, uint256 newBCR) external;
-
     function openTrove(
         address _owner,
         uint256 _ownerIndex,

@@ -61,12 +61,12 @@ interface IAddressesRegistry is IAddressesRegistryWhitelist {
         uint256 timestamp;
     }
 
-    function CCR() external returns (uint256);
-    function SCR() external returns (uint256);
-    function MCR() external returns (uint256);
-    function BCR() external returns (uint256);
-    function LIQUIDATION_PENALTY_SP() external returns (uint256);
-    function LIQUIDATION_PENALTY_REDISTRIBUTION() external returns (uint256);
+    function CCR() external view returns (uint256);
+    function SCR() external view returns (uint256);
+    function MCR() external view returns (uint256);
+    function BCR() external view returns (uint256);
+    function LIQUIDATION_PENALTY_SP() external view returns (uint256);
+    function LIQUIDATION_PENALTY_REDISTRIBUTION() external view returns (uint256);
 
     function collToken() external view returns (IERC20Metadata);
     function borrowerOperations() external view returns (IBorrowerOperations);
@@ -85,7 +85,7 @@ interface IAddressesRegistry is IAddressesRegistryWhitelist {
     function multiTroveGetter() external view returns (IMultiTroveGetter);
     function collateralRegistry() external view returns (ICollateralRegistry);
     function boldToken() external view returns (IBoldToken);
-    function WETH() external returns (IWETH);
+    function WETH() external view returns (IWETH);
 
     function setWhitelist(IWhitelist _newWhitelist) external;
 

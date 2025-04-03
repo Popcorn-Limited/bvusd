@@ -19,7 +19,7 @@ import {BaseInvariantTest} from "./TestContracts/BaseInvariantTest.sol";
 import {BaseMultiCollateralTest} from "./TestContracts/BaseMultiCollateralTest.sol";
 import {TestDeployer} from "./TestContracts/Deployment.t.sol";
 import {AdjustedTroveProperties, InvariantsTestHandler} from "./TestContracts/InvariantsTestHandler.t.sol";
-
+import "forge-std/console.sol";
 library SortedTrovesHelpers {
     function getBatchOf(ISortedTroves sortedTroves, uint256 troveId) internal view returns (BatchId batchId) {
         (,, batchId,) = sortedTroves.nodes(troveId);
@@ -300,7 +300,8 @@ contract InvariantsTest is Assertions, Logging, BaseInvariantTest, BaseMultiColl
             assertLt(
                 stabilityPool.getTotalBoldDeposits() - sumBoldDeposit, 1000, "totalBoldDeposits !~= sum(boldDeposit)"
             );
-
+            console.log("stabilityPool.getYieldGainsOwed()", stabilityPool.getYieldGainsOwed());
+            console.log("sumYieldGain", sumYieldGain);
             assertLt(stabilityPool.getYieldGainsOwed() - sumYieldGain, 1000, "yieldGainsOwed !~= sum(yieldGain)");
 
             // This only holds as long as no one sends BOLD directly to the SP's address other than ActivePool
