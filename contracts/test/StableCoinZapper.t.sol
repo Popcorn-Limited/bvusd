@@ -86,7 +86,7 @@ contract StableCoinZapperTest is Test {
         uint256 userSbvUSDBalanceBefore = IERC20(sbvUSDAddr).balanceOf(userA);
 
         // deposit
-        uint256 sbvUSDOut = _zapDeposit(userA, asset, depositAmount);
+        uint256 sbvUSDOut = _zapDeposit(userA, depositAmount);
 
         // zapper holds no assets
         assertEq(asset.balanceOf(zapperAddr), 0, "Zapper Asset balanace");
@@ -123,7 +123,6 @@ contract StableCoinZapperTest is Test {
 
     function _zapDeposit(
         address who,
-        IERC20Metadata asset,
         uint256 amount
     ) internal returns (uint256 sbvUSDOut) {
         vm.startPrank(who);

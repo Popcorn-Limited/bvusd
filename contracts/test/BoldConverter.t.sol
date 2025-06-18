@@ -28,32 +28,25 @@ contract TestToken is ERC20 {
 contract StableCoinConverterTest is Test {
     BoldConverter public converter;
 
-    IERC20Metadata public asset;
+    IERC20Metadata public firstAsset;
     IBoldToken public bvUSD;
 
     address public userA;
-    address public receiver;
+    address public firstReceiver;
 
     address public converterAddr;
 
-    uint256 public constant mintAmount = 1000e6;
-    uint256 public constant depositAmount = 25e6;
-    uint256 public constant withdrawAmount = 10e18;
-    uint256 public constant feeAmount = 100; // 1%
-
-    uint8 public constant assetDecimals = 6;
-
     function setUp() public {
-        asset = IERC20Metadata(new TestToken(assetDecimals, "USDC", "USDC"));
+        firstAsset = IERC20Metadata(new TestToken(6, "USDC", "USDC"));
         bvUSD = IBoldToken(0x876aac7648D79f87245E73316eB2D100e75F3Df1); // katana fork
         userA = makeAddr("A");
-        receiver = makeAddr("Receiver");
+        firstReceiver = makeAddr("Receiver");
 
         BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
-        paths[0] = BoldConverter.Path(receiver, 0, feeAmount);
+        paths[0] = BoldConverter.Path(firstReceiver, 0, 100);
 
         IERC20Metadata[] memory assets = new IERC20Metadata[](1);
-        assets[0] = asset;
+        assets[0] = firstAsset;
 
         converter = new BoldConverter(assets, paths, address(bvUSD));
         converterAddr = address(converter);
@@ -64,17 +57,37 @@ contract StableCoinConverterTest is Test {
         vm.stopPrank();
     }
 
-    function test_deposit() public {
-       _testDeposit(userA, receiver, asset, depositAmount);
+    function test_deposit_six_decimals(uint256 depositAmount) public {
+        vm.assume(depositAmount < 1000000000000000000000);
+       _testDeposit(userA, firstReceiver, firstAsset, depositAmount);
     }
 
-    function test_withdraw() public {
-       _testWithdraw(userA, receiver, asset, withdrawAmount, feeAmount);
+    function test_withdraw(uint256 depositAmount, uint256 withdrawAmount) public {
+        vm.assume(depositAmount >= withdrawAmount);
+        vm.assume(depositAmount < 1000000000000000000000);
+
+        _testDeposit(userA, firstReceiver, firstAsset, depositAmount);
+        _testWithdraw(userA, firstReceiver, firstAsset, withdrawAmount, 100);
     }
 
-    function test_multiplePaths() public {
+    function test_withdraw_noReceiverApproval() public {
+        deal(address(firstAsset), userA, 10e18);
+
+        // deposit
+        _deposit(userA, firstAsset, 10e18);
+        
+        // underlying asset holder does not approve assets to be pulled
+        vm.expectRevert("ERC20: insufficient allowance");
+        vm.prank(userA);
+        converter.withdraw(firstAsset, 1e18, userA);
+    }
+
+    function test_multiplePaths_18_decimals(uint256 depositAmount, uint256 withdrawAmount) public {
+        vm.assume(depositAmount >= withdrawAmount);
+        vm.assume(depositAmount < 1000000000000000000000);
+        
         IERC20Metadata newAsset = IERC20Metadata(
-            new TestToken(assetDecimals, "USDC2", "USDC2")
+            new TestToken(18, "USDC2", "USDC2")
         );
 
         address receiver2 = makeAddr("receiverB");
@@ -82,7 +95,7 @@ contract StableCoinConverterTest is Test {
         assertFalse(converter.isValidPath(newAsset));
 
         BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
-        paths[0] = BoldConverter.Path(receiver2, 0, feeAmount);
+        paths[0] = BoldConverter.Path(receiver2, 0, 100);
 
         IERC20Metadata[] memory assets = new IERC20Metadata[](1);
         assets[0] = newAsset;
@@ -94,18 +107,18 @@ contract StableCoinConverterTest is Test {
 
         _testDeposit(userA, receiver2, newAsset, depositAmount);
 
-        _testWithdraw(userA, receiver2, newAsset, withdrawAmount, 0);
+        _testWithdraw(userA, receiver2, newAsset, withdrawAmount, 100);
     }
 
     function test_addPath_onlyOwner() public {
         IERC20Metadata newAsset = IERC20Metadata(
-            new TestToken(assetDecimals, "USDC2", "USDC2")
+            new TestToken(6, "USDC2", "USDC2")
         );
 
         assertFalse(converter.isValidPath(newAsset));
 
         BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
-        paths[0] = BoldConverter.Path(receiver, 0, 0);
+        paths[0] = BoldConverter.Path(firstReceiver, 0, 0);
 
         IERC20Metadata[] memory assets = new IERC20Metadata[](1);
         assets[0] = newAsset;
@@ -121,13 +134,13 @@ contract StableCoinConverterTest is Test {
 
     function test_removePath_onlyOwner() public {
         IERC20Metadata newAsset = IERC20Metadata(
-            new TestToken(assetDecimals, "USDC2", "USDC2")
+            new TestToken(6, "USDC2", "USDC2")
         );
 
         assertFalse(converter.isValidPath(newAsset));
 
         BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
-        paths[0] = BoldConverter.Path(receiver, 0, 0);
+        paths[0] = BoldConverter.Path(firstReceiver, 0, 0);
 
         IERC20Metadata[] memory assets = new IERC20Metadata[](1);
         assets[0] = newAsset;
@@ -148,7 +161,7 @@ contract StableCoinConverterTest is Test {
 
     function test_deposit_invalidPath() public {
         IERC20Metadata invalidAsset = IERC20Metadata(
-            new TestToken(assetDecimals, "USDC", "USDC")
+            new TestToken(6, "USDC", "USDC")
         );
         vm.expectRevert("Invalid path");
         vm.prank(userA);
@@ -157,7 +170,7 @@ contract StableCoinConverterTest is Test {
 
     function test_withdraw_invalidPath() public {
         IERC20Metadata invalidAsset = IERC20Metadata(
-            new TestToken(assetDecimals, "USDC", "USDC")
+            new TestToken(6, "USDC", "USDC")
         );
         vm.expectRevert("Invalid path");
         vm.prank(userA);
@@ -165,14 +178,17 @@ contract StableCoinConverterTest is Test {
     }
 
     function _testDeposit(address user, address receiver, IERC20Metadata asset, uint256 amount) internal {
-        deal(address(asset), user, mintAmount);
+        uint256 assetDecimals = asset.decimals();
+
+        deal(address(asset), user, amount);
 
         uint256 receiverAssetBalanceBefore = asset.balanceOf(receiver);
         uint256 userBvUSDBalanceBefore = bvUSD.balanceOf(user);
         uint256 bvUSDSupplyBefore = bvUSD.totalSupply();
+        uint256 userAssetBalanceBefore = asset.balanceOf(user);
 
         // deposit
-        uint256 bvUSDOut = _deposit(user, asset, depositAmount);
+        uint256 bvUSDOut = _deposit(user, asset, amount);
 
         // Converter holds no assets
         assertEq(asset.balanceOf(converterAddr), 0, "Converter Asset balanace");
@@ -181,12 +197,12 @@ contract StableCoinConverterTest is Test {
         // receiver holds assets
         assertEq(
             asset.balanceOf(receiver),
-            receiverAssetBalanceBefore + depositAmount,
+            receiverAssetBalanceBefore + amount,
             "Receiver Asset balanace"
         );
 
         // total supply increased by scaled amount
-        uint256 scaledbvUSDAmount = depositAmount * 10 ** (18 - assetDecimals);
+        uint256 scaledbvUSDAmount = amount * 10 ** (18 - assetDecimals);
         assertEq(
             bvUSD.totalSupply(),
             bvUSDSupplyBefore + scaledbvUSDAmount,
@@ -203,16 +219,13 @@ contract StableCoinConverterTest is Test {
         // user asset balance
         assertEq(
             asset.balanceOf(user),
-            mintAmount - depositAmount,
+            userAssetBalanceBefore - amount,
             "User Asset balanace"
         );
     }
 
     function _testWithdraw(address user, address receiver, IERC20Metadata asset, uint256 amount, uint256 fee) internal {
-        deal(address(asset), user, mintAmount);
-
-        // deposit
-        _deposit(user, asset, depositAmount);
+        uint256 assetDecimals = asset.decimals();
 
         uint256 receiverAssetBalanceBefore = asset.balanceOf(receiver);
         uint256 userBvUSDBalanceBefore = bvUSD.balanceOf(user);
@@ -221,13 +234,13 @@ contract StableCoinConverterTest is Test {
 
         // underlying receiver needs to approve converter
         vm.prank(receiver);
-        asset.approve(converterAddr, withdrawAmount);
+        asset.approve(converterAddr, amount);
 
         vm.prank(user);
-        uint256 assetOut = converter.withdraw(asset, withdrawAmount, user);
+        uint256 assetOut = converter.withdraw(asset, amount, user);
 
-        uint256 scaledWithdraw = withdrawAmount / (10 ** (18 - assetDecimals));
-        uint256 expectedFee = scaledWithdraw * feeAmount / 10000;
+        uint256 scaledWithdraw = amount / (10 ** (18 - assetDecimals));
+        uint256 expectedFee = scaledWithdraw * fee / 10000;
 
         assertEq(assetOut, scaledWithdraw - expectedFee, "Fee amount");
 
@@ -248,14 +261,14 @@ contract StableCoinConverterTest is Test {
         // user bvUSD
         assertEq(
             bvUSD.balanceOf(userA),
-            userBvUSDBalanceBefore - withdrawAmount,
+            userBvUSDBalanceBefore - amount,
             "bvUSD user balance"
         );
 
         // bvUSD is burned
         assertEq(
             bvUSD.totalSupply(),
-            bvUSDSupplyBefore - withdrawAmount,
+            bvUSDSupplyBefore - amount,
             "bvUSD supply"
         );
 

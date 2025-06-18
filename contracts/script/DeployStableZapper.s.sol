@@ -45,7 +45,7 @@ contract DeployCollateralZapper is Logging, Script {
     
         address receiver = address(0); // receiver of underlying asset
         uint256 feeAmount = 100; // 10 000 MAX
-        IERC20Metadata asset = IERC20Metadata(address()); // deposit asset
+        IERC20Metadata asset = IERC20Metadata(address(0)); // deposit asset
         
         BoldConverter.Path[] memory paths = new BoldConverter.Path[](numberOfPaths);
         paths[0] = BoldConverter.Path(receiver, 0, feeAmount);
