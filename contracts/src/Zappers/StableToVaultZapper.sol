@@ -20,6 +20,8 @@ contract StableToVaultZapper {
     address private immutable sbvUSD;
 
     constructor(BoldConverter boldConverter, address vault) {
+        require(vault != address(0), "Invalid vault");
+
         _boldConverter = boldConverter;
         sbvUSD = vault;
 
