@@ -17,104 +17,35 @@ contract StableToVaultZapper {
     using SafeERC20 for IERC20Metadata;
 
     BoldConverter private immutable _boldConverter;
-    IERC20Metadata private immutable _underlying;
     address private immutable sbvUSD;
-
-    struct PendingWithdraw {
-        uint256 totalShares;
-        uint256 lastRequestTimestamp;
-    }
-
-    mapping(address => PendingWithdraw) public userPendingRequest;
 
     constructor(BoldConverter boldConverter, address vault) {
         _boldConverter = boldConverter;
-        _underlying = boldConverter.underlying();
         sbvUSD = vault;
 
-        // approve converter to pull stable
-        _underlying.approve(address(boldConverter), type(uint256).max);
-
         // approve vault to pull bold
-        IERC20Metadata(address(boldConverter.bvUSD())).approve(address(sbvUSD), type(uint256).max);
+        IERC20Metadata(address(boldConverter.bvUSD())).approve(
+            address(sbvUSD),
+            type(uint256).max
+        );
     }
 
-    function deposit(uint256 amount) external returns (uint256 shares) {
-        // pull stable
-        _underlying.safeTransferFrom(msg.sender, address(this), amount);
+    function deposit(
+        IERC20Metadata asset,
+        uint256 amount
+    ) external returns (uint256 shares) {
+        require(_boldConverter.isValidPath(asset), "Invalid asset");
+
+        // pull asset
+        asset.safeTransferFrom(msg.sender, address(this), amount);
+
+        // approve converter
+        asset.safeIncreaseAllowance(address(_boldConverter), amount);
 
         // exchange for bvUSD
-        uint256 boldAmount = _boldConverter.deposit(amount);
+        uint256 boldAmount = _boldConverter.deposit(asset, amount);
 
         // stake for sbvUSD
         shares = IERC4626(sbvUSD).deposit(boldAmount, msg.sender);
-    }
-
-    // Instantly unstake and withdraw your assets from sbvUSD
-    // require sufficient _underlying allowance from the safe to the zapper
-    function unstakeAndWithdraw(uint256 shares) external returns (uint256 assetAmountOut) {
-        // pull user sbvUSD
-        IERC20Metadata(sbvUSD).safeTransferFrom(msg.sender, address(this), shares);
-
-        // unstake and receive bvUSD
-        _requestWithdrawal(shares);
-
-        uint256 bvUSDAmountOut = _fulfillAndRedeem(shares);
-
-        // burn bvUSD and transfer underlying
-        assetAmountOut = _boldConverter.withdraw(bvUSDAmountOut, msg.sender);
-
-        // emit ZapUnstake(msg.sender, amount, assetAmountOut);
-    }
-
-    // submit a vault unstake request
-    function requestUnstake(uint256 shares) external {
-        // pull user sbvUSD
-        IERC20Metadata(sbvUSD).safeTransferFrom(msg.sender, address(this), shares);
-
-        // store user requestID 
-        PendingWithdraw storage withdrawReq = userPendingRequest[msg.sender];
-        withdrawReq.totalShares += shares;
-        withdrawReq.lastRequestTimestamp = block.timestamp;
-
-        // request vault withdrawal
-        _requestWithdrawal(shares);
-    }
-
-    // finalize an unstake request by withdrawing assets
-    function withdraw() external returns (uint256 assetAmountOut) {
-        uint256 shares = userPendingRequest[msg.sender].totalShares;
-
-        require(shares > 0, "Invalid");
-
-        // clear pending requestId
-        delete userPendingRequest[msg.sender];
-
-        // fulfill redemption on vault
-        uint256 bvUSDOut = _fulfillAndRedeem(shares);
-
-        // burn bvUSD and transfer underlying
-       assetAmountOut = _boldConverter.withdraw(bvUSDOut, msg.sender);
-    }
-
-    /// @notice Internal function to request a withdrawal from a vault
-    function _requestWithdrawal(
-        uint256 shares
-    ) internal {
-        // allow vault to pull shares
-        IERC20Metadata(sbvUSD).safeIncreaseAllowance(sbvUSD, shares);
-
-        // request redeem - send shares to vault
-        IERC7540Redeem(sbvUSD).requestRedeem(shares, address(this), address(this));
-    }
-
-    /// @notice Internal function to fulfill a withdrawal from a vault
-    function _fulfillAndRedeem(
-        uint256 shares
-    ) internal returns (uint256 assets) {
-        IERC7540Redeem(sbvUSD).fulfillRedeem(shares, address(this));
-
-        // receive bvUSD
-        assets = IERC4626(sbvUSD).redeem(shares, address(this), address(this));
     }
 }

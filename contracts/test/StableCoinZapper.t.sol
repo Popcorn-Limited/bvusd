@@ -13,7 +13,11 @@ import "forge-std/Test.sol";
 contract TestToken is ERC20 {
     uint8 internal _decimals;
 
-    constructor(uint8 dec, string memory name, string memory symbol) ERC20(name, symbol) {
+    constructor(
+        uint8 dec,
+        string memory name,
+        string memory symbol
+    ) ERC20(name, symbol) {
         _decimals = dec;
     }
 
@@ -48,9 +52,15 @@ contract StableCoinZapperTest is Test {
         sbvUSDAddr = address(0x24E2aE2f4c59b8b7a03772142d439fDF13AAF15b); // katana fork
         vaultSafe = address(0x452DC676b4E377a76B4b3048eB3b511A0F1ec057);
 
-        converter = new BoldConverter(asset, address(bvUSD), 0, vaultSafe);
+        BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
+        paths[0] = BoldConverter.Path(vaultSafe, 0, 0);
 
-        zapper = new StableToVaultZapper(converter, sbvUSDAddr);      
+        IERC20Metadata[] memory assets = new IERC20Metadata[](1);
+        assets[0] = asset;
+
+        converter = new BoldConverter(assets, paths, address(bvUSD));
+
+        zapper = new StableToVaultZapper(converter, sbvUSDAddr);
         zapperAddr = address(zapper);
 
         vm.startPrank(bvUSD.owner());
@@ -76,102 +86,50 @@ contract StableCoinZapperTest is Test {
         uint256 userSbvUSDBalanceBefore = IERC20(sbvUSDAddr).balanceOf(userA);
 
         // deposit
-        uint256 sbvUSDOut = _zapDeposit(userA, depositAmount);
-        
+        uint256 sbvUSDOut = _zapDeposit(userA, asset, depositAmount);
+
         // zapper holds no assets
         assertEq(asset.balanceOf(zapperAddr), 0, "Zapper Asset balanace");
         assertEq(bvUSD.balanceOf(zapperAddr), 0, "Zapper bvUSD balanace");
 
-        assertEq(asset.balanceOf(vaultSafe), safeAssetBalanceBefore + depositAmount, "Safe Asset balanace");
+        assertEq(
+            asset.balanceOf(vaultSafe),
+            safeAssetBalanceBefore + depositAmount,
+            "Safe Asset balanace"
+        );
 
         // total supply increased by scaled amount
         uint256 scaledbvUSDAmount = depositAmount * 10 ** (18 - assetDecimals);
-        assertEq(bvUSD.totalSupply(), bvUSDSupplyBefore + scaledbvUSDAmount, "bvUSD supply");
+        assertEq(
+            bvUSD.totalSupply(),
+            bvUSDSupplyBefore + scaledbvUSDAmount,
+            "bvUSD supply"
+        );
 
         // user receives sbvUSD scaled amount
-        assertEq(IERC20(sbvUSDAddr).balanceOf(userA), userSbvUSDBalanceBefore + sbvUSDOut, "sbvUSD balance");
+        assertEq(
+            IERC20(sbvUSDAddr).balanceOf(userA),
+            userSbvUSDBalanceBefore + sbvUSDOut,
+            "sbvUSD balance"
+        );
 
         // user asset balance
-        assertEq(asset.balanceOf(userA), mintAmount - depositAmount, "User Asset balanace");
+        assertEq(
+            asset.balanceOf(userA),
+            mintAmount - depositAmount,
+            "User Asset balanace"
+        );
     }
 
-    // // requires enough bvUSD is liquid in the vault safe
-    function test_zapInstantWithdraw() public {
-        deal(address(asset), userA, mintAmount);
-
-        // deposit
-        _zapDeposit(userA, depositAmount);
-
-        uint256 safeAssetBalanceBefore = asset.balanceOf(vaultSafe);
-        uint256 bvUSDSupplyBefore = bvUSD.totalSupply();
-        uint256 sbvUSDSupplyBefore = IERC20(sbvUSDAddr).totalSupply();
-        uint256 userAssetBalanceBefore = asset.balanceOf(userA);
-
-        // safe needs to approve zapper to pull USDC
-        vm.startPrank(vaultSafe);
-        asset.approve(zapperAddr, withdrawAmount);
-
-        vm.startPrank(userA);
-        IERC20(sbvUSDAddr).approve(zapperAddr, withdrawAmount);
-        uint256 assetOut = zapper.unstakeAndWithdraw(withdrawAmount);
-
-        vm.stopPrank();
-
-        // safe sent asset to user
-        assertEq(asset.balanceOf(vaultSafe), safeAssetBalanceBefore - assetOut, "Safe asset balance");
-
-        // user received asset
-        assertEq(asset.balanceOf(userA), userAssetBalanceBefore + assetOut, "User asset balance");
-
-        // unstaked bvUSD is burned
-        assertEq(bvUSD.totalSupply(), bvUSDSupplyBefore - withdrawAmount, "bvUSD supply");
-
-        // sbvUSD is burned 
-        assertEq(IERC20(sbvUSDAddr).totalSupply(), sbvUSDSupplyBefore - withdrawAmount, "sbvUSD supply");
-    }
-
-    // assumes funds are not available when requesting withdraw and are made available after
-    function test_zapAsyncWithdraw() public {
-        deal(address(asset), userA, mintAmount);
-
-        // deposit
-        _zapDeposit(userA, depositAmount);
-
-        uint256 safeAssetBalanceBefore = asset.balanceOf(vaultSafe);
-        uint256 bvUSDSupplyBefore = bvUSD.totalSupply();
-        uint256 sbvUSDSupplyBefore = IERC20(sbvUSDAddr).totalSupply();
-        uint256 userAssetBalanceBefore = asset.balanceOf(userA);
-
-        // safe needs to approve zapper to pull USDC
-        vm.startPrank(vaultSafe);
-        asset.approve(zapperAddr, withdrawAmount);
-
-        vm.startPrank(userA);
-        IERC20(sbvUSDAddr).approve(zapperAddr, withdrawAmount);
-        zapper.requestUnstake(withdrawAmount);
-        
-        uint256 assetOut = zapper.withdraw();
-
-        vm.stopPrank();
-
-        // safe sent asset to user
-        assertEq(asset.balanceOf(vaultSafe), safeAssetBalanceBefore - assetOut, "Safe asset balance");
-
-        // user received asset
-        assertEq(asset.balanceOf(userA), userAssetBalanceBefore + assetOut, "User asset balance");
-
-        // unstaked bvUSD is burned
-        assertEq(bvUSD.totalSupply(), bvUSDSupplyBefore - withdrawAmount, "bvUSD supply");
-
-        // sbvUSD is burned 
-        assertEq(IERC20(sbvUSDAddr).totalSupply(), sbvUSDSupplyBefore - withdrawAmount, "sbvUSD supply");
-    }
-
-    function _zapDeposit(address who, uint256 amount) internal returns (uint256 sbvUSDOut) {
+    function _zapDeposit(
+        address who,
+        IERC20Metadata asset,
+        uint256 amount
+    ) internal returns (uint256 sbvUSDOut) {
         vm.startPrank(who);
         asset.approve(zapperAddr, amount);
 
-        sbvUSDOut = zapper.deposit(amount);
+        sbvUSDOut = zapper.deposit(asset, amount);
         vm.stopPrank();
     }
 }

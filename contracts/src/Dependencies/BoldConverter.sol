@@ -9,69 +9,135 @@ import {IBoldToken} from "../Interfaces/IBoldToken.sol";
 import "./Owned.sol";
 
 contract BoldConverter is Owned {
-    IERC20Metadata private immutable _underlying;
-    uint256 private immutable _underlyingDecimals;
+    uint256 public constant MAX_FEE = 10000;
 
-    IBoldToken private immutable _bvUSD;
+    IBoldToken public bvUSD;
 
-    uint256 public withdrawalFee;
-    address public underlyingReceiver;
+    struct Path {
+        address underlyingReceiver;
+        uint256 underlyingDecimals;
+        uint256 withdrawalFee;
+    }
+
+    mapping(IERC20Metadata => Path) private _underlyingPaths;
+
+    event NewPath(IERC20Metadata indexed underlying);
+    event DeletedPath(IERC20Metadata indexed underlying);
 
     constructor(
-        IERC20Metadata underlyingToken, 
-        address bvUSD, 
-        uint256 fee, 
-        address receiver
+        IERC20Metadata[] memory underlyings_,
+        Path[] memory paths_,
+        address bvUSD_
     ) Owned(msg.sender) {
-        _underlying = underlyingToken;
-        _underlyingDecimals = underlyingToken.decimals();
-        _bvUSD = IBoldToken(bvUSD);
-
-        require(_underlyingDecimals <= 18, "Max 18 underlying decimals");
-        require(withdrawalFee <= 10000, "Invalid fee");
-
-        withdrawalFee = fee;
-        underlyingReceiver = receiver;
+        _setPaths(underlyings_, paths_);
+        bvUSD = IBoldToken(bvUSD_);
     }
 
-    function underlying() external view returns (IERC20Metadata) {
-        return _underlying;
+    function isValidPath(
+        IERC20Metadata underlying
+    ) external view returns (bool) {
+        return _underlyingPaths[underlying].underlyingReceiver != address(0);
     }
 
-    function bvUSD() external view returns (IBoldToken) {
-        return _bvUSD;
+    function getPath(
+        IERC20Metadata underlying
+    ) external view returns (Path memory path) {
+        path = _underlyingPaths[underlying];
     }
 
     // amount in underlying token decimals
-    function deposit(uint256 amount) external returns (uint256 boldAmount) {
-        // pull underlying
-        SafeERC20.safeTransferFrom(_underlying, msg.sender, underlyingReceiver, amount);
+    function deposit(
+        IERC20Metadata underlying,
+        uint256 amount
+    ) external returns (uint256 boldAmount) {
+        Path memory path = _underlyingPaths[underlying];
+        require(path.underlyingReceiver != address(0), "Invalid path");
 
-        // scale to 18 decimals 
-        boldAmount = amount * 10 ** (18 - _underlyingDecimals);
+        // pull underlying
+        SafeERC20.safeTransferFrom(
+            underlying,
+            msg.sender,
+            path.underlyingReceiver,
+            amount
+        );
+
+        // scale to 18 decimals
+        boldAmount = amount * 10 ** (18 - path.underlyingDecimals);
 
         // mint bvUSD
-        _bvUSD.mint(msg.sender, boldAmount);
+        bvUSD.mint(msg.sender, boldAmount);
     }
 
-    function withdraw(uint256 amount, address receiver) external returns (uint256 assetOut) {
+    function withdraw(
+        IERC20Metadata underlying,
+        uint256 amount,
+        address receiver
+    ) external returns (uint256 underlyingOut) {
+        Path memory path = _underlyingPaths[underlying];
+        require(path.underlyingReceiver != address(0), "Invalid path");
+
         // burn bvUSD
-        _bvUSD.burn(msg.sender, amount);
+        bvUSD.burn(msg.sender, amount);
 
         // scale amount
-        uint256 withdrawalAmount = amount / (10 ** (18 - _underlyingDecimals));
+        uint256 withdrawalAmount = amount /
+            (10 ** (18 - path.underlyingDecimals));
 
-        // scale amount andsubtract fee
-        assetOut = withdrawalAmount - (withdrawalAmount * withdrawalFee / 10000);
+        // scale amount and subtract fee
+        underlyingOut =
+            withdrawalAmount -
+            ((withdrawalAmount * path.withdrawalFee) / MAX_FEE);
 
-        SafeERC20.safeTransferFrom(_underlying, underlyingReceiver, receiver, assetOut);
+        // transfer underlyings
+        SafeERC20.safeTransferFrom(
+            underlying,
+            path.underlyingReceiver,
+            receiver,
+            underlyingOut
+        );
     }
 
-    function setWithdrawalFee(uint256 fee) external onlyOwner {
-        withdrawalFee = fee;
+    function deletePaths(
+        IERC20Metadata[] memory underlyings
+    ) external onlyOwner {
+        for (uint i = 0; i < underlyings.length; i++) {
+            delete _underlyingPaths[underlyings[i]];
+
+            emit DeletedPath(underlyings[i]);
+        }
     }
 
-    function setUnderlyingReceiver(address receiver) external onlyOwner {
-        underlyingReceiver = receiver;
+    function setPaths(
+        IERC20Metadata[] memory underlyings,
+        Path[] memory paths
+    ) external onlyOwner {
+        _setPaths(underlyings, paths);
+    }
+
+    function _setPaths(
+        IERC20Metadata[] memory underlyings,
+        Path[] memory paths
+    ) internal {
+        uint256 length = underlyings.length;
+        require(length == paths.length, "Invalid length");
+
+        for (uint i = 0; i < length; i++) {
+            Path memory path = paths[i];
+
+            require(path.withdrawalFee <= MAX_FEE, "Invalid fee");
+            require(path.underlyingReceiver != address(0), "Invalid receiver");
+
+            IERC20Metadata underlying = underlyings[i];
+
+            path.underlyingDecimals = underlying.decimals();
+            require(
+                path.underlyingDecimals <= 18,
+                "Max 18 underlying decimals"
+            );
+
+            _underlyingPaths[underlying] = path;
+
+            emit NewPath(underlying);
+        }
     }
 }
