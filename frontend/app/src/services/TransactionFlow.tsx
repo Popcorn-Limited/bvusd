@@ -36,7 +36,7 @@ import { updateLeveragePosition, type UpdateLeveragePositionRequest } from "@/sr
 import { updateLoanInterestRate, type UpdateLoanInterestRateRequest } from "@/src/tx-flows/updateLoanInterestRate";
 import { wrapToken, type WrapTokenRequest } from "@/src/tx-flows/wrapToken";
 import { vaultUpdate, type VaultUpdateRequest } from "@/src/tx-flows/vaultUpdate";
-import { buyStable, type BuyStableRequest } from "@/src/tx-flows/buyStable";
+import { convert, type ConvertRequest } from "@/src/tx-flows/convert";
 import { addToWhitelist, type AddToWhitelistRequest, removeFromWhitelist, type RemoveFromWhitelistRequest } from "@/src/tx-flows/whitelistAdmin";
 
 export type FlowRequestMap = {
@@ -52,7 +52,7 @@ export type FlowRequestMap = {
   "updateLoanInterestRate": UpdateLoanInterestRateRequest;
   "wrapToken": WrapTokenRequest;
   "vaultUpdate": VaultUpdateRequest;
-  "buyStable": BuyStableRequest;
+  "convert": ConvertRequest;
   "addToWhitelist" : AddToWhitelistRequest,
   "removeFromWhitelist": RemoveFromWhitelistRequest
 };
@@ -70,7 +70,7 @@ const FlowIdSchema = v.union([
   v.literal("updateLoanInterestRate"),
   v.literal("wrapToken"),
   v.literal("vaultUpdate"),
-  v.literal("buyStable"),
+  v.literal("convert"),
   v.literal("addToWhitelist"),
   v.literal("removeFromWhitelist")
 ]);
@@ -88,7 +88,7 @@ export const flows: FlowsMap = {
   updateLoanInterestRate,
   wrapToken,
   vaultUpdate,
-  buyStable,
+  convert,
   addToWhitelist,
   removeFromWhitelist
 };

@@ -30,6 +30,20 @@ export function parseInputFloat(value: string) {
   return dn.from(value === "" ? 0 : value, 18);
 }
 
+export function parseInputFloatWithDecimals(value: string, decimals: number) {
+  value = value.trim();
+
+  if (!isInputFloat(value)) {
+    return null;
+  }
+
+  value = value
+    .replace(/\.$/, "")
+    .replace(/^\./, "0.");
+
+  return dn.from(value === "" ? 0 : value, decimals);
+}
+
 export function parseInputPercentage(value: string) {
   const parsedValue = parseInputFloat(value);
   if (parsedValue === null || dn.lt(parsedValue, 0) || dn.gt(parsedValue, 100)) {

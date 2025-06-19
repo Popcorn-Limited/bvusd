@@ -1,7 +1,7 @@
 import type { Token } from "@/src/types";
 import type { Address } from "@liquity2/uikit";
 
-import { dnum18, dnum8 } from "@/src/dnum-utils";
+import { dnum18, dnum6, dnum8 } from "@/src/dnum-utils";
 import { getBranch } from "@/src/liquity-utils";
 import { getSafeStatus } from "@/src/safe-utils";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ import { useModal as useConnectKitModal } from "connectkit";
 import { match } from "ts-pattern";
 import { erc20Abi } from "viem";
 import { useAccount as useWagmiAccount, useEnsName, useReadContract } from "wagmi";
-import { CONTRACT_BOLD_TOKEN, CONTRACT_VAULT } from "./env";
+import { CONTRACT_BOLD_TOKEN, CONTRACT_USDC, CONTRACT_USDT, CONTRACT_VAULT } from "./env";
 
 export function useBalance(
   address: Address | undefined,
@@ -35,9 +35,15 @@ export function useBalance(
           return "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c";
         }
         if(symbol === "USDT") {
-          return "0x55d398326f99059fF775485246999027B3197955";
+          return CONTRACT_USDT;
         }
-        return getBranch(symbol)?.contracts.CollToken.address ?? null;
+        if(symbol === "USDC") {
+          return CONTRACT_USDC;
+        }
+        else {
+          // @ts-ignore
+          return getBranch(symbol)?.contracts.CollToken.address ?? null;
+        }
       },
     )
     .otherwise(() => null);
@@ -49,7 +55,7 @@ export function useBalance(
     functionName: "balanceOf",
     args: address && [address],
     query: {
-      select: (value) => tokenAddress === "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c" ? dnum8(value ?? 0n) : dnum18(value ?? 0n),
+      select: (value) => ["USDC", "USDT"].includes(token) ? dnum6(value ?? 0n) : dnum18(value ?? 0n),
       enabled: Boolean(address),
     },
   });
