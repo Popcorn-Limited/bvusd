@@ -1,20 +1,22 @@
 "use client";
 
-import {
-  StatsScreenCard,
-  StatsTitle,
-} from "@/src/comps/Screen/StatsScreenCard";
 import { useLiquityStats } from "@/src/liquity-utils";
-import { match } from "ts-pattern";
-import { css } from "@/styled-system/css";
-import { HFlex, LoadingSurface } from "@liquity2/uikit";
-import { TokenCard } from "@/src/screens/HomeScreen/HomeScreen";
-import { fmtnum } from "@/src/formatting";
-import SupplyChart from "./SupplyChart";
-import CollateralRatioChart from "./CollateralRatioChart";
+import { TransparencyMetrics } from "./TransparencyMetrics";
+import { ChartsPanel } from "./ChartsPanel";
+import { VenueAndSupplyPanel } from "./VenueAndSupplyPanels";
+import { BackingTablePanel } from "./BackingTablePanel";
+import { AttestationsAndProofPanel } from "./AttestationsAndProofPanel";
+import { useState } from "react";
+import { MarketStatPanel } from "./MarketStatsPanel";
+import { MarketChartPanel } from "./MarketChartPanel";
+import { FundingBreakdownPanel } from "./FundingBreakdownPanel";
+import { SpreadAndDistributionPanel } from "./SpreadAndDistributionPanel";
 
-// TODO fix branch symbol after production deployment
 export function StatsScreen() {
+  const [activeTab, setActiveTab] = useState<"transparency" | "market">(
+    "transparency"
+  );
+
   const liquityStats = useLiquityStats();
   const loadingState =
     liquityStats.isLoading || liquityStats.status === "pending"
@@ -24,197 +26,82 @@ export function StatsScreen() {
       : "success";
 
   return (
-    <div
-      className={css({
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-        gap: 64,
-        width: "100%",
-      })}
-    >
-      <StatsScreenCard
-        mode={match(loadingState)
-          .returnType<"ready" | "loading" | "error">()
-          .with("loading", () => "loading")
-          .with("error", () => "error")
-          .otherwise(() => "ready")}
-      >
-        {match(loadingState)
-          .with("loading", () => (
-            <div
-              className={css({
-                display: "grid",
-                placeItems: "center",
-                height: "100%",
-              })}
-            >
-              <LoadingSurface />
-            </div>
-          ))
-          .with("error", () => (
-            <HFlex gap={8}>
-              Error fetching data
-              {/* <Button
-              mode="primary"
-              label="Try again"
-              size="mini"
-              onClick={onRetry}
-            /> */}
-            </HFlex>
-          ))
-          .otherwise(() => {
-            if (!liquityStats) {
-              <HFlex gap={8}>Invalid Data</HFlex>;
-            }
-            return (
-              <>
-                <StatsTitle
-                  title="Transparency Page"
-                  subtitle="bvUSD statistics"
-                />
-                <div
-                  className={css({
-                    display: "grid",
-                    gap: 24,
-                    width: "100%",
-                  })}
-                  style={{
-                    gridTemplateColumns: `repeat(4, 1fr)`,
-                    gridAutoRows: 180,
-                  }}
-                >
-                  <TokenCard
-                    token="Total Supply"
-                    subValues={[
-                      {
-                        label: "",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.totalBoldSupply),
-                          "2z"
-                        )} bvUSD`,
-                      },
-                    ]}
-                    link={{ label: "", href: "" }}
-                  />
-                  <TokenCard
-                    token="Total Collateral Value"
-                    subValues={[
-                      {
-                        label: "",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.totalCollValue),
-                          "2z"
-                        )} $`,
-                      },
-                    ]}
-                    link={{ label: "", href: "" }}
-                  />
-                  <TokenCard
-                    token="Collateralization Ratio"
-                    subValues={[
-                      {
-                        label: "",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.totalCollValue)>
-                            0
-                            ? (Number(liquityStats.data.totalCollValue) /
-                                Number(liquityStats.data.totalBoldSupply)) *
-                                100
-                            : 0,
-                          "2z"
-                        )} %`,
-                      },
-                    ]}
-                    link={{ label: "", href: "" }}
-                  />
-                  <TokenCard
-                    token="Total Value Locked"
-                    subValues={[
-                      {
-                        label: "",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.totalValueLocked),
-                          "2z"
-                        )} $`,
-                      },
-                    ]}
-                    link={{ label: "", href: "" }}
-                  />
-                </div>
-                <div
-                  className={css({
-                    marginTop: "5%",
-                    display: "grid",
-                    gap: 24,
-                    width: "100%",
-                  })}
-                  style={{
-                    gridTemplateColumns: `repeat(2, 1fr)`,
-                    gridAutoRows: 180,
-                  }}
-                >
-                  <TokenCard
-                    token="BTC Branch"
-                    subValues={[
-                      {
-                        label: "Collateral",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.branch["BVBTC"].collActive),
-                          "2z"
-                        )} BTC`,
-                      },
-                      {
-                        label: "Debt",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.branch["BVBTC"].totalDebt),
-                          "2z"
-                        )} bvUSD`,
-                      },
-                      {
-                        label: "Collateral Ratio",
-                        value: `${fmtnum(
-                          Number(liquityStats.data.branch["BVBTC"].totalDebt) >
-                            0
-                            ? (Number(
-                                liquityStats.data.branch["BVBTC"].collValue
-                              ) /
-                                Number(
-                                  liquityStats.data.branch["BVBTC"].totalDebt
-                                )) *
-                                100
-                            : 0,
-                          "2z"
-                        )} %`,
-                      },
-                    ]}
-                    link={{ label: "", href: "" }}
-                  />
-                </div>
-                <hr
-                  style={{
-                    border: "none",
-                    height: "1px",
-                    backgroundColor: "#ccc",
-                    margin: "5%",
-                  }}
-                />
-                <div>
-                  <StatsTitle title="Historical stats" subtitle="" />
-                  <SupplyChart data={liquityStats.data.historicalSupply} />
-                  <CollateralRatioChart
-                    data={liquityStats.data.historicalGlobalCR}
-                    title="Global Collateral Ratio"
-                  />
-                  <CollateralRatioChart
-                    data={liquityStats.data.branch["BVBTC"].historicalCR}
-                    title="BTC Branch Collateral Ratio"
-                  />
-                </div>
-              </>
-            );
-          })}
-      </StatsScreenCard>
+    <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", gap: 32, marginBottom: 24, justifyContent: "center" }}>
+        <button
+          onClick={() => setActiveTab("transparency")}
+          style={{
+            fontSize: 16,
+            color: activeTab === "transparency" ? "#fff" : "#aaa",
+            fontWeight: activeTab === "transparency" ? 600 : 400,
+            borderBottom:
+              activeTab === "transparency" ? "2px solid #fff" : "none",
+            paddingBottom: 4,
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Transparency
+        </button>
+        <button
+          onClick={() => setActiveTab("market")}
+          style={{
+            fontSize: 16,
+            color: activeTab === "market" ? "#fff" : "#aaa",
+            fontWeight: activeTab === "market" ? 600 : 400,
+            borderBottom: activeTab === "market" ? "2px solid #fff" : "none",
+            paddingBottom: 4,
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Market Data
+        </button>
+      </div>
+
+      {activeTab === "transparency" && (
+        <div
+          style={{
+            padding: "32px 32px",
+            maxWidth: 1400,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 48,
+          }}
+        >
+          <TransparencyMetrics
+            protocolBackingRatio="1"
+            totalBacking="2"
+            totalSupply="3"
+            price="4"
+          />
+          <ChartsPanel />
+          <VenueAndSupplyPanel />
+          <BackingTablePanel />
+          <AttestationsAndProofPanel />
+        </div>
+      )}
+
+      {activeTab === "market" && (
+        <div
+          style={{
+            padding: "32px 32px",
+            maxWidth: 1400,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 48,
+          }}
+        >
+          <MarketStatPanel />
+          <MarketChartPanel />
+          <FundingBreakdownPanel />
+          <SpreadAndDistributionPanel />
+        </div>
+      )}
     </div>
   );
 }
