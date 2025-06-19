@@ -11,6 +11,10 @@ import { MarketStatPanel } from "./MarketStatsPanel";
 import { MarketChartPanel } from "./MarketChartPanel";
 import { FundingBreakdownPanel } from "./FundingBreakdownPanel";
 import { SpreadAndDistributionPanel } from "./SpreadAndDistributionPanel";
+import { match } from "ts-pattern";
+import { HFlex, LoadingSurface } from "@liquity2/uikit";
+import { css } from "@/styled-system/css";
+import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"transparency" | "market">(
@@ -26,82 +30,138 @@ export function StatsScreen() {
       : "success";
 
   return (
-    <div style={{ width: "100%" }}>
-      <div style={{ display: "flex", gap: 32, marginBottom: 24, justifyContent: "center" }}>
-        <button
-          onClick={() => setActiveTab("transparency")}
-          style={{
-            fontSize: 16,
-            color: activeTab === "transparency" ? "#fff" : "#aaa",
-            fontWeight: activeTab === "transparency" ? 600 : 400,
-            borderBottom:
-              activeTab === "transparency" ? "2px solid #fff" : "none",
-            paddingBottom: 4,
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Transparency
-        </button>
-        <button
-          onClick={() => setActiveTab("market")}
-          style={{
-            fontSize: 16,
-            color: activeTab === "market" ? "#fff" : "#aaa",
-            fontWeight: activeTab === "market" ? 600 : 400,
-            borderBottom: activeTab === "market" ? "2px solid #fff" : "none",
-            paddingBottom: 4,
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Market Data
-        </button>
-      </div>
+     <div
+      className={css({
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        gap: 64,
+        width: "100%",
+      })}
+    >
+    <StatsScreenCard
+      mode={match(loadingState)
+        .returnType<"ready" | "loading" | "error">()
+        .with("loading", () => "loading")
+        .with("error", () => "error")
+        .otherwise(() => "ready")}
+    >
+      {match(loadingState)
+        .with("loading", () => (
+          <div
+            className={css({
+              display: "grid",
+              placeItems: "center",
+              height: "100%",
+            })}
+          >
+            <LoadingSurface />
+          </div>
+        ))
+        .with("error", () => (
+          <HFlex gap={8}>
+            Error fetching data
+            {/* <Button
+              mode="primary"
+              label="Try again"
+              size="mini"
+              onClick={onRetry}
+            /> */}
+          </HFlex>
+        ))
+        .otherwise(() => {
+          if (!liquityStats) {
+            <HFlex gap={8}>Invalid Data</HFlex>;
+          }
+          return (
+            <div style={{ width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 32,
+                  marginBottom: 24,
+                  justifyContent: "center",
+                }}
+              >
+                <button
+                  onClick={() => setActiveTab("transparency")}
+                  style={{
+                    fontSize: 16,
+                    color: activeTab === "transparency" ? "#fff" : "#aaa",
+                    fontWeight: activeTab === "transparency" ? 600 : 400,
+                    borderBottom:
+                      activeTab === "transparency" ? "2px solid #fff" : "none",
+                    paddingBottom: 4,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Transparency
+                </button>
+                <button
+                  onClick={() => setActiveTab("market")}
+                  style={{
+                    fontSize: 16,
+                    color: activeTab === "market" ? "#fff" : "#aaa",
+                    fontWeight: activeTab === "market" ? 600 : 400,
+                    borderBottom:
+                      activeTab === "market" ? "2px solid #fff" : "none",
+                    paddingBottom: 4,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Market Data
+                </button>
+              </div>
 
-      {activeTab === "transparency" && (
-        <div
-          style={{
-            padding: "32px 32px",
-            maxWidth: 1400,
-            margin: "0 auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: 48,
-          }}
-        >
-          <TransparencyMetrics
-            protocolBackingRatio="1"
-            totalBacking="2"
-            totalSupply="3"
-            price="4"
-          />
-          <ChartsPanel />
-          <VenueAndSupplyPanel />
-          <BackingTablePanel />
-          <AttestationsAndProofPanel />
-        </div>
-      )}
+              {activeTab === "transparency" && (
+                <div
+                  style={{
+                    padding: "32px 32px",
+                    maxWidth: 1400,
+                    margin: "0 auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 48,
+                  }}
+                >
+                  <TransparencyMetrics
+                    protocolBackingRatio="1"
+                    totalBacking="2"
+                    totalSupply="3"
+                    price="4"
+                  />
+                  <ChartsPanel />
+                  <VenueAndSupplyPanel />
+                  <BackingTablePanel />
+                  <AttestationsAndProofPanel />
+                </div>
+              )}
 
-      {activeTab === "market" && (
-        <div
-          style={{
-            padding: "32px 32px",
-            maxWidth: 1400,
-            margin: "0 auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: 48,
-          }}
-        >
-          <MarketStatPanel />
-          <MarketChartPanel />
-          <FundingBreakdownPanel />
-          <SpreadAndDistributionPanel />
-        </div>
-      )}
+              {activeTab === "market" && (
+                <div
+                  style={{
+                    padding: "32px 32px",
+                    maxWidth: 1400,
+                    margin: "0 auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 48,
+                  }}
+                >
+                  <MarketStatPanel />
+                  <MarketChartPanel />
+                  <FundingBreakdownPanel />
+                  <SpreadAndDistributionPanel />
+                </div>
+              )}
+            </div>
+          );
+        })}
+    </StatsScreenCard>
     </div>
   );
 }
