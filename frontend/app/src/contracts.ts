@@ -21,9 +21,11 @@ import { TroveManager } from "@/src/abi/TroveManager";
 import { TroveNFT } from "@/src/abi/TroveNFT";
 import { AddressesRegistry } from "@/src/abi/AddressesRegistry";
 import { WhitelistAbi } from "@/src/abi/Whitelist";
+import { Converter } from "@/src/abi/Converter";
 import {
   CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
+  CONTRACT_CONVERTER,
   CONTRACT_EXCHANGE_HELPERS,
   CONTRACT_GOVERNANCE,
   CONTRACT_HINT_HELPERS,
@@ -31,6 +33,8 @@ import {
   CONTRACT_LQTY_TOKEN,
   CONTRACT_LUSD_TOKEN,
   CONTRACT_MULTI_TROVE_GETTER,
+  CONTRACT_USDC,
+  CONTRACT_USDT,
   CONTRACT_WETH,
   ENV_BRANCHES,
 } from "@/src/env";
@@ -38,6 +42,7 @@ import { erc20Abi, zeroAddress } from "viem";
 
 const protocolAbis = {
   BoldToken: erc20Abi,
+  bvUSD: erc20Abi, // Same as BoldToken
   CollateralRegistry,
   ExchangeHelpers,
   Governance,
@@ -47,6 +52,9 @@ const protocolAbis = {
   LusdToken: erc20Abi,
   MultiTroveGetter,
   WETH: erc20Abi,
+  Converter,
+  USDC: erc20Abi,
+  USDT: erc20Abi,
 } as const;
 
 const BorrowerOperationsErrorsAbi = BorrowerOperations.filter((f) => f.type === "error");
@@ -72,7 +80,7 @@ const collateralAbis = {
   StabilityPool,
   TroveManager,
   TroveNFT,
-  Whitelist: WhitelistAbi,
+  Whitelist: WhitelistAbi
 } as const;
 
 const abis = {
@@ -111,6 +119,7 @@ export type Contracts = ProtocolContractMap & {
 
 export const CONTRACTS: Contracts = {
   BoldToken: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
+  bvUSD: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
   CollateralRegistry: {
     abi: abis.CollateralRegistry,
     address: CONTRACT_COLLATERAL_REGISTRY,
@@ -129,6 +138,9 @@ export const CONTRACTS: Contracts = {
     address: CONTRACT_MULTI_TROVE_GETTER,
   },
   WETH: { abi: abis.WETH, address: CONTRACT_WETH },
+  USDC: { abi: abis.USDC, address: CONTRACT_USDC },
+  USDT: { abi: abis.USDT, address: CONTRACT_USDT },
+  Converter: { abi: abis.Converter, address: CONTRACT_CONVERTER },
   branches: ENV_BRANCHES.map(({ branchId, symbol, contracts }) => ({
     id: branchId,
     branchId,

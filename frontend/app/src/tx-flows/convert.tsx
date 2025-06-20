@@ -3,7 +3,7 @@ import type { FlowDeclaration } from "@/src/services/TransactionFlow";
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TransactionDetailsRow } from "@/src/screens/TransactionsScreen/TransactionsScreen";
 import { TransactionStatus } from "@/src/screens/TransactionsScreen/TransactionStatus";
-import { vDnum, vUnderlyingToken } from "@/src/valibot-utils";
+import { vAddress, vDnum, vUnderlyingToken } from "@/src/valibot-utils";
 import * as dn from "dnum";
 import * as v from "valibot";
 import { createRequestSchema, verifyTransaction } from "./shared";
@@ -11,19 +11,23 @@ import { readContract, sendTransaction } from "wagmi/actions";
 import { erc20Abi, maxUint256 } from "viem";
 import { fmtnum } from "@/src/formatting";
 import { usePrice } from "@/src/services/Prices";
-import { ENSO_API_KEY } from "@/src/env";
+import { CONTRACT_CONVERTER, ENSO_API_KEY } from "@/src/env";
+import { Converter } from "../abi/Converter";
+import { getProtocolContract } from "../contracts";
 
 const RequestSchema = createRequestSchema(
-  "buyStable",
+  "convert",
   {
     amount: vDnum(),
-    token: vUnderlyingToken(),
+    inputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD")]),
+    outputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD")]),
+    mode: v.union([v.literal("buy"), v.literal("sell")]),
   },
 );
 
-export type BuyStableRequest = v.InferOutput<typeof RequestSchema>;
+export type ConvertRequest = v.InferOutput<typeof RequestSchema>;
 
-export const buyStable: FlowDeclaration<BuyStableRequest> = {
+export const convert: FlowDeclaration<ConvertRequest> = {
   title: "Review & Send Transaction",
 
   Summary({ request }) {
@@ -31,33 +35,20 @@ export const buyStable: FlowDeclaration<BuyStableRequest> = {
   },
 
   Details({ request }) {
-    const { amount, token } = request;
-    const wbtcPrice = usePrice("WBTC");
+    const { amount, inputToken, outputToken } = request;
 
-    return wbtcPrice.data && (
+    return (
       <>
         <TransactionDetailsRow
-          label="Sell Amount"
+          label="Input Amount"
           value={[
-            `${fmtnum(amount)} WBTC`,
-            <Amount
-              key="end"
-              fallback="…"
-              prefix="$"
-              value={wbtcPrice.data && dn.mul(amount, wbtcPrice.data)}
-            />,
+            `${fmtnum(amount)} ${inputToken}`,
           ]}
         />
         <TransactionDetailsRow
-          label="Buy Amount"
+          label="Output Amount"
           value={[
-            `${fmtnum(dn.mul(amount, wbtcPrice.data))} bvUSD`,
-            <Amount
-              key="end"
-              fallback="…"
-              prefix="$"
-              value={wbtcPrice.data && dn.mul(amount, wbtcPrice.data)}
-            />,
+            `${fmtnum(amount)} ${outputToken}`,
           ]}
         />
       </>
@@ -77,12 +68,13 @@ export const buyStable: FlowDeclaration<BuyStableRequest> = {
         />
       ),
       async commit(ctx) {
+        console.log(ctx.request.amount)
         return ctx.writeContract({
-          address: ctx.request.token,
+          address: getProtocolContract(ctx.request.inputToken).address,
           abi: erc20Abi,
           functionName: "approve",
           args: [
-            "0xF329F1BF880760bE580f0422475f8d101cb29Ad6",
+            CONTRACT_CONVERTER,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -94,25 +86,41 @@ export const buyStable: FlowDeclaration<BuyStableRequest> = {
       },
     },
 
-    // buy stable
-    buyStable: {
+    // buy bvUSD
+    buy: {
       name: () => "Buy bvUSD",
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const ensoRes = (await fetch(
-          `https://api.enso.finance/api/v1/shortcuts/route?chainId=56&fromAddress=${ctx.account}&spender=${ctx.account}&receiver=${ctx.account}&amountIn=${ctx.request.amount.toLocaleString("fullwide", { useGrouping: false })}&slippage=100&tokenIn=${ctx.request.token}&tokenOut=0x0471D185cc7Be61E154277cAB2396cD397663da6&routingStrategy=router`,
-          { headers: { Authorization: `Bearer ${ENSO_API_KEY}` } }
-        ))
-        const ensoResJson = await ensoRes.json()
-        
-        return sendTransaction(ctx.wagmiConfig, { 
-          chain: 56, 
-          account: ctx.account, 
-          to: ensoResJson.tx.to,
-          data: ensoResJson.tx.data as `0x${string}`,
-          value: ensoResJson.tx.value 
-          });
+        const Converter = getProtocolContract("Converter");
+
+        return ctx.writeContract({
+          address: Converter.address,
+          abi: Converter.abi,
+          functionName: "deposit",
+          args: [getProtocolContract(ctx.request.inputToken).address, ctx.request.amount[0]],
+        });
+      },
+
+      async verify(ctx, hash) {
+        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+      },
+    },
+
+    // sell bvUSD
+    sell: {
+      name: () => "Sell bvUSD",
+      Status: TransactionStatus,
+
+      async commit(ctx) {
+        const Converter = getProtocolContract("Converter");
+
+        return ctx.writeContract({
+          address: Converter.address,
+          abi: Converter.abi,
+          functionName: "withdraw",
+          args: [getProtocolContract(ctx.request.outputToken).address, ctx.request.amount[0], ctx.account],
+        });
       },
 
       async verify(ctx, hash) {
@@ -124,10 +132,10 @@ export const buyStable: FlowDeclaration<BuyStableRequest> = {
   async getSteps(ctx) {
     // Check if approval is needed
     const allowance = await readContract(ctx.wagmiConfig, {
-      address: ctx.request.token,
+      address: getProtocolContract(ctx.request.inputToken).address,
       abi: erc20Abi,
       functionName: "allowance",
-      args: [ctx.account, "0xF75584eF6673aD213a685a1B58Cc0330B8eA22Cf"],
+      args: [ctx.account, CONTRACT_CONVERTER],
     });
 
     const steps: string[] = [];
@@ -136,7 +144,13 @@ export const buyStable: FlowDeclaration<BuyStableRequest> = {
       steps.push("approve");
     }
 
-    steps.push("buyStable");
+    if (ctx.request.mode === "buy") {
+      steps.push("buy");
+    }
+    else {
+      steps.push("sell");
+    }
+
     return steps;
   },
 

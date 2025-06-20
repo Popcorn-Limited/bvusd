@@ -402,6 +402,16 @@ export default {
     },
   },
 
+  // Buy screen
+  buyScreen: {
+    sellPanel: {
+      label: "You sell bvUSD",
+    },
+    buyPanel: {
+      label: "You buy bvUSD",
+    },
+  },
+
   // Stake screen
   stakeScreen: {
     headline: (lqtyIcon: N) => (

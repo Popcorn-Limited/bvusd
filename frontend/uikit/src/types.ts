@@ -10,6 +10,7 @@ export type TokenSymbol =
   | "sbvUSD"
   | "WBTC"
   | "USDT"
+  | "USDC"
 
 export type Token = {
   icon: string;
