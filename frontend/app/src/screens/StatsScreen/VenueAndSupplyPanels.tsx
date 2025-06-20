@@ -12,6 +12,7 @@ import {
   Tooltip as LineTooltip,
 } from 'recharts';
 import { PanelHeader } from './PanelTitle';
+import { fmtnum } from '@/src/formatting';
 
 const pieData = [
   { name: 'A', value: 40, color: '#F6B73C' },
@@ -20,17 +21,22 @@ const pieData = [
   { name: 'D', value: 5, color: '#DB3C4B' },
 ];
 
-const supplyData = [
-  { date: '1/25', value: 0 },
-  { date: '2/25', value: 4 },
-  { date: '3/25', value: 8 },
-  { date: '4/25', value: 7 },
-  { date: '5/25', value: 7 },
-  { date: '6/25', value: 7.5 },
-  { date: '7/25', value: 9 },
-];
+type SupplyChartProps = {
+  data: {
+    day: string;
+    holders: string;
+    supply: string;
+  }[];
+};
 
-export function VenueAndSupplyPanel() {
+
+export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
+  const day_supply = [...data].reverse().map((item) => ({
+    day: item.day.split(" ")[0],
+    supply: parseFloat(fmtnum(Number(item.supply), "2z").replace(/,/g, "")),
+    holders: parseFloat(fmtnum(Number(item.holders), "2z").replace(/,/g, "")),
+  }));
+
   return (
     <div
       style={{
@@ -105,13 +111,18 @@ export function VenueAndSupplyPanel() {
       >
         <PanelHeader title="bvUSD Supply" />
         <ResponsiveContainer width="100%" height={360}>
-          <LineChart data={supplyData}>
-            <XAxis axisLine={false} tickLine={false} dataKey="date" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }}/>
-            <YAxis axisLine={false} tickLine={false} stroke="#777" tickFormatter={(v) => `${v}M`} tick={{ fontSize: 10, fill: '#aaa' }}/>
+          <LineChart data={day_supply}>
+            <XAxis axisLine={false} tickLine={false} dataKey="day" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }}/>
+            <YAxis axisLine={false} tickLine={false} stroke="#777"  tickFormatter={(value) => {
+                  if (value >= 1_000_000)
+                    return `${(value / 1_000_000).toFixed(1)}M`;
+                  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+                  return value.toString();
+                }} tick={{ fontSize: 10, fill: '#aaa' }}/>
             <LineTooltip />
             <Line
               type="monotone"
-              dataKey="value"
+              dataKey="supply"
               stroke="#F6B73C"
               strokeWidth={2}
               dot={false}

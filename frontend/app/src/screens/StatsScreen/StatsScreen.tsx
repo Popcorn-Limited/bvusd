@@ -15,6 +15,7 @@ import { match } from "ts-pattern";
 import { HFlex, LoadingSurface } from "@liquity2/uikit";
 import { css } from "@/styled-system/css";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
+import { fmtnum } from "@/src/formatting";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"transparency" | "market">(
@@ -129,13 +130,21 @@ export function StatsScreen() {
                   }}
                 >
                   <TransparencyMetrics
-                    protocolBackingRatio="1"
-                    totalBacking="2"
-                    totalSupply="3"
-                    price="4"
+                    protocolBackingRatio={`${fmtnum(
+                          Number(liquityStats.data.totalCollValue)>
+                            0
+                            ? (Number(liquityStats.data.totalCollValue) /
+                                Number(liquityStats.data.totalBoldSupply)) *
+                                100
+                            : 0,
+                          "2z"
+                        )} %`}
+                    totalBacking={liquityStats.data.totalCollValue}
+                    totalSupply={liquityStats.data.totalBoldSupply}
+                    price="1 $"
                   />
-                  <ChartsPanel />
-                  <VenueAndSupplyPanel />
+                  <ChartsPanel data={liquityStats.data.historicalGlobalCR}/>
+                  <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/>
                   <BackingTablePanel />
                   <AttestationsAndProofPanel />
                 </div>

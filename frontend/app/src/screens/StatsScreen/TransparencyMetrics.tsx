@@ -1,3 +1,5 @@
+import { fmtnum } from "@/src/formatting";
+
 interface TransparencyMetricsProps {
   protocolBackingRatio: string;
   totalBacking: string;
@@ -27,19 +29,16 @@ export function TransparencyMetrics({
     >
       <MetricBox label="Protocol Backing Ratio" value={protocolBackingRatio} />
       <MetricBox label="Total Backing (+ Reserve Fund)" value={totalBacking} />
-      <MetricBox label="bvUSD Total Supply" value={totalSupply} />
+      <MetricBox
+        label="bvUSD Total Supply"
+        value={`${fmtnum(Number(totalSupply), "2z")} bvUSD`}
+      />
       <MetricBox label="bvUSD Price" value={price} />
     </div>
   );
 }
 
-function MetricBox({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function MetricBox({ label, value }: { label: string; value: string }) {
   return (
     <div
       style={{

@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { PanelHeader } from './PanelTitle';
 import { SmallLegend } from './SmallChartLegend';
+import { fmtnum } from '@/src/formatting';
 
 const systemBackingData = [
   { date: '1/25', USDC: 5, BTC: 7, ETH: 3 },
@@ -23,17 +24,19 @@ const systemBackingData = [
   { date: '7/25', USDC: 6, BTC: 7, ETH: 2 },
 ];
 
-const bvusdPriceData = [
-  { date: '1/25', value: 5.5 },
-  { date: '2/25', value: 5.8 },
-  { date: '3/25', value: 6.2 },
-  { date: '4/25', value: 7.0 },
-  { date: '5/25', value: 6.5 },
-  { date: '6/25', value: 6.0 },
-  { date: '7/25', value: 6.9 },
-];
+type CRProps = {
+  data: {
+    day: string;
+    collateral_ratio: string;
+  }[];
+};
 
-export function ChartsPanel() {
+export function ChartsPanel({ data }: CRProps) {
+  const day_CR = [...data].reverse().map((item) => ({
+    day: item.day.split(" ")[0],
+    CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
+  }));
+
   return (
     <div
       style={{
@@ -87,7 +90,7 @@ export function ChartsPanel() {
         </ResponsiveContainer>
       </div>
 
-      {/* Right Card: bvUSD Secondary Price */}
+      {/* Right Card: Collateral Ratio Historical */}
       <div
         style={{
           flex: 1,
@@ -98,15 +101,15 @@ export function ChartsPanel() {
           flexDirection: 'column',
         }}
       >
-        <PanelHeader title="bvUSD Secondary Price" />
+        <PanelHeader title="Collateral Ratio" />
         <ResponsiveContainer width="100%" height={360}>
-          <LineChart data={bvusdPriceData}>
-            <XAxis axisLine={false} tickLine={false} dataKey="date" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }} />
-            <YAxis axisLine={false} tickLine={false} stroke="#777" tickFormatter={(v) => `${v}M`} tick={{ fontSize: 10, fill: '#aaa' }} />
+          <LineChart data={day_CR}>
+            <XAxis axisLine={false} tickLine={false} dataKey="day" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }} />
+            <YAxis axisLine={false} tickLine={false} domain={[150, "auto"]} stroke="#777" tickFormatter={(value) => `${value.toFixed(0)}%`} tick={{ fontSize: 10, fill: '#aaa' }} />
             <Tooltip />
             <Line
               type="monotone"
-              dataKey="value"
+              dataKey="CR"
               stroke="#FFB11B"
               strokeWidth={2}
               dot={false}
