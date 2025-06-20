@@ -13,21 +13,21 @@ import { getCollToken, isEarnPositionActive } from "@/src/liquity-utils";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { infoTooltipProps } from "@/src/uikit-utils";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
-import { Button, bvUSD, Dropdown, HFlex, InfoTooltip, InputField, map, Tabs, TextButton, TokenIcon, USDT } from "@liquity2/uikit";
+import { Button, bvUSD, Dropdown, HFlex, InfoTooltip, InputField, Tabs, TextButton, TokenIcon, USDT } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useState } from "react";
+import { CONTRACT_BOLD_TOKEN, CONTRACT_VAULT } from "@/src/env";
+import { STABLE_SYMBOLS } from "../BuyScreen/PanelConvert";
 
-type ConvertMode = "buy" | "sell";
+type ValueUpdateMode = "add" | "remove";
 
-export const STABLE_SYMBOLS = ["USDT", "USDC"] as const;
-
-export function PanelConvert() {
+export function PanelVaultUpdate() {
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
-  const [mode, setMode] = useState<ConvertMode>("buy");
-  const [inputSymbol, setInputSymbol] = useState<Token["symbol"]>("USDC");
-  const [outputSymbol, setOutputSymbol] = useState<Token["symbol"]>("bvUSD");
+  const [mode, setMode] = useState<ValueUpdateMode>("add");
+  const [inputSymbol, setInputSymbol] = useState<Token["symbol"]>("bvUSD");
+  const [outputSymbol, setOutputSymbol] = useState<Token["symbol"]>("sbvUSD");
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
 
@@ -35,7 +35,7 @@ export function PanelConvert() {
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
-  const balances = Object.fromEntries([...STABLE_SYMBOLS, "bvUSD"].map((symbol) => ([
+  const balances = Object.fromEntries(["bvUSD", "sbvUSD", ...STABLE_SYMBOLS].map((symbol) => ([
     symbol,
     // known collaterals are static so we can safely call this hook in a .map()
     useBalance(account.address, symbol as Token["symbol"]),
@@ -68,11 +68,11 @@ export function PanelConvert() {
               }
               : null
             }
-            contextual={
+            contextual={mode === "add" ?
               <Dropdown
                 items={
-                  STABLE_SYMBOLS.map(symbol => ({
-                    icon: <TokenIcon symbol={symbol} />,
+                  ["bvUSD", ...STABLE_SYMBOLS].map(symbol => ({
+                    icon: <TokenIcon symbol={symbol as Token["symbol"]} />,
                     label: symbol,
                     value: account.isConnected
                       ? fmtnum(balances[symbol]?.data ?? 0)
@@ -81,42 +81,45 @@ export function PanelConvert() {
                 }
                 menuPlacement="end"
                 menuWidth={300}
-                onSelect={(index) => {
-                  mode === "buy" ? setInputSymbol(STABLE_SYMBOLS[index]) : setOutputSymbol(STABLE_SYMBOLS[index]);
-                }}
+                onSelect={(index) => setInputSymbol(["bvUSD", ...STABLE_SYMBOLS][index] as Token["symbol"])}
                 // @ts-ignore
-                selected={mode === "buy" ? STABLE_SYMBOLS.indexOf(inputSymbol) : STABLE_SYMBOLS.indexOf(outputSymbol)}
+                selected={["bvUSD", ...STABLE_SYMBOLS].indexOf(inputSymbol)}
+              />
+              : <InputTokenBadge
+                background={false}
+                icon={<TokenIcon symbol="bvUSD" />}
+                label="bvUSD"
               />
             }
             id="input-deposit-change"
             label={{
-              start: mode === "sell"
-                ? content.buyScreen.sellPanel.label
-                : content.buyScreen.buyPanel.label,
+              start: mode === "add"
+                ? content.earnScreen.depositPanel.label
+                : content.earnScreen.withdrawPanel.label,
               end: (
                 <Tabs
                   compact
                   items={[
-                    { label: "Buy", panelId: "panel-buy", tabId: "tab-buy" },
-                    { label: "Sell", panelId: "panel-sell", tabId: "tab-sell" },
+                    { label: "Deposit", panelId: "panel-deposit", tabId: "tab-deposit" },
+                    { label: "Withdraw", panelId: "panel-withdraw", tabId: "tab-withdraw" },
                   ]}
                   onSelect={(index, { origin, event }) => {
-                    setMode(index === 1 ? "sell" : "buy");
+                    setMode(index === 1 ? "remove" : "add");
                     setValue("");
-                    if(index === 1) {
-                      setInputSymbol("bvUSD");
-                      setOutputSymbol("USDC");
+                    if (index === 1) {
+                      setInputSymbol("sbvUSD");
+                      setOutputSymbol("bvUSD");
                     }
                     else {
-                      setInputSymbol("USDC");
-                      setOutputSymbol("bvUSD");
+                      setInputSymbol("bvUSD");
+                      setOutputSymbol("sbvUSD");
                     }
                     if (origin !== "keyboard") {
                       event.preventDefault();
                       (event.target as HTMLElement).focus();
                     }
                   }}
-                  selected={mode === "sell" ? 1 : 0}
+                  selected={mode === "remove" ? 1 : 0}
                 />
               )
             }}
@@ -162,17 +165,17 @@ export function PanelConvert() {
             }
 
             txFlow.start({
-              flowId: "convert",
+              flowId: "vaultUpdate",
               backLink: [
-                `/buy`,
+                `/vault`,
                 "Back to editing",
               ],
               successLink: ["/", "Go to the Dashboard"],
-              successMessage: "Your order has been processed successfully.",
+              successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
               mode: mode,
               amount: parsedValue,
-              inputToken: inputSymbol as "USDC" | "USDT" | "bvUSD",
-              outputToken: outputSymbol as "USDC" | "USDT" | "bvUSD",
+              inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
+              outputToken: outputSymbol as "bvUSD" | "sbvUSD",
             });
           }}
         />

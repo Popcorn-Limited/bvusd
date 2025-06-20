@@ -5,7 +5,7 @@ import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
 import { fmtnum } from "@/src/formatting";
 import { isEarnPositionActive, useVault } from "@/src/liquity-utils";
 import { css } from "@/styled-system/css";
-import { IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@liquity2/uikit";
+import { bvUSD, IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@liquity2/uikit";
 import * as dn from "dnum";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ export function VaultPositionSummary({
   linkToScreen?: boolean;
   txPreviewMode?: boolean;
 }) {
-  const collToken = USDT
+  const collToken = bvUSD
   const vault = useVault()
 
   const { totalDeposited: totalPoolDeposit } = vault.data;
@@ -106,7 +106,7 @@ export function VaultPositionSummary({
             })}
           >
             <div>
-              Vault
+              sbvUSD
             </div>
             <div
               className={css({

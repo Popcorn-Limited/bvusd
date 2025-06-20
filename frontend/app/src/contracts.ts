@@ -22,6 +22,8 @@ import { TroveNFT } from "@/src/abi/TroveNFT";
 import { AddressesRegistry } from "@/src/abi/AddressesRegistry";
 import { WhitelistAbi } from "@/src/abi/Whitelist";
 import { Converter } from "@/src/abi/Converter";
+import { StableToVaultZapper } from "./abi/StableToVaultZapper";
+import { Vault } from "./abi/Vault";
 import {
   CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
@@ -33,8 +35,10 @@ import {
   CONTRACT_LQTY_TOKEN,
   CONTRACT_LUSD_TOKEN,
   CONTRACT_MULTI_TROVE_GETTER,
+  CONTRACT_STABLE_VAULT_ZAPPER,
   CONTRACT_USDC,
   CONTRACT_USDT,
+  CONTRACT_VAULT,
   CONTRACT_WETH,
   ENV_BRANCHES,
 } from "@/src/env";
@@ -55,6 +59,9 @@ const protocolAbis = {
   Converter,
   USDC: erc20Abi,
   USDT: erc20Abi,
+  Vault:Vault,
+  sbvUSD:Vault,
+  StableToVaultZapper:StableToVaultZapper
 } as const;
 
 const BorrowerOperationsErrorsAbi = BorrowerOperations.filter((f) => f.type === "error");
@@ -141,6 +148,9 @@ export const CONTRACTS: Contracts = {
   USDC: { abi: abis.USDC, address: CONTRACT_USDC },
   USDT: { abi: abis.USDT, address: CONTRACT_USDT },
   Converter: { abi: abis.Converter, address: CONTRACT_CONVERTER },
+  Vault: { abi: abis.Vault, address: CONTRACT_VAULT },
+  sbvUSD: { abi: abis.Vault, address: CONTRACT_VAULT },
+  StableToVaultZapper: { abi: abis.StableToVaultZapper, address: CONTRACT_STABLE_VAULT_ZAPPER },
   branches: ENV_BRANCHES.map(({ branchId, symbol, contracts }) => ({
     id: branchId,
     branchId,

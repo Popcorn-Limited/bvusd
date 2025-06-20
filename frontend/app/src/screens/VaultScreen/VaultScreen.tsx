@@ -11,8 +11,8 @@ import { HFlex, IconEarn } from "@liquity2/uikit";
 import { a, useTransition } from "@react-spring/web";
 import * as dn from "dnum";
 import { match } from "ts-pattern";
-import { PanelUpdateVaultDeposit } from "./PanelUpdateVaultDeposit";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
+import { PanelVaultUpdate } from "./PanelVaultUpdate";
 
 
 export function VaultPoolScreen() {
@@ -110,11 +110,7 @@ export function VaultPoolScreen() {
               opacity: style.opacity,
             }}
           >
-            <PanelUpdateVaultDeposit
-              branchId={0}
-              deposited={vault.data.totalDeposited ?? dn.from(0, 18)}
-              position={vaultPosition.data}
-            />
+            <PanelVaultUpdate/>
           </a.div>
         )
       ))}
