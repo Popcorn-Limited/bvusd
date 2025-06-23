@@ -68,7 +68,6 @@ export function Dropdown({
   selected: null | number;
   size?: "small" | "medium";
 }) {
-  console.log(items)
   const { groups, flatItems } = normalizeGroups(items);
 
   let placement = menuPlacement === "start" || menuPlacement === "end"

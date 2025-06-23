@@ -1,4 +1,4 @@
-import type { PositionEarn } from "@/src/types";
+import type { PositionEarn, RequestBalance } from "@/src/types";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
@@ -12,11 +12,13 @@ import Link from "next/link";
 export function VaultPositionSummary({
   prevEarnPosition,
   earnPosition,
+  requestBalance,
   linkToScreen,
   txPreviewMode,
 }: {
   prevEarnPosition?: PositionEarn | null;
   earnPosition: PositionEarn | null;
+  requestBalance: RequestBalance | null;
   linkToScreen?: boolean;
   txPreviewMode?: boolean;
 }) {
@@ -276,6 +278,26 @@ export function VaultPositionSummary({
                   <TokenIcon symbol="bvUSD" size="mini" title={null} />
                 </div>
               )}
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                color: `var(--fg-secondary-${active ? "active" : "inactive"})`,
+              }}
+            >
+              Pending Withdrawal
+            </div>
+            <div
+              className={css({
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                height: 24,
+              })}
+            >
+              {fmtnum(requestBalance.pendingShares)}
+              <TokenIcon symbol="sbvUSD" size="mini" title={null} />
             </div>
           </div>
           {active && (

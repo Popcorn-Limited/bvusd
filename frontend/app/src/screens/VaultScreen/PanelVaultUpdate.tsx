@@ -1,4 +1,4 @@
-import type { BranchId, PositionEarn, Token } from "@/src/types";
+import type { BranchId, PositionEarn, RequestBalance, Token } from "@/src/types";
 import type { Dnum } from "dnum";
 
 import { Amount } from "@/src/comps/Amount/Amount";
@@ -15,13 +15,44 @@ import { infoTooltipProps } from "@/src/uikit-utils";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
 import { Button, bvUSD, Dropdown, HFlex, InfoTooltip, InputField, Tabs, TextButton, TokenIcon, USDT } from "@liquity2/uikit";
 import * as dn from "dnum";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CONTRACT_BOLD_TOKEN, CONTRACT_VAULT } from "@/src/env";
 import { STABLE_SYMBOLS } from "../BuyScreen/PanelConvert";
+import { css } from "@/styled-system/css";
+import { readContract } from "viem/actions";
+import { getProtocolContract } from "@/src/contracts";
+import { useReadContract } from "wagmi";
+import { Address } from "viem";
+import ClaimAssets from "./ClaimAssets";
+
+
+async function getNextWithdrawalDate(): Promise<{ days: number, hours: number, minutes: number, seconds: number }> {
+  // Get current date in CET timezone
+  const now = new Date();
+
+  // Create a date for the first day of next month at 12:00 CET
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1, 12, 0, 0);
+
+  // Calculate time difference in milliseconds
+  const timeDiff = nextMonth.getTime() - now.getTime();
+
+  // Convert to days, hours, minutes, seconds
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+  };
+}
 
 type ValueUpdateMode = "add" | "remove";
 
-export function PanelVaultUpdate() {
+export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBalance }) {
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
@@ -30,8 +61,26 @@ export function PanelVaultUpdate() {
   const [outputSymbol, setOutputSymbol] = useState<Token["symbol"]>("sbvUSD");
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
+  const [withdrawalDate, setWithdrawalDate] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
 
-  const parsedValue = parseInputFloatWithDecimals(value, inputSymbol === "bvUSD" ? 18 : 6);
+  useEffect(() => {
+    // Initial call
+    getNextWithdrawalDate().then(setWithdrawalDate);
+
+    // Set up interval to update every 1 second
+    const interval = setInterval(() => {
+      getNextWithdrawalDate().then(setWithdrawalDate);
+    }, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  const parsedValue = parseInputFloatWithDecimals(
+    value,
+    // @ts-ignore
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+  );
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
@@ -142,6 +191,10 @@ export function PanelVaultUpdate() {
         }
       />
 
+      {mode === "remove" && requestBalance && dn.gt(requestBalance.claimableAssets, 0) &&
+        <ClaimAssets requestBalance={requestBalance} />
+      }
+
       <div
         style={{
           display: "flex",
@@ -151,6 +204,16 @@ export function PanelVaultUpdate() {
           width: "100%",
         }}
       >
+        {mode === "remove" &&
+          <p className={css({
+            color: "content",
+            fontSize: "16px",
+            textAlign: "center",
+          })}>
+            Withdrawals requests will be processed every 30 days.
+            Next withdrawals will be processed in {withdrawalDate.days} days, {withdrawalDate.hours} hours, {withdrawalDate.minutes} minutes, {withdrawalDate.seconds} seconds.
+          </p>
+        }
         <ConnectWarningBox />
         <Button
           disabled={!allowSubmit}

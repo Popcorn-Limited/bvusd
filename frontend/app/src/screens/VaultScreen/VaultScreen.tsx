@@ -7,12 +7,16 @@ import content from "@/src/content";
 import { useVault, useVaultPosition } from "@/src/liquity-utils";
 import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
-import { HFlex, IconEarn } from "@liquity2/uikit";
+import { Address, HFlex, IconEarn } from "@liquity2/uikit";
 import { a, useTransition } from "@react-spring/web";
 import * as dn from "dnum";
 import { match } from "ts-pattern";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
 import { PanelVaultUpdate } from "./PanelVaultUpdate";
+import { getProtocolContract } from "@/src/contracts";
+import { useReadContract } from "wagmi";
+import { RequestBalance } from "@/src/types";
+import { dnum18 } from "@/src/dnum-utils";
 
 
 export function VaultPoolScreen() {
@@ -20,7 +24,21 @@ export function VaultPoolScreen() {
 
   const vaultPosition = useVaultPosition(account.address ?? null);
   const vault = useVault();
-  const loadingState = vault.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
+  const requestBalance = useReadContract({
+    address: getProtocolContract("Vault").address,
+    abi: getProtocolContract("Vault").abi,
+    functionName: "getRequestBalance",
+    args: [account.address as Address],
+    query: {
+      select: (data) => ({
+        pendingShares: dnum18(data.pendingShares),
+        requestTime: Number(data.requestTime),
+        claimableShares: dnum18(data.claimableShares),
+        claimableAssets: dnum18(data.claimableAssets),
+      }),
+    },
+  });
+  const loadingState = vault.isLoading || requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
 
   const tabsTransition = useTransition(loadingState, {
     from: { opacity: 0 },
@@ -56,6 +74,7 @@ export function VaultPoolScreen() {
               ? (
                 <VaultPositionSummary
                   earnPosition={vaultPosition.data}
+                  requestBalance={requestBalance.data as RequestBalance}
                 />
               )
               : (
@@ -110,7 +129,7 @@ export function VaultPoolScreen() {
               opacity: style.opacity,
             }}
           >
-            <PanelVaultUpdate/>
+            <PanelVaultUpdate requestBalance={requestBalance.data as RequestBalance} />
           </a.div>
         )
       ))}
