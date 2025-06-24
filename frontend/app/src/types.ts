@@ -113,7 +113,7 @@ export type RequestBalance = {
   claimableAssets: Dnum;
 };
 
-export type Position = PositionLoan | PositionEarn | RequestBalance;
+export type Position = PositionLoan | PositionEarn;
 
 export type Delegate = {
   address: Address;
