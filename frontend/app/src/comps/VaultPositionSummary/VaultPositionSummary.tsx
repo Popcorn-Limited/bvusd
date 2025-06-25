@@ -1,26 +1,28 @@
-import type { PositionEarn } from "@/src/types";
+import type { PositionEarn, RequestBalance } from "@/src/types";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
 import { fmtnum } from "@/src/formatting";
 import { isEarnPositionActive, useVault } from "@/src/liquity-utils";
 import { css } from "@/styled-system/css";
-import { IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@liquity2/uikit";
+import { bvUSD, IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@liquity2/uikit";
 import * as dn from "dnum";
 import Link from "next/link";
 
 export function VaultPositionSummary({
   prevEarnPosition,
   earnPosition,
+  requestBalance,
   linkToScreen,
   txPreviewMode,
 }: {
   prevEarnPosition?: PositionEarn | null;
   earnPosition: PositionEarn | null;
+  requestBalance: RequestBalance | null;
   linkToScreen?: boolean;
   txPreviewMode?: boolean;
 }) {
-  const collToken = USDT
+  const collToken = bvUSD
   const vault = useVault()
 
   const { totalDeposited: totalPoolDeposit } = vault.data;
@@ -88,7 +90,7 @@ export function VaultPositionSummary({
           })}
         >
           <TokenIcon
-            symbol={collToken.symbol}
+            symbol="sbvUSD"
             size={34}
           />
         </div>
@@ -106,7 +108,7 @@ export function VaultPositionSummary({
             })}
           >
             <div>
-              Vault
+              sbvUSD
             </div>
             <div
               className={css({
@@ -276,6 +278,26 @@ export function VaultPositionSummary({
                   <TokenIcon symbol="bvUSD" size="mini" title={null} />
                 </div>
               )}
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                color: `var(--fg-secondary-${active ? "active" : "inactive"})`,
+              }}
+            >
+              Pending Withdrawal
+            </div>
+            <div
+              className={css({
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                height: 24,
+              })}
+            >
+              {fmtnum(requestBalance.pendingShares)}
+              <TokenIcon symbol="sbvUSD" size="mini" title={null} />
             </div>
           </div>
           {active && (

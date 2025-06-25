@@ -39,7 +39,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as dn from "dnum";
 import { useMemo } from "react";
 import * as v from "valibot";
-import { encodeAbiParameters, erc4626Abi, keccak256, parseAbiParameters } from "viem";
+import { encodeAbiParameters, erc4626Abi, keccak256, parseAbiParameters, zeroAddress } from "viem";
 import { useConfig as useWagmiConfig, useReadContract, useReadContracts } from "wagmi";
 import { readContract, readContracts } from "wagmi/actions";
 import { graphQuery, InterestBatchesQuery } from "./subgraph-queries";
@@ -302,7 +302,7 @@ export function useVaultPosition(
     address: CONTRACT_VAULT,
     abi: erc4626Abi,
     functionName: "balanceOf",
-    args: [account ?? "0x"],
+    args: [account ?? zeroAddress],
     query: {
       select: dnum18,
     },
@@ -322,10 +322,7 @@ export function useVaultPosition(
         },
       };
     },
-    enabled: Boolean(
-      account
-      && balance.status === "success"
-    ),
+    enabled: balance.status === "success",
   });
 }
 

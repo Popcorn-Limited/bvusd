@@ -19,7 +19,7 @@ import { useState } from "react";
 
 type ConvertMode = "buy" | "sell";
 
-const SYMBOLS = ["USDT", "USDC"] as const;
+export const STABLE_SYMBOLS = ["USDC", "USDT"] as const;
 
 export function PanelConvert() {
   const account = useAccount();
@@ -35,13 +35,11 @@ export function PanelConvert() {
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
-  const balances = Object.fromEntries([...SYMBOLS, "bvUSD"].map((symbol) => ([
+  const balances = Object.fromEntries([...STABLE_SYMBOLS, "bvUSD"].map((symbol) => ([
     symbol,
     // known collaterals are static so we can safely call this hook in a .map()
     useBalance(account.address, symbol as Token["symbol"]),
   ] as const)));
-
-  console.log(balances)
 
   const insufficientBalance = parsedValue && balances[inputSymbol].data && dn.lt(balances[inputSymbol].data, parsedValue);
 
@@ -73,7 +71,7 @@ export function PanelConvert() {
             contextual={
               <Dropdown
                 items={
-                  SYMBOLS.map(symbol => ({
+                  STABLE_SYMBOLS.map(symbol => ({
                     icon: <TokenIcon symbol={symbol} />,
                     label: symbol,
                     value: account.isConnected
@@ -84,10 +82,10 @@ export function PanelConvert() {
                 menuPlacement="end"
                 menuWidth={300}
                 onSelect={(index) => {
-                  mode === "buy" ? setInputSymbol(SYMBOLS[index]) : setOutputSymbol(SYMBOLS[index]);
+                  mode === "buy" ? setInputSymbol(STABLE_SYMBOLS[index]) : setOutputSymbol(STABLE_SYMBOLS[index]);
                 }}
                 // @ts-ignore
-                selected={mode === "buy" ? SYMBOLS.indexOf(inputSymbol) : SYMBOLS.indexOf(outputSymbol)}
+                selected={mode === "buy" ? STABLE_SYMBOLS.indexOf(inputSymbol) : STABLE_SYMBOLS.indexOf(outputSymbol)}
               />
             }
             id="input-deposit-change"

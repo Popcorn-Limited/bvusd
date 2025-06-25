@@ -106,6 +106,13 @@ export type PositionEarn = {
   };
 };
 
+export type RequestBalance = {
+  pendingShares: Dnum;
+  requestTime: number;
+  claimableShares: Dnum;
+  claimableAssets: Dnum;
+};
+
 export type Position = PositionLoan | PositionEarn;
 
 export type Delegate = {

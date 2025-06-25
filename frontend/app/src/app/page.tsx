@@ -1,5 +1,5 @@
-import { HomeScreen } from "@/src/screens/HomeScreen/HomeScreen";
+import { VaultPoolScreen } from "@/src/screens/VaultScreen/VaultScreen";
 
 export default function Page() {
-  return <HomeScreen />;
+  return <VaultPoolScreen />;
 }

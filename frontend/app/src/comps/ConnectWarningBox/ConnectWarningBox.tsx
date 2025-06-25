@@ -16,7 +16,7 @@ export function ConnectWarningBox() {
           padding: "20px 24px",
           textAlign: "center",
           background: "none",
-          color: "background",
+          color: "content",
           borderRadius: 8,
         })}
       >
