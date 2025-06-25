@@ -17,7 +17,7 @@ export default {
 
   // Menu bar
   menu: {
-    dashboard: "Portfolio",
+    portfolio: "Portfolio",
     borrow: "Borrow",
     earn: "Earn",
     wrap: "Wrap",
