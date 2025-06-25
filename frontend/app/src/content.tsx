@@ -17,12 +17,12 @@ export default {
 
   // Menu bar
   menu: {
-    dashboard: "Dashboard",
+    dashboard: "Portfolio",
     borrow: "Borrow",
     earn: "Earn",
     wrap: "Wrap",
     buy: "Buy",
-    stats: "Stats",
+    stats: "Dashboard",
   },
 
   accountButton: {

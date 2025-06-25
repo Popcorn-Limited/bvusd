@@ -91,8 +91,6 @@ export function StatsScreen() {
                     fontSize: 16,
                     color: activeTab === "transparency" ? "#fff" : "#aaa",
                     fontWeight: activeTab === "transparency" ? 600 : 400,
-                    borderBottom:
-                      activeTab === "transparency" ? "2px solid #fff" : "none",
                     paddingBottom: 4,
                     background: "transparent",
                     border: "none",
@@ -107,8 +105,6 @@ export function StatsScreen() {
                     fontSize: 16,
                     color: activeTab === "market" ? "#fff" : "#aaa",
                     fontWeight: activeTab === "market" ? 600 : 400,
-                    borderBottom:
-                      activeTab === "market" ? "2px solid #fff" : "none",
                     paddingBottom: 4,
                     background: "transparent",
                     border: "none",
@@ -141,7 +137,7 @@ export function StatsScreen() {
                         )} %`}
                     totalBacking={liquityStats.data.totalCollValue}
                     totalSupply={liquityStats.data.totalBoldSupply}
-                    price="1 $"
+                    price="$ 1.00"
                   />
                   <ChartsPanel data={liquityStats.data.historicalGlobalCR}/>
                   <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/>

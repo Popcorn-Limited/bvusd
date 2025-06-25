@@ -38,7 +38,9 @@ export function BackingTablePanel() {
         border: "1px solid var(--Neutral-100, #353945)",
         borderRadius: 16,
         padding: 24,
+        gap: "100px",
         width: '100%',
+        height: "284px",
       }}
     >
       {/* Header */}
@@ -47,10 +49,23 @@ export function BackingTablePanel() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          paddingBottom: '20px'
         }}
       >
-        <PanelHeader title="Backing" line={false}/>
-        <span style={{ color: '#aaa', fontSize: "16px" }}>Last update Jun 18</span>
+         <h3
+          style={{
+            color: "var(--Primary-White, #FFF)",
+            fontFamily: "KHTeka",
+            fontSize: "24px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "120%",
+          }}
+        >
+          Backing
+        </h3>
+        {/* <PanelHeader title="Backing" line={false}/> */}
+        <span style={{ color: '#aaa', fontSize: "16px" }}>Last updated: 18 June 2025</span>
       </div>
 
       {/* Table Header */}
@@ -58,18 +73,21 @@ export function BackingTablePanel() {
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-          padding: '12px 0',
+          padding: '10px',
+          gap: 10,
           borderBottom: '1px solid #333',
-          color: '#aaa',
-          fontSize: 12,
+          color: '#fff',
+          fontSize: 14,
+          fontFamily: "KHTeka",
+          fontWeight: "400",
           textTransform: 'uppercase',
         }}
       >
         <div></div>
-        <div>Name Provider</div>
-        <div>Name Provider</div>
-        <div>Name Provider</div>
-        <div>Name Provider</div>
+        <div>NAME PROVIDER</div>
+        <div>NAME PROVIDER</div>
+        <div>NAME PROVIDER</div>
+        <div>NAME PROVIDER</div>
       </div>
 
       {/* Table Rows */}
@@ -79,10 +97,13 @@ export function BackingTablePanel() {
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-            alignItems: 'center',
-            padding: '16px 0',
-            borderBottom: idx !== backingData.length - 1 ? '1px solid #222' : undefined,
+            padding: '12px',
+            gap: 16,
+            borderBottom: "1px solid #23262F",
             color: '#fff',
+            fontSize: 18,
+            fontFamily: "KHTeka",
+            fontWeight: "400",
           }}
         >
           {/* Icon + Label */}

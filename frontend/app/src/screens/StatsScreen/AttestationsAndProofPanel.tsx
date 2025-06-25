@@ -55,8 +55,8 @@ export function AttestationsAndProofPanel() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: 16,
-            padding: 24,
+            gap: 10,
+            padding: 12,
           }}
         >
           {attestationMonths.map((label, idx) => (
@@ -66,17 +66,19 @@ export function AttestationsAndProofPanel() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                padding: "12px 16px",
+                padding: "15px",
                 borderRadius: 12,
-                backgroundColor: "#1e1e24",
+                backgroundColor: "#23262F",
                 color: "#fff",
-                border: "none",
-                fontSize: 14,
+                border: "1px solid #353945",
+                fontSize: 20,
+                fontWeight: 400,
+                fontFamily: "KHTeka",
                 cursor: "pointer",
               }}
             >
               {label}
-              <span style={{ color: "#aaa", fontSize: 14 }}>↗</span>
+              <span style={{ color: "#f6ae3f", fontSize: 19 }}>↗</span>
             </button>
           ))}
         </div>
@@ -103,37 +105,44 @@ export function AttestationsAndProofPanel() {
             width: "100%",
             alignItems: "center",
             padding: 10,
+            borderBottom: "1px solid #23262F"
           }}
         >
           <div
             style={{
               width: "33%",
-              fontWeight: 500,
+              fontWeight: 400,
+              fontSize: 18,
+              paddingLeft: 12,
+              fontFamily: "KHTeka",
               color: "#fff",
-              textAlign: "center",
             }}
           >
-            18 June 2025
+            18 Jun 2025
           </div>
           <div
             style={{
               width: "33%",
-              fontWeight: 500,
+              fontWeight: 400,
+              fontFamily: "KHTeka",
+              fontSize: 14,
               color: "#fff",
               textAlign: "center",
             }}
           >
-            Overcollateralized
+            OVERCOLLATERALIZED
           </div>
           <div
             style={{
               width: "33%",
-              fontWeight: 500,
+              fontWeight: 400,
+              fontSize: 14,
+              fontFamily: "KHTeka",
               color: "#fff",
               textAlign: "center",
             }}
           >
-            Delta-Neutral
+            DELTA-NEUTRAL
           </div>
         </div>
         <div
@@ -154,8 +163,9 @@ export function AttestationsAndProofPanel() {
           <div
             style={{
               width: "95%",
-              backgroundColor: "#1e1e24",
-              padding: 5,
+              backgroundColor: "#23262F",
+              border: "1px solid #353945",
+              padding: 20,
               marginTop: 20,
               margin: "0 auto",
               borderRadius: 12,
@@ -165,6 +175,7 @@ export function AttestationsAndProofPanel() {
               gap: 12,
               color: "#fff",
               fontSize: 16,
+              fontFamily: "KHTeka",
               textAlign: "center",
             }}
           >
@@ -174,9 +185,11 @@ export function AttestationsAndProofPanel() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontWeight: 500,
+                    justifyContent: "left",
+                    alignItems: "left",
+                    fontWeight: 400,
+                    fontFamily: "KHTeka",
+                    fontSize: 18,
                     height: 40, // optional: keeps rows consistent
                   }}
                 >
@@ -185,9 +198,11 @@ export function AttestationsAndProofPanel() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontWeight: 500,
+                    justifyContent: "left",
+                    alignItems: "left",
+                    fontWeight: 400,
+                    fontFamily: "KHTeka",
+                    fontSize: 14,
                     height: 40,
                   }}
                 >
@@ -199,9 +214,11 @@ export function AttestationsAndProofPanel() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontWeight: 500,
+                    justifyContent: "left",
+                    alignItems: "left",
+                    fontWeight: 400,
+                    fontFamily: "KHTeka",
+                    fontSize: 14,
                     height: 40,
                   }}
                 >

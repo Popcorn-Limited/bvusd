@@ -19,7 +19,7 @@ type SupplyChartProps = {
 
 export default function SupplyChart({ data }: SupplyChartProps) {
   const day_supply = [...data].reverse().map((item) => ({
-    day: item.day.split(" ")[0],
+    day: item.day.split(" ")[0].slice(0,7),
     supply: parseFloat(fmtnum(Number(item.supply), "2z").replace(/,/g, "")),
     holders: parseFloat(fmtnum(Number(item.holders), "2z").replace(/,/g, "")),
   }));

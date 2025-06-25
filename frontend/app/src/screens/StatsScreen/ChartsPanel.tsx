@@ -43,7 +43,7 @@ type CRProps = {
 // TODO add USDC - USDT data
 export function ChartsPanel({ data, backing }: CRProps) {
   const day_CR = [...data].reverse().map((item) => ({
-    day: item.day.split(" ")[0],
+    day: item.day.split(" ")[0].slice(0,7),
     CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
   }));
 
@@ -140,7 +140,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
               tickLine={false}
               dataKey="day"
               stroke="#777"
-              tick={{ fontSize: 10, fill: "#aaa" }}
+              tick={{ fontSize: 10, fill: "#fff" }}
             />
             <YAxis
               axisLine={false}
@@ -148,7 +148,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
               domain={[150, "auto"]}
               stroke="#777"
               tickFormatter={(value) => `${value.toFixed(0)}%`}
-              tick={{ fontSize: 10, fill: "#aaa" }}
+              tick={{ fontSize: 10, fill: "#fff" }}
             />
             <Tooltip />
             <Line

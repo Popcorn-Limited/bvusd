@@ -8,10 +8,11 @@ interface PanelHeaderProps {
 export function PanelHeader({ title, line }: PanelHeaderProps) {
   return (
     <>
-      <div style={{ padding: "15px" }}>
+      <div style={{ paddingTop: "15px", paddingBottom: "15px", paddingLeft: "25px" }}>
         <h3
           style={{
             color: "var(--Primary-White, #FFF)",
+            fontFamily: "KHTeka",
             fontSize: "24px",
             fontStyle: "normal",
             fontWeight: "400",

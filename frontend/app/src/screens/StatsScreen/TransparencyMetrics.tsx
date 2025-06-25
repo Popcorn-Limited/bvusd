@@ -29,10 +29,10 @@ export function TransparencyMetrics({
       }}
     >
       <MetricBox label="Protocol Backing Ratio" value={protocolBackingRatio} />
-      <MetricBox label="Total Backing (+ Reserve Fund)" value={totalBacking} />
+      <MetricBox label="Total Backing (+ Reserve Fund)" value={`$ ${fmtnum(Number(totalBacking), "2z")}`} />
       <MetricBox
         label="bvUSD Total Supply"
-        value={`${fmtnum(Number(totalSupply), "2z")} bvUSD`}
+        value={`$ ${fmtnum(Number(totalSupply), "2z")}`}
       />
       <MetricBox label="bvUSD Price" value={price} />
     </div>
@@ -46,8 +46,9 @@ function MetricBox({ label, value }: { label: string; value: string }) {
         flex: "1 0 0",
         border: "1px solid #23262F",
         borderRadius: 16,
-        padding: "10px",
+        padding: "20px",
         display: "flex",
+        gap: 24,
         flexDirection: "column",
         background: "rgba(20, 20, 22, 0.40)"
       }}
@@ -55,9 +56,9 @@ function MetricBox({ label, value }: { label: string; value: string }) {
       <span
         style={{
           fontSize: 14,
-          color: "#aaa",
-          marginBottom: 8,
-          gap: "8px"
+          fontWeight: 400,
+          fontFamily: "KHTeka",
+          color: "#fff",
         }}
       >
         {label}
@@ -65,7 +66,8 @@ function MetricBox({ label, value }: { label: string; value: string }) {
       <span
         style={{
           fontSize: 30,
-          fontWeight: 600,
+          fontFamily: "KHTeka",
+          fontWeight: 400,
         }}
       >
         {value}
