@@ -42,10 +42,15 @@ type CRProps = {
 // TODO - build query in dune of collaterals backing amount over time
 // TODO add USDC - USDT data
 export function ChartsPanel({ data, backing }: CRProps) {
-  const day_CR = [...data].reverse().map((item) => ({
-    day: item.day.split(" ")[0].slice(0,7),
-    CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
-  }));
+  const day_CR = [...data]
+    .reverse()
+    .filter((item, index) => {
+      return index === 0|| index % 15 === 0;
+    })
+    .map((item) => ({
+      day: item.day.split(" ")[0].slice(0, 7),
+      CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
+    }));
 
   // const backingData = backing.map(b => ({
   //   collateralSymbol: b.collateralSymbol,
@@ -61,6 +66,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
         alignItems: "flex-start",
         flexDirection: "row",
         gap: "24px",
+        fontFamily: "KHTeka",
       }}
     >
       {/* Left Card: System Backing */}
@@ -74,24 +80,25 @@ export function ChartsPanel({ data, backing }: CRProps) {
           flexShrink: 0,
           background: "transparent",
           borderRadius: "16px",
-          border: "1px solid var(--Neutral-100, #353945)"
+          overflow: "hidden",
+          border: "1px solid var(--Neutral-100, #353945)",
         }}
       >
-        <PanelHeader title="System Backing" line={true}/>
-        <ResponsiveContainer width="100%" height={360}>
+        <PanelHeader title="System Backing" line={true} />
+        <ResponsiveContainer width="98%" height={360}>
           <AreaChart data={systemBackingData}>
             <XAxis
               axisLine={false}
               tickLine={false}
               dataKey="date"
-              tick={{ fontSize: 10, fill: "#aaa" }}
+              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
               stroke="#777"
             />
             <YAxis
               axisLine={false}
               tickLine={false}
               stroke="#777"
-              tick={{ fontSize: 10, fill: "#aaa" }}
+              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
               tickFormatter={(v) => `${v}M`}
             />
             <Tooltip />
@@ -121,7 +128,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
       {/* Right Card: Collateral Ratio Historical */}
       <div
         style={{
-         flex: 1,
+          flex: 1,
           display: "flex",
           flexDirection: "column",
           width: "100%",
@@ -129,18 +136,24 @@ export function ChartsPanel({ data, backing }: CRProps) {
           flexShrink: 0,
           background: "transparent",
           borderRadius: "16px",
-          border: "1px solid var(--Neutral-100, #353945)"
+          border: "1px solid var(--Neutral-100, #353945)",
         }}
       >
-        <PanelHeader title="Collateral Ratio" line={true}/>
-        <ResponsiveContainer width="100%" height={360}>
+        <PanelHeader title="Collateral Ratio" line={true} />
+        <ResponsiveContainer
+          width="98%"
+          height={360}
+          style={{ padding: 1, overflow: "hidden", position: "relative" }}
+        >
           <LineChart data={day_CR}>
             <XAxis
               axisLine={false}
               tickLine={false}
               dataKey="day"
-              stroke="#777"
-              tick={{ fontSize: 10, fill: "#fff" }}
+              stroke="#fff"
+              minTickGap={30}
+              style={{marginRight: 15}}
+              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
             <YAxis
               axisLine={false}
@@ -148,7 +161,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
               domain={[150, "auto"]}
               stroke="#777"
               tickFormatter={(value) => `${value.toFixed(0)}%`}
-              tick={{ fontSize: 10, fill: "#fff" }}
+              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
             <Tooltip />
             <Line

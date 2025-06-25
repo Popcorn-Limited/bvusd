@@ -80,6 +80,7 @@ export function StatsScreen() {
               <div
                 style={{
                   display: "flex",
+                  padding: "0px 32px",
                   gap: 32,
                   marginBottom: 24,
                   justifyContent: "center",
