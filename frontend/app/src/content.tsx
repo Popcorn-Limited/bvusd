@@ -17,7 +17,7 @@ export default {
 
   // Menu bar
   menu: {
-    dashboard: "Dashboard",
+    portfolio: "Portfolio",
     borrow: "Borrow",
     earn: "Earn",
     wrap: "Wrap",
@@ -404,12 +404,32 @@ export default {
 
   // Buy screen
   buyScreen: {
+    headline: (tokensIcons: N,boldIcon: N) => (
+      <>
+        Buy {boldIcon} bvUSD with {tokensIcons} stablecoins
+      </>
+    ),
+    subheading: (button: N, boldIcon: N) => (
+      <>
+        {button} your {boldIcon} bvUSD for 10%+ APY on the earn page.
+      </>
+    ),
     sellPanel: {
       label: "You sell bvUSD",
     },
     buyPanel: {
       label: "You buy bvUSD",
     },
+  },
+
+  // Vault screen
+  vaultScreen: {
+    headline: "Earn best-in-class yield on your stablecoins",
+    subheading: (icons: N) => (
+      <>
+       Managed by {icons}
+      </>
+    ),
   },
 
   // Stake screen

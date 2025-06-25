@@ -19,7 +19,7 @@ import { useState } from "react";
 
 type ConvertMode = "buy" | "sell";
 
-export const STABLE_SYMBOLS = ["USDT", "USDC"] as const;
+export const STABLE_SYMBOLS = ["USDC", "USDT"] as const;
 
 export function PanelConvert() {
   const account = useAccount();

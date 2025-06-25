@@ -90,7 +90,7 @@ export function VaultPositionSummary({
           })}
         >
           <TokenIcon
-            symbol={collToken.symbol}
+            symbol="sbvUSD"
             size={34}
           />
         </div>

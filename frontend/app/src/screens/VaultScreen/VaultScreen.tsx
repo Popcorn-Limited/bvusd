@@ -17,6 +17,7 @@ import { getProtocolContract } from "@/src/contracts";
 import { useReadContract } from "wagmi";
 import { RequestBalance } from "@/src/types";
 import { dnum18 } from "@/src/dnum-utils";
+import { zeroAddress } from "viem";
 
 
 export function VaultPoolScreen() {
@@ -28,7 +29,7 @@ export function VaultPoolScreen() {
     address: getProtocolContract("Vault").address,
     abi: getProtocolContract("Vault").abi,
     functionName: "getRequestBalance",
-    args: [account.address as Address],
+    args: [account.address ?? zeroAddress],
     query: {
       select: (data) => ({
         pendingShares: dnum18(data.pendingShares),
@@ -54,68 +55,90 @@ export function VaultPoolScreen() {
   return (
     <Screen
       ready={loadingState === "success"}
-      heading={
-        <div
-          className={css({
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-          })}
-        >
-          <ScreenCard
-            mode={match(loadingState)
-              .returnType<"ready" | "loading">()
-              .with("success", () => "ready")
-              .with("loading", () => "loading")
-              .exhaustive()}
-            finalHeight={140}
-          >
-            {loadingState === "success"
-              ? (
-                <VaultPositionSummary
-                  earnPosition={vaultPosition.data}
-                  requestBalance={requestBalance.data as RequestBalance}
+      heading={{
+        title: content.vaultScreen.headline,
+        subtitle: (
+          <HFlex gap={16}>
+            {content.vaultScreen.subheading(
+              <HFlex gap={16}>
+                <img
+                  src="/investors/gsr.png"
+                  alt="Gsr"
+                  className={css({
+                    width: 72,
+                    height: 18
+                  })}
                 />
-              )
-              : (
-                <>
+                <img
+                  src="/investors/auros.png"
+                  alt="Auros"
+                  className={css({
+                    width: 92,
+                    height: 18
+                  })}
+                />
+              </HFlex>
+            )}
+          </HFlex>
+        ),
+      }}
+    >
+      <div
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+        })}
+      >
+        <ScreenCard
+          mode={match(loadingState)
+            .returnType<"ready" | "loading">()
+            .with("success", () => "ready")
+            .with("loading", () => "loading")
+            .exhaustive()}
+          finalHeight={140}
+        >
+          {loadingState === "success"
+            ? (
+              <VaultPositionSummary
+                earnPosition={vaultPosition.data}
+                requestBalance={requestBalance.data as RequestBalance}
+              />
+            )
+            : (
+              <>
+                <div
+                  className={css({
+                    position: "absolute",
+                    top: 16,
+                    left: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    textTransform: "uppercase",
+                    userSelect: "none",
+                    fontSize: 12,
+                  })}
+                >
                   <div
                     className={css({
-                      position: "absolute",
-                      top: 16,
-                      left: 16,
                       display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      textTransform: "uppercase",
-                      userSelect: "none",
-                      fontSize: 12,
                     })}
                   >
-                    <div
-                      className={css({
-                        display: "flex",
-                      })}
-                    >
-                      <IconEarn size={16} />
-                    </div>
-                    <div>
-                      Earn Pool
-                    </div>
+                    <IconEarn size={16} />
                   </div>
-                  <HFlex gap={8}>
-                    Fetching Vault…
-                    <Spinner size={18} />
-                  </HFlex>
-                </>
-              )}
-          </ScreenCard>
-        </div>
-      }
-      className={css({
-        position: "relative",
-      })}
-    >
+                  <div>
+                    Earn Pool
+                  </div>
+                </div>
+                <HFlex gap={8}>
+                  Fetching Vault…
+                  <Spinner size={18} />
+                </HFlex>
+              </>
+            )}
+        </ScreenCard>
+      </div>
       {tabsTransition((style, item) => (
         item === "success" && (
           <a.div
