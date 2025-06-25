@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   AreaChart,
   Area,
@@ -9,19 +9,23 @@ import {
   LineChart,
   Line,
   Legend,
-} from 'recharts';
-import { PanelHeader } from './PanelTitle';
-import { SmallLegend } from './SmallChartLegend';
-import { fmtnum } from '@/src/formatting';
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip as PieTooltip,
+} from "recharts";
+import { PanelHeader } from "./PanelTitle";
+import { SmallLegend } from "./SmallChartLegend";
+import { fmtnum } from "@/src/formatting";
 
 const systemBackingData = [
-  { date: '1/25', USDC: 5, BTC: 7, ETH: 3 },
-  { date: '2/25', USDC: 10, BTC: 13, ETH: 6 },
-  { date: '3/25', USDC: 9, BTC: 11, ETH: 8 },
-  { date: '4/25', USDC: 9, BTC: 10, ETH: 5 },
-  { date: '5/25', USDC: 8, BTC: 9, ETH: 4 },
-  { date: '6/25', USDC: 7, BTC: 8, ETH: 3 },
-  { date: '7/25', USDC: 6, BTC: 7, ETH: 2 },
+  { date: "1/25", USDC: 5, BTC: 7, ETH: 3 },
+  { date: "2/25", USDC: 10, BTC: 13, ETH: 6 },
+  { date: "3/25", USDC: 9, BTC: 11, ETH: 8 },
+  { date: "4/25", USDC: 9, BTC: 10, ETH: 5 },
+  { date: "5/25", USDC: 8, BTC: 9, ETH: 4 },
+  { date: "6/25", USDC: 7, BTC: 8, ETH: 3 },
+  { date: "7/25", USDC: 6, BTC: 7, ETH: 2 },
 ];
 
 type CRProps = {
@@ -29,43 +33,67 @@ type CRProps = {
     day: string;
     collateral_ratio: string;
   }[];
+  backing?: {
+    collateralSymbol: string;
+    total_amount: string;
+  }[];
 };
 
-export function ChartsPanel({ data }: CRProps) {
+// TODO - build query in dune of collaterals backing amount over time
+// TODO add USDC - USDT data
+export function ChartsPanel({ data, backing }: CRProps) {
   const day_CR = [...data].reverse().map((item) => ({
     day: item.day.split(" ")[0],
     CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
   }));
 
+  // const backingData = backing.map(b => ({
+  //   collateralSymbol: b.collateralSymbol,
+  //   total_amount: Number(b.total_amount)
+  // }));
+
+  const pieChartColors = ["#F6B73C", "#C9C9C9", "#4BA4F0", "#DB3C4B"];
+
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 32,
-        width: '100%',
-        padding: 24,
-        backgroundColor: '#000',
-        borderRadius: 20,
-        border: '1px solid #222',
+        display: "flex",
+        alignItems: "flex-start",
+        flexDirection: "row",
+        gap: "24px",
       }}
     >
       {/* Left Card: System Backing */}
       <div
         style={{
           flex: 1,
-          border: '1px solid #444',
-          borderRadius: 16,
-          padding: 24,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "460px",
+          flexShrink: 0,
+          background: "transparent",
+          borderRadius: "16px",
+          border: "1px solid var(--Neutral-100, #353945)"
         }}
       >
-        <PanelHeader title="System Backing" />
+        <PanelHeader title="System Backing" line={true}/>
         <ResponsiveContainer width="100%" height={360}>
           <AreaChart data={systemBackingData}>
-            <XAxis axisLine={false} tickLine={false} dataKey="date" tick={{ fontSize: 10, fill: '#aaa' }} stroke="#777" />
-            <YAxis axisLine={false} tickLine={false} stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }} tickFormatter={(v) => `${v}M`} />
+            <XAxis
+              axisLine={false}
+              tickLine={false}
+              dataKey="date"
+              tick={{ fontSize: 10, fill: "#aaa" }}
+              stroke="#777"
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              stroke="#777"
+              tick={{ fontSize: 10, fill: "#aaa" }}
+              tickFormatter={(v) => `${v}M`}
+            />
             <Tooltip />
             <Legend content={SmallLegend} />
             <Area
@@ -93,19 +121,35 @@ export function ChartsPanel({ data }: CRProps) {
       {/* Right Card: Collateral Ratio Historical */}
       <div
         style={{
-          flex: 1,
-          border: '1px solid #444',
-          borderRadius: 16,
-          padding: 24,
-          display: 'flex',
-          flexDirection: 'column',
+         flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "460px",
+          flexShrink: 0,
+          background: "transparent",
+          borderRadius: "16px",
+          border: "1px solid var(--Neutral-100, #353945)"
         }}
       >
-        <PanelHeader title="Collateral Ratio" />
+        <PanelHeader title="Collateral Ratio" line={true}/>
         <ResponsiveContainer width="100%" height={360}>
           <LineChart data={day_CR}>
-            <XAxis axisLine={false} tickLine={false} dataKey="day" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }} />
-            <YAxis axisLine={false} tickLine={false} domain={[150, "auto"]} stroke="#777" tickFormatter={(value) => `${value.toFixed(0)}%`} tick={{ fontSize: 10, fill: '#aaa' }} />
+            <XAxis
+              axisLine={false}
+              tickLine={false}
+              dataKey="day"
+              stroke="#777"
+              tick={{ fontSize: 10, fill: "#aaa" }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              domain={[150, "auto"]}
+              stroke="#777"
+              tickFormatter={(value) => `${value.toFixed(0)}%`}
+              tick={{ fontSize: 10, fill: "#aaa" }}
+            />
             <Tooltip />
             <Line
               type="monotone"

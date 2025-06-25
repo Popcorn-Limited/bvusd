@@ -1,6 +1,6 @@
 "use client";
 
-import { useLiquityStats } from "@/src/liquity-utils";
+import { getBranches, useLiquityStats } from "@/src/liquity-utils";
 import { TransparencyMetrics } from "./TransparencyMetrics";
 import { ChartsPanel } from "./ChartsPanel";
 import { VenueAndSupplyPanel } from "./VenueAndSupplyPanels";
@@ -16,6 +16,7 @@ import { HFlex, LoadingSurface } from "@liquity2/uikit";
 import { css } from "@/styled-system/css";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { fmtnum } from "@/src/formatting";
+import { COLLATERALS, USDT } from "@liquity2/uikit";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"transparency" | "market">(
@@ -121,12 +122,11 @@ export function StatsScreen() {
               {activeTab === "transparency" && (
                 <div
                   style={{
-                    padding: "32px 32px",
                     maxWidth: 1400,
                     margin: "0 auto",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 48,
+                    gap: "32px",
                   }}
                 >
                   <TransparencyMetrics

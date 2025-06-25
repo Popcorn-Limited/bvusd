@@ -19,12 +19,13 @@ export function TransparencyMetrics({
         width: "100%",
         display: "flex",
         flexDirection: "row",
-        gap: 32,
+        gap: "16px",
         padding: 24,
-        backgroundColor: "#000",
+        background: "rgba(20, 20, 22, 0.30)",
         borderRadius: 16,
         border: "1px solid #333",
         color: "#fff",
+        boxShadow: "0px 3px 8px 0px rgba(53, 57, 69, 0.40), 0px 0px 2px 0px #353945",
       }}
     >
       <MetricBox label="Protocol Backing Ratio" value={protocolBackingRatio} />
@@ -42,13 +43,13 @@ function MetricBox({ label, value }: { label: string; value: string }) {
   return (
     <div
       style={{
-        flex: 1,
-        border: "1px solid #333",
+        flex: "1 0 0",
+        border: "1px solid #23262F",
         borderRadius: 16,
-        padding: 24,
+        padding: "10px",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        background: "rgba(20, 20, 22, 0.40)"
       }}
     >
       <span
@@ -56,13 +57,14 @@ function MetricBox({ label, value }: { label: string; value: string }) {
           fontSize: 14,
           color: "#aaa",
           marginBottom: 8,
+          gap: "8px"
         }}
       >
         {label}
       </span>
       <span
         style={{
-          fontSize: 24,
+          fontSize: 30,
           fontWeight: 600,
         }}
       >

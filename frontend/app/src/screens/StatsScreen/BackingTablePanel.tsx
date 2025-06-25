@@ -34,8 +34,8 @@ export function BackingTablePanel() {
   return (
     <div
       style={{
-        backgroundColor: '#000',
-        border: '1px solid #222',
+        background: "transparent",
+        border: "1px solid var(--Neutral-100, #353945)",
         borderRadius: 16,
         padding: 24,
         width: '100%',
@@ -47,11 +47,10 @@ export function BackingTablePanel() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: 24,
         }}
       >
-        <PanelHeader title="Backing" />
-        <span style={{ color: '#aaa', fontSize: 12 }}>Last update Jun 18</span>
+        <PanelHeader title="Backing" line={false}/>
+        <span style={{ color: '#aaa', fontSize: "16px" }}>Last update Jun 18</span>
       </div>
 
       {/* Table Header */}

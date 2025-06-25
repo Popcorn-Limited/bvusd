@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   PieChart,
   Pie,
@@ -10,15 +10,15 @@ import {
   XAxis,
   YAxis,
   Tooltip as LineTooltip,
-} from 'recharts';
-import { PanelHeader } from './PanelTitle';
-import { fmtnum } from '@/src/formatting';
+} from "recharts";
+import { PanelHeader } from "./PanelTitle";
+import { fmtnum } from "@/src/formatting";
 
 const pieData = [
-  { name: 'A', value: 40, color: '#F6B73C' },
-  { name: 'B', value: 30, color: '#C9C9C9' },
-  { name: 'C', value: 25, color: '#4BA4F0' },
-  { name: 'D', value: 5, color: '#DB3C4B' },
+  { name: "A", value: 40, color: "#F6B73C" },
+  { name: "B", value: 30, color: "#C9C9C9" },
+  { name: "C", value: 25, color: "#4BA4F0" },
+  { name: "D", value: 5, color: "#DB3C4B" },
 ];
 
 type SupplyChartProps = {
@@ -28,7 +28,6 @@ type SupplyChartProps = {
     supply: string;
   }[];
 };
-
 
 export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
   const day_supply = [...data].reverse().map((item) => ({
@@ -40,28 +39,26 @@ export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 32,
-        width: '100%',
-        padding: 24,
-        backgroundColor: '#000', // shared black background
-        borderRadius: 20,
-        border: '1px solid #222',
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "24px",
       }}
     >
       {/* Left Card: Venue Breakdown */}
       <div
         style={{
           flex: 1,
-          border: '1px solid #444',
-          borderRadius: 16,
-          padding: 24,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "460px",
+          flexShrink: 0,
+          background: "transparent",
+          borderRadius: "16px",
+          border: "1px solid var(--Neutral-100, #353945)",
         }}
       >
-        <PanelHeader title="Venue Breakdown" />
+        <PanelHeader title="Venue Breakdown" line={true} />
         <ResponsiveContainer width="100%" height={360}>
           <PieChart>
             <Pie
@@ -81,18 +78,29 @@ export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
           </PieChart>
         </ResponsiveContainer>
 
-        <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "38px",
+            justifyContent: "center",
+            padding: "0 4px",
+            alignItems: "flex-end",
+          }}
+        >
           {pieData.map((entry, idx) => (
-            <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div
+              key={idx}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
               <div
                 style={{
                   width: 10,
                   height: 10,
-                  borderRadius: '50%',
+                  borderRadius: "50%",
                   backgroundColor: entry.color,
                 }}
               />
-              <span style={{ color: '#aaa', fontSize: 12 }}>XXXXX</span>
+              <span style={{ color: "#aaa", fontSize: 12 }}>XXXXX</span>
             </div>
           ))}
         </div>
@@ -102,23 +110,38 @@ export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
       <div
         style={{
           flex: 1,
-          border: '1px solid #444',
-          borderRadius: 16,
-          padding: 24,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "460px",
+          flexShrink: 0,
+          background: "transparent",
+          borderRadius: "16px",
+          border: "1px solid var(--Neutral-100, #353945)",
         }}
       >
-        <PanelHeader title="bvUSD Supply" />
+        <PanelHeader title="bvUSD Supply" line={true}/>
         <ResponsiveContainer width="100%" height={360}>
           <LineChart data={day_supply}>
-            <XAxis axisLine={false} tickLine={false} dataKey="day" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }}/>
-            <YAxis axisLine={false} tickLine={false} stroke="#777"  tickFormatter={(value) => {
-                  if (value >= 1_000_000)
-                    return `${(value / 1_000_000).toFixed(1)}M`;
-                  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
-                  return value.toString();
-                }} tick={{ fontSize: 10, fill: '#aaa' }}/>
+            <XAxis
+              axisLine={false}
+              tickLine={false}
+              dataKey="day"
+              stroke="#777"
+              tick={{ fontSize: 10, fill: "#aaa" }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              stroke="#777"
+              tickFormatter={(value) => {
+                if (value >= 1_000_000)
+                  return `${(value / 1_000_000).toFixed(1)}M`;
+                if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+                return value.toString();
+              }}
+              tick={{ fontSize: 10, fill: "#aaa" }}
+            />
             <LineTooltip />
             <Line
               type="monotone"
