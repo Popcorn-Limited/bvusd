@@ -3,9 +3,9 @@ export function CheckIcon() {
     <div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="21"
-        height="20"
-        viewBox="0 0 21 20"
+        width="25"
+        height="24"
+        viewBox="0 0 25 24"
         fill="none"
       >
         <path
@@ -30,7 +30,7 @@ export function NoIcon() {
     <div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="25"
+        width="32"
         height="24"
         viewBox="0 0 25 24"
         fill="none"
