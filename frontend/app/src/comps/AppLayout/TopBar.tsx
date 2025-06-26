@@ -26,7 +26,7 @@ export function TopBar() {
         position: "relative",
         zIndex: 1,
         height: 72,
-        padding: "0 32px"
+        padding: "0 32px",
       })}
     >
       <div
@@ -42,8 +42,9 @@ export function TopBar() {
           padding: "16px 24px",
           fontSize: 16,
           fontWeight: 500,
-          background: "fieldSurface",
-          border: "1px solid token(colors.fieldBorder)",
+          background: "#141416",
+          boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+          border: "1px solid var(--Neutral-100, #353945)",
           borderRadius: 16,
         })}
       >
