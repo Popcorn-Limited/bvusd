@@ -20,7 +20,7 @@ import { CustomTooltip } from "./CustomTooltip";
 import { fmtnum } from "@/src/formatting";
 
 const systemBackingData = [
-  { date: "1/25", USDC: 5, BTC: 7, ETH: 3 },
+  { date: "", USDC: 5, BTC: 7, ETH: 3 },
   { date: "2/25", USDC: 10, BTC: 13, ETH: 6 },
   { date: "3/25", USDC: 9, BTC: 11, ETH: 8 },
   { date: "4/25", USDC: 9, BTC: 10, ETH: 5 },
@@ -50,7 +50,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
   const day_CR = [...data]
     .reverse()
     .filter((item, index) => {
-      return index === 0 || index % 15 === 0;
+      return index === 1 || index % 15 === 0;
     })
     .map((item) => ({
       day: item.day.split(" ")[0].slice(0, 7),
@@ -80,7 +80,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          width: "100%",
+          width: "676px",
           height: "460px",
           flexShrink: 0,
           background: "transparent",
@@ -90,8 +90,16 @@ export function ChartsPanel({ data, backing }: CRProps) {
         }}
       >
         <PanelHeader title="System Backing" line={true} />
-        <ResponsiveContainer width="98%" height={360}>
-          <AreaChart data={systemBackingData}>
+        <ResponsiveContainer
+          width="100%"
+          height={360}
+          style={{
+            padding: "0 24px",
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
+          <AreaChart data={systemBackingData} margin={{ left: -20 }}>
             <XAxis
               axisLine={false}
               tickLine={false}
@@ -100,6 +108,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
               stroke="#777"
             />
             <YAxis
+              orientation="left"
               axisLine={false}
               tickLine={false}
               stroke="#777"
@@ -136,7 +145,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          width: "100%",
+          width: "676px",
           height: "460px",
           flexShrink: 0,
           background: "transparent",
@@ -146,11 +155,15 @@ export function ChartsPanel({ data, backing }: CRProps) {
       >
         <PanelHeader title="Collateral Ratio" line={true} />
         <ResponsiveContainer
-          width="98%"
-          height={360}
-          style={{ padding: 1, overflow: "hidden", position: "relative" }}
+          width="100%"
+          height={333}
+          style={{
+            padding: "0 24px",
+            overflow: "hidden",
+            position: "relative",
+          }}
         >
-          <LineChart data={day_CR}>
+          <AreaChart data={day_CR} margin={{ left: -20 }}>
             <XAxis
               axisLine={false}
               tickLine={false}
@@ -168,15 +181,14 @@ export function ChartsPanel({ data, backing }: CRProps) {
               tickFormatter={(value) => displayCR(value)}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
-            <Tooltip content={<CustomTooltip transformValue={displayCR}/>} />
-            <Line
+            <Tooltip content={<CustomTooltip transformValue={displayCR} />} />
+            <Area
               type="monotone"
               dataKey="CR"
               stroke="#FFB11B"
-              strokeWidth={2}
-              dot={false}
+              fill="rgba(255, 177, 27, 0.2)"
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

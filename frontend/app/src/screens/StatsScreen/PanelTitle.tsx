@@ -28,7 +28,7 @@ export function PanelHeader({ title, line }: PanelHeaderProps) {
             width: "100%",
             height: 1,
             background: "#353945",
-            marginBottom: "16px",
+            marginBottom: "24px",
           }}
         />
       )}
