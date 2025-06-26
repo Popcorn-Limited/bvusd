@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { PanelHeader } from "./PanelTitle";
 import { fmtnum } from "@/src/formatting";
+import { CustomTooltip } from "./CustomTooltip";
 
 const pieData = [
   { name: "A", value: 40, color: "#F6B73C" },
@@ -29,14 +30,23 @@ type SupplyChartProps = {
   }[];
 };
 
+function displaySupply(supply: number): string {
+  if (supply >= 1_000_000) return `${(supply / 1_000_000).toFixed(1)}M`;
+  if (supply >= 1_000) return `${(supply / 1_000).toFixed(1)}K`;
+  return supply.toString();
+}
+
 export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
-  const day_supply = [...data].reverse().filter((item, index) => {
+  const day_supply = [...data]
+    .reverse()
+    .filter((item, index) => {
       return index === 0 || index % 5 === 0;
-    }).map((item) => ({
-    day: item.day.split(" ")[0].slice(0,7),
-    supply: parseFloat(fmtnum(Number(item.supply), "2z").replace(/,/g, "")),
-    holders: parseFloat(fmtnum(Number(item.holders), "2z").replace(/,/g, "")),
-  }));
+    })
+    .map((item) => ({
+      day: item.day.split(" ")[0].slice(0, 7),
+      supply: parseFloat(fmtnum(Number(item.supply), "2z").replace(/,/g, "")),
+      holders: parseFloat(fmtnum(Number(item.holders), "2z").replace(/,/g, "")),
+    }));
 
   return (
     <div
@@ -70,15 +80,13 @@ export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
               innerRadius={60}
               outerRadius={120}
               stroke="none"
-              label={({ percent }) =>
-              `${(percent * 100).toFixed(0)}%`}
+              label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
               labelLine={false}
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <PieTooltip />
           </PieChart>
         </ResponsiveContainer>
 
@@ -123,24 +131,26 @@ export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
           background: "transparent",
           borderRadius: "16px",
           border: "1px solid var(--Neutral-100, #353945)",
-                          fontFamily: "KHTeka",
-
+          fontFamily: "KHTeka",
         }}
       >
-        <PanelHeader title="bvUSD Supply" line={true}/>
+        <PanelHeader title="bvUSD Supply" line={true} />
         <ResponsiveContainer
           width="98%"
           height={360}
           style={{ padding: 1, overflow: "hidden", position: "relative" }}
         >
-          <LineChart data={day_supply} margin={{ top: 5, right: 5, bottom: 0, left: 0 }}>
+          <LineChart
+            data={day_supply}
+            margin={{ top: 5, right: 5, bottom: 0, left: 0 }}
+          >
             <XAxis
               axisLine={false}
               tickLine={false}
               dataKey="day"
               stroke="#fff"
               minTickGap={30}
-              style={{marginRight: 15}}
+              style={{ marginRight: 15 }}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
             <YAxis
@@ -148,14 +158,13 @@ export function VenueAndSupplyPanel({ data }: SupplyChartProps) {
               tickLine={false}
               stroke="#fff"
               tickFormatter={(value) => {
-                if (value >= 1_000_000)
-                  return `${(value / 1_000_000).toFixed(1)}M`;
-                if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
-                return value.toString();
+                return displaySupply(value);
               }}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
-            <LineTooltip />
+            <LineTooltip
+              content={<CustomTooltip transformValue={displaySupply} />}
+            />
             <Line
               type="monotone"
               dataKey="supply"

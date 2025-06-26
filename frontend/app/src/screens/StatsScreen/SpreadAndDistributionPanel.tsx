@@ -54,7 +54,7 @@ export function SpreadAndDistributionPanel() {
           padding: 24,
         }}
       >
-        <PanelHeader title="bvUSD Spread vs 3m Treasury" />
+        <PanelHeader title="bvUSD Spread vs 3m Treasury" line={true} />
         <ResponsiveContainer width="100%" height={360}>
           <LineChart data={spreadData}>
             <XAxis axisLine={false} tickLine={false} dataKey="x" stroke="#777" tick={{ fontSize: 10, fill: '#aaa' }}/>

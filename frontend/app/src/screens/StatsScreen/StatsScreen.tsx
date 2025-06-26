@@ -148,25 +148,27 @@ export function StatsScreen() {
               )}
 
               {activeTab === "market" && (
-                <div
-                  style={{
-                    padding: "32px 32px",
-                    maxWidth: 1400,
-                    margin: "0 auto",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 48,
-                  }}
-                >
-                  <MarketStatPanel />
-                  <MarketChartPanel />
-                  <FundingBreakdownPanel />
-                  <SpreadAndDistributionPanel />
-                </div>
+                "Coming soon..."
+                // <div
+                //   style={{
+                //     padding: "32px 32px",
+                //     maxWidth: 1400,
+                //     margin: "0 auto",
+                //     display: "flex",
+                //     flexDirection: "column",
+                //     gap: 48,
+                //   }}
+                // >
+                //   <MarketStatPanel />
+                //   <MarketChartPanel />
+                //   <FundingBreakdownPanel />
+                //   <SpreadAndDistributionPanel />
+                // </div>
               )}
             </div>
           );
-        })}
+        })
+}
     </StatsScreenCard>
     </div>
   );

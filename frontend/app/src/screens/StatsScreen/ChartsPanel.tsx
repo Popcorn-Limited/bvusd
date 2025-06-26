@@ -16,6 +16,7 @@ import {
 } from "recharts";
 import { PanelHeader } from "./PanelTitle";
 import { SmallLegend } from "./SmallChartLegend";
+import { CustomTooltip } from "./CustomTooltip";
 import { fmtnum } from "@/src/formatting";
 
 const systemBackingData = [
@@ -39,13 +40,17 @@ type CRProps = {
   }[];
 };
 
+function displayCR(cr: number): string {
+  return `${cr.toFixed(0)}%`;
+}
+
 // TODO - build query in dune of collaterals backing amount over time
 // TODO add USDC - USDT data
 export function ChartsPanel({ data, backing }: CRProps) {
   const day_CR = [...data]
     .reverse()
     .filter((item, index) => {
-      return index === 0|| index % 15 === 0;
+      return index === 0 || index % 15 === 0;
     })
     .map((item) => ({
       day: item.day.split(" ")[0].slice(0, 7),
@@ -101,7 +106,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
               tickFormatter={(v) => `${v}M`}
             />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Legend content={SmallLegend} />
             <Area
               type="monotone"
@@ -112,7 +117,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
             <Area
               type="monotone"
               dataKey="BTC"
-              stroke="#ffffff"
+              stroke="#DB3C4B"
               fill="rgba(255, 255, 255, 0.1)"
             />
             <Area
@@ -152,7 +157,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
               dataKey="day"
               stroke="#fff"
               minTickGap={30}
-              style={{marginRight: 15}}
+              style={{ marginRight: 15 }}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
             <YAxis
@@ -160,10 +165,10 @@ export function ChartsPanel({ data, backing }: CRProps) {
               tickLine={false}
               domain={[150, "auto"]}
               stroke="#777"
-              tickFormatter={(value) => `${value.toFixed(0)}%`}
+              tickFormatter={(value) => displayCR(value)}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip transformValue={displayCR}/>} />
             <Line
               type="monotone"
               dataKey="CR"
