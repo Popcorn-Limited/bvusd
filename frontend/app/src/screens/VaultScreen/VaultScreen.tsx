@@ -7,9 +7,8 @@ import content from "@/src/content";
 import { useVault, useVaultPosition } from "@/src/liquity-utils";
 import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
-import { Address, HFlex, IconEarn } from "@liquity2/uikit";
+import { Address, Button, HFlex, IconEarn } from "@liquity2/uikit";
 import { a, useTransition } from "@react-spring/web";
-import * as dn from "dnum";
 import { match } from "ts-pattern";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
 import { PanelVaultUpdate } from "./PanelVaultUpdate";
@@ -18,6 +17,7 @@ import { useReadContract } from "wagmi";
 import { RequestBalance } from "@/src/types";
 import { dnum18 } from "@/src/dnum-utils";
 import { zeroAddress } from "viem";
+import PointsPanel from "../PointScreen/PointsPanel";
 
 
 export function VaultPoolScreen() {
@@ -156,6 +156,7 @@ export function VaultPoolScreen() {
           </a.div>
         )
       ))}
+      <PointsPanel />
     </Screen>
   );
 }

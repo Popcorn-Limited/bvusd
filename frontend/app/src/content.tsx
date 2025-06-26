@@ -17,6 +17,7 @@ export default {
 
   // Menu bar
   menu: {
+    points: "Points",
     portfolio: "Portfolio",
     borrow: "Borrow",
     earn: "Earn",
