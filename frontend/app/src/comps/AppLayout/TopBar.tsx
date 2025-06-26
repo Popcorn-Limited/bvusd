@@ -26,6 +26,7 @@ export function TopBar() {
         position: "relative",
         zIndex: 1,
         height: 72,
+        padding: "0 32px"
       })}
     >
       <div
@@ -35,7 +36,7 @@ export function TopBar() {
           display: "flex",
           justifyContent: "space-between",
           gap: 16,
-          maxWidth: 1280,
+          maxWidth: 1440,
           height: "100%",
           margin: "0 auto",
           padding: "16px 24px",

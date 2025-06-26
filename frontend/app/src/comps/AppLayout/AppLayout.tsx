@@ -13,7 +13,7 @@ import { fmtnum } from "@/src/formatting";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
 import { usePrice } from "@/src/services/Prices";
 
-export const LAYOUT_WIDTH = 1092;
+export const LAYOUT_WIDTH = 1392;
 
 export function AppLayout({
   children,

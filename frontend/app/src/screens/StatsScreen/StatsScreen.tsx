@@ -39,6 +39,7 @@ export function StatsScreen() {
         flexDirection: "column",
         gap: 64,
         width: "100%",
+        padding: "0 12px"
       })}
     >
     <StatsScreenCard
@@ -80,7 +81,6 @@ export function StatsScreen() {
               <div
                 style={{
                   display: "flex",
-                  padding: "0px 32px",
                   gap: 32,
                   marginBottom: 24,
                   justifyContent: "center",
