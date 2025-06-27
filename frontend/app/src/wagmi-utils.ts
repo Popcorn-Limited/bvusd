@@ -76,25 +76,25 @@ export function useAccount():
   & {
     connect: () => void;
     ensName: string | undefined;
-    // safeStatus: Awaited<ReturnType<typeof getSafeStatus>> | null;
+    safeStatus: Awaited<ReturnType<typeof getSafeStatus>> | null;
   } {
   const account = useWagmiAccount();
   const connectKitModal = useConnectKitModal();
   const ensName = useEnsName({ address: account?.address });
 
-  // const safeStatus = useQuery({
-  //   queryKey: ["safeStatus", account.address],
-  //   queryFn: async () => {
-  //     if (!account.address) {
-  //       throw new Error("No account address");
-  //     }
-  //     const status = await getSafeStatus(account.address);
-  //     return status;
-  //   },
-  //   staleTime: Infinity,
-  //   refetchInterval: false, // only needed once
-  //   enabled: Boolean(account.address),
-  // });
+  const safeStatus = useQuery({
+    queryKey: ["safeStatus", account.address],
+    queryFn: async () => {
+      if (!account.address) {
+        throw new Error("No account address");
+      }
+      const status = await getSafeStatus(account.address);
+      return status;
+    },
+    staleTime: Infinity,
+    refetchInterval: false, // only needed once
+    enabled: Boolean(account.address),
+  });
 
   return {
     ...account,
@@ -102,6 +102,6 @@ export function useAccount():
       connectKitModal.setOpen(true);
     },
     ensName: ensName.data ?? undefined,
-    // safeStatus: safeStatus.data ?? null,
+    safeStatus: safeStatus.data ?? null,
   };
 }

@@ -17,11 +17,16 @@ import { css } from "@/styled-system/css";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { fmtnum } from "@/src/formatting";
 import { COLLATERALS, USDT } from "@liquity2/uikit";
+import { useAccount } from "wagmi";
+import { useRouter } from "next/router";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"transparency" | "market">(
     "transparency"
   );
+
+  const account = useAccount();
+  const router = useRouter();
 
   const liquityStats = useLiquityStats();
   const loadingState =
