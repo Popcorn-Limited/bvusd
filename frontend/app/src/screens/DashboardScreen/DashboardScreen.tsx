@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { getBranches, useLiquityStats } from "@/src/liquity-utils";
 import { TransparencyMetrics } from "./TransparencyMetrics";
@@ -18,7 +19,7 @@ import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { fmtnum } from "@/src/formatting";
 import { COLLATERALS, USDT } from "@liquity2/uikit";
 
-export function StatsScreen() {
+export function DashboardScreen() {
   const [activeTab, setActiveTab] = useState<"transparency" | "market">(
     "transparency"
   );

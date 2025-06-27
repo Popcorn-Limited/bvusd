@@ -20,7 +20,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 export default withBundleAnalyzer({
-  output: "export",
   reactStrictMode: false,
   images: { unoptimized: true },
   trailingSlash: flag(process.env.NEXT_TRAILING_SLASH),
@@ -32,6 +31,7 @@ export default withBundleAnalyzer({
   webpack: (config) => {
     // WalletConnect 2.0 imports these
     config.resolve.fallback = { fs: false, net: false, tls: false };
+    config.optimization.minimize = false;
     return config;
   },
   typescript: {
