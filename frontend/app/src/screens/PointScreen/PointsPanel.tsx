@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { css } from "@/styled-system/css";
 import { zeroAddress } from "viem";
 import { useRouter } from "next/navigation";
+import { fmtnum } from "@/src/formatting";
 
 const POINTS_CAMPAIGNS: { title: string, reward: number, href: string, id: string }[] = [
   {
@@ -25,10 +26,10 @@ const POINTS_CAMPAIGNS: { title: string, reward: number, href: string, id: strin
 async function getPoints(account: string, id: string) {
   const response = await fetch(`https://api.merkl.xyz/v4/rewards?chainId=747474&campaignId=${id}`);
   const data = await response.json();
-  const entry = data.find((entry) => entry.recipeint === account);
+  const entry = data.find((entry) => entry.recipient === account);
   if (entry) {
     return {
-      points: Number(entry.amount) / 1e18,
+      points: (Number(entry.amount) + Number(entry.pending)) / 1e18,
       claimable: (Number(entry.amount) - Number(entry.claimed)) / 1e18
     }
   }
@@ -99,7 +100,7 @@ export default function PointsPanel({ showHeader = true }: { showHeader?: boolea
               fontSize: 56,
             })}
           >
-            {points.reduce((acc, point) => acc + point.points, 0)}
+            {fmtnum(points.reduce((acc, point) => acc + point.points, 0))}
           </p>
         </div>
         <div>
@@ -115,7 +116,7 @@ export default function PointsPanel({ showHeader = true }: { showHeader?: boolea
               fontSize: 56,
             })}
           >
-            {points.reduce((acc, point) => acc + point.claimable, 0)}
+            {fmtnum(points.reduce((acc, point) => acc + point.claimable, 0))}
           </p>
         </div>
       </div>
