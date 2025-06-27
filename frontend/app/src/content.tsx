@@ -23,7 +23,7 @@ export default {
     earn: "Earn",
     wrap: "Wrap",
     buy: "Buy",
-    stats: "Stats",
+    dashboard: "Dashboard",
   },
 
   accountButton: {
@@ -422,6 +422,16 @@ export default {
       label: "You buy bvUSD",
     },
   },
+
+  // dashboard screen
+  dashboardScreen: {
+    headline: () => (
+      <>
+        Explore Bitvault statistics and metrics
+      </>
+    ),
+  },
+
 
   // Vault screen
   vaultScreen: {
