@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { getBranches, useLiquityStats } from "@/src/liquity-utils";
 import { TransparencyMetrics } from "./TransparencyMetrics";
