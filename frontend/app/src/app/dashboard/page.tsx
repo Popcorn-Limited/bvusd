@@ -1,5 +1,5 @@
-import { StatsScreen } from "@/src/screens/StatsScreen/StatsScreen";
+import { DashboardScreen } from "@/src/screens/DashboardScreen/DashboardScreen";
 
 export default function Page() {
-  return <StatsScreen />;
+  return <DashboardScreen />;
 }
