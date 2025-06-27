@@ -422,6 +422,16 @@ export default {
     },
   },
 
+  // dashboard screen
+  dashboardScreen: {
+    headline: () => (
+      <>
+        Explore Bitvault statistics and metrics
+      </>
+    ),
+  },
+
+
   // Vault screen
   vaultScreen: {
     headline: "Earn best-in-class yield on your stablecoins",
