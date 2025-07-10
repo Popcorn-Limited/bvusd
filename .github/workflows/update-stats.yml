@@ -32,7 +32,7 @@ jobs:
       - name: Run update-stats script
         run: yarn run update-stats
         env:
-          ALCHEMY_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
 
       - name: Commit & push changes 
         run: |
