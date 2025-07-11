@@ -6,6 +6,8 @@ import "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.s
 
 interface ITokenWrapper is IERC20Metadata {
     function deposit(uint256 amount) external;
+    function deposit(uint256 amount, address to) external;
     function withdraw(uint256 amount) external;
+    function withdraw(uint256 amount, address to) external;
     function underlying() external view returns (IERC20Metadata);
 }
