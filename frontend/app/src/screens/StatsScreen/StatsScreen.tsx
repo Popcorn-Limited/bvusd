@@ -127,16 +127,7 @@ export function StatsScreen() {
                   }}
                 >
                   <TransparencyMetrics
-                    protocolBackingRatio={`${fmtnum(
-                          Number(liquityStats.data.totalCollValue)>
-                            0
-                            ? (Number(liquityStats.data.totalCollValue) /
-                                Number(liquityStats.data.totalBoldSupply)) *
-                                100
-                            : 0,
-                          "2z"
-                        )} %`}
-                    totalBacking={liquityStats.data.totalCollValue}
+                    totalBacking={{totalCollaterals: liquityStats.data.totalCollValue, totalReserves: liquityStats.data.totalReserves}}
                     totalSupply={liquityStats.data.totalBoldSupply}
                     tvl={liquityStats.data.totalValueLocked}
                   />

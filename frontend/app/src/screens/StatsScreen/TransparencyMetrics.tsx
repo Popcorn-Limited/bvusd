@@ -1,18 +1,28 @@
 import { fmtnum } from "@/src/formatting";
 
+interface BackingData {
+  totalCollaterals: string;
+  totalReserves: string;
+}
+
 interface TransparencyMetricsProps {
-  protocolBackingRatio: string;
-  totalBacking: string;
+  totalBacking: BackingData;
   totalSupply: string;
   tvl: string;
 }
 
 export function TransparencyMetrics({
-  protocolBackingRatio,
   totalBacking,
   totalSupply,
   tvl,
 }: TransparencyMetricsProps) {
+  const backing =
+    Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves);
+  const protocolBackingRatio = `${fmtnum(
+    backing > 0 ? (backing / Number(totalSupply)) * 100 : 0,
+    "2z"
+  )} %`;
+
   return (
     <div
       style={{
@@ -25,16 +35,23 @@ export function TransparencyMetrics({
         borderRadius: 16,
         border: "1px solid #333",
         color: "#fff",
-        boxShadow: "0px 3px 8px 0px rgba(53, 57, 69, 0.40), 0px 0px 2px 0px #353945",
+        boxShadow:
+          "0px 3px 8px 0px rgba(53, 57, 69, 0.40), 0px 0px 2px 0px #353945",
       }}
     >
       <MetricBox
         label="bvUSD Total Supply"
         value={`$ ${fmtnum(Number(totalSupply), "2z")}`}
       />
-      <MetricBox label="Total Backing (+ Reserve Fund)" value={`$ ${fmtnum(Number(totalBacking), "2z")}`} />
+      <MetricBox
+        label="Total Backing (+ Reserve Fund)"
+        value={`$ ${fmtnum(Number(backing), "2z")}`}
+      />
       <MetricBox label="Collateral Ratio" value={protocolBackingRatio} />
-      <MetricBox label="Total Value Locked" value={tvl} /> 
+      <MetricBox
+        label="Total Value Locked"
+        value={`$ ${fmtnum(Number(tvl), "2z")}`}
+      />
     </div>
   );
 }
@@ -50,7 +67,7 @@ function MetricBox({ label, value }: { label: string; value: string }) {
         display: "flex",
         gap: 24,
         flexDirection: "column",
-        background: "rgba(20, 20, 22, 0.40)"
+        background: "rgba(20, 20, 22, 0.40)",
       }}
     >
       <span
