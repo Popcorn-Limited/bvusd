@@ -8,27 +8,22 @@ export function ConnectWarningBox() {
   return !account.isConnected && (
     <div
       className={css({
-        paddingTop: 16,
+        padding: "16px 24px",
+        textAlign: "center",
+        background: "none",
+        color: "content",
+        borderRadius: 8,
+        border: "1px solid token(colors.accent)",
       })}
     >
-      <div
-        className={css({
-          padding: "20px 24px",
-          textAlign: "center",
-          background: "none",
-          color: "content",
-          borderRadius: 8,
-        })}
-      >
-        Please{" "}
-        <TextButton
-          label="connect"
-          onClick={() => {
-            account.connect();
-          }}
-        />{" "}
-        your wallet to continue.
-      </div>
+      Please{" "}
+      <TextButton
+        label="connect"
+        onClick={() => {
+          account.connect();
+        }}
+      />{" "}
+      your wallet to continue.
     </div>
   );
 }

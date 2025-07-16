@@ -1,10 +1,19 @@
-import { BuyScreen } from "@/src/screens/BuyScreen/BuyScreen";
+"use client"
+
+import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
+import { Screen } from "@/src/comps/Screen/Screen";
+import PointsPanel from "@/src/screens/PointScreen/PointsPanel";
 
 export default function Page() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
-      <p className="text-2xl font-bold">Coming Soon</p>
-    </div>
+    <Screen
+      heading={{
+        title: "VCRAFT Bits Program",
+        subtitle: "Earn Bits by contributing to BitVault’s ecosystem-whether minting bvUSD, staking for sbvUSD, or adding liquidity. The VCRAFT Bits Program rewards users for actions that strengthen protocol utility and growth, with evolving incentives across future seasons.",
+      }} 
+    >
+      <ConnectWarningBox />
+      <PointsPanel showHeader={false} />
+    </Screen>
   );
-  // return <BuyScreen />;
 }

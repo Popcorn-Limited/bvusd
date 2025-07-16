@@ -4,7 +4,7 @@ pragma solidity 0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {WETHPriceFeed} from "../src/PriceFeeds/WETHPriceFeed.sol";
 import {PushPriceFeed} from "../src/PriceFeeds/PushPriceFeed.sol";
-import {InterchangeablePriceFeed, Ownable, IPriceFeed} from "../src/PriceFeeds/InterchangeablePriceFeed.sol";
+import {InterchangeablePriceFeed, Owned, IPriceFeed} from "../src/PriceFeeds/InterchangeablePriceFeed.sol";
 
 contract MockBorrowerOperations {
     bool public isShutdown = false;
@@ -16,11 +16,11 @@ contract MockBorrowerOperations {
     }
 }
 
-contract MockPushPriceFeed is Ownable {
+contract MockPushPriceFeed is Owned {
    uint256 public lastGoodPrice;
    bool public isFailed;
 
-    constructor(address _owner) Ownable(_owner) {}
+    constructor(address _owner) Owned(_owner) {}
 
     function fetchPrice() external returns (uint256, bool) {
         return (lastGoodPrice, isFailed);

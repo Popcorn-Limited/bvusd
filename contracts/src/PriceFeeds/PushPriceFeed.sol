@@ -2,13 +2,13 @@
 
 pragma solidity 0.8.24;
 
-import "../Dependencies/Ownable.sol";
+import "../Dependencies/Owned.sol";
 
-contract PushPriceFeed is Ownable {
+contract PushPriceFeed is Owned {
     
     uint256 public lastGoodPrice;
 
-    constructor(address _owner) Ownable(_owner) {}
+    constructor(address _owner) Owned(_owner) {}
 
     function fetchPrice() external returns (uint256, bool) {
         return (lastGoodPrice, false);
