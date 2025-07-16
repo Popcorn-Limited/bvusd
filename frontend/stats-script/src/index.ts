@@ -1,6 +1,7 @@
 import fs, { write } from "fs";
 import path from "path";
 import v2MainnetDeployment from "./deployment.json";
+import vaults from "./vaults.json";
 import { getProvider } from "./connection";
 import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from './env';
@@ -27,6 +28,7 @@ export async function fetchAndUpdateStats() {
   const [bscStats] = await Promise.all([
     fetchV2Stats({
       deployment: v2MainnetDeployment,
+      vaults,
       provider: katanaProvider,
       duneKey: env.DUNE_KEY
     })

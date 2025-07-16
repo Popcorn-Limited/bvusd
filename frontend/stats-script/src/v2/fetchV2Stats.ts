@@ -5,7 +5,10 @@ import { Decimal } from "@liquity/lib-base";
 import {
   getContracts,
   LiquityV2BranchContracts,
+  VaultsDeployment,
+  erc20Abi,
   type LiquityV2Deployment,
+  ERC20,
 } from "./contracts";
 import {
   fetchHistCRFromDune,
@@ -13,6 +16,7 @@ import {
   fetchSpAverageApysFromDune,
   fetchStableVaultTVLFromDune,
 } from "./duneQueries";
+import { Contract } from "@ethersproject/contracts";
 
 const ONE_WEI = Decimal.fromBigNumberString("1");
 
@@ -90,11 +94,13 @@ const emptyBranchData = (
 export const fetchV2Stats = async ({
   provider,
   deployment,
+  vaults,
   blockTag = "latest",
   duneKey,
 }: {
   provider: Provider;
   deployment: LiquityV2Deployment;
+  vaults: VaultsDeployment;
   blockTag?: BlockTag;
   duneKey: string;
 }) => {
@@ -103,75 +109,94 @@ export const fetchV2Stats = async ({
   );
   const contracts = getContracts(provider, deployment);
 
+  // counts all assets (stables) in the vaults safes
+  const reserves = await Promise.all(
+    vaults.stableVaults.map(async (vault) => {
+      const asset = new Contract(
+        vault.asset,
+        erc20Abi,
+        provider
+      ) as unknown as ERC20;
+      return (
+        Number(await asset.balanceOf(vault.safe, { blockTag })) /
+        10 ** vault.assetDecimals
+      );
+    })
+  );
+
   const deployed = true;
 
-  const [total_bold_supply, branches, historicalSupply, historicalCR, vault_tvl] =
-    await Promise.all([
-      // total_bold_supply
-      deployed
-        ? contracts.boldToken.totalSupply({ blockTag }).then(decimalify)
-        : Decimal.ZERO,
+  const [
+    total_bold_supply,
+    branches,
+    historicalSupply,
+    historicalCR,
+    vault_tvl,
+  ] = await Promise.all([
+    // total_bold_supply
+    deployed
+      ? contracts.boldToken.totalSupply({ blockTag }).then(decimalify)
+      : Decimal.ZERO,
 
-      // branches
-      (deployed ? fetchBranchData : emptyBranchData)(contracts.branches)
-        .then((branches) =>
-          branches.map((branch) => ({
-            ...branch,
-            debt_pending: branch.interest_pending.add(
-              branch.batch_management_fees_pending
-            ),
-            coll_value: branch.coll_active
-              .add(branch.coll_default)
-              .mul(branch.coll_price),
-            sp_apy:
-              (SP_YIELD_SPLIT * Number(branch.interest_accrual_1y)) /
-              Number(branch.sp_deposits),
-          }))
-        )
-        .then((branches) =>
-          branches.map((branch) => ({
-            ...branch,
-            value_locked: branch.coll_value.add(branch.sp_deposits), // taking BOLD at face value
-          }))
-        ),
+    // branches
+    (deployed ? fetchBranchData : emptyBranchData)(contracts.branches)
+      .then((branches) =>
+        branches.map((branch) => ({
+          ...branch,
+          debt_pending: branch.interest_pending.add(
+            branch.batch_management_fees_pending
+          ),
+          coll_value: branch.coll_active
+            .add(branch.coll_default)
+            .mul(branch.coll_price),
+          sp_apy:
+            (SP_YIELD_SPLIT * Number(branch.interest_accrual_1y)) /
+            Number(branch.sp_deposits),
+        }))
+      )
+      .then((branches) =>
+        branches.map((branch) => ({
+          ...branch,
+          value_locked: branch.coll_value.add(branch.sp_deposits), // taking BOLD at face value
+        }))
+      ),
 
-      // SP AVERAGE APY
-      // deployed
-      // ? fetchSpAverageApysFromDune({
-      //     branches: contracts.branches,
-      //     apiKey: duneKey,
-      //     network: "bnb",
-      //   })
-      // : null,
+    // SP AVERAGE APY
+    // deployed
+    // ? fetchSpAverageApysFromDune({
+    //     branches: contracts.branches,
+    //     apiKey: duneKey,
+    //     network: "bnb",
+    //   })
+    // : null,
 
-      // HISTORICALS SUPPLY
-      deployed
-        ? fetchHistSupplyFromDune({
-            apiKey: duneKey,
-            network: "katana",
-          })
-        : null,
-
-      // HISTORICAL CR
-      deployed
-        ? fetchHistCRFromDune({
-            apiKey: duneKey,
-            network: "katana",
-          })
-        : null,
-        
-      // TVL
-      deployed
-        ? fetchStableVaultTVLFromDune({
+    // HISTORICALS SUPPLY
+    deployed
+      ? fetchHistSupplyFromDune({
           apiKey: duneKey,
           network: "katana",
         })
-        : Decimal.ZERO
-    ]);
+      : null,
+
+    // HISTORICAL CR
+    deployed
+      ? fetchHistCRFromDune({
+          apiKey: duneKey,
+          network: "katana",
+        })
+      : null,
+
+    // TVL
+    deployed
+      ? fetchStableVaultTVLFromDune({
+          apiKey: duneKey,
+          network: "katana",
+        })
+      : Decimal.ZERO,
+  ]);
 
   const sp_apys = branches.map((b) => b.sp_apy).filter((x) => !isNaN(x));
-  console.log(sp_apys);
-
+  // console.log(sp_apys);
   return {
     total_bold_supply: `${total_bold_supply}`,
     total_debt_pending: `${branches
@@ -188,13 +213,14 @@ export const fetchV2Stats = async ({
       .reduce((a, b) => a.add(b))
       .add(vault_tvl)}`,
     total_vault_tvl: `${vault_tvl}`,
+    total_reserve: `${reserves.reduce((a, b) => a + b)}`,
     max_sp_apy: `${sp_apys.length > 0 ? Math.max(...sp_apys) : 0}`,
     day_supply: historicalSupply!.map((daily) =>
       mapObj(
         {
           ...daily,
         },
-       (x) => `${x}`
+        (x) => `${x}`
       )
     ),
     collateral_ratio: historicalCR!
