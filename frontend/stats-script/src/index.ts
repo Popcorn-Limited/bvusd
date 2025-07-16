@@ -23,7 +23,7 @@ const writeTree = (parentDir: string, tree: Tree) => {
 
 export async function fetchAndUpdateStats() {
   const alchemyApiKey = env.ALCHEMY_KEY;
-  const katanaProvider = getProvider(747474, { alchemyApiKey });
+  const katanaProvider = getProvider(747474, { alchemyApiKey });
   const [bscStats] = await Promise.all([
     fetchV2Stats({
       deployment: v2MainnetDeployment,

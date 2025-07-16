@@ -3,7 +3,8 @@
   "total_debt_pending": "0",
   "total_coll_value": "0",
   "total_sp_deposits": "0",
-  "total_value_locked": "0",
+  "total_value_locked": "2.999999999999",
+  "total_vault_tvl": "2.999999999999",
   "max_sp_apy": "0",
   "day_supply": [
     {

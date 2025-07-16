@@ -138,7 +138,7 @@ export function StatsScreen() {
                         )} %`}
                     totalBacking={liquityStats.data.totalCollValue}
                     totalSupply={liquityStats.data.totalBoldSupply}
-                    price="$ 1.00"
+                    tvl={liquityStats.data.totalValueLocked}
                   />
                   <ChartsPanel data={liquityStats.data.historicalGlobalCR}/>
                   <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/>

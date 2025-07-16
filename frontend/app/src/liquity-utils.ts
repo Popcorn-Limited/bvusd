@@ -591,6 +591,7 @@ const StatsSchema = v.pipe(
     total_coll_value: v.string(),
     total_sp_deposits: v.string(),
     total_value_locked: v.string(),
+    total_vault_tvl: v.string(),
     max_sp_apy: v.string(),
     day_supply: v.array(v.object({
       day: v.string(),
@@ -630,6 +631,7 @@ const StatsSchema = v.pipe(
     totalCollValue: value.total_coll_value,
     totalSpDeposits: value.total_sp_deposits,
     totalValueLocked: value.total_value_locked,
+    totalVaultTVL: value.total_vault_tvl,
     maxSpApy: value.max_sp_apy,
     historicalSupply: value.day_supply.map((dailyObj) => {
       return {

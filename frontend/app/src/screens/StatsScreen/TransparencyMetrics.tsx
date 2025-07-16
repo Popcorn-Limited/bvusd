@@ -4,14 +4,14 @@ interface TransparencyMetricsProps {
   protocolBackingRatio: string;
   totalBacking: string;
   totalSupply: string;
-  price: string;
+  tvl: string;
 }
 
 export function TransparencyMetrics({
   protocolBackingRatio,
   totalBacking,
   totalSupply,
-  price,
+  tvl,
 }: TransparencyMetricsProps) {
   return (
     <div
@@ -28,13 +28,13 @@ export function TransparencyMetrics({
         boxShadow: "0px 3px 8px 0px rgba(53, 57, 69, 0.40), 0px 0px 2px 0px #353945",
       }}
     >
-      <MetricBox label="Protocol Backing Ratio" value={protocolBackingRatio} />
-      <MetricBox label="Total Backing (+ Reserve Fund)" value={`$ ${fmtnum(Number(totalBacking), "2z")}`} />
       <MetricBox
         label="bvUSD Total Supply"
         value={`$ ${fmtnum(Number(totalSupply), "2z")}`}
       />
-      <MetricBox label="bvUSD Price" value={price} />
+      <MetricBox label="Total Backing (+ Reserve Fund)" value={`$ ${fmtnum(Number(totalBacking), "2z")}`} />
+      <MetricBox label="Collateral Ratio" value={protocolBackingRatio} />
+      <MetricBox label="Total Value Locked" value={tvl} /> 
     </div>
   );
 }

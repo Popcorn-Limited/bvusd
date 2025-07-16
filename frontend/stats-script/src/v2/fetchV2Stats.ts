@@ -1,5 +1,5 @@
 import type { BlockTag, Provider } from "@ethersproject/abstract-provider";
-import type { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "@ethersproject/bignumber";
 import { resolveProperties } from "@ethersproject/properties";
 import { Decimal } from "@liquity/lib-base";
 import {
@@ -11,6 +11,7 @@ import {
   fetchHistCRFromDune,
   fetchHistSupplyFromDune,
   fetchSpAverageApysFromDune,
+  fetchStableVaultTVLFromDune,
 } from "./duneQueries";
 
 const ONE_WEI = Decimal.fromBigNumberString("1");
@@ -104,7 +105,7 @@ export const fetchV2Stats = async ({
 
   const deployed = true;
 
-  const [total_bold_supply, branches, historicalSupply, historicalCR] =
+  const [total_bold_supply, branches, historicalSupply, historicalCR, vault_tvl] =
     await Promise.all([
       // total_bold_supply
       deployed
@@ -158,6 +159,14 @@ export const fetchV2Stats = async ({
             network: "katana",
           })
         : null,
+        
+      // TVL
+      deployed
+        ? fetchStableVaultTVLFromDune({
+          apiKey: duneKey,
+          network: "katana",
+        })
+        : Decimal.ZERO
     ]);
 
   const sp_apys = branches.map((b) => b.sp_apy).filter((x) => !isNaN(x));
@@ -176,14 +185,16 @@ export const fetchV2Stats = async ({
       .reduce((a, b) => a.add(b))}`,
     total_value_locked: `${branches
       .map((b) => b.value_locked)
-      .reduce((a, b) => a.add(b))}`,
+      .reduce((a, b) => a.add(b))
+      .add(vault_tvl)}`,
+    total_vault_tvl: `${vault_tvl}`,
     max_sp_apy: `${sp_apys.length > 0 ? Math.max(...sp_apys) : 0}`,
     day_supply: historicalSupply!.map((daily) =>
       mapObj(
         {
           ...daily,
         },
-        (x) => `${x}`
+       (x) => `${x}`
       )
     ),
     collateral_ratio: historicalCR!
