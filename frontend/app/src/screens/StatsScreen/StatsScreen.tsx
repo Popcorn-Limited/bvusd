@@ -131,8 +131,8 @@ export function StatsScreen() {
                     totalSupply={liquityStats.data.totalBoldSupply}
                     tvl={liquityStats.data.totalValueLocked}
                   />
-                  <ChartsPanel data={liquityStats.data.historicalGlobalCR}/>
-                  <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/>
+                  <ChartsPanel data={liquityStats.data.historicalGlobalCR} supply={liquityStats.data.historicalSupply}/>
+                  {/* <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/> */}
                   <BackingTablePanel />
                   <AttestationsAndProofPanel />
                 </div>

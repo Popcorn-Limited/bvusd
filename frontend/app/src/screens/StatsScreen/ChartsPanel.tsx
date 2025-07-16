@@ -12,7 +12,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  Tooltip as PieTooltip,
+  Tooltip as LineTooltip,
 } from "recharts";
 import { PanelHeader } from "./PanelTitle";
 import { SmallLegend } from "./SmallChartLegend";
@@ -34,9 +34,10 @@ type CRProps = {
     day: string;
     collateral_ratio: string;
   }[];
-  backing?: {
-    collateralSymbol: string;
-    total_amount: string;
+  supply: {
+    day: string;
+    holders: string;
+    supply: string;
   }[];
 };
 
@@ -46,7 +47,7 @@ function displayCR(cr: number): string {
 
 // TODO - build query in dune of collaterals backing amount over time
 // TODO add USDC - USDT data
-export function ChartsPanel({ data, backing }: CRProps) {
+export function ChartsPanel({ data, supply }: CRProps) {
   const day_CR = [...data]
     .reverse()
     .filter((item, index) => {
@@ -57,12 +58,24 @@ export function ChartsPanel({ data, backing }: CRProps) {
       CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
     }));
 
-  // const backingData = backing.map(b => ({
-  //   collateralSymbol: b.collateralSymbol,
-  //   total_amount: Number(b.total_amount)
-  // }));
+  const day_supply = [...supply]
+    .reverse()
+    .filter((item, index) => {
+      return index === 0 || index % 5 === 0;
+    })
+    .map((item) => ({
+      day: item.day.split(" ")[0].slice(0, 7),
+      supply: parseFloat(fmtnum(Number(item.supply), "2z").replace(/,/g, "")),
+      holders: parseFloat(fmtnum(Number(item.holders), "2z").replace(/,/g, "")),
+    }));
 
-  const pieChartColors = ["#F6B73C", "#C9C9C9", "#4BA4F0", "#DB3C4B"];
+  function displaySupply(supply: number): string {
+    if (supply >= 1_000_000) return `${(supply / 1_000_000).toFixed(1)}M`;
+    if (supply >= 1_000) return `${(supply / 1_000).toFixed(1)}K`;
+    return supply.toString();
+  }
+
+  // const pieChartColors = ["#F6B73C", "#C9C9C9", "#4BA4F0", "#DB3C4B"];
 
   return (
     <div
@@ -75,7 +88,7 @@ export function ChartsPanel({ data, backing }: CRProps) {
       }}
     >
       {/* Left Card: System Backing */}
-      <div
+      {/* <div
         style={{
           flex: 1,
           display: "flex",
@@ -136,6 +149,62 @@ export function ChartsPanel({ data, backing }: CRProps) {
               fill="rgba(57, 211, 83, 0.1)"
             />
           </AreaChart>
+        </ResponsiveContainer>
+      </div> */}
+
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "460px",
+          flexShrink: 0,
+          background: "transparent",
+          borderRadius: "16px",
+          border: "1px solid var(--Neutral-100, #353945)",
+          fontFamily: "KHTeka",
+        }}
+      >
+        <PanelHeader title="bvUSD Supply" line={true} />
+        <ResponsiveContainer
+          width="98%"
+          height={360}
+          style={{ padding: 1, overflow: "hidden", position: "relative" }}
+        >
+          <LineChart
+            data={day_supply}
+            margin={{ top: 5, right: 5, bottom: 0, left: 0 }}
+          >
+            <XAxis
+              axisLine={false}
+              tickLine={false}
+              dataKey="day"
+              stroke="#fff"
+              minTickGap={30}
+              style={{ marginRight: 15 }}
+              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              stroke="#fff"
+              tickFormatter={(value) => {
+                return displaySupply(value);
+              }}
+              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
+            />
+            <LineTooltip
+              content={<CustomTooltip transformValue={displaySupply} />}
+            />
+            <Line
+              type="monotone"
+              dataKey="supply"
+              stroke="#F6B73C"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
 
