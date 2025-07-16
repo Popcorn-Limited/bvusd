@@ -2,11 +2,11 @@
 
 pragma solidity 0.8.24;
 
-import "../Dependencies/Ownable.sol";
+import "../Dependencies/Owned.sol";
 import "../Interfaces/IPriceFeed.sol";
 import "../BorrowerOperations.sol";
 
-contract InterchangeablePriceFeed is Ownable, IPriceFeed {
+contract InterchangeablePriceFeed is Owned, IPriceFeed {
 
     uint256 public lastGoodPrice;
     
@@ -17,7 +17,7 @@ contract InterchangeablePriceFeed is Ownable, IPriceFeed {
     event ShutDownFromOracleFailure(address _failedOracleAddr);
 
 
-    constructor(address _owner, IPriceFeed _priceFeed) Ownable(_owner) {
+    constructor(address _owner, IPriceFeed _priceFeed) Owned(_owner) {
         priceFeed = _priceFeed;
     }
 
