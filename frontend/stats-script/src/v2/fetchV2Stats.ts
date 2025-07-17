@@ -13,9 +13,10 @@ import {
 import {
   fetchHistCRFromDune,
   fetchHistSupplyFromDune,
+  fetchListOfTroves,
   fetchSpAverageApysFromDune,
   fetchStableVaultTVLFromDune,
-} from "./duneQueries";
+} from "./queries";
 import { Contract } from "@ethersproject/contracts";
 
 const ONE_WEI = Decimal.fromBigNumberString("1");
@@ -132,6 +133,7 @@ export const fetchV2Stats = async ({
     historicalSupply,
     historicalCR,
     vault_tvl,
+    troves,
   ] = await Promise.all([
     // total_bold_supply
     deployed
@@ -193,7 +195,16 @@ export const fetchV2Stats = async ({
           network: "katana",
         })
       : Decimal.ZERO,
+
+    // Troves
+    deployed
+      ? fetchListOfTroves({
+          apiKey: duneKey,
+          network: "katana",
+        })
+      : null,
   ]);
+
 
   const sp_apys = branches.map((b) => b.sp_apy).filter((x) => !isNaN(x));
   // console.log(sp_apys);
@@ -275,6 +286,14 @@ export const fetchV2Stats = async ({
           },
         ];
       })
+    ),
+    troves: troves!.map((trove) =>
+      mapObj(
+        {
+          ...trove,
+        },
+        (x) => `${x}`
+      )
     ),
   };
 };
