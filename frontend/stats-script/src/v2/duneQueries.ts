@@ -41,7 +41,7 @@ const isDuneHistoricalSupplyResponse = (
 ): data is DuneResponse<{
   day: string;
   num_holders: number;
-  token_balance: number;
+  total_supply: number;
 }> =>
   isDuneResponse(data) &&
   data.result.rows.length > 0 &&
@@ -53,8 +53,8 @@ const isDuneHistoricalSupplyResponse = (
       typeof row.day === "string" &&
       "num_holders" in row &&
       typeof row.num_holders === "number" &&
-      "token_balance" in row &&
-      typeof row.token_balance === "number"
+      "total_supply" in row &&
+      typeof row.total_supply === "number"
   );
 
 const isDuneHistoricalCRResponse = (
@@ -176,7 +176,7 @@ export const fetchHistSupplyFromDune = async ({
     return {
       day: daily.day,
       holders: daily.num_holders,
-      supply: daily.token_balance,
+      supply: daily.total_supply,
     };
   });
 };
