@@ -7,21 +7,25 @@ interface BackingData {
 
 interface TransparencyMetricsProps {
   totalBacking: BackingData;
+  avgCR: string;
   totalSupply: string;
   tvl: string;
 }
 
 export function TransparencyMetrics({
   totalBacking,
+  avgCR,
   totalSupply,
   tvl,
 }: TransparencyMetricsProps) {
   const backing =
     Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves);
   const protocolBackingRatio = `${fmtnum(
-    backing > 0 ? (backing / Number(totalSupply)) * 100 : 0,
+    Number(avgCR),
     "2z"
   )} %`;
+
+  console.log(avgCR);
 
   return (
     <div

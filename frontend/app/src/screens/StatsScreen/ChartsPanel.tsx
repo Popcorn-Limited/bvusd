@@ -222,7 +222,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
           border: "1px solid var(--Neutral-100, #353945)",
         }}
       >
-        <PanelHeader title="Collateral Ratio" line={true} />
+        <PanelHeader title="Global Collateral Ratio" line={true} />
         <ResponsiveContainer
           width="100%"
           height={333}

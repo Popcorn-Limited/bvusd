@@ -128,6 +128,7 @@ export function StatsScreen() {
                 >
                   <TransparencyMetrics
                     totalBacking={{totalCollaterals: liquityStats.data.totalCollValue, totalReserves: liquityStats.data.totalReserves}}
+                    avgCR={liquityStats.data.historicalGlobalCR[0].collateral_ratio}
                     totalSupply={liquityStats.data.totalBoldSupply}
                     tvl={liquityStats.data.totalValueLocked}
                   />
