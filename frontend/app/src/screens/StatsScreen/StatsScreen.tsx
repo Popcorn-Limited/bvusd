@@ -17,10 +17,11 @@ import { css } from "@/styled-system/css";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { fmtnum } from "@/src/formatting";
 import { COLLATERALS, USDT } from "@liquity2/uikit";
+import { VaultsPanel } from "./VaultsPanel";
 
 export function StatsScreen() {
-  const [activeTab, setActiveTab] = useState<"transparency" | "market">(
-    "transparency"
+  const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
+    "Protocol"
   );
 
   const liquityStats = useLiquityStats();
@@ -32,136 +33,142 @@ export function StatsScreen() {
       : "success";
 
   return (
-     <div
+    <div
       className={css({
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
         gap: 64,
         width: "100%",
-        padding: "0 12px"
+        padding: "0 12px",
       })}
     >
-    <StatsScreenCard
-      mode={match(loadingState)
-        .returnType<"ready" | "loading" | "error">()
-        .with("loading", () => "loading")
-        .with("error", () => "error")
-        .otherwise(() => "ready")}
-    >
-      {match(loadingState)
-        .with("loading", () => (
-          <div
-            className={css({
-              display: "grid",
-              placeItems: "center",
-              height: "100%",
-            })}
-          >
-            <LoadingSurface />
-          </div>
-        ))
-        .with("error", () => (
-          <HFlex gap={8}>
-            Error fetching data
-            {/* <Button
+      <StatsScreenCard
+        mode={match(loadingState)
+          .returnType<"ready" | "loading" | "error">()
+          .with("loading", () => "loading")
+          .with("error", () => "error")
+          .otherwise(() => "ready")}
+      >
+        {match(loadingState)
+          .with("loading", () => (
+            <div
+              className={css({
+                display: "grid",
+                placeItems: "center",
+                height: "100%",
+              })}
+            >
+              <LoadingSurface />
+            </div>
+          ))
+          .with("error", () => (
+            <HFlex gap={8}>
+              Error fetching data
+              {/* <Button
               mode="primary"
               label="Try again"
               size="mini"
               onClick={onRetry}
             /> */}
-          </HFlex>
-        ))
-        .otherwise(() => {
-          if (!liquityStats) {
-            <HFlex gap={8}>Invalid Data</HFlex>;
-          }
-          return (
-            <div style={{ width: "100%" }}>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 32,
-                  marginBottom: 24,
-                  justifyContent: "center",
-                }}
-              >
-                <button
-                  onClick={() => setActiveTab("transparency")}
-                  style={{
-                    fontSize: 16,
-                    color: activeTab === "transparency" ? "#fff" : "#aaa",
-                    fontWeight: activeTab === "transparency" ? 600 : 400,
-                    paddingBottom: 4,
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  Transparency
-                </button>
-                <button
-                  onClick={() => setActiveTab("market")}
-                  style={{
-                    fontSize: 16,
-                    color: activeTab === "market" ? "#fff" : "#aaa",
-                    fontWeight: activeTab === "market" ? 600 : 400,
-                    paddingBottom: 4,
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  Market Data
-                </button>
-              </div>
-
-              {activeTab === "transparency" && (
+            </HFlex>
+          ))
+          .otherwise(() => {
+            if (!liquityStats) {
+              <HFlex gap={8}>Invalid Data</HFlex>;
+            }
+            return (
+              <div style={{ width: "100%" }}>
                 <div
                   style={{
-                    maxWidth: 1400,
-                    margin: "0 auto",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: "32px",
+                    gap: 32,
+                    marginBottom: 24,
+                    justifyContent: "center",
                   }}
                 >
-                  <TransparencyMetrics
-                    totalBacking={{totalCollaterals: liquityStats.data.totalCollValue, totalReserves: liquityStats.data.totalReserves}}
-                    avgCR={liquityStats.data.historicalGlobalCR[0].collateral_ratio}
-                    totalSupply={liquityStats.data.totalBoldSupply}
-                    tvl={liquityStats.data.totalValueLocked}
-                  />
-                  <ChartsPanel data={liquityStats.data.historicalGlobalCR} supply={liquityStats.data.historicalSupply}/>
-                  {/* <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/> */}
-                  <BackingTablePanel />
-                  <AttestationsAndProofPanel />
+                  <button
+                    onClick={() => setActiveTab("Protocol")}
+                    style={{
+                      fontSize: 16,
+                      color: activeTab === "Protocol" ? "#fff" : "#aaa",
+                      fontWeight: activeTab === "Protocol" ? 600 : 400,
+                      paddingBottom: 4,
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Protocol
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("transparency")}
+                    style={{
+                      fontSize: 16,
+                      color: activeTab === "transparency" ? "#fff" : "#aaa",
+                      fontWeight: activeTab === "transparency" ? 600 : 400,
+                      paddingBottom: 4,
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Transparency
+                  </button>
                 </div>
-              )}
 
-              {activeTab === "market" && (
-                "Coming soon..."
-                // <div
-                //   style={{
-                //     padding: "32px 32px",
-                //     maxWidth: 1400,
-                //     margin: "0 auto",
-                //     display: "flex",
-                //     flexDirection: "column",
-                //     gap: 48,
-                //   }}
-                // >
-                //   <MarketStatPanel />
-                //   <MarketChartPanel />
-                //   <FundingBreakdownPanel />
-                //   <SpreadAndDistributionPanel />
-                // </div>
-              )}
-            </div>
-          );
-        })
-}
-    </StatsScreenCard>
+                {activeTab === "Protocol" && (
+                  <div
+                    style={{
+                      maxWidth: 1400,
+                      margin: "0 auto",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "32px",
+                    }}
+                  >
+                    <TransparencyMetrics
+                      totalBacking={{
+                        totalCollaterals: liquityStats.data.totalCollValue,
+                        totalReserves: liquityStats.data.totalReserves,
+                      }}
+                      avgCR={
+                        liquityStats.data.historicalGlobalCR[0].collateral_ratio
+                      }
+                      totalSupply={liquityStats.data.totalBoldSupply}
+                      tvl={liquityStats.data.totalValueLocked}
+                    />
+                    <ChartsPanel
+                      data={liquityStats.data.historicalGlobalCR}
+                      supply={liquityStats.data.historicalSupply}
+                    />
+                    {/* <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/> */}
+                    <VaultsPanel />
+                  </div>
+                )}
+
+                {activeTab === "transparency" && (
+                  <div
+                    style={{
+                      maxWidth: 1400,
+                      margin: "0 auto",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "32px",
+                    }}
+                  >
+                    <AttestationsAndProofPanel />
+
+                    {/* <MarketStatPanel />
+                  <MarketChartPanel />
+                  <FundingBreakdownPanel />
+                  <SpreadAndDistributionPanel /> */}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+      </StatsScreenCard>
     </div>
   );
 }
