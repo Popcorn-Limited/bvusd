@@ -625,6 +625,11 @@ const StatsSchema = v.pipe(
         })),
       }),
     ),
+    troves: v.array(v.object({
+      collateral: v.string(),
+      debt: v.string(),
+      cr: v.string(),
+    })),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -674,6 +679,13 @@ const StatsSchema = v.pipe(
         }];
       }),
     ),
+    troves: value.troves.map((trove) => {
+      return {
+      collateral: trove.collateral,
+      debt: trove.debt,
+      cr: trove.cr,
+      }
+    }),
   })),
 );
 

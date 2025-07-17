@@ -66,6 +66,9 @@ export const fetchListOfTroves = async ({
   });
 
   return troves.map((t) => ({
+    owner: t.owner.match(/0x[a-fA-F0-9]{40}/)?.[0], // todo
+    troveId: t.trove_id,
+    collateralAsset: t.collateral_type,
     collateral: t.collateral,
     debt: t.debt,
     cr: t.collateral_ratio

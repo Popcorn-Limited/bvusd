@@ -560,19 +560,84 @@
   },
   "troves": [
     {
+      "owner": "0xb4d3bea9d824c4dd7ded7ccc93e6212e3f0b186a",
+      "troveId": "10894...7825",
+      "collateralAsset": "ETH",
       "collateral": "47268636.75492216",
       "debt": "14650221.952487098",
       "cr": "3.2264792238794437"
     },
     {
+      "owner": "0x7b852ebc448b3638f971bac2c463db6578634f11",
+      "troveId": "75612...8955",
+      "collateralAsset": "rETH",
       "collateral": "13186510.516909555",
       "debt": "3976737.2386302976",
       "cr": "3.3159119463098765"
     },
     {
+      "owner": "0x7b852ebc448b3638f971bac2c463db6578634f11",
+      "troveId": "75612...8955",
+      "collateralAsset": "wstETH",
       "collateral": "13083832.377720978",
       "debt": "3920834.1666664183",
       "cr": "3.337002235125172"
+    },
+    {
+      "owner": "0x46a83dc1a264bff133db887023d2884167094837",
+      "troveId": "48799...0624",
+      "collateralAsset": "wstETH",
+      "collateral": "8355138.12726502",
+      "debt": "3640647.4333142354",
+      "cr": "2.294959421450757"
+    },
+    {
+      "owner": "0xc83aa8e0da4ffc388fdbfc1cb111d8d625b5b8e7",
+      "troveId": "26244...6541",
+      "collateralAsset": "wstETH",
+      "collateral": "11153100.191337695",
+      "debt": "3435223.390817419",
+      "cr": "3.2466884748021556"
+    },
+    {
+      "owner": "0x3630220f243288e3eac4c5676fc191cff5756431",
+      "troveId": "35499...3260",
+      "collateralAsset": "wstETH",
+      "collateral": "4140204.569368196",
+      "debt": "1584320.5514650247",
+      "cr": "2.6132366745730464"
+    },
+    {
+      "owner": "0xbdfa4f4492dd7b7cf211209c4791af8d52bf5c50",
+      "troveId": "86492...7047",
+      "collateralAsset": "ETH",
+      "collateral": "3713963",
+      "debt": "1442433.0107317395",
+      "cr": "2.574790629698584"
+    },
+    {
+      "owner": "0xf06016d822943c42e3cb7fc3a6a3b1889c1045f8",
+      "troveId": "10224...0154",
+      "collateralAsset": "ETH",
+      "collateral": "3038697",
+      "debt": "1057102.5803721873",
+      "cr": "2.874552627551177"
+    },
+    {
+      "owner": "0xb199883e985ffe6a8a8051f5e8d0bc53aa380a14",
+      "troveId": "45971...0557",
+      "collateralAsset": "wstETH",
+      "collateral": "2137813.491358423",
+      "debt": "798998.0572383046",
+      "cr": "2.6756178841631537"
+    },
+    {
+      "owner": "0xddfe74f671f6546f49a6d20909999cfe5f09ad78",
+      "troveId": "63033...2929",
+      "collateralAsset": "wstETH",
+      "collateral": "2038000",
+      "debt": "752316.1890609612",
+      "cr": "2.7089673592480117"
     }
   ]
 }
