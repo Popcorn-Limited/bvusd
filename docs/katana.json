@@ -5,7 +5,17 @@
   "total_sp_deposits": "0",
   "total_value_locked": "2.999999999999",
   "total_vault_tvl": "2.999999999999",
-  "total_reserve": "11",
+  "total_reserve": "15",
+  "reserves_assets": [
+    {
+      "asset": "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
+      "balance": "11"
+    },
+    {
+      "asset": "0x876aac7648D79f87245E73316eB2D100e75F3Df1",
+      "balance": "4"
+    }
+  ],
   "max_sp_apy": "0",
   "day_supply": [
     {
@@ -644,14 +654,14 @@
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "wstETH",
-      "time": "2025-07-18 01:30:59.000 UTC",
-      "amount": "7807562.012442833"
+      "time": "2025-07-18 12:52:11.000 UTC",
+      "amount": "7796447.695155246"
     },
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "ETH",
-      "time": "2025-07-18 01:30:59.000 UTC",
-      "amount": "3903781.0062214164"
+      "time": "2025-07-18 12:52:11.000 UTC",
+      "amount": "3898223.847577623"
     },
     {
       "depositor": "0x2048a730f564246411415f719198d6f7c10a7961",
@@ -662,8 +672,8 @@
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "rETH",
-      "time": "2025-07-18 01:30:59.000 UTC",
-      "amount": "1301260.335407139"
+      "time": "2025-07-18 12:52:11.000 UTC",
+      "amount": "1299407.9491925412"
     },
     {
       "depositor": "0x7b852ebc448b3638f971bac2c463db6578634f11",

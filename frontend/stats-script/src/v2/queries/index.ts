@@ -4,3 +4,4 @@ export * from "./tvl";
 export * from "./troves";
 export * from "./avgApy";
 export * from "./spDeposits";
+export * from "./reserves";

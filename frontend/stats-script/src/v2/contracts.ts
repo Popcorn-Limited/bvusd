@@ -9,6 +9,7 @@ export interface LiquityV2Deployment {
 }
 
 interface VaultData {
+  symbol: string;
   asset: string;
   assetDecimals: number;
   safe: string;
