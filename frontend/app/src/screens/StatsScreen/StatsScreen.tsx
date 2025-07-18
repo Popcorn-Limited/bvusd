@@ -144,8 +144,7 @@ export function StatsScreen() {
                       data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
-                    {/* <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/> */}
-                    <VaultsPanel />
+                    <VaultsPanel collateralReserves={liquityStats.data.reserveAssets}/>
                     <TrovesPanel troves={liquityStats.data.troves} />
                     <SPDepositsPanel deposits={liquityStats.data.spDeposits} />
                   </div>  

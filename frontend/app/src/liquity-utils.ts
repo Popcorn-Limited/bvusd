@@ -656,6 +656,12 @@ const StatsSchema = v.pipe(
     total_value_locked: v.string(),
     total_vault_tvl: v.string(),
     total_reserve: v.string(),
+    reserves_assets: v.array(
+      v.object({
+        asset: v.string(),
+        balance: v.string(),
+      })
+    ),
     max_sp_apy: v.string(),
     day_supply: v.array(
       v.object({
@@ -721,6 +727,12 @@ const StatsSchema = v.pipe(
     totalValueLocked: value.total_value_locked,
     totalVaultTVL: value.total_vault_tvl,
     totalReserves: value.total_reserve,
+    reserveAssets: value.reserves_assets.map((r) => {
+      return {
+        asset: r.asset,
+        balance: r.balance,
+      };
+    }),
     maxSpApy: value.max_sp_apy,
     historicalSupply: value.day_supply.map((dailyObj) => {
       return {
