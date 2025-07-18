@@ -1,17 +1,6 @@
 import { SP_DEPOSITS_QUERY } from "../../constants";
 import { duneFetch, type DuneResponse, isDuneResponse } from "../../dune";
 
-
-// collateral_type: 'rETH',
-//     contract_address: '0xd442e41019b7f5c4dd78f50dc03726c446148695',
-//     created_time: '2025-06-06 12:54:35.000 UTC',
-//     deposited_bold: 1301260.335407139,
-//     depositor: "<a href='https://etherscan.io/address/0x50bd66d59911f5e086ec87ae43c811e0d059dd11' target='_blank'>0x50b...dd11</a>",
-//     depositor_age: '6 weeks',
-//     last_modified: '2025-07-18 01:30:59.000 UTC',
-//     unclaimed_bold: 0,
-//     unclaimed_eth: 0
-
 const isValidResponse = (
   data: unknown
 ): data is DuneResponse<{
@@ -70,6 +59,7 @@ export const fetchStabilityPoolDeposits = async ({
 
   return deposits.map((t) => ({
     depositor: t.depositor.match(/0x[a-fA-F0-9]{40}/)?.[0], // todo
+    collateral: t.collateral_type,
     time: t.last_modified,
     amount: t.deposited_bold
   }));
