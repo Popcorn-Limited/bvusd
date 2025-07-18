@@ -15,6 +15,13 @@ type TroveProps = {
   troves: TroveRow[];
 };
 
+// TODO
+const maxLTV = {
+  ETH: 90,
+  rETH: 85,
+  wstETH: 90
+}
+
 export function TrovesPanel({ troves }: TroveProps) {
   console.log(troves[0]);
   return (
@@ -56,7 +63,7 @@ export function TrovesPanel({ troves }: TroveProps) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
           padding: "10px",
           gap: 10,
           borderBottom: "1px solid #333",
@@ -68,11 +75,12 @@ export function TrovesPanel({ troves }: TroveProps) {
         }}
       >
         <div>Owner</div>
-        <div>TroveId</div>
         <div>Collateral Asset</div>
         <div>Collateral Value</div>
         <div>Debt</div>
         <div>Collateral Ratio</div>
+        <div>LTV</div>
+        <div>MAX LTV</div>
       </div>
 
       {/* Table Rows */}
@@ -81,7 +89,7 @@ export function TrovesPanel({ troves }: TroveProps) {
           key={idx}
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
             padding: "12px",
             gap: 16,
             borderBottom: "1px solid #23262F",
@@ -95,9 +103,6 @@ export function TrovesPanel({ troves }: TroveProps) {
             {`${row.owner.slice(0, 6)}...${row.owner.slice(-3)}`}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {row.troveId}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {row.collateralAsset}
           </div>
 
@@ -105,10 +110,16 @@ export function TrovesPanel({ troves }: TroveProps) {
             {`${fmtnum(Number(row.collateral), "2z")} $`}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum(Number(row.debt), "2z")}
+            {`${fmtnum(Number(row.debt), "2z")} $`}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {fmtnum(Number(row.cr) * 100, "2z")} %
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {fmtnum(1 / Number(row.cr) * 100, "2z")} %
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {fmtnum(Number(maxLTV[row.collateralAsset]), "2z")} %
           </div>
         </div>
       ))}
