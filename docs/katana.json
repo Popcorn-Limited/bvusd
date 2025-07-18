@@ -8,11 +8,11 @@
   "total_reserve": "15",
   "reserves_assets": [
     {
-      "asset": "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
+      "asset": "USDC",
       "balance": "11"
     },
     {
-      "asset": "0x876aac7648D79f87245E73316eB2D100e75F3Df1",
+      "asset": "bvUSD",
       "balance": "4"
     }
   ],

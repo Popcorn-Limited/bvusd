@@ -127,7 +127,7 @@ export const fetchV2Stats = async ({
         provider
       ) as unknown as ERC20;
       return ({
-        asset: vault.asset,
+        asset: vault.symbol,
         balance:  Number(await asset.balanceOf(vault.safe, { blockTag })) /
         10 ** vault.assetDecimals
       });
