@@ -704,6 +704,14 @@ const StatsSchema = v.pipe(
         cr: v.string(),
       })
     ),
+    spDeposits: v.array(
+      v.object({
+        depositor: v.string(),
+        collateral: v.string(),
+        time: v.string(),
+        amount: v.string(),
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -764,6 +772,14 @@ const StatsSchema = v.pipe(
         collateral: trove.collateral,
         debt: trove.debt,
         cr: trove.cr,
+      };
+    }),
+    spDeposits: value.spDeposits.map((deposit) => {
+      return {
+        depositor: deposit.depositor,
+        time: deposit.time,
+        collateralAsset: deposit.collateral,
+        amount: deposit.amount
       };
     }),
   }))

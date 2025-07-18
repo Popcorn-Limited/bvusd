@@ -45,7 +45,7 @@ export function TransparencyMetrics({
     >
       <MetricBox
         label="bvUSD Total Supply"
-        value={`$ ${fmtnum(Number(totalSupply), "2z")}`}
+        value={`${fmtnum(Number(totalSupply), "2z")} bvUSD`}
       />
       <MetricBox
         label="Total Backing (+ Reserve Fund)"

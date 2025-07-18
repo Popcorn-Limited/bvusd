@@ -2,21 +2,23 @@
 
 import { fmtnum } from "@/src/formatting";
 
-interface TroveRow {
-  owner: string;
-  troveId: string;
+interface DepositRow {
+  depositor: string;
   collateralAsset: string;
-  collateral: string;
-  debt: string;
-  cr: string;
+  amount: string;
+  time: string;
 }
 
-type TroveProps = {
-  troves: TroveRow[];
+type SPProps = {
+  deposits: DepositRow[];
 };
 
-export function TrovesPanel({ troves }: TroveProps) {
-  console.log(troves[0]);
+const formatDate = (input: string) => {
+    return new Date(input).toISOString().slice(0, 16).replace('T', ' ');
+}
+
+export function SPDepositsPanel({ deposits }: SPProps) {
+    console.log(deposits[0])
   return (
     <div
       style={{
@@ -48,7 +50,7 @@ export function TrovesPanel({ troves }: TroveProps) {
             lineHeight: "120%",
           }}
         >
-          Troves List
+          SP Deposits List
         </h3>
       </div>
 
@@ -56,7 +58,7 @@ export function TrovesPanel({ troves }: TroveProps) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
           padding: "10px",
           gap: 10,
           borderBottom: "1px solid #333",
@@ -67,21 +69,19 @@ export function TrovesPanel({ troves }: TroveProps) {
           textTransform: "uppercase",
         }}
       >
-        <div>Owner</div>
-        <div>TroveId</div>
+        <div>Depositor</div>
         <div>Collateral Asset</div>
-        <div>Collateral Value</div>
-        <div>Debt</div>
-        <div>Collateral Ratio</div>
+        <div>Amount</div>
+        <div>Time</div>
       </div>
 
       {/* Table Rows */}
-      {troves.map((row, idx) => (
+      {deposits.map((row, idx) => (
         <div
           key={idx}
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr",
             padding: "12px",
             gap: 16,
             borderBottom: "1px solid #23262F",
@@ -92,23 +92,17 @@ export function TrovesPanel({ troves }: TroveProps) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${row.owner.slice(0, 6)}...${row.owner.slice(-3)}`}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {row.troveId}
+            {`${row.depositor.slice(0, 6)}...${row.depositor.slice(-3)}`}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {row.collateralAsset}
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${fmtnum(Number(row.collateral), "2z")} $`}
+            {`${fmtnum(Number(row.amount), "2z")} $`}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum(Number(row.debt), "2z")}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum(Number(row.cr) * 100, "2z")} %
+            {formatDate(row.time)}
           </div>
         </div>
       ))}

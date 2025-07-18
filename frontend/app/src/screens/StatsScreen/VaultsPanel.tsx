@@ -77,9 +77,6 @@ export function VaultsPanel() {
         >
           sbvUSD Vaults List
         </h3>
-        <span style={{ color: "#aaa", fontSize: "16px" }}>
-          Last updated: 17 July 2025
-        </span>
       </div>
 
       {/* Table Header */}
@@ -96,7 +93,12 @@ export function VaultsPanel() {
           fontWeight: "400",
           textTransform: "uppercase",
         }}
-      ></div>
+      >
+        <div>Asset</div>
+        <div>Strategy Name</div>
+        <div>Vault Address</div>
+        <div>Chain</div>
+      </div>
 
       {/* Table Rows */}
       {vaultsData.map((row, idx) => (

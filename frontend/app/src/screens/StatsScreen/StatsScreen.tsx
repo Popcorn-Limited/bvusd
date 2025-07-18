@@ -19,6 +19,7 @@ import { fmtnum } from "@/src/formatting";
 import { COLLATERALS, USDT } from "@liquity2/uikit";
 import { VaultsPanel } from "./VaultsPanel";
 import { TrovesPanel } from "./TrovesPanel";
+import { SPDepositsPanel } from "./SPDepositsPanel";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
@@ -146,6 +147,7 @@ export function StatsScreen() {
                     {/* <VenueAndSupplyPanel data={liquityStats.data.historicalSupply}/> */}
                     <VaultsPanel />
                     <TrovesPanel troves={liquityStats.data.troves} />
+                    <SPDepositsPanel deposits={liquityStats.data.spDeposits} />
                   </div>  
                 )}
 
