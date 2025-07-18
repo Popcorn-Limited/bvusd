@@ -15,6 +15,7 @@ import {
   fetchHistSupplyFromDune,
   fetchListOfTroves,
   fetchSpAverageApysFromDune,
+  fetchStabilityPoolDeposits,
   fetchStableVaultTVLFromDune,
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
@@ -110,6 +111,7 @@ export const fetchV2Stats = async ({
   );
   const contracts = getContracts(provider, deployment);
 
+
   // counts all assets (stables) in the vaults safes
   const reserves = await Promise.all(
     vaults.stableVaults.map(async (vault) => {
@@ -134,6 +136,7 @@ export const fetchV2Stats = async ({
     historicalCR,
     vault_tvl,
     troves,
+    spDeposits
   ] = await Promise.all([
     // total_bold_supply
     deployed
@@ -203,6 +206,14 @@ export const fetchV2Stats = async ({
           network: "katana",
         })
       : null,
+
+    deployed 
+      ? 
+        fetchStabilityPoolDeposits({
+          apiKey: duneKey,
+          network: "katana",
+        })
+      : null
   ]);
 
 
@@ -223,7 +234,7 @@ export const fetchV2Stats = async ({
       .map((b) => b.value_locked)
       .reduce((a, b) => a.add(b))
       .add(vault_tvl)}`,
-    total_vault_tvl: `${vault_tvl}`,
+    total_vault_tvl: `${vault_tvl}`, 
     total_reserve: `${reserves.reduce((a, b) => a + b)}`,
     max_sp_apy: `${sp_apys.length > 0 ? Math.max(...sp_apys) : 0}`,
     day_supply: historicalSupply!.map((daily) =>
@@ -291,6 +302,14 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...trove,
+        },
+        (x) => `${x}`
+      )
+    ),
+    spDeposits: spDeposits!.map((deposit) =>
+      mapObj(
+        {
+          ...deposit,
         },
         (x) => `${x}`
       )
