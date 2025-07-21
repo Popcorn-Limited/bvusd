@@ -19,16 +19,6 @@ import { SmallLegend } from "./SmallChartLegend";
 import { CustomTooltip } from "./CustomTooltip";
 import { fmtnum } from "@/src/formatting";
 
-const systemBackingData = [
-  { date: "", USDC: 5, BTC: 7, ETH: 3 },
-  { date: "2/25", USDC: 10, BTC: 13, ETH: 6 },
-  { date: "3/25", USDC: 9, BTC: 11, ETH: 8 },
-  { date: "4/25", USDC: 9, BTC: 10, ETH: 5 },
-  { date: "5/25", USDC: 8, BTC: 9, ETH: 4 },
-  { date: "6/25", USDC: 7, BTC: 8, ETH: 3 },
-  { date: "7/25", USDC: 6, BTC: 7, ETH: 2 },
-];
-
 type CRProps = {
   data: {
     day: string;
@@ -45,8 +35,23 @@ function displayCR(cr: number): string {
   return `${cr.toFixed(0)}%`;
 }
 
+const CustomXAxisTick = ({ x, y, payload, index }) => {
+  if (index === 0) return null;
+  return (
+    <text
+      x={x}
+      y={y + 10}
+      fill="#fff"
+      fontSize={12}
+      fontWeight={400}
+      textAnchor="middle"
+    >
+      {payload.value}
+    </text>
+  );
+};
+
 // TODO - build query in dune of collaterals backing amount over time
-// TODO add USDC - USDT data
 export function ChartsPanel({ data, supply }: CRProps) {
   const day_CR = [...data]
     .reverse()
@@ -87,70 +92,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
         fontFamily: "KHTeka",
       }}
     >
-      {/* Left Card: System Backing */}
-      {/* <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          width: "676px",
-          height: "460px",
-          flexShrink: 0,
-          background: "transparent",
-          borderRadius: "16px",
-          overflow: "hidden",
-          border: "1px solid var(--Neutral-100, #353945)",
-        }}
-      >
-        <PanelHeader title="System Backing" line={true} />
-        <ResponsiveContainer
-          width="100%"
-          height={360}
-          style={{
-            padding: "0 24px",
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
-          <AreaChart data={systemBackingData} margin={{ left: -20 }}>
-            <XAxis
-              axisLine={false}
-              tickLine={false}
-              dataKey="date"
-              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
-              stroke="#777"
-            />
-            <YAxis
-              orientation="left"
-              axisLine={false}
-              tickLine={false}
-              stroke="#777"
-              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
-              tickFormatter={(v) => `${v}M`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend content={SmallLegend} />
-            <Area
-              type="monotone"
-              dataKey="USDC"
-              stroke="#FFB11B"
-              fill="rgba(255, 177, 27, 0.2)"
-            />
-            <Area
-              type="monotone"
-              dataKey="BTC"
-              stroke="#DB3C4B"
-              fill="rgba(255, 255, 255, 0.1)"
-            />
-            <Area
-              type="monotone"
-              dataKey="ETH"
-              stroke="#39D353"
-              fill="rgba(57, 211, 83, 0.1)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div> */}
+      {/* Left Card: Supply */}
 
       <div
         style={{
@@ -174,7 +116,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
         >
           <LineChart
             data={day_supply}
-            margin={{ top: 5, right: 5, bottom: 0, left: 0 }}
+            margin={{ top: 5, right: 5, bottom: 0, left: -20 }}
           >
             <XAxis
               axisLine={false}
@@ -182,6 +124,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
               dataKey="day"
               stroke="#fff"
               minTickGap={30}
+              padding={{left: 20}}
               style={{ marginRight: 15 }}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
@@ -192,7 +135,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
               tickFormatter={(value) => {
                 return displaySupply(value);
               }}
-              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
+              tick={CustomXAxisTick}
             />
             <LineTooltip
               content={<CustomTooltip transformValue={displaySupply} />}
@@ -225,7 +168,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
         <PanelHeader title="Global Collateral Ratio" line={true} />
         <ResponsiveContainer
           width="100%"
-          height={333}
+          height={360}
           style={{
             padding: "0 24px",
             overflow: "hidden",
@@ -238,7 +181,8 @@ export function ChartsPanel({ data, supply }: CRProps) {
               tickLine={false}
               dataKey="day"
               stroke="#fff"
-              minTickGap={30}
+              minTickGap={20}
+              padding={{left: 20}}
               style={{ marginRight: 15 }}
               tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
             />
@@ -248,7 +192,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
               domain={[150, "auto"]}
               stroke="#777"
               tickFormatter={(value) => displayCR(value)}
-              tick={{ fontSize: 12, fontWeight: 400, fill: "#fff" }}
+              tick={CustomXAxisTick}
             />
             <Tooltip content={<CustomTooltip transformValue={displayCR} />} />
             <Area
