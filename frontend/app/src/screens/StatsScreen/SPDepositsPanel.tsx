@@ -1,6 +1,7 @@
 "use client";
 
 import { fmtnum } from "@/src/formatting";
+import { useMemo, useState } from "react";
 
 interface DepositRow {
   depositor: string;
@@ -14,11 +15,50 @@ type SPProps = {
 };
 
 const formatDate = (input: string) => {
-    return new Date(input).toISOString().slice(0, 16).replace('T', ' ');
-}
+  return new Date(input).toISOString().slice(0, 16).replace("T", " ");
+};
 
 export function SPDepositsPanel({ deposits }: SPProps) {
-    console.log(deposits[0])
+  const [sortBy, setSortBy] = useState("amount");
+  const [sortDir, setSortDir] = useState("desc");
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDir("asc");
+    }
+  };
+
+  const getSortableValue = (row, column) => {
+    switch (column) {
+      case "collateralAsset":
+        return row.collateralAsset;
+      case "amount":
+        return Number(row.amount);
+      case "time":
+        return row.time;
+      default:
+        return row[column];
+    }
+  };
+
+  const sortedDeposits = useMemo(() => {
+    return [...deposits].sort((a, b) => {
+      const valA = getSortableValue(a, sortBy);
+      const valB = getSortableValue(b, sortBy);
+      const dir = sortDir === "asc" ? 1 : -1;
+      return valA > valB ? dir : valA < valB ? -dir : 0;
+    });
+  }, [deposits, sortBy, sortDir]);
+
+  const renderHeaderCell = (label, columnKey) => (
+    <div onClick={() => handleSort(columnKey)} style={{ cursor: "pointer" }}>
+      {label} {sortBy === columnKey ? (sortDir === "asc" ? "↑" : "↓") : ""}
+    </div>
+  );
+
   return (
     <div
       style={{
@@ -70,13 +110,13 @@ export function SPDepositsPanel({ deposits }: SPProps) {
         }}
       >
         <div>Depositor</div>
-        <div>Collateral Asset</div>
-        <div>Amount</div>
-        <div>Time</div>
+        <div>{renderHeaderCell("Collateral Asset", "collateralAsset")}</div>
+        <div>{renderHeaderCell("Amount", "amount")}</div>
+        <div>{renderHeaderCell("Time", "time")}</div>
       </div>
 
       {/* Table Rows */}
-      {deposits.map((row, idx) => (
+      {sortedDeposits.map((row, idx) => (
         <div
           key={idx}
           style={{
