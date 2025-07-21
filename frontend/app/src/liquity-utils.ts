@@ -660,6 +660,8 @@ const StatsSchema = v.pipe(
       v.object({
         asset: v.string(),
         balance: v.string(),
+        wallet: v.string(),
+        chain: v.string(),
       })
     ),
     max_sp_apy: v.string(),
@@ -731,6 +733,8 @@ const StatsSchema = v.pipe(
       return {
         asset: r.asset,
         balance: r.balance,
+        wallet: r.wallet,
+        chain: r.chain,
       };
     }),
     maxSpApy: value.max_sp_apy,

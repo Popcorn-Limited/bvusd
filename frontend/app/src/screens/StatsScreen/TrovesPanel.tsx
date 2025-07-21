@@ -23,7 +23,6 @@ const maxLTV = {
 }
 
 export function TrovesPanel({ troves }: TroveProps) {
-  console.log(troves[0]);
   return (
     <div
       style={{

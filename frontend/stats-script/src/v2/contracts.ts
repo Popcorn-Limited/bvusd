@@ -13,6 +13,7 @@ interface VaultData {
   asset: string;
   assetDecimals: number;
   safe: string;
+  chain: string;
 }
 
 export interface VaultsDeployment {

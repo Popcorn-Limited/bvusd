@@ -17,9 +17,10 @@ import { css } from "@/styled-system/css";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { fmtnum } from "@/src/formatting";
 import { COLLATERALS, USDT } from "@liquity2/uikit";
-import { VaultsPanel } from "./VaultsPanel";
+import { ReservesPanel } from "./ReservesPanel";
 import { TrovesPanel } from "./TrovesPanel";
 import { SPDepositsPanel } from "./SPDepositsPanel";
+import { VaultsPanel } from "./VaultsPanel";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
@@ -144,7 +145,9 @@ export function StatsScreen() {
                       data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
-                    <VaultsPanel collateralReserves={liquityStats.data.reserveAssets}/>
+                    {/* TODO add branch collaterals when present*/}
+                    <ReservesPanel collateralReserves={liquityStats.data.reserveAssets}/> 
+                    <VaultsPanel/> 
                     <TrovesPanel troves={liquityStats.data.troves} />
                     <SPDepositsPanel deposits={liquityStats.data.spDeposits} />
                   </div>  
