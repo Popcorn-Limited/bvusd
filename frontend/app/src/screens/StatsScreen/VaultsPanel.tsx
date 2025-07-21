@@ -64,7 +64,6 @@ export function VaultsPanel() {
         fontFamily: "KHTeka",
       }}
     >
-      {/* Right Card: 60% width */}
       <div
         style={{
           flexBasis: "100%",

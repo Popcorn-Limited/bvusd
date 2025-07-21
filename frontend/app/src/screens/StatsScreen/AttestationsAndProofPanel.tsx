@@ -190,7 +190,7 @@ export function AttestationsAndProofPanel() {
                     fontWeight: 400,
                     fontFamily: "KHTeka",
                     fontSize: 18,
-                    height: 40, // optional: keeps rows consistent
+                    height: 40,
                   }}
                 >
                   {row.name}
@@ -198,8 +198,8 @@ export function AttestationsAndProofPanel() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "left",
-                    alignItems: "left",
+                    justifyContent: "center",
+                    alignItems: "center",
                     fontWeight: 400,
                     fontFamily: "KHTeka",
                     fontSize: 14,
@@ -214,8 +214,8 @@ export function AttestationsAndProofPanel() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "left",
-                    alignItems: "left",
+                    justifyContent: "center",
+                    alignItems: "center",
                     fontWeight: 400,
                     fontFamily: "KHTeka",
                     fontSize: 14,

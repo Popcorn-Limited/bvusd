@@ -720,6 +720,13 @@ const StatsSchema = v.pipe(
         amount: v.string(),
       })
     ),
+    poolDepth: v.array(
+      v.object({
+        tick: v.string(),
+        liquidity: v.string(),
+        price: v.string(),
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -796,6 +803,13 @@ const StatsSchema = v.pipe(
         time: deposit.time,
         collateralAsset: deposit.collateral,
         amount: deposit.amount
+      };
+    }),
+    poolDepth: value.poolDepth.map((tick) => {
+      return {
+        tick: tick.tick,
+        liquidity: tick.liquidity,
+        price: tick.price,
       };
     }),
   }))

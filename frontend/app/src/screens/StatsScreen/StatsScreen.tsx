@@ -21,6 +21,7 @@ import { ReservesPanel } from "./ReservesPanel";
 import { TrovesPanel } from "./TrovesPanel";
 import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
+import { DepthChart } from "./Depth";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
@@ -163,8 +164,8 @@ export function StatsScreen() {
                       gap: "32px",
                     }}
                   >
-                    <AttestationsAndProofPanel />
-
+                  <AttestationsAndProofPanel />
+                  <DepthChart data={liquityStats.data.poolDepth} />
                     {/* <MarketStatPanel />
                   <MarketChartPanel />
                   <FundingBreakdownPanel />
