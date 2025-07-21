@@ -129,7 +129,8 @@ export const fetchV2Stats = async ({
       return ({
         asset: vault.symbol,
         balance:  Number(await asset.balanceOf(vault.safe, { blockTag })) /
-        10 ** vault.assetDecimals
+        10 ** vault.assetDecimals,
+        wallet: vault.safe,
       });
     })
   );

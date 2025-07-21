@@ -9,7 +9,8 @@
   "reserves_assets": [
     {
       "asset": "USDC",
-      "balance": "11"
+      "balance": "11",
+      "wallet": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057"
     }
   ],
   "max_sp_apy": "0",
@@ -650,26 +651,26 @@
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "wstETH",
-      "time": "2025-07-18 12:52:11.000 UTC",
-      "amount": "7796447.695155246"
+      "time": "2025-07-20 20:26:23.000 UTC",
+      "amount": "7828931.334594138"
     },
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "ETH",
-      "time": "2025-07-18 12:52:11.000 UTC",
-      "amount": "3898223.847577623"
+      "time": "2025-07-20 20:26:23.000 UTC",
+      "amount": "3914476.2792884"
     },
     {
       "depositor": "0x2048a730f564246411415f719198d6f7c10a7961",
       "collateral": "ETH",
-      "time": "2025-07-17 11:56:35.000 UTC",
-      "amount": "2667564.240663095"
+      "time": "2025-07-20 17:33:35.000 UTC",
+      "amount": "1924003.9152606984"
     },
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "rETH",
-      "time": "2025-07-18 12:52:11.000 UTC",
-      "amount": "1299407.9491925412"
+      "time": "2025-07-20 20:26:23.000 UTC",
+      "amount": "1304818.892709182"
     },
     {
       "depositor": "0x7b852ebc448b3638f971bac2c463db6578634f11",
@@ -680,8 +681,20 @@
     {
       "depositor": "0x3630220f243288e3eac4c5676fc191cff5756431",
       "collateral": "ETH",
-      "time": "2025-06-27 01:33:23.000 UTC",
-      "amount": "619398.1005611356"
+      "time": "2025-07-20 04:58:59.000 UTC",
+      "amount": "621619.8892591699"
+    },
+    {
+      "depositor": "0x930fcc7713010bef90847567897156a0488cadb4",
+      "collateral": "ETH",
+      "time": "2025-07-20 16:45:11.000 UTC",
+      "amount": "572085.8807033419"
+    },
+    {
+      "depositor": "0x46af61661b1e15da5bfe40756495b7881f426214",
+      "collateral": "wstETH",
+      "time": "2025-07-19 00:45:47.000 UTC",
+      "amount": "569524.9653815707"
     },
     {
       "depositor": "0xceb63486c7ec2896b399e2d967c567d8c05f673a",
@@ -694,18 +707,6 @@
       "collateral": "ETH",
       "time": "2025-06-23 09:35:35.000 UTC",
       "amount": "504982.7579562253"
-    },
-    {
-      "depositor": "0x6076908d835ddaaef6baaa7e3e0afd5ea00de09c",
-      "collateral": "wstETH",
-      "time": "2025-06-23 17:33:47.000 UTC",
-      "amount": "502659.13758991205"
-    },
-    {
-      "depositor": "0x7b852ebc448b3638f971bac2c463db6578634f11",
-      "collateral": "ETH",
-      "time": "2025-07-17 13:01:11.000 UTC",
-      "amount": "501785.809226062"
     }
   ]
 }
