@@ -20,6 +20,7 @@ import {
   fetchReservesFromDune
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
+import { fetchLiquidityDepth } from "./queries/getPoolDepth";
 
 const ONE_WEI = Decimal.fromBigNumberString("1");
 
@@ -112,7 +113,7 @@ export const fetchV2Stats = async ({
   );
   const contracts = getContracts(provider, deployment);
 
-
+  const poolDepth = await fetchLiquidityDepth(provider);
   // await fetchReservesFromDune({
   //     apiKey: duneKey,
   //     network: "katana",
@@ -328,6 +329,14 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...deposit,
+        },
+        (x) => `${x}`
+      )
+    ),
+    poolDepth: poolDepth!.map((tick) =>
+      mapObj(
+        {
+          ...tick,
         },
         (x) => `${x}`
       )
