@@ -108,8 +108,8 @@ export const DepthChart = ({ data }: DepthChartProps) => {
                 return value.toFixed(2);
               }}
             />{" "}
-            <Bar dataKey="token0" stackId="a" fill="#f9a825" />
-            <Bar dataKey="token1" stackId="a" fill="#d8d1c7ff" />
+            <Bar dataKey="token0" stackId="a" fill="#f9a825" name="USDC" />
+            <Bar dataKey="token1" stackId="a" fill="#d8d1c7ff" name="bvUSD" />
           </BarChart>
         </ResponsiveContainer>
       </div>
