@@ -6,6 +6,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  TooltipProps,
 } from "recharts";
 import { PanelHeader } from "./PanelTitle";
 import { NumberToHexErrorType } from "viem";
@@ -15,7 +16,6 @@ type DepthDataPoint = {
   price: string;
   liquidity: string;
 };
-
 
 type DepthChartProps = {
   data: DepthDataPoint[];
@@ -44,6 +44,34 @@ function getTokenAmounts(
     token1: amount1 / 10 ** decimals,
   };
 }
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+  if (!active || !payload || !payload.length) return null;
+
+  const price = Number(label).toFixed(6);
+
+  return (
+    <div
+      style={{
+        background: "#1e1e1e",
+        padding: "10px",
+        borderRadius: "8px",
+        border: "1px solid #444",
+        color: "#fff",
+      }}
+    >
+      <div style={{ fontWeight: 600, marginBottom: 6 }}>Price: {price}</div>
+      {payload.map((entry, idx) => (
+        <div key={idx} style={{ color: entry.color }}>
+          {entry.name}:{" "}
+          {Number(entry.value).toLocaleString(undefined, {
+            maximumFractionDigits: 0,
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export const DepthChart = ({ data }: DepthChartProps) => {
   console.log(data);
@@ -90,7 +118,7 @@ export const DepthChart = ({ data }: DepthChartProps) => {
 
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData} barCategoryGap={0} barGap={0}>
-            <XAxis dataKey="price" tick={{ fontSize: 10 }} interval={4}/>
+            <XAxis dataKey="price" tick={{ fontSize: 10 }} interval={4} />
             <YAxis
               tick={{ fontSize: 10 }}
               tickFormatter={(value) => {
@@ -100,14 +128,7 @@ export const DepthChart = ({ data }: DepthChartProps) => {
                 return value.toFixed(0);
               }}
             />{" "}
-            <Tooltip
-              formatter={(value: number) => {
-                if (value >= 1_000_000)
-                  return `${(value / 1_000_000).toFixed(2)}M`;
-                if (value >= 1_000) return `${(value / 1_000).toFixed(2)}K`;
-                return value.toFixed(2);
-              }}
-            />{" "}
+            <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="token0" stackId="a" fill="#f9a825" name="USDC" />
             <Bar dataKey="token1" stackId="a" fill="#d8d1c7ff" name="bvUSD" />
           </BarChart>
