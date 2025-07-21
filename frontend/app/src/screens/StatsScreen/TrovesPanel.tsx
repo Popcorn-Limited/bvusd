@@ -38,6 +38,7 @@ export function TrovesPanel({ troves }: TroveProps) {
 
   const getSortableValue = (row, column) => {
     switch (column) {
+      case "owner": return row.owner;
       case "collateral": return Number(row.collateral);
       case "debt": return Number(row.debt);
       case "cr": return Number(row.cr);
@@ -112,7 +113,7 @@ export function TrovesPanel({ troves }: TroveProps) {
           textTransform: "uppercase",
         }}
       >
-        <div>Owner</div>
+        <div>{renderHeaderCell("Owner", "owner")}</div>
         <div>{renderHeaderCell("Collateral Asset", "collateralAsset")}</div>
         <div>{renderHeaderCell("Collateral Value", "collateral")}</div>
         <div>{renderHeaderCell("Debt", "debt")}</div>

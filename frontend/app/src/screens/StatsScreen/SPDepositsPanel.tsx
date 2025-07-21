@@ -33,6 +33,8 @@ export function SPDepositsPanel({ deposits }: SPProps) {
 
   const getSortableValue = (row, column) => {
     switch (column) {
+      case "depositor":
+        return row.depositor;
       case "collateralAsset":
         return row.collateralAsset;
       case "amount":
@@ -109,7 +111,7 @@ export function SPDepositsPanel({ deposits }: SPProps) {
           textTransform: "uppercase",
         }}
       >
-        <div>Depositor</div>
+        <div>{renderHeaderCell("Depositor", "depositor")}</div>
         <div>{renderHeaderCell("Collateral Asset", "collateralAsset")}</div>
         <div>{renderHeaderCell("Amount", "amount")}</div>
         <div>{renderHeaderCell("Time", "time")}</div>
