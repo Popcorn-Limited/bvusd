@@ -10,7 +10,8 @@
     {
       "asset": "USDC",
       "balance": "11",
-      "wallet": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057"
+      "wallet": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
+      "chain": "Katana"
     }
   ],
   "max_sp_apy": "0",
@@ -651,26 +652,26 @@
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "wstETH",
-      "time": "2025-07-20 20:26:23.000 UTC",
-      "amount": "7828931.334594138"
+      "time": "2025-07-20 23:47:59.000 UTC",
+      "amount": "7838082.205500949"
     },
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "ETH",
-      "time": "2025-07-20 20:26:23.000 UTC",
-      "amount": "3914476.2792884"
+      "time": "2025-07-20 23:47:59.000 UTC",
+      "amount": "3919057.3457976053"
     },
     {
       "depositor": "0x2048a730f564246411415f719198d6f7c10a7961",
       "collateral": "ETH",
-      "time": "2025-07-20 17:33:35.000 UTC",
-      "amount": "1924003.9152606984"
+      "time": "2025-07-21 07:25:35.000 UTC",
+      "amount": "1924813.8927479838"
     },
     {
       "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
       "collateral": "rETH",
-      "time": "2025-07-20 20:26:23.000 UTC",
-      "amount": "1304818.892709182"
+      "time": "2025-07-20 23:47:59.000 UTC",
+      "amount": "1306343.4687563279"
     },
     {
       "depositor": "0x7b852ebc448b3638f971bac2c463db6578634f11",

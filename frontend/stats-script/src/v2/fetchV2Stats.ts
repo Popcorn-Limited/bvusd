@@ -113,12 +113,13 @@ export const fetchV2Stats = async ({
   const contracts = getContracts(provider, deployment);
 
 
-      // await fetchReservesFromDune({
-      //     apiKey: duneKey,
-      //     network: "katana",
-      //   })
+  // await fetchReservesFromDune({
+  //     apiKey: duneKey,
+  //     network: "katana",
+  //   })
 
   // counts all assets (stables) in the vaults safes
+  // TODO multichain 
   const reserves = await Promise.all(
     vaults.stableVaults.map(async (vault) => {
       const asset = new Contract(
@@ -131,6 +132,7 @@ export const fetchV2Stats = async ({
         balance:  Number(await asset.balanceOf(vault.safe, { blockTag })) /
         10 ** vault.assetDecimals,
         wallet: vault.safe,
+        chain: vault.chain
       });
     })
   );
