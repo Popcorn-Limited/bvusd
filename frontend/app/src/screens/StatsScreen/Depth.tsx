@@ -45,6 +45,33 @@ function getTokenAmounts(
   };
 }
 
+// group buckets of price
+function groupByPriceTickSize(
+  data: { price: string; token0: number; token1: number }[],
+  bucketSize: number
+) {
+  const grouped = new Map<string, { price: string; token0: number; token1: number }>();
+
+  data.forEach((item) => {
+    const priceFloat = parseFloat(item.price);
+    const bucket = (Math.floor(priceFloat / bucketSize) * bucketSize).toFixed(6);
+
+    if (!grouped.has(bucket)) {
+      grouped.set(bucket, {
+        price: bucket,
+        token0: 0,
+        token1: 0,
+      });
+    }
+
+    const entry = grouped.get(bucket)!;
+    entry.token0 += item.token0;
+    entry.token1 += item.token1;
+  });
+
+  return Array.from(grouped.values()).sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+}
+
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (!active || !payload || !payload.length) return null;
 
@@ -74,7 +101,9 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
 };
 
 export const DepthChart = ({ data }: DepthChartProps) => {
-  console.log(data);
+  // console.log(data);
+  const minTickSize = 10000;
+
   const chartData = data.slice(0, -1).map((item, idx) => {
     const tick = parseInt(item.tick);
     const nextTick = parseInt(data[idx + 1].tick);
@@ -87,7 +116,9 @@ export const DepthChart = ({ data }: DepthChartProps) => {
       token0,
       token1,
     };
-  });
+  }).filter(tick => tick.token0 + tick.token1 > minTickSize);
+
+  // const groupedData = groupByPriceTickSize(chartData, 0.00025);
 
   return (
     <div
@@ -128,7 +159,7 @@ export const DepthChart = ({ data }: DepthChartProps) => {
                 return value.toFixed(0);
               }}
             />{" "}
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
             <Bar dataKey="token0" stackId="a" fill="#f9a825" name="USDC" />
             <Bar dataKey="token1" stackId="a" fill="#d8d1c7ff" name="bvUSD" />
           </BarChart>
