@@ -46,7 +46,7 @@ export const fetchLiquidityDepth = async (provider: Provider) => {
 
   const ticks: { tick: number; liquidity: string; price: number }[] = [];
 
-  const range = 20; // # of ticks above/below current
+  const range = 100; // # of ticks above/below current
   for (let i = -range; i <= range; i++) {
     const tick = currentTick + i * tickSpacing;
     try {
