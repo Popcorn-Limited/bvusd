@@ -17,7 +17,8 @@ import {
   fetchSpAverageApysFromDune,
   fetchStabilityPoolDeposits,
   fetchStableVaultTVLFromDune,
-  fetchReservesFromDune
+  fetchReservesFromDune,
+  fetchbvUSDHolders
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
 import { fetchLiquidityDepth } from "./queries/getPoolDepth";
@@ -147,7 +148,8 @@ export const fetchV2Stats = async ({
     historicalCR,
     vault_tvl,
     troves,
-    spDeposits
+    spDeposits,
+    holders
   ] = await Promise.all([
     // total_bold_supply
     deployed
@@ -224,7 +226,12 @@ export const fetchV2Stats = async ({
           apiKey: duneKey,
           network: "katana",
         })
-      : null
+      : null,
+
+    fetchbvUSDHolders({
+      apiKey: duneKey,
+      network: "katana",
+    })
   ]);
 
 
@@ -337,6 +344,14 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...tick,
+        },
+        (x) => `${x}`
+      )
+    ),
+    holders: holders!.map((holder) =>
+      mapObj(
+        {
+          ...holder,
         },
         (x) => `${x}`
       )
