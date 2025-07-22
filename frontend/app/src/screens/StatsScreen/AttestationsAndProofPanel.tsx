@@ -105,7 +105,7 @@ export function AttestationsAndProofPanel() {
             width: "100%",
             alignItems: "center",
             padding: 10,
-            borderBottom: "1px solid #23262F"
+            borderBottom: "1px solid #23262F",
           }}
         >
           <div

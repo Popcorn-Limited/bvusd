@@ -727,6 +727,13 @@ const StatsSchema = v.pipe(
         price: v.string(),
       })
     ),
+    holders: v.array(
+      v.object({
+        holder: v.string(),
+        balance: v.string(),
+        day: v.string(),
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -810,6 +817,13 @@ const StatsSchema = v.pipe(
         tick: tick.tick,
         liquidity: tick.liquidity,
         price: tick.price,
+      };
+    }),
+    holders: value.holders.map((h) => {
+      return {
+        holder: h.holder,
+        balance: h.balance,
+        lastUpdate: h.day,
       };
     }),
   }))

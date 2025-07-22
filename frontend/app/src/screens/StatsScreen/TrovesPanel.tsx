@@ -20,8 +20,8 @@ type TroveProps = {
 const maxLTV = {
   ETH: 90,
   rETH: 85,
-  wstETH: 90
-}
+  wstETH: 90,
+};
 
 export function TrovesPanel({ troves }: TroveProps) {
   const [sortBy, setSortBy] = useState("collateral");
@@ -38,13 +38,20 @@ export function TrovesPanel({ troves }: TroveProps) {
 
   const getSortableValue = (row, column) => {
     switch (column) {
-      case "owner": return row.owner;
-      case "collateral": return Number(row.collateral);
-      case "debt": return Number(row.debt);
-      case "cr": return Number(row.cr);
-      case "ltv": return 1 / Number(row.cr);
-      case "maxltv": return Number(maxLTV[row.collateralAsset] || 0);
-      default: return row[column];
+      case "owner":
+        return row.owner;
+      case "collateral":
+        return Number(row.collateral);
+      case "debt":
+        return Number(row.debt);
+      case "cr":
+        return Number(row.cr);
+      case "ltv":
+        return 1 / Number(row.cr);
+      case "maxltv":
+        return Number(maxLTV[row.collateralAsset] || 0);
+      default:
+        return row[column];
     }
   };
 
@@ -155,7 +162,7 @@ export function TrovesPanel({ troves }: TroveProps) {
             {fmtnum(Number(row.cr) * 100, "2z")} %
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum(1 / Number(row.cr) * 100, "2z")} %
+            {fmtnum((1 / Number(row.cr)) * 100, "2z")} %
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {fmtnum(Number(maxLTV[row.collateralAsset]), "2z")} %

@@ -22,6 +22,7 @@ import { TrovesPanel } from "./TrovesPanel";
 import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
 import { DepthChart } from "./Depth";
+import { HoldersPanel } from "./HoldersPanel";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
@@ -146,12 +147,15 @@ export function StatsScreen() {
                       data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
+                    <HoldersPanel holders={liquityStats.data.holders} />
                     {/* TODO add branch collaterals when present*/}
-                    <ReservesPanel collateralReserves={liquityStats.data.reserveAssets}/> 
-                    <VaultsPanel/> 
+                    <ReservesPanel
+                      collateralReserves={liquityStats.data.reserveAssets}
+                    />
+                    <VaultsPanel />
                     <TrovesPanel troves={liquityStats.data.troves} />
                     <SPDepositsPanel deposits={liquityStats.data.spDeposits} />
-                  </div>  
+                  </div>
                 )}
 
                 {activeTab === "transparency" && (
@@ -164,8 +168,8 @@ export function StatsScreen() {
                       gap: "32px",
                     }}
                   >
-                  <AttestationsAndProofPanel />
-                  <DepthChart data={liquityStats.data.poolDepth} />
+                    <AttestationsAndProofPanel />
+                    <DepthChart data={liquityStats.data.poolDepth} />
                     {/* <MarketStatPanel />
                   <MarketChartPanel />
                   <FundingBreakdownPanel />

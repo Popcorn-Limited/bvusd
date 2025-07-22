@@ -20,10 +20,7 @@ export function TransparencyMetrics({
 }: TransparencyMetricsProps) {
   const backing =
     Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves);
-  const protocolBackingRatio = `${fmtnum(
-    Number(avgCR),
-    "2z"
-  )} %`;
+  const protocolBackingRatio = `${fmtnum(Number(avgCR), "2z")} %`;
 
   console.log(avgCR);
 
