@@ -6,3 +6,4 @@ export * from "./avgApy";
 export * from "./spDeposits";
 export * from "./reserves";
 export * from "./holders";
+export * from "./branchData";
