@@ -23,6 +23,7 @@ import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
 import { DepthChart } from "./Depth";
 import { HoldersPanel } from "./HoldersPanel";
+import { VolumeChart } from "./PoolVolume";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
@@ -83,7 +84,7 @@ export function StatsScreen() {
               <HFlex gap={8}>Invalid Data</HFlex>;
             }
             return (
-              <div style={{ width: "100%" }}>
+              <div style={{ width: "100%", minHeight: "calc(100vh - 80px)"}}>
                 <div
                   style={{
                     display: "flex",
@@ -169,7 +170,8 @@ export function StatsScreen() {
                     }}
                   >
                     <AttestationsAndProofPanel />
-                    <DepthChart data={liquityStats.data.poolDepth} />
+                    <DepthChart depth={liquityStats.data.poolDepth} />
+                    <VolumeChart volume={liquityStats.data.poolVolume} />
                     {/* <MarketStatPanel />
                   <MarketChartPanel />
                   <FundingBreakdownPanel />

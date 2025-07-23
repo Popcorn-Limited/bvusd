@@ -22,12 +22,11 @@ export function TransparencyMetrics({
     Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves);
   const protocolBackingRatio = `${fmtnum(Number(avgCR), "2z")} %`;
 
-  console.log(avgCR);
+  // console.log(avgCR);
 
   return (
     <div
       style={{
-        width: "100%",
         display: "flex",
         flexDirection: "row",
         gap: "16px",

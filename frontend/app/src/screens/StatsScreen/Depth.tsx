@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { PanelHeader } from "./PanelTitle";
 import { NumberToHexErrorType } from "viem";
+import { fmtnum } from "@/src/formatting";
 
 type DepthDataPoint = {
   tick: string;
@@ -18,7 +19,7 @@ type DepthDataPoint = {
 };
 
 type DepthChartProps = {
-  data: DepthDataPoint[];
+  depth: DepthDataPoint[];
 };
 
 // Convert tick to sqrtPrice
@@ -43,6 +44,12 @@ function getTokenAmounts(
     token0: amount0 / 10 ** decimals,
     token1: amount1 / 10 ** decimals,
   };
+}
+
+function display(value: number): string {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+  return value.toString();
 }
 
 // group buckets of price
@@ -107,18 +114,24 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   );
 };
 
-export const DepthChart = ({ data }: DepthChartProps) => {
+export const DepthChart = ({ depth }: DepthChartProps) => {
   // console.log(data);
   const minTickSize = 10000;
+  let totalToken0 = 0;
+  let totalToken1 = 0;
 
-  const chartData = data
+  const chartData = depth
     .slice(0, -1)
     .map((item, idx) => {
       const tick = parseInt(item.tick);
-      const nextTick = parseInt(data[idx + 1].tick);
+      const nextTick = parseInt(depth[idx + 1].tick);
       const liquidity = Number(item.liquidity);
 
       const { token0, token1 } = getTokenAmounts(liquidity, tick, nextTick, 6);
+
+      // Accumulate totals
+      totalToken0 += token0;
+      totalToken1 += token1;
 
       return {
         price: Number(item.price).toFixed(6),
@@ -142,7 +155,88 @@ export const DepthChart = ({ data }: DepthChartProps) => {
     >
       <div
         style={{
-          flexBasis: "100%",
+          flexBasis: "30%",
+          flexGrow: 0,
+          flexShrink: 0,
+          padding: 24,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          background: "transparent",
+          borderRadius: "16px",
+          border: "1px solid var(--Neutral-100, #353945)",
+        }}
+      >
+        {" "}
+        <PanelHeader title="Sushi Pool Stats" line={true} />
+        {/* Table Header */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            padding: "10px",
+            gap: 10,
+            borderBottom: "1px solid #333",
+            color: "#fff",
+            fontSize: 14,
+            fontFamily: "KHTeka",
+            fontWeight: "400",
+            textTransform: "uppercase",
+          }}
+        >
+          <div>Tokens</div>
+          <div>USD Liquidity</div>
+        </div>
+        {/* Table Rows */}
+        <div
+          key={0}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            padding: "12px",
+            gap: 16,
+            borderBottom: "1px solid #23262F",
+            color: "#fff",
+            fontSize: 18,
+            fontFamily: "KHTeka",
+            fontWeight: "400",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {"USDC"}
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {`$ ${display(Number(totalToken0))}`}
+          </div>
+        </div>
+        <div
+          key={0}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            padding: "12px",
+            gap: 16,
+            borderBottom: "1px solid #23262F",
+            color: "#fff",
+            fontSize: 18,
+            fontFamily: "KHTeka",
+            fontWeight: "400",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {"aUSD"}
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {`$ ${display(Number(totalToken1))}`}
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          flexBasis: "70%",
           flexGrow: 0,
           flexShrink: 0,
           padding: 24,
