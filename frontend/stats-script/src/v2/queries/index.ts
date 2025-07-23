@@ -7,3 +7,4 @@ export * from "./spDeposits";
 export * from "./reserves";
 export * from "./holders";
 export * from "./branchData";
+export * from "./poolVolume";

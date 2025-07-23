@@ -6,3 +6,4 @@ export const TROVES_QUERY = "https:/api.dune.com/api/v1/query/5494475/results?li
 export const SP_DEPOSITS_QUERY = "https:/api.dune.com/api/v1/query/5156890/results?limit=10";
 export const RESERVES_QUERY = "https:/api.dune.com/api/v1/query/5492104/results?limit=1000";
 export const bvUSD_HOLDERS = "https:/api.dune.com/api/v1/query/5517514/results?limit=1000";
+export const SUSHI_VOLUME = "https:/api.dune.com/api/v1/query/5523901/results?limit=1000";

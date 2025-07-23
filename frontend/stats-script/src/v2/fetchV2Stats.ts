@@ -18,6 +18,7 @@ import {
   fetchbvUSDHolders,
   fetchBranchData,
   emptyBranchData,
+  fetchPoolVolume,
   decimalify,
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
@@ -91,6 +92,7 @@ export const fetchV2Stats = async ({
     spDeposits,
     holders,
     poolDepth,
+    poolVolume
   ] = deployed
     ? await Promise.all([
         // total bvUSD supply
@@ -139,6 +141,9 @@ export const fetchV2Stats = async ({
 
         // pool depth
         fetchLiquidityDepth(provider),
+
+        // pool volume
+        fetchPoolVolume(fetchConfig)
       ])
     : await Promise.all([
         Decimal.ZERO, // total_bold_supply
@@ -150,6 +155,7 @@ export const fetchV2Stats = async ({
         null, // spDeposits
         null,
         null,
+        null
       ]);
 
   const sp_apys = branches.map((b) => b.sp_apy).filter((x) => !isNaN(x));
@@ -269,6 +275,14 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...holder,
+        },
+        (x) => `${x}`
+      )
+    ),
+    poolVolume: poolVolume!.map((pool) =>
+      mapObj(
+        {
+          ...pool,
         },
         (x) => `${x}`
       )
