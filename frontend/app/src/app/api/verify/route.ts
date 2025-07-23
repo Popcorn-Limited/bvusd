@@ -1,19 +1,10 @@
-export const runtime = 'nodejs';
-
 import { NextResponse } from "next/server";
 import { verifyMessage } from "viem";
 import { keccak256 } from "viem";
-
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import allowlist from './allowList.json';
 
 export async function POST(req: Request) {
   try {
-    const allowlist = getAllowList();
     const { account, message, signature } = await req.json();
 
     const verified = await verifyMessage({
@@ -31,9 +22,9 @@ export async function POST(req: Request) {
     );
   }
 }
-const getAllowList = () => {
-  const filePath = join(__dirname, "allowList.json");
-  const raw = readFileSync(filePath, "utf-8");
-  const allowlist: string[] = JSON.parse(raw);
-  return allowlist.map((addr) => addr.toLowerCase());
-};
+// const getAllowList = () => {
+//   const filePath = join(__dirname, "allowList.json");
+//   const raw = readFileSync(filePath, "utf-8");
+//   const allowlist: string[] = JSON.parse(raw);
+//   return allowlist.map((addr) => addr.toLowerCase());
+// };
