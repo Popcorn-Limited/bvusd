@@ -1,5 +1,5 @@
 import React from "react";
-import { PanelHeader } from "./PanelTitle";
+import { PanelHeader } from "../StatsScreen/PanelTitle";
 
 type VolumeData = {
   pool: string;

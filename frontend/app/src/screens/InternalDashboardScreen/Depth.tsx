@@ -8,9 +8,7 @@ import {
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
-import { PanelHeader } from "./PanelTitle";
-import { NumberToHexErrorType } from "viem";
-import { fmtnum } from "@/src/formatting";
+import { PanelHeader } from "../StatsScreen/PanelTitle";
 
 type DepthDataPoint = {
   tick: string;
