@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -114,7 +114,8 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
 
 export const DepthChart = ({ depth }: DepthChartProps) => {
   // console.log(data);
-  const minTickSize = 10000;
+  const [minTickSize, setMinTickSize] = useState(10000);
+
   let totalToken0 = 0;
   let totalToken1 = 0;
 
@@ -140,6 +141,13 @@ export const DepthChart = ({ depth }: DepthChartProps) => {
     .filter((tick) => tick.token0 + tick.token1 > minTickSize);
 
   // const groupedData = groupByPriceTickSize(chartData, 0.00025);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    if (!isNaN(value)) {
+      setMinTickSize(value);
+    }
+  };
 
   return (
     <div
@@ -248,8 +256,44 @@ export const DepthChart = ({ depth }: DepthChartProps) => {
         }}
       >
         {/* Header */}
-        <PanelHeader title="bvUSD-USDC Pool Depth" line={true} />
-
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingBottom: "20px",
+          }}
+        >
+          <h3
+            style={{
+              color: "var(--Primary-White, #FFF)",
+              fontFamily: "KHTeka",
+              fontSize: "24px",
+              fontStyle: "normal",
+              fontWeight: "400",
+              lineHeight: "120%",
+            }}
+          >
+            Pool Depth
+          </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <label style={{ color: "#fff" }}>Tick Size (USD):</label>
+            <input
+              type="number"
+              value={minTickSize}
+              onChange={handleChange}
+              min={0}
+              style={{
+                padding: "8px 12px",
+                borderRadius: 8,
+                border: "1px solid #ccc",
+                fontSize: 16,
+                background: "#111",
+                color: "#fff",
+              }}
+            />
+          </div>
+        </div>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData} barCategoryGap={0} barGap={0}>
             <XAxis dataKey="price" tick={{ fontSize: 10 }} interval={4} />
