@@ -14,8 +14,16 @@ type SPProps = {
   deposits: DepositRow[];
 };
 
-const formatDate = (input: string) => {
-  return new Date(input).toISOString().slice(0, 16).replace("T", " ");
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 };
 
 export function SPDepositsPanel({ deposits }: SPProps) {
@@ -145,7 +153,7 @@ export function SPDepositsPanel({ deposits }: SPProps) {
             {`${fmtnum(Number(row.amount), "2z")} $`}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {formatDate(row.time)}
+            {formatDate(row.time)} UTC
           </div>
         </div>
       ))}

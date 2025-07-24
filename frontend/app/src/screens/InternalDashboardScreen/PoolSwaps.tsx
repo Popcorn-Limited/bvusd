@@ -26,6 +26,18 @@ const sliceAmount = (amount: string) => {
   else return amount;
 };
 
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
 export function PoolSwaps({ swaps }: TroveProps) {
   const [filterAmount, setFilterAmount] = useState(MIN_USDC_AMOUNT);
 
@@ -157,7 +169,7 @@ export function PoolSwaps({ swaps }: TroveProps) {
               }}
             >
               <div>{row.action}</div>
-              <div>{row.time.slice(0, 10)}</div>
+              <div>{formatDate(row.time.slice(0, 19))} UTC</div>
               <div
                 style={{
                   whiteSpace: "nowrap",

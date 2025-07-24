@@ -8,6 +8,18 @@ type HoldersProps = {
   }[];
 };
 
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
 export function HoldersPanel({ holders }: HoldersProps) {
   // console.log(holders);
 
@@ -102,7 +114,7 @@ export function HoldersPanel({ holders }: HoldersProps) {
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              {row.lastUpdate}
+              {formatDate(row.lastUpdate)} UTC
             </div>
           </div>
         ))}
