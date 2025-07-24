@@ -923,7 +923,7 @@
     },
     {
       "tick": "3",
-      "liquidity": "417839958719185",
+      "liquidity": "411894480736148",
       "price": "1.0003000300009999"
     },
     {
@@ -938,7 +938,7 @@
     },
     {
       "tick": "6",
-      "liquidity": "7639082463938941",
+      "liquidity": "7473522773591325",
       "price": "1.0006001500200015"
     },
     {
@@ -948,7 +948,7 @@
     },
     {
       "tick": "8",
-      "liquidity": "38657466558568441",
+      "liquidity": "38491906868220825",
       "price": "1.000800280056007"
     },
     {
@@ -973,7 +973,7 @@
     },
     {
       "tick": "13",
-      "liquidity": "552694580021913",
+      "liquidity": "546749102038876",
       "price": "1.0013007802860714"
     },
     {
@@ -1237,18 +1237,20 @@
   ],
   "poolSwaps": [
     {
-      "amount0": "1397544850",
-      "amount1": "393764803846904751",
+      "amount0": "1243.414181",
+      "amount1": "0.35329517690320184",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
       "sender": "0x2905d7e4d048d29954f81b02171dd313f457a4a4",
-      "time": "2025-07-24 06:43:02.000 UTC",
+      "time": "2025-07-24 07:05:56.000 UTC",
       "token0": "USDC",
       "token1": "ETH",
-      "txHash": "0x07a21968ec2e1a601c9be4fa23c0ff1ec9a611b44f0baa5b681a27d55c6d97d8",
+      "txHash": "0x3bf3b3173b608be393113595538d9cd623edb3b6e5cddd1109e9f5c9656d6871",
       "type": "sell"
     },
     {
-      "amount0": "1500794038",
-      "amount1": "411840129153064502",
+      "amount0": "1500.794038",
+      "amount1": "0.4118401291530645",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
       "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
       "time": "2025-07-24 02:51:20.000 UTC",
       "token0": "USDC",
@@ -1257,48 +1259,20 @@
       "type": "sell"
     },
     {
-      "amount0": "1146823868",
-      "amount1": "320000000000000000",
-      "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
-      "time": "2025-07-24 05:23:01.000 UTC",
+      "amount0": "4369.551328",
+      "amount1": "1.2073763807242066",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
+      "sender": "0x2905d7e4d048d29954f81b02171dd313f457a4a4",
+      "time": "2025-07-23 22:32:31.000 UTC",
       "token0": "USDC",
       "token1": "ETH",
-      "txHash": "0x727fad6be78ce468e0aae0e91e3062bb927f7c116d24b51f0390864a5d5f9c34",
-      "type": "sell"
-    },
-    {
-      "amount0": "1500750375",
-      "amount1": "413910691816653725",
-      "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
-      "time": "2025-07-24 04:45:25.000 UTC",
-      "token0": "USDC",
-      "token1": "ETH",
-      "txHash": "0x4f7c2b1c5ea6e9bbf5c17151732941f6f78dc2d24d47c8d4eb7a7ce07ca85b3f",
+      "txHash": "0x7a6fac45c87ad32993e2b5124a219858001b4ab454099bfabc5885b5a9e6947b",
       "type": "buy"
     },
     {
-      "amount0": "1010539466",
-      "amount1": "281829938094725134",
-      "sender": "0x4d3732460442d4c25cd5a7207572f72f571cf673",
-      "time": "2025-07-24 05:14:11.000 UTC",
-      "token0": "USDC",
-      "token1": "ETH",
-      "txHash": "0x0604cb7620ed10f37f6b63fe258867e9e2423f0775d211b0c9318272ad1b6828",
-      "type": "buy"
-    },
-    {
-      "amount0": "1290769712",
-      "amount1": "360000000000000000",
-      "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
-      "time": "2025-07-24 05:14:11.000 UTC",
-      "token0": "USDC",
-      "token1": "ETH",
-      "txHash": "0x2fcc1f1ad085bdb2db2b4be4ac92434dc9b38218752f281f40b76a8e54578bb6",
-      "type": "sell"
-    },
-    {
-      "amount0": "2100000000",
-      "amount1": "591491777423495341",
+      "amount0": "2100",
+      "amount1": "0.5914917774234953",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
       "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
       "time": "2025-07-24 07:11:21.000 UTC",
       "token0": "USDC",
@@ -1307,8 +1281,9 @@
       "type": "buy"
     },
     {
-      "amount0": "1502574735",
-      "amount1": "415771602799528792",
+      "amount0": "1502.574735",
+      "amount1": "0.4157716027995288",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
       "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
       "time": "2025-07-23 22:32:39.000 UTC",
       "token0": "USDC",
@@ -1317,8 +1292,9 @@
       "type": "sell"
     },
     {
-      "amount0": "1504317293",
-      "amount1": "415737032469062236",
+      "amount0": "1504.317293",
+      "amount1": "0.4157370324690622",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
       "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
       "time": "2025-07-23 22:32:34.000 UTC",
       "token0": "USDC",
@@ -1327,13 +1303,47 @@
       "type": "sell"
     },
     {
-      "amount0": "1107494043",
-      "amount1": "305632499052375424",
+      "amount0": "1107.494043",
+      "amount1": "0.30563249905237544",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
       "sender": "0x33fc8dee983ebdee375491992cc2cce260e8c16d",
       "time": "2025-07-23 22:32:34.000 UTC",
       "token0": "USDC",
       "token1": "ETH",
       "txHash": "0xe792bcc97c52c3e63f997880f3d2e541a927c7a07d6ac221fb3ec819cb3ca2a4",
+      "type": "sell"
+    },
+    {
+      "amount0": "1010.539466",
+      "amount1": "0.2818299380947251",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
+      "sender": "0x4d3732460442d4c25cd5a7207572f72f571cf673",
+      "time": "2025-07-24 05:14:11.000 UTC",
+      "token0": "USDC",
+      "token1": "ETH",
+      "txHash": "0x0604cb7620ed10f37f6b63fe258867e9e2423f0775d211b0c9318272ad1b6828",
+      "type": "buy"
+    },
+    {
+      "amount0": "1290.769712",
+      "amount1": "0.36",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
+      "sender": "0x4e1d81a3e627b9294532e990109e4c21d217376c",
+      "time": "2025-07-24 05:14:11.000 UTC",
+      "token0": "USDC",
+      "token1": "ETH",
+      "txHash": "0x2fcc1f1ad085bdb2db2b4be4ac92434dc9b38218752f281f40b76a8e54578bb6",
+      "type": "sell"
+    },
+    {
+      "amount0": "1091.527937",
+      "amount1": "0.3000885131567502",
+      "pool": "0x136e82d68b61bcf76334c6227f53e43b8f79b3e8",
+      "sender": "0x2905d7e4d048d29954f81b02171dd313f457a4a4",
+      "time": "2025-07-24 01:33:53.000 UTC",
+      "token0": "USDC",
+      "token1": "ETH",
+      "txHash": "0x6b89007e23094cc09a7b905ac5078d79302738963018c422b3fe64ee0024dde4",
       "type": "sell"
     }
   ]

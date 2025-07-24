@@ -2,9 +2,10 @@ import { SUSHI_SWAPS } from "../../constants";
 import { duneFetch, type DuneResponse, isDuneResponse } from "../../dune";
 
 type Entry = {
+  pool: string;
   sender: string;
-  amount0: string;
-  amount1: string;
+  amount0: number;
+  amount1: number;
   txHash: string;
   time: string;
   token0: string;
@@ -19,12 +20,14 @@ const isValidResponse = (data: unknown): data is DuneResponse<Entry> =>
     (row: unknown) =>
       typeof row === "object" &&
       row !== null &&
+      "pool" in row &&
+      typeof row.pool === "string" &&
       "sender" in row &&
       typeof row.sender === "string" &&
       "amount0" in row &&
-      typeof row.amount0 === "string" &&
+      typeof row.amount0 === "number" &&
       "amount1" in row &&
-      typeof row.amount1 === "string" &&
+      typeof row.amount1 === "number" &&
       "txHash" in row &&
       typeof row.txHash === "string" &&
       "time" in row &&
