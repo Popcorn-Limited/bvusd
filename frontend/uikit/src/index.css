@@ -1,1 +1,71 @@
 @layer reset, base, tokens, recipes, utilities;
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-RegularItalic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-LightItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KHTeka";
+  src: url("/fonts/KHTeka-BlackItalic.woff") format("woff");
+  font-weight: 900;
+  font-style: italic;
+}
