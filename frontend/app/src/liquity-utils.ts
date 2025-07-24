@@ -40,6 +40,7 @@ import {
 import {
   CHAIN_BLOCK_EXPLORER,
   CONTRACT_VAULT,
+  DIFFS_STATS_URL,
   ENV_BRANCHES,
   LIQUITY_STATS_URL,
 } from "@/src/env";
@@ -886,6 +887,21 @@ export function useBranchDebt(branchId: BranchId) {
       refetchInterval: DATA_REFRESH_INTERVAL,
       select: dnum18,
     },
+  });
+}
+
+export function useDiffs() {
+  return useQuery({
+    queryKey: ["stats-diff"],
+    queryFn: async () => {
+      if (!DIFFS_STATS_URL) {
+        throw new Error("DIFFS_STATS_URL is not defined");
+      }
+      const response = await fetch(DIFFS_STATS_URL);
+      const json = await response.json();
+      return json;
+    },
+    enabled: true,
   });
 }
 

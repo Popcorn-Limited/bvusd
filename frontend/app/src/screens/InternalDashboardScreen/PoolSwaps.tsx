@@ -150,7 +150,7 @@ export function PoolSwaps({ swaps }: TroveProps) {
         {/* Scrollable Table Body */}
         <div
           style={{
-            maxHeight: 10 * 52,
+            maxHeight: 5 * 52,
             overflowY: "auto",
           }}
         >

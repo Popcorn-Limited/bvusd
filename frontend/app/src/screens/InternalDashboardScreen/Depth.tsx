@@ -167,7 +167,7 @@ export const DepthChart = ({ depth }: DepthChartProps) => {
         }}
       >
         {" "}
-        <PanelHeader title="Sushi Pool Stats" line={true} />
+        <PanelHeader title="Sushi Pool Liquidity" line={true} />
         {/* Table Header */}
         <div
           style={{
