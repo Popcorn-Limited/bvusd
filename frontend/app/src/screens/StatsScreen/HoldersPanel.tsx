@@ -14,6 +14,7 @@ export function HoldersPanel({ holders }: HoldersProps) {
   return (
     <div
       style={{
+        userSelect: "text",
         display: "flex",
         alignItems: "stretch",
         flexDirection: "row",

@@ -57,6 +57,7 @@ export function VaultsPanel() {
   return (
     <div
       style={{
+        userSelect: "text",
         display: "flex",
         alignItems: "flex-start",
         flexDirection: "row",

@@ -745,6 +745,19 @@ const StatsSchema = v.pipe(
         total_volume_7d: v.string(),
       })
     ),
+    poolSwaps: v.array(
+      v.object({
+        pool: v.string(),
+        amount0: v.string(),
+        amount1: v.string(),
+        sender: v.string(),
+        token0: v.string(),
+        token1: v.string(),
+        time: v.string(),
+        txHash: v.string(),
+        type: v.string()
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -846,6 +859,19 @@ const StatsSchema = v.pipe(
         token1: v.token1,
         volume1d: v.total_volume_1d,
         volume7d: v.total_volume_7d
+      }
+    }),
+    poolSwaps: value.poolSwaps.map((s) => {
+      return {
+        pool: s.pool,
+        amount0: s.amount0,
+        amount1: s.amount1,
+        sender: s.sender,
+        token0: s.token0,
+        token1: s.token1,
+        time: s.time,
+        txHash: s.txHash,
+        type: s.type
       }
     })
   }))

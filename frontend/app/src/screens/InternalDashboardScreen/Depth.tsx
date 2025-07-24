@@ -144,6 +144,7 @@ export const DepthChart = ({ depth }: DepthChartProps) => {
   return (
     <div
       style={{
+        userSelect: "text",
         display: "flex",
         alignItems: "flex-start",
         flexDirection: "row",

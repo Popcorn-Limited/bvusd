@@ -47,6 +47,7 @@ export function ReservesPanel({ collateralReserves }: ReserveProps) {
   return (
     <div
       style={{
+        userSelect: "text",
         display: "flex",
         alignItems: "stretch",
         flexDirection: "row",

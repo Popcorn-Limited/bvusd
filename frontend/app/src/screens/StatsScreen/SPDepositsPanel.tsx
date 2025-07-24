@@ -64,6 +64,7 @@ export function SPDepositsPanel({ deposits }: SPProps) {
   return (
     <div
       style={{
+        userSelect: "text",
         background: "transparent",
         border: "1px solid var(--Neutral-100, #353945)",
         borderRadius: 16,

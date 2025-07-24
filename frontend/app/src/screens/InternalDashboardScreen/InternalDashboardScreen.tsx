@@ -8,6 +8,7 @@ import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { DepthChart } from "./Depth";
 import { VolumeChart } from "./PoolVolume";
 import { GatedContent } from "./Gate";
+import { PoolSwaps } from "./PoolSwaps";
 
 export function InternalDashboardScreen() {
   const liquityStats = useLiquityStats();
@@ -77,6 +78,7 @@ export function InternalDashboardScreen() {
                   >
                     <DepthChart depth={liquityStats.data.poolDepth} />
                     <VolumeChart volume={liquityStats.data.poolVolume} />
+                    <PoolSwaps swaps={liquityStats.data.poolSwaps} />
                   </div>
                 </div>
               );

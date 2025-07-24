@@ -27,6 +27,7 @@ export function TransparencyMetrics({
   return (
     <div
       style={{
+        userSelect: "text",
         display: "flex",
         flexDirection: "row",
         gap: "16px",

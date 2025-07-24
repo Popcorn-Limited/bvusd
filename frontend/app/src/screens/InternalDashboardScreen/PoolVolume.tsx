@@ -25,6 +25,7 @@ export const VolumeChart = ({ volume }: VolumetProps) => {
   return (
     <div
       style={{
+        userSelect: "text",
         display: "flex",
         alignItems: "flex-start",
         flexDirection: "row",
