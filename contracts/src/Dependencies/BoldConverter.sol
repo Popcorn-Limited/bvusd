@@ -2,13 +2,13 @@
 
 pragma solidity 0.8.24;
 
-import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import {SafeERC20} from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
+import {ReentrancyGuard} from "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {IBoldToken} from "../Interfaces/IBoldToken.sol";
 import "./Owned.sol";
 
-contract BoldConverter is Owned {
+contract BoldConverter is Owned, ReentrancyGuard {
     uint256 public constant MAX_FEE = 10000;
 
     IBoldToken public bvUSD;
@@ -48,8 +48,9 @@ contract BoldConverter is Owned {
     // amount in underlying token decimals
     function deposit(
         IERC20Metadata underlying,
-        uint256 amount
-    ) external returns (uint256 boldAmount) {
+        uint256 amount,
+        address to
+    ) public nonReentrant returns (uint256 boldAmount) {
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -63,16 +64,25 @@ contract BoldConverter is Owned {
 
         // scale to 18 decimals
         boldAmount = amount * 10 ** (18 - path.underlyingDecimals);
+        require(boldAmount > 0, "out = 0");
 
         // mint bvUSD
-        bvUSD.mint(msg.sender, boldAmount);
+        bvUSD.mint(to, boldAmount);
     }
+
+    function deposit(
+        IERC20Metadata underlying,
+        uint256 amount
+    ) external returns (uint256 boldAmount) {
+        return deposit(underlying, amount, msg.sender);
+    }
+
 
     function withdraw(
         IERC20Metadata underlying,
         uint256 amount,
-        address receiver
-    ) external returns (uint256 underlyingOut) {
+        address to
+    ) public nonReentrant returns (uint256 underlyingOut) {
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -87,14 +97,22 @@ contract BoldConverter is Owned {
         underlyingOut =
             withdrawalAmount -
             ((withdrawalAmount * path.withdrawalFee) / MAX_FEE);
+        require(underlyingOut > 0, "out = 0");
 
         // transfer underlyings
         SafeERC20.safeTransferFrom(
             underlying,
             path.underlyingReceiver,
-            receiver,
+            to,
             underlyingOut
         );
+    }
+
+    function withdraw(
+        IERC20Metadata underlying,
+        uint256 amount
+    ) external returns (uint256 underlyingOut) {
+        return withdraw(underlying, amount, msg.sender);
     }
 
     function deletePaths(
