@@ -20,6 +20,7 @@ import {
   emptyBranchData,
   fetchPoolVolume,
   decimalify,
+  fetchPoolSwaps,
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
 import { fetchLiquidityDepth } from "./queries/getPoolDepth";
@@ -92,7 +93,8 @@ export const fetchV2Stats = async ({
     spDeposits,
     holders,
     poolDepth,
-    poolVolume
+    poolVolume,
+    poolSwaps
   ] = deployed
     ? await Promise.all([
         // total bvUSD supply
@@ -143,7 +145,10 @@ export const fetchV2Stats = async ({
         fetchLiquidityDepth(provider),
 
         // pool volume
-        fetchPoolVolume(fetchConfig)
+        fetchPoolVolume(fetchConfig),
+
+        // pool swaps
+        fetchPoolSwaps(fetchConfig)
       ])
     : await Promise.all([
         Decimal.ZERO, // total_bold_supply
@@ -153,6 +158,7 @@ export const fetchV2Stats = async ({
         Decimal.ZERO, // vault_tvl
         null, // troves
         null, // spDeposits
+        null,
         null,
         null,
         null
@@ -283,6 +289,14 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...pool,
+        },
+        (x) => `${x}`
+      )
+    ),
+    poolSwaps: poolSwaps!.map((swaps) =>
+      mapObj(
+        {
+          ...swaps,
         },
         (x) => `${x}`
       )

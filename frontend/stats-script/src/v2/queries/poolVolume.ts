@@ -1,13 +1,17 @@
 import { SUSHI_VOLUME } from "../../constants";
 import { duneFetch, type DuneResponse, isDuneResponse } from "../../dune";
 
-const isValidResponse = (
-  data: unknown
-): data is DuneResponse<{
-  holder: string;
-  balance: number;
-  day: string;
-}> =>
+type Entry = {
+  swap_count_7d: number;
+  swap_count_1d: number;
+  total_volume_7d: number;
+  total_volume_1d: number;
+  pool: string;
+  token0: string;
+  token1: string;
+};
+
+const isValidResponse = (data: unknown): data is DuneResponse<Entry> =>
   isDuneResponse(data) &&
   data.result.rows.length > 0 &&
   data.result.rows.every(
