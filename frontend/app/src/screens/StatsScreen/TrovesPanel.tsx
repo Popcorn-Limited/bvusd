@@ -131,45 +131,52 @@ export function TrovesPanel({ troves }: TroveProps) {
       </div>
 
       {/* Table Rows */}
-      {sortedTroves.map((row, idx) => (
-        <div
-          key={idx}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-            padding: "12px",
-            gap: 16,
-            borderBottom: "1px solid #23262F",
-            color: "#fff",
-            fontSize: 18,
-            fontFamily: "KHTeka",
-            fontWeight: "400",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${row.owner.slice(0, 6)}...${row.owner.slice(-3)}`}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {row.collateralAsset}
-          </div>
+      <div
+        style={{
+          maxHeight: 5 * 52,
+          overflowY: "auto",
+        }}
+      >
+        {sortedTroves.map((row, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+              padding: "12px",
+              gap: 16,
+              borderBottom: "1px solid #23262F",
+              color: "#fff",
+              fontSize: 18,
+              fontFamily: "KHTeka",
+              fontWeight: "400",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {`${row.owner.slice(0, 6)}...${row.owner.slice(-3)}`}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {row.collateralAsset}
+            </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${fmtnum(Number(row.collateral), "2z")} $`}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {`${fmtnum(Number(row.collateral), "2z")} $`}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {`${fmtnum(Number(row.debt), "2z")} $`}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {fmtnum(Number(row.cr) * 100, "2z")} %
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {fmtnum((1 / Number(row.cr)) * 100, "2z")} %
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {fmtnum(Number(maxLTV[row.collateralAsset]), "2z")} %
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${fmtnum(Number(row.debt), "2z")} $`}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum(Number(row.cr) * 100, "2z")} %
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum((1 / Number(row.cr)) * 100, "2z")} %
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {fmtnum(Number(maxLTV[row.collateralAsset]), "2z")} %
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

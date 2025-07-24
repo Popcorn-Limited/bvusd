@@ -127,36 +127,43 @@ export function SPDepositsPanel({ deposits }: SPProps) {
       </div>
 
       {/* Table Rows */}
-      {sortedDeposits.map((row, idx) => (
-        <div
-          key={idx}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
-            padding: "12px",
-            gap: 16,
-            borderBottom: "1px solid #23262F",
-            color: "#fff",
-            fontSize: 18,
-            fontFamily: "KHTeka",
-            fontWeight: "400",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${row.depositor.slice(0, 6)}...${row.depositor.slice(-3)}`}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {row.collateralAsset}
-          </div>
+      <div
+        style={{
+          maxHeight: 5 * 52,
+          overflowY: "auto",
+        }}
+      >
+        {sortedDeposits.map((row, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              padding: "12px",
+              gap: 16,
+              borderBottom: "1px solid #23262F",
+              color: "#fff",
+              fontSize: 18,
+              fontFamily: "KHTeka",
+              fontWeight: "400",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {`${row.depositor.slice(0, 6)}...${row.depositor.slice(-3)}`}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {row.collateralAsset}
+            </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`${fmtnum(Number(row.amount), "2z")} $`}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {`${fmtnum(Number(row.amount), "2z")} $`}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {formatDate(row.time)} UTC
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {formatDate(row.time)} UTC
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
