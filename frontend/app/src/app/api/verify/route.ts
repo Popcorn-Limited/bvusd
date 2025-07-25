@@ -1,9 +1,12 @@
+import { ALLOWLIST_URL } from "@/src/env";
 import { NextResponse } from "next/server";
 import { verifyMessage } from "viem";
 import { keccak256 } from "viem";
-import allowlist from './allowList.json';
 
 export async function POST(req: Request) {
+  const raw = await fetch(ALLOWLIST_URL);
+  const allowlist = await raw.json();
+
   try {
     const { account, message, signature } = await req.json();
 

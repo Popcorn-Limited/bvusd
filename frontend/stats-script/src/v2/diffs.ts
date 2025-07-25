@@ -12,12 +12,12 @@ export const getDiffs = () => {
     fs.readFileSync(path.join(OUTPUT_DIR_V2, "previous.json"), "utf-8")
   );
 
-  // Load existing diffs (or start empty)
+  // Load existing diffs
   const existingDiffs = fs.existsSync(diffPath)
     ? JSON.parse(fs.readFileSync(diffPath, "utf-8"))
     : {};
 
-  // Compute field-by-field diff
+  // Compute diff
   const diff = {};
   for (const key in latest) {
     const oldVal = previous[key];
@@ -30,7 +30,7 @@ export const getDiffs = () => {
 
   // Only write if something changed
   if (Object.keys(diff).length > 0) {
-    const today = new Date().toISOString().slice(0, 14); // YYYY-MM-DD
+    const today = new Date().toISOString().slice(0, 14); // YYYY-MM-DD TODO
     existingDiffs[today] = diff;
 
     fs.writeFileSync(diffPath, JSON.stringify(existingDiffs, null, 2));

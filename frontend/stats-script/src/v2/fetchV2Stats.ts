@@ -123,7 +123,8 @@ export const fetchV2Stats = async ({
             }))
           ),
 
-        // HISTORICALS SUPPLY
+        
+        // HISTORICAL SUPPLY
         fetchHistSupplyFromDune(fetchConfig),
 
         // HISTORICAL CR
