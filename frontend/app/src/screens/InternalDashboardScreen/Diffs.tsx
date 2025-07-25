@@ -10,7 +10,16 @@ import { diffTokenLiquidity } from "@/src/diff-utils";
 
 const STORAGE_KEY = "acknowledgedDiffs";
 
+// 7 days prior to today
+const getDefaultMinDate = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - 7);
+  return date.toISOString().slice(0, 10);
+};
+
 export default function JsonDiffViewer() {
+  const [minDate, setMinDate] = useState<string>(getDefaultMinDate());
+
   const diffs = useDiffs();
 
   const loadingState =
@@ -33,61 +42,66 @@ export default function JsonDiffViewer() {
   };
 
   const renderDiff = (obj: any) =>
-    Object.entries(obj).flatMap(([dateKey, fields]) =>
-      Object.entries(fields).map(([field, value]) => {
-        const fullKey = `${dateKey}.${field}`;
+    Object.entries(obj)
+      .filter(([dateKey]) => !minDate || dateKey >= minDate)
+      .flatMap(([dateKey, fields]) =>
+        Object.entries(fields).map(([field, value]) => {
+          const fullKey = `${dateKey}.${field}`;
 
-        // filter acknowledged
-        if (acknowledged.includes(fullKey)) return null;
+          // filter acknowledged
+          if (acknowledged.includes(fullKey)) return null;
 
-        let before: string | number = "";
-        let after: string | number = "";
+          let before: string | number = "";
+          let after: string | number = "";
 
-        // pool depth object requires different processing
-        if (field === "poolDepth") {
-          const [liqBefore, liqAfter] = diffTokenLiquidity(value);
-          before = displayValue(liqBefore);
-          after = displayValue(liqAfter);
-        } else if (Array.isArray(value[0]) && typeof value[0][0] === "object") {
-          // other object fields that don't have a processor yet
-          return null;
-        } else {
-          // default
-          before = String(value[0]);
-          after = String(value[1]);
-        }
+          // pool depth object requires different processing
+          if (field === "poolDepth") {
+            const [liqBefore, liqAfter] = diffTokenLiquidity(value);
+            before = displayValue(liqBefore);
+            after = displayValue(liqAfter);
+          } else if (
+            Array.isArray(value[0]) &&
+            typeof value[0][0] === "object"
+          ) {
+            // other object fields that don't have a processor yet
+            return null;
+          } else {
+            // default
+            before = String(value[0]);
+            after = String(value[1]);
+          }
 
-        return (
-          <div
-            key={fullKey}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              alignItems: "center",
-              gap: 16,
-              padding: "12px",
-              borderBottom: "1px solid #23262F",
-              fontSize: 16,
-            }}
-          >
-            <div>{field}</div>
-            <div>
-              <span style={{ color: "red" }}>{before}</span> →{" "}
-              <span style={{ color: "green" }}>{after}</span>
+          return (
+            <div
+              key={fullKey}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                alignItems: "center",
+                gap: 16,
+                padding: "12px",
+                borderBottom: "1px solid #23262F",
+                fontSize: 16,
+              }}
+            >
+              <div>{field}</div>
+              <div>
+                <span style={{ color: "red" }}>{before}</span> →{" "}
+                <span style={{ color: "green" }}>{after}</span>
+              </div>
+              <div style={{ fontSize: 14, color: "#aaa" }}>{dateKey}</div>
+              <div>
+                <Button
+                  mode="primary"
+                  label="Acknowledge"
+                  size="mini"
+                  onClick={() => acknowledgeKey(fullKey)}
+                />
+              </div>
             </div>
-            <div style={{ fontSize: 14, color: "#aaa" }}>{dateKey}</div>
-            <div>
-              <Button
-                mode="primary"
-                label="Acknowledge"
-                size="mini"
-                onClick={() => acknowledgeKey(fullKey)}
-              />
-            </div>
-          </div>
-        );
-      })
-    );
+          );
+        })
+      );
 
   return (
     <div
@@ -159,6 +173,23 @@ export default function JsonDiffViewer() {
                   >
                     DIFFS
                   </h3>
+                  <div>
+                    <label style={{ marginRight: 8, color: "#ccc" }}>
+                      Since:
+                    </label>
+                    <input
+                      type="date"
+                      value={minDate}
+                      onChange={(e) => setMinDate(e.target.value)}
+                      style={{
+                        background: "#111",
+                        color: "#fff",
+                        padding: "6px 10px",
+                        borderRadius: 6,
+                        border: "1px solid #333",
+                      }}
+                    />
+                  </div>
                   <Button
                     mode="primary"
                     label="Reset Acknowledged"
