@@ -5,6 +5,7 @@ import vaults from "./vaults.json";
 import { getProvider } from "./connection";
 import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from './env';
+import { getDiffs } from "./v2/diffs";
 
 interface Tree extends Record<string, string | Tree> {}
   
@@ -44,7 +45,15 @@ export async function fetchAndUpdateStats() {
   // writeTree(OUTPUT_DIR_V2, v2Stats); -> prints all txt files as well
 
   if (!fs.existsSync(OUTPUT_DIR_V2)) fs.mkdirSync(OUTPUT_DIR_V2, {recursive:true});
+  
+  // copy previous stats
+  fs.copyFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), path.join(OUTPUT_DIR_V2, "previous.json"))
+  
+  // write new stats
   fs.writeFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), JSON.stringify(v2Stats, null, 2));
+
+  // write diffs 
+  getDiffs();
 }
 
 await fetchAndUpdateStats();
