@@ -9,6 +9,7 @@ import {
   TooltipProps,
 } from "recharts";
 import { PanelHeader } from "../StatsScreen/PanelTitle";
+import {getTokenAmounts} from "@/src/diff-utils";
 
 type DepthDataPoint = {
   tick: string;
@@ -20,33 +21,9 @@ type DepthChartProps = {
   depth: DepthDataPoint[];
 };
 
-// Convert tick to sqrtPrice
-function tickToSqrtPrice(tick: number): number {
-  return Math.pow(1.0001, tick / 2);
-}
-
-// Convert tick liquidity to token0 & token1 amounts
-function getTokenAmounts(
-  liquidity: number,
-  lowerTick: number,
-  upperTick: number,
-  decimals: number
-) {
-  const sqrtLower = tickToSqrtPrice(lowerTick);
-  const sqrtUpper = tickToSqrtPrice(upperTick);
-
-  const amount0 = liquidity * (1 / sqrtLower - 1 / sqrtUpper);
-  const amount1 = liquidity * (sqrtUpper - sqrtLower);
-
-  return {
-    token0: amount0 / 10 ** decimals,
-    token1: amount1 / 10 ** decimals,
-  };
-}
-
-function display(value: number): string {
-  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+export function displayValue(value: number): string {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(3)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(3)}K`;
   return value.toString();
 }
 
@@ -214,7 +191,7 @@ export const DepthChart = ({ depth }: DepthChartProps) => {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`$ ${display(Number(totalToken0))}`}
+            {`$ ${displayValue(Number(totalToken0))}`}
           </div>
         </div>
         <div
@@ -236,7 +213,7 @@ export const DepthChart = ({ depth }: DepthChartProps) => {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {`$ ${display(Number(totalToken1))}`}
+            {`$ ${displayValue(Number(totalToken1))}`}
           </div>
         </div>
       </div>

@@ -36,7 +36,7 @@ const icons = {
 };
 
 export function ReservesPanel({ collateralReserves }: ReserveProps) {
-  console.log(collateralReserves);
+  // console.log(collateralReserves);
 
   let pie = collateralReserves.map((c, i) => ({
     name: c.asset,

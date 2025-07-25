@@ -5,6 +5,8 @@ import { useDiffs } from "@/src/liquity-utils";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { match } from "ts-pattern";
 import { css } from "@/styled-system/css";
+import { displayValue } from "./Depth";
+import { diffTokenLiquidity } from "@/src/diff-utils";
 
 const STORAGE_KEY = "acknowledgedDiffs";
 
@@ -35,7 +37,25 @@ export default function JsonDiffViewer() {
       Object.entries(fields).map(([field, value]) => {
         const fullKey = `${dateKey}.${field}`;
 
+        // filter acknowledged
         if (acknowledged.includes(fullKey)) return null;
+
+        let before: string | number = "";
+        let after: string | number = "";
+
+        // pool depth object requires different processing
+        if (field === "poolDepth") {
+          const [liqBefore, liqAfter] = diffTokenLiquidity(value);
+          before = displayValue(liqBefore);
+          after = displayValue(liqAfter);
+        } else if (Array.isArray(value[0]) && typeof value[0][0] === "object") {
+          // other object fields that don't have a processor yet
+          return null;
+        } else {
+          // default
+          before = String(value[0]);
+          after = String(value[1]);
+        }
 
         return (
           <div
@@ -50,32 +70,17 @@ export default function JsonDiffViewer() {
               fontSize: 16,
             }}
           >
-            {/* Field name (e.g., tvl, collateralRatio) */}
             <div>{field}</div>
-
-            {/* Value diff */}
             <div>
-              <span style={{ color: "red" }}>{value[0]}</span> →{" "}
-              <span style={{ color: "green" }}>{value[1]}</span>
+              <span style={{ color: "red" }}>{before}</span> →{" "}
+              <span style={{ color: "green" }}>{after}</span>
             </div>
-
-            {/* Date */}
-            <div style={{ fontSize: 14, color: "#aaa" }}>
-              {new Date(dateKey).toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                timeZone: "UTC",
-              })}
-            </div>
-
-            {/* Acknowledge button */}
+            <div style={{ fontSize: 14, color: "#aaa" }}>{dateKey}</div>
             <div>
               <Button
                 mode="primary"
-                label="Reset"
-                size="mini"
                 label="Acknowledge"
+                size="mini"
                 onClick={() => acknowledgeKey(fullKey)}
               />
             </div>
@@ -156,15 +161,13 @@ export default function JsonDiffViewer() {
                   </h3>
                   <Button
                     mode="primary"
-                    label="Reset"
+                    label="Reset Acknowledged"
                     size="mini"
                     onClick={() => {
                       localStorage.removeItem(STORAGE_KEY);
                       setAcknowledged([]);
                     }}
-                  >
-                    Reset Acknowledged
-                  </Button>
+                  />
                 </div>
                 <div
                   style={{
