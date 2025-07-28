@@ -167,8 +167,7 @@ export function StatsScreen() {
                       gap: "32px",
                     }}
                   >
-                    Coming soon..
-                    {/* <AttestationsAndProofPanel /> */}
+                    <AttestationsAndProofPanel />
                     {/* <MarketStatPanel />
                   <MarketChartPanel />
                   <FundingBreakdownPanel />
