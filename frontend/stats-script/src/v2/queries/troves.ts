@@ -17,7 +17,6 @@ const isDuneTroveResponse = (
   trove_id: string;
 }> =>
   isDuneResponse(data) &&
-  data.result.rows.length > 0 &&
   data.result.rows.every(
     (row: unknown) =>
       typeof row === "object" &&

@@ -3,7 +3,7 @@ import path from "path";
 
 const OUTPUT_DIR_V2 = "../../docs";
 
-const ignoredKeys = ["spDeposits"];
+const ignoredKeys = ["spDeposits", "troves"];
 
 function formatDateUTC(date: Date): string {
   const options: Intl.DateTimeFormatOptions = {

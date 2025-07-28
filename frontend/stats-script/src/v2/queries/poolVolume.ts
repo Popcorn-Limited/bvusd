@@ -13,7 +13,6 @@ type Entry = {
 
 const isValidResponse = (data: unknown): data is DuneResponse<Entry> =>
   isDuneResponse(data) &&
-  data.result.rows.length > 0 &&
   data.result.rows.every(
     (row: unknown) =>
       typeof row === "object" &&

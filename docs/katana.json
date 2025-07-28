@@ -566,150 +566,8 @@
       "historical_cr": []
     }
   },
-  "troves": [
-    {
-      "owner": "0xb4d3bea9d824c4dd7ded7ccc93e6212e3f0b186a",
-      "troveId": "10894...7825",
-      "collateralAsset": "ETH",
-      "collateral": "47268636.75492216",
-      "debt": "14650221.952487098",
-      "cr": "3.2264792238794437"
-    },
-    {
-      "owner": "0x7b852ebc448b3638f971bac2c463db6578634f11",
-      "troveId": "75612...8955",
-      "collateralAsset": "rETH",
-      "collateral": "13186510.516909555",
-      "debt": "3976737.2386302976",
-      "cr": "3.3159119463098765"
-    },
-    {
-      "owner": "0x7b852ebc448b3638f971bac2c463db6578634f11",
-      "troveId": "75612...8955",
-      "collateralAsset": "wstETH",
-      "collateral": "13083832.377720978",
-      "debt": "3920834.1666664183",
-      "cr": "3.337002235125172"
-    },
-    {
-      "owner": "0x46a83dc1a264bff133db887023d2884167094837",
-      "troveId": "48799...0624",
-      "collateralAsset": "wstETH",
-      "collateral": "8355138.12726502",
-      "debt": "3640647.4333142354",
-      "cr": "2.294959421450757"
-    },
-    {
-      "owner": "0xc83aa8e0da4ffc388fdbfc1cb111d8d625b5b8e7",
-      "troveId": "26244...6541",
-      "collateralAsset": "wstETH",
-      "collateral": "11153100.191337695",
-      "debt": "3435223.390817419",
-      "cr": "3.2466884748021556"
-    },
-    {
-      "owner": "0x3630220f243288e3eac4c5676fc191cff5756431",
-      "troveId": "35499...3260",
-      "collateralAsset": "wstETH",
-      "collateral": "4140204.569368196",
-      "debt": "1584320.5514650247",
-      "cr": "2.6132366745730464"
-    },
-    {
-      "owner": "0xbdfa4f4492dd7b7cf211209c4791af8d52bf5c50",
-      "troveId": "86492...7047",
-      "collateralAsset": "ETH",
-      "collateral": "3713963",
-      "debt": "1442433.0107317395",
-      "cr": "2.574790629698584"
-    },
-    {
-      "owner": "0xf06016d822943c42e3cb7fc3a6a3b1889c1045f8",
-      "troveId": "10224...0154",
-      "collateralAsset": "ETH",
-      "collateral": "3038697",
-      "debt": "1057102.5803721873",
-      "cr": "2.874552627551177"
-    },
-    {
-      "owner": "0xb199883e985ffe6a8a8051f5e8d0bc53aa380a14",
-      "troveId": "45971...0557",
-      "collateralAsset": "wstETH",
-      "collateral": "2137813.491358423",
-      "debt": "798998.0572383046",
-      "cr": "2.6756178841631537"
-    },
-    {
-      "owner": "0xddfe74f671f6546f49a6d20909999cfe5f09ad78",
-      "troveId": "63033...2929",
-      "collateralAsset": "wstETH",
-      "collateral": "2038000",
-      "debt": "752316.1890609612",
-      "cr": "2.7089673592480117"
-    }
-  ],
-  "spDeposits": [
-    {
-      "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
-      "collateral": "wstETH",
-      "time": "2025-07-27 21:50:23.000 UTC",
-      "amount": "7821708.771098421"
-    },
-    {
-      "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
-      "collateral": "ETH",
-      "time": "2025-07-27 21:50:23.000 UTC",
-      "amount": "3910854.3855492105"
-    },
-    {
-      "depositor": "0x46af61661b1e15da5bfe40756495b7881f426214",
-      "collateral": "wstETH",
-      "time": "2025-07-27 05:45:59.000 UTC",
-      "amount": "2829043.2615615567"
-    },
-    {
-      "depositor": "0x50bd66d59911f5e086ec87ae43c811e0d059dd11",
-      "collateral": "rETH",
-      "time": "2025-07-27 21:50:23.000 UTC",
-      "amount": "1303618.1285164035"
-    },
-    {
-      "depositor": "0x7b852ebc448b3638f971bac2c463db6578634f11",
-      "collateral": "rETH",
-      "time": "2025-07-17 12:56:35.000 UTC",
-      "amount": "1150000"
-    },
-    {
-      "depositor": "0x3630220f243288e3eac4c5676fc191cff5756431",
-      "collateral": "wstETH",
-      "time": "2025-07-25 14:47:11.000 UTC",
-      "amount": "1094814.1712169126"
-    },
-    {
-      "depositor": "0x930fcc7713010bef90847567897156a0488cadb4",
-      "collateral": "ETH",
-      "time": "2025-07-20 16:45:11.000 UTC",
-      "amount": "572085.8807033419"
-    },
-    {
-      "depositor": "0xceb63486c7ec2896b399e2d967c567d8c05f673a",
-      "collateral": "ETH",
-      "time": "2025-07-27 18:18:11.000 UTC",
-      "amount": "526254.7844562704"
-    },
-    {
-      "depositor": "0x7b852ebc448b3638f971bac2c463db6578634f11",
-      "collateral": "ETH",
-      "time": "2025-07-17 13:01:11.000 UTC",
-      "amount": "501785.809226062"
-    },
-    {
-      "depositor": "0xddfe74f671f6546f49a6d20909999cfe5f09ad78",
-      "collateral": "wstETH",
-      "time": "2025-05-19 14:52:59.000 UTC",
-      "amount": "500411.9190945704"
-    }
-  ],
+  "troves": [],
+  "spDeposits": [],
   "poolDepth": [
     {
       "tick": "-102",
@@ -748,7 +606,7 @@
     },
     {
       "tick": "-92",
-      "liquidity": "231308162453141",
+      "liquidity": "231305583841936",
       "price": "0.9908426462737453"
     },
     {
@@ -893,7 +751,7 @@
     },
     {
       "tick": "-12",
-      "liquidity": "92844284602920",
+      "liquidity": "93878668200586",
       "price": "0.9988007796361366"
     },
     {
@@ -993,7 +851,7 @@
     },
     {
       "tick": "8",
-      "liquidity": "120269928440986",
+      "liquidity": "121304312038652",
       "price": "1.000800280056007"
     },
     {

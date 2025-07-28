@@ -13,7 +13,6 @@ const isValidResponse = (
   unclaimed_bold: number;
 }> =>
   isDuneResponse(data) &&
-  data.result.rows.length > 0 &&
   data.result.rows.every(
     (row: unknown) =>
       typeof row === "object" &&
@@ -61,6 +60,6 @@ export const fetchStabilityPoolDeposits = async ({
     depositor: t.depositor.match(/0x[a-fA-F0-9]{40}/)?.[0], // todo
     collateral: t.collateral_type,
     time: t.last_modified,
-    amount: t.deposited_bold
+    amount: t.deposited_bold,
   }));
 };
