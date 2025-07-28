@@ -47,13 +47,15 @@ export async function fetchAndUpdateStats() {
   if (!fs.existsSync(OUTPUT_DIR_V2)) fs.mkdirSync(OUTPUT_DIR_V2, {recursive:true});
   
   // copy previous stats
-  fs.copyFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), path.join(OUTPUT_DIR_V2, "previous.json"))
+  const previous = JSON.parse(
+      fs.readFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), "utf-8")
+    );
   
   // write new stats
   fs.writeFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), JSON.stringify(v2Stats, null, 2));
 
   // write diffs 
-  getDiffs();
+  getDiffs(previous, v2Stats);
 }
 
 await fetchAndUpdateStats();
