@@ -50,7 +50,8 @@ export const fetchHistSupplyFromDune = async ({
       result: { rows: histSupply },
     } = await duneFetch({
       apiKey,
-      url: `${url}`,
+      id: url,
+      maxResults: "1000",
       validate: isDuneHistoricalSupplyResponse,
     });
   

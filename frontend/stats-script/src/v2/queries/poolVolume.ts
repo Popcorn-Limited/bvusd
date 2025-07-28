@@ -50,7 +50,8 @@ export const fetchPoolVolume = async ({
     result: { rows: poolStats },
   } = await duneFetch({
     apiKey,
-    url: `${url}`,
+    id: url,
+    maxResults: "1000",
     validate: isValidResponse,
   });
 

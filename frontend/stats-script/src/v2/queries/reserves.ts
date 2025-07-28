@@ -40,7 +40,8 @@ export const fetchReservesFromDune = async ({
     result: { rows: reserves },
   } = await duneFetch({
     apiKey,
-    url: `${url}`,
+    id: url,
+    maxResults: "1000",
     validate: isDuneValidResponse,
   });
 

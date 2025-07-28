@@ -37,7 +37,8 @@ export const fetchStableVaultTVLFromDune = async ({
     result: { rows: tvl },
   } = await duneFetch({
     apiKey,
-    url: `${url}`,
+    id: url,
+    maxResults: "1000",
     validate: isDuneTVLResponse,
   });
 

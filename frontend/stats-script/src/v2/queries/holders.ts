@@ -28,9 +28,9 @@ export const fetchbvUSDHolders = async ({
   apiKey: string;
   network: "bnb" | "mainnet" | "katana";
 }) => {
-  const url = bvUSD_HOLDERS;
+  const id = bvUSD_HOLDERS;
 
-  if (!url) {
+  if (!id) {
     return null;
   }
 
@@ -38,7 +38,8 @@ export const fetchbvUSDHolders = async ({
     result: { rows: holders },
   } = await duneFetch({
     apiKey,
-    url: `${url}`,
+    id,
+    maxResults: "1000",
     validate: isValidResponse,
   });
 

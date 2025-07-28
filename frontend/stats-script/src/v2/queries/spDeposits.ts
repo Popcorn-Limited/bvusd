@@ -52,7 +52,8 @@ export const fetchStabilityPoolDeposits = async ({
     result: { rows: deposits },
   } = await duneFetch({
     apiKey,
-    url: `${url}`,
+    id: url,
+    maxResults: "1000",
     validate: isValidResponse,
   });
 

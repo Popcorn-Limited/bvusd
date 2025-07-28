@@ -44,7 +44,8 @@ const isDuneHistoricalCRResponse = (
       result: { rows: histCR },
     } = await duneFetch({
       apiKey,
-      url: `${url}`,
+      id: url,
+      maxResults: "1000",
       validate: isDuneHistoricalCRResponse,
     });
   
