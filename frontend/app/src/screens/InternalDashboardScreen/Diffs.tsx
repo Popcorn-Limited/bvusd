@@ -17,6 +17,17 @@ const getDefaultMinDate = (): string => {
   return date.toISOString().slice(0, 10);
 };
 
+// human readable to timestamp
+const toTimestamp = (dateStr: string) : number => {
+  const date = new Date(dateStr.replace(" at ", " "));
+
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date: " + dateStr);
+  }
+
+  return date.getTime();
+}
+
 export default function JsonDiffViewer() {
   const [minDate, setMinDate] = useState<string>(getDefaultMinDate());
 
@@ -43,7 +54,7 @@ export default function JsonDiffViewer() {
 
   const renderDiff = (obj: any) =>
     Object.entries(obj)
-      .filter(([dateKey]) => !minDate || dateKey >= minDate)
+      .filter(([dateKey]) => !minDate || toTimestamp(dateKey) >= new Date(minDate).getTime())
       .flatMap(([dateKey, fields]) =>
         Object.entries(fields).map(([field, value]) => {
           const fullKey = `${dateKey}.${field}`;
@@ -232,6 +243,7 @@ export default function JsonDiffViewer() {
                   {/* Scrollable Table Body */}
                   <div
                     style={{
+                      userSelect: "text",
                       maxHeight: 10 * 52,
                       overflowY: "auto",
                     }}
