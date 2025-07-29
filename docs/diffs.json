@@ -995,13 +995,10 @@
           "price": "1.0097467077871283"
         }
       ]
-    ]
+    ],
+    "prevTime": "July 27, 2025 at 8:50 AM UTC"
   },
   "July 29, 2025 at 8:53 AM UTC": {
-    "supply": [
-      "10",
-      "11"
-    ],
     "poolDepth": [
       [
         {
@@ -2038,6 +2035,6 @@
         }
       ]
     ],
-    "prevTime": "July 27, 2025 at 8:50 AM UTC"
+    "prevTime": "July 28, 2025 at 8:50 AM UTC"
   }
 }

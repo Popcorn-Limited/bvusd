@@ -9,7 +9,8 @@ const ignoredKeys = ["spDeposits", "troves", "time"];
 // otherwise get diffs only on the specified keys of an object
 type DiffFieldsMap = Record<string, string[]>;
 const diffFieldsMap: DiffFieldsMap = {
-  day_supply: ["holders", "supply"]
+  day_supply: ["holders", "supply"],
+  collateral_ratio: ["avg_cr"],
 }
 
 export function formatDateUTC(date: Date): string {

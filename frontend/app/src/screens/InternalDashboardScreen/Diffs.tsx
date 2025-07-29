@@ -28,7 +28,9 @@ const toTimestamp = (dateStr: string) : number => {
   return date.getTime();
 }
 
-export default function JsonDiffViewer() {
+const ignoreKeys = ["prevTime"];
+
+export default function StatsDiff() {
   const [minDate, setMinDate] = useState<string>(getDefaultMinDate());
 
   const diffs = useDiffs();
@@ -59,6 +61,8 @@ export default function JsonDiffViewer() {
         Object.entries(fields).map(([field, value]) => {
           const fullKey = `${dateKey}.${field}`;
 
+          if (ignoreKeys.includes(field)) return null;
+
           // filter acknowledged
           if (acknowledged.includes(fullKey)) return null;
 
@@ -87,7 +91,7 @@ export default function JsonDiffViewer() {
               key={fullKey}
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
                 alignItems: "center",
                 gap: 16,
                 padding: "12px",
@@ -100,6 +104,7 @@ export default function JsonDiffViewer() {
                 <span style={{ color: "red" }}>{before}</span> →{" "}
                 <span style={{ color: "green" }}>{after}</span>
               </div>
+              <div style={{ fontSize: 14, color: "#aaa" }}>{fields["prevTime"]}</div>
               <div style={{ fontSize: 14, color: "#aaa" }}>{dateKey}</div>
               <div>
                 <Button
@@ -224,7 +229,7 @@ export default function JsonDiffViewer() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                      gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
                       alignItems: "center",
                       gap: 16,
                       fontSize: 14,
@@ -236,7 +241,8 @@ export default function JsonDiffViewer() {
                   >
                     <div>Metric</div>
                     <div>Diff</div>
-                    <div>Time</div>
+                    <div>From</div>
+                    <div>To</div>
                     <div>Acknowledge</div>
                   </div>
 
