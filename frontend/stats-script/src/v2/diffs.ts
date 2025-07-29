@@ -3,9 +3,16 @@ import path from "path";
 
 const OUTPUT_DIR_V2 = "../../docs";
 
-const ignoredKeys = ["spDeposits", "troves"];
+// the entire object is skipped 
+const ignoredKeys = ["spDeposits", "troves", "time"];
 
-function formatDateUTC(date: Date): string {
+// otherwise get diffs only on the specified keys of an object
+type DiffFieldsMap = Record<string, string[]>;
+const diffFieldsMap: DiffFieldsMap = {
+  day_supply: ["holders", "supply"]
+}
+
+export function formatDateUTC(date: Date): string {
   const options: Intl.DateTimeFormatOptions = {
     timeZone: "UTC",
     year: "numeric",
@@ -28,17 +35,38 @@ export const getDiffs = (previous: any, latest: any) => {
     ? JSON.parse(fs.readFileSync(diffPath, "utf-8"))
     : {};
 
-  // Compute diff
-  const diff = {};
-  for (const key in latest) {
-    const oldVal = previous[key];
-    const newVal = latest[key];
+  const diff: Record<string, any> = {};
 
-    if (
-      JSON.stringify(oldVal) !== JSON.stringify(newVal) &&
-      !ignoredKeys.includes(key)
-    ) {
-      diff[key] = [oldVal, newVal];
+  for (const key in latest) {
+    // Skip entire object if it's in ignoredKeys
+    if (ignoredKeys.includes(key)) continue;
+
+    const isFieldMapped = diffFieldsMap.hasOwnProperty(key);
+    const subKeys = isFieldMapped ? diffFieldsMap[key] : [];
+    
+    // handle nested object
+    if (isFieldMapped) {
+      // only pick first element (most recent)
+      const latestSub = latest[key][0] || {};
+      const prevSub = previous[key][0] || {};
+
+      for (const subKey of subKeys) {
+        const oldVal = prevSub[subKey];
+        const newVal = latestSub[subKey];
+
+        if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+          if (!diff[subKey]) diff[subKey] = {};
+          diff[subKey] = [oldVal, newVal];
+        }
+      }
+    } else {
+      // Handle flat fields
+      const oldVal = previous[key];
+      const newVal = latest[key];
+
+      if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+        diff[key] = [oldVal, newVal];
+      }
     }
   }
 
@@ -46,10 +74,12 @@ export const getDiffs = (previous: any, latest: any) => {
   if (Object.keys(diff).length > 0) {
     const today = formatDateUTC(new Date());
     existingDiffs[today] = diff;
+    existingDiffs[today]["prevTime"] = previous.time;
 
     fs.writeFileSync(diffPath, JSON.stringify(existingDiffs, null, 2));
-    console.log(`Diff written to diffs.json`);
+    console.log(`✅ Diff written to diffs.json`);
   } else {
-    console.log("No diff detected");
+    console.log("ℹ️ No diff detected");
   }
 };
+

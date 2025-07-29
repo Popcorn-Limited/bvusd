@@ -56,6 +56,7 @@ export const duneExecuteFetch = async <T extends DuneResponse>({
 }: {
   apiKey: string;
   id: string;
+  maxResults: string;
   validate: (data: unknown) => data is T;
 }): Promise<T> => {
   try {

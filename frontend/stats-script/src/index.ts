@@ -5,7 +5,7 @@ import vaults from "./vaults.json";
 import { getProvider } from "./connection";
 import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from './env';
-import { getDiffs } from "./v2/diffs";
+import { getDiffs, formatDateUTC } from "./v2/diffs";
 
 interface Tree extends Record<string, string | Tree> {}
   
@@ -36,6 +36,7 @@ export async function fetchAndUpdateStats() {
   ]);
   
   const v2Stats = {
+    time: formatDateUTC(new Date()),
     ...stats
   };
 
