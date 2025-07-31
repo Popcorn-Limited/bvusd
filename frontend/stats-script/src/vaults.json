@@ -1,0 +1,11 @@
+{
+    "stableVaults": [
+        {
+            "symbol": "USDC",
+            "asset":"0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
+            "assetDecimals": 6,
+            "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
+            "chain": "Katana"
+        }
+    ]
+}

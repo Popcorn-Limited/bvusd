@@ -17,7 +17,7 @@ const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
   [content.menu.buy, "/buy", IconEarn],
   [content.menu.points, "/points", IconEarn],
   [content.menu.portfolio, "/portfolio", IconDashboard],
-  [content.menu.stats, "/stats", IconEarn],
+  [content.menu.dashboard, "/dashboard", IconEarn],
 ];
 
 export function TopBar() {
@@ -27,6 +27,7 @@ export function TopBar() {
         position: "relative",
         zIndex: 1,
         height: 72,
+        padding: "0 32px",
       })}
     >
       <div
@@ -36,14 +37,15 @@ export function TopBar() {
           display: "flex",
           justifyContent: "space-between",
           gap: 16,
-          maxWidth: 1280,
+          maxWidth: 1440,
           height: "100%",
           margin: "0 auto",
           padding: "16px 24px",
           fontSize: 16,
           fontWeight: 500,
-          background: "fieldSurface",
-          border: "1px solid token(colors.fieldBorder)",
+          background: "#141416",
+          boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+          border: "1px solid var(--Neutral-100, #353945)",
           borderRadius: 16,
         })}
       >

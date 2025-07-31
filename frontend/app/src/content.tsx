@@ -23,7 +23,7 @@ export default {
     earn: "Earn",
     wrap: "Wrap",
     buy: "Buy",
-    stats: "Stats",
+    dashboard: "Dashboard",
   },
 
   accountButton: {

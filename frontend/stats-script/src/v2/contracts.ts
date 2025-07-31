@@ -8,6 +8,18 @@ export interface LiquityV2Deployment {
   branches: LiquityV2BranchAddresses[];
 }
 
+interface VaultData {
+  symbol: string;
+  asset: string;
+  assetDecimals: number;
+  safe: string;
+  chain: string;
+}
+
+export interface VaultsDeployment {
+  stableVaults: VaultData[];
+}
+
 export interface LiquityV2Constants {
   SP_YIELD_SPLIT: string;
 }
@@ -21,14 +33,16 @@ export interface LiquityV2BranchAddresses {
   stabilityPool: string;
 }
 
-const erc20Abi = [
+export const erc20Abi = [
   "function symbol() view returns (string)",
-  "function totalSupply() view returns (uint256)"
+  "function totalSupply() view returns (uint256)",
+  "function balanceOf(address) view returns(uint256)"
 ];
 
 export interface ERC20 {
   symbol(overrides?: CallOverrides): Promise<string>;
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(args0: string, overrides?: CallOverrides): Promise<BigNumber>;
 }
 
 const activePoolAbi = [

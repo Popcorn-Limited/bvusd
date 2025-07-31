@@ -29,6 +29,7 @@
     "@vercel/analytics": "^1.4.1",
     "@wagmi/core": "^2.16.4",
     "abitype": "^1.0.8",
+    "axios": "^1.10.0",
     "blo": "^1.2.0",
     "connectkit": "^1.8.2",
     "dnum": "^2.14.0",
