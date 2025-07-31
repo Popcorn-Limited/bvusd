@@ -11,7 +11,11 @@ import "forge-std/Test.sol";
 contract TestToken is ERC20 {
     uint8 internal _decimals;
 
-    constructor(uint8 dec, string memory name, string memory symbol) ERC20(name, symbol) {
+    constructor(
+        uint8 dec,
+        string memory name,
+        string memory symbol
+    ) ERC20(name, symbol) {
         _decimals = dec;
     }
 
@@ -35,10 +39,16 @@ contract TokenWrapperTest is Test {
     }
 
     function test_name_symbol() public {
-        assertEq(IERC20Metadata(address(wrapper18Decimals)).name(), "Wrapped Ethereum");
+        assertEq(
+            IERC20Metadata(address(wrapper18Decimals)).name(),
+            "Wrapped Ethereum"
+        );
         assertEq(IERC20Metadata(address(wrapper18Decimals)).symbol(), "wETH");
 
-        assertEq(IERC20Metadata(address(wrapper8Decimals)).name(), "Wrapped Bitcoin");
+        assertEq(
+            IERC20Metadata(address(wrapper8Decimals)).name(),
+            "Wrapped Bitcoin"
+        );
         assertEq(IERC20Metadata(address(wrapper8Decimals)).symbol(), "wBTC");
     }
 
@@ -92,9 +102,25 @@ contract TokenWrapperTest is Test {
 
         vm.stopPrank();
     }
+    function testFail_WithdrawZero() public {
+        address user = address(1234);
+        uint256 tokenAmount = 10e18;
+        uint256 wrappedAmount = 10e18 * 10 ** 10;
+
+        deal(address(token8Decimals), user, tokenAmount);
+
+        vm.startPrank(user);
+        token8Decimals.approve(address(wrapper8Decimals), tokenAmount);
+        wrapper8Decimals.deposit(tokenAmount, address(token8Decimals));
+
+        wrapper8Decimals.withdraw(1);
+        vm.stopPrank();
+    }
 
     function test_revert_max_18_decimals_underlying() public {
-        IERC20Metadata token30Decimals = IERC20Metadata(new TestToken(30, "test", "test"));
+        IERC20Metadata token30Decimals = IERC20Metadata(
+            new TestToken(30, "test", "test")
+        );
 
         vm.expectRevert("Max 18 underlying decimals");
         new TokenWrapper(token30Decimals);

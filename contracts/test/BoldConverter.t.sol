@@ -59,10 +59,13 @@ contract StableCoinConverterTest is Test {
 
     function test_deposit_six_decimals(uint256 depositAmount) public {
         vm.assume(depositAmount < 1000000000000000000000);
-       _testDeposit(userA, firstReceiver, firstAsset, depositAmount);
+        _testDeposit(userA, firstReceiver, firstAsset, depositAmount);
     }
 
-    function test_withdraw(uint256 depositAmount, uint256 withdrawAmount) public {
+    function test_withdraw(
+        uint256 depositAmount,
+        uint256 withdrawAmount
+    ) public {
         vm.assume(depositAmount >= withdrawAmount);
         vm.assume(depositAmount < 1000000000000000000000);
 
@@ -75,17 +78,20 @@ contract StableCoinConverterTest is Test {
 
         // deposit
         _deposit(userA, firstAsset, 10e18);
-        
+
         // underlying asset holder does not approve assets to be pulled
         vm.expectRevert("ERC20: insufficient allowance");
         vm.prank(userA);
         converter.withdraw(firstAsset, 1e18, userA);
     }
 
-    function test_multiplePaths_18_decimals(uint256 depositAmount, uint256 withdrawAmount) public {
+    function test_multiplePaths_18_decimals(
+        uint256 depositAmount,
+        uint256 withdrawAmount
+    ) public {
         vm.assume(depositAmount >= withdrawAmount);
         vm.assume(depositAmount < 1000000000000000000000);
-        
+
         IERC20Metadata newAsset = IERC20Metadata(
             new TestToken(18, "USDC2", "USDC2")
         );
@@ -177,7 +183,12 @@ contract StableCoinConverterTest is Test {
         converter.withdraw(invalidAsset, 1e18, userA);
     }
 
-    function _testDeposit(address user, address receiver, IERC20Metadata asset, uint256 amount) internal {
+    function _testDeposit(
+        address user,
+        address receiver,
+        IERC20Metadata asset,
+        uint256 amount
+    ) internal {
         uint256 assetDecimals = asset.decimals();
 
         deal(address(asset), user, amount);
@@ -187,44 +198,66 @@ contract StableCoinConverterTest is Test {
         uint256 bvUSDSupplyBefore = bvUSD.totalSupply();
         uint256 userAssetBalanceBefore = asset.balanceOf(user);
 
-        // deposit
-        uint256 bvUSDOut = _deposit(user, asset, amount);
+        if (amount == 0) {
+            vm.startPrank(user);
+            asset.approve(converterAddr, amount);
 
-        // Converter holds no assets
-        assertEq(asset.balanceOf(converterAddr), 0, "Converter Asset balanace");
-        assertEq(bvUSD.balanceOf(converterAddr), 0, "Converter bvUSD balanace");
+            vm.expectRevert("out = 0");
+            converter.deposit(asset, amount);
+            vm.stopPrank();
+        } else {
+            // deposit
+            uint256 bvUSDOut = _deposit(user, asset, amount);
+            // Converter holds no assets
+            assertEq(
+                asset.balanceOf(converterAddr),
+                0,
+                "Converter Asset balanace"
+            );
+            assertEq(
+                bvUSD.balanceOf(converterAddr),
+                0,
+                "Converter bvUSD balanace"
+            );
 
-        // receiver holds assets
-        assertEq(
-            asset.balanceOf(receiver),
-            receiverAssetBalanceBefore + amount,
-            "Receiver Asset balanace"
-        );
+            // receiver holds assets
+            assertEq(
+                asset.balanceOf(receiver),
+                receiverAssetBalanceBefore + amount,
+                "Receiver Asset balanace"
+            );
 
-        // total supply increased by scaled amount
-        uint256 scaledbvUSDAmount = amount * 10 ** (18 - assetDecimals);
-        assertEq(
-            bvUSD.totalSupply(),
-            bvUSDSupplyBefore + scaledbvUSDAmount,
-            "bvUSD supply"
-        );
+            // total supply increased by scaled amount
+            uint256 scaledbvUSDAmount = amount * 10 ** (18 - assetDecimals);
+            assertEq(
+                bvUSD.totalSupply(),
+                bvUSDSupplyBefore + scaledbvUSDAmount,
+                "bvUSD supply"
+            );
 
-        // user receives bvUSD scaled amount
-        assertEq(
-            bvUSD.balanceOf(user),
-            userBvUSDBalanceBefore + bvUSDOut,
-            "bvUSD balance"
-        );
+            // user receives bvUSD scaled amount
+            assertEq(
+                bvUSD.balanceOf(user),
+                userBvUSDBalanceBefore + bvUSDOut,
+                "bvUSD balance"
+            );
 
-        // user asset balance
-        assertEq(
-            asset.balanceOf(user),
-            userAssetBalanceBefore - amount,
-            "User Asset balanace"
-        );
+            // user asset balance
+            assertEq(
+                asset.balanceOf(user),
+                userAssetBalanceBefore - amount,
+                "User Asset balanace"
+            );
+        }
     }
 
-    function _testWithdraw(address user, address receiver, IERC20Metadata asset, uint256 amount, uint256 fee) internal {
+    function _testWithdraw(
+        address user,
+        address receiver,
+        IERC20Metadata asset,
+        uint256 amount,
+        uint256 fee
+    ) internal {
         uint256 assetDecimals = asset.decimals();
 
         uint256 receiverAssetBalanceBefore = asset.balanceOf(receiver);
@@ -237,44 +270,56 @@ contract StableCoinConverterTest is Test {
         asset.approve(converterAddr, amount);
 
         vm.prank(user);
-        uint256 assetOut = converter.withdraw(asset, amount, user);
+        if ((assetDecimals != 18 && amount < 1e12) || amount == 0) {
+            vm.expectRevert("out = 0");
+            converter.withdraw(asset, amount, user);
+        } else {
+            uint256 assetOut = converter.withdraw(asset, amount, user);
+            uint256 scaledWithdraw = amount / (10 ** (18 - assetDecimals));
+            uint256 expectedFee = (scaledWithdraw * fee) / 10000;
 
-        uint256 scaledWithdraw = amount / (10 ** (18 - assetDecimals));
-        uint256 expectedFee = scaledWithdraw * fee / 10000;
+            assertEq(assetOut, scaledWithdraw - expectedFee, "Fee amount");
 
-        assertEq(assetOut, scaledWithdraw - expectedFee, "Fee amount");
+            // underlying receiver sent asset to user
+            assertEq(
+                asset.balanceOf(receiver),
+                receiverAssetBalanceBefore - assetOut,
+                "Receiver asset balance"
+            );
 
-        // underlying receiver sent asset to user
-        assertEq(
-            asset.balanceOf(receiver),
-            receiverAssetBalanceBefore - assetOut,
-            "Receiver asset balance"
-        );
+            // user received asset
+            assertEq(
+                asset.balanceOf(userA),
+                userAssetBalanceBefore + assetOut,
+                "User asset balance"
+            );
 
-        // user received asset
-        assertEq(
-            asset.balanceOf(userA),
-            userAssetBalanceBefore + assetOut,
-            "User asset balance"
-        );
+            // user bvUSD
+            assertEq(
+                bvUSD.balanceOf(userA),
+                userBvUSDBalanceBefore - amount,
+                "bvUSD user balance"
+            );
 
-        // user bvUSD
-        assertEq(
-            bvUSD.balanceOf(userA),
-            userBvUSDBalanceBefore - amount,
-            "bvUSD user balance"
-        );
+            // bvUSD is burned
+            assertEq(
+                bvUSD.totalSupply(),
+                bvUSDSupplyBefore - amount,
+                "bvUSD supply"
+            );
 
-        // bvUSD is burned
-        assertEq(
-            bvUSD.totalSupply(),
-            bvUSDSupplyBefore - amount,
-            "bvUSD supply"
-        );
-
-        // Converter holds no assets
-        assertEq(asset.balanceOf(converterAddr), 0, "Converter Asset balanace");
-        assertEq(bvUSD.balanceOf(converterAddr), 0, "Converter bvUSD balanace");
+            // Converter holds no assets
+            assertEq(
+                asset.balanceOf(converterAddr),
+                0,
+                "Converter Asset balanace"
+            );
+            assertEq(
+                bvUSD.balanceOf(converterAddr),
+                0,
+                "Converter bvUSD balanace"
+            );
+        }
     }
 
     function _deposit(
@@ -287,5 +332,34 @@ contract StableCoinConverterTest is Test {
 
         bvUSDOut = converter.deposit(asset, amount);
         vm.stopPrank();
+    }
+
+
+    function test_failing() public {
+        uint256 depositAmount = 489877346851431045;
+        uint256 withdrawAmount = 3;
+
+        IERC20Metadata newAsset = IERC20Metadata(
+            new TestToken(18, "USDC2", "USDC2")
+        );
+
+        address receiver2 = makeAddr("receiverB");
+
+        assertFalse(converter.isValidPath(newAsset));
+
+        BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
+        paths[0] = BoldConverter.Path(receiver2, 0, 100);
+
+        IERC20Metadata[] memory assets = new IERC20Metadata[](1);
+        assets[0] = newAsset;
+
+        vm.prank(address(this));
+        converter.setPaths(assets, paths);
+
+        assertTrue(converter.isValidPath(newAsset));
+
+        _testDeposit(userA, receiver2, newAsset, depositAmount);
+
+        _testWithdraw(userA, receiver2, newAsset, withdrawAmount, 100);
     }
 }

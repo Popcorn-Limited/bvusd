@@ -5,13 +5,15 @@ pragma solidity 0.8.24;
 import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 
 import "./Owned.sol";
 
 // token wrapper with decimal scaling
-contract MultiTokenWrapper is ERC20, Owned {
+contract MultiTokenWrapper is ERC20, Owned, ReentrancyGuard {
     mapping(address => bool) public isUnderlying;
     mapping(address => uint256) public underlyingDecimals;
+    mapping(address => mapping(address => uint256)) public underlyingBalances;
 
     event UnderlyingAdded(address indexed underlying);
     event UnderlyingRemoved(address indexed underlying);
@@ -23,9 +25,12 @@ contract MultiTokenWrapper is ERC20, Owned {
         )
         Owned(msg.sender)
     {}
-
     // amount in underlying token decimals
-    function deposit(uint256 amount, address underlying) external onlyOwner {
+    function deposit(
+        uint256 amount,
+        address underlying,
+        address to
+    ) public nonReentrant {
         require(msg.sender != address(this), "Wrapper can't deposit");
         require(isUnderlying[underlying], "Underlying not supported");
 
@@ -36,20 +41,39 @@ contract MultiTokenWrapper is ERC20, Owned {
             amount
         );
 
-        _mint(msg.sender, amount * 10 ** (18 - underlyingDecimals[underlying]));
+        underlyingBalances[underlying][to] += amount;
+        uint256 amountOut = amount *
+            10 ** (18 - underlyingDecimals[underlying]);
+        require(amountOut > 0, "out = 0");
+
+        _mint(to, amountOut);
+    }
+
+    function deposit(uint256 amount, address underlying) external {
+        deposit(amount, underlying, msg.sender);
     }
 
     // amount in wrapped token decimals (18)
-    function withdraw(uint256 amount, address underlying) external onlyOwner {
+    function withdraw(
+        uint256 amount,
+        address underlying,
+        address to
+    ) public nonReentrant {
         require(isUnderlying[underlying], "Underlying not supported");
 
         _burn(msg.sender, amount);
 
-        SafeERC20.safeTransfer(
-            IERC20(underlying),
-            msg.sender,
-            amount / 10 ** (18 - underlyingDecimals[underlying])
-        );
+        uint256 amountOut = amount /
+            10 ** (18 - underlyingDecimals[underlying]);
+        require(amountOut > 0, "out = 0");
+
+        underlyingBalances[underlying][msg.sender] -= amountOut;
+
+        SafeERC20.safeTransfer(IERC20(underlying), to, amountOut);
+    }
+
+    function withdraw(uint256 amount, address underlying) external {
+        withdraw(amount, underlying, msg.sender);
     }
 
     function addUnderlying(address underlying) external onlyOwner {

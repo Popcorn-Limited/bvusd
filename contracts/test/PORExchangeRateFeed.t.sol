@@ -32,7 +32,7 @@ contract PORExchangeRateFeedTest is Test {
         mockAsset = new MockERC20();
 
         // Deploy the PORExchangeRateFeed contract
-        porExchangeRateFeed = new PORExchangeRateFeed(mockPORFeed, mockAsset);
+        porExchangeRateFeed = new PORExchangeRateFeed(mockPORFeed, mockAsset, 86400);
     }
 
     function test_Decimals() public {
@@ -91,7 +91,8 @@ contract PORExchangeRateFeedTest is Test {
         // Deploy new instance with mainnet contracts
         PORExchangeRateFeed mainnetFeed = new PORExchangeRateFeed(
             porFeed,
-            asset
+            asset,
+            86400
         );
 
         (

@@ -11,11 +11,13 @@ contract PORExchangeRateFeed is AggregatorV3Interface {
 
     AggregatorV3Interface public immutable POR_FEED;
     IERC20 public immutable ASSET;
+    uint256 public immutable MAX_DELAY;
 
     // @dev We assume the porFeed and asset have both 8 decimals and the POR feed is for the asset.
-    constructor(AggregatorV3Interface porFeed, IERC20 asset) {
+    constructor(AggregatorV3Interface porFeed, IERC20 asset, uint256 maxDelay) {
         POR_FEED = porFeed;
         ASSET = asset;
+        MAX_DELAY = maxDelay;
     }
 
     function decimals() external pure returns (uint8) {
@@ -35,6 +37,9 @@ contract PORExchangeRateFeed is AggregatorV3Interface {
     {
         (roundId, answer, startedAt, updatedAt, answeredInRound) = POR_FEED
             .latestRoundData();
+
+        require(updatedAt >= block.timestamp - MAX_DELAY, "Stale oracle data");
+
 
         // No conversions needed since both asset and price feed have 8 decimals
         // We dont want to return a value greater than 1e8 if the asset is overcollateralized
