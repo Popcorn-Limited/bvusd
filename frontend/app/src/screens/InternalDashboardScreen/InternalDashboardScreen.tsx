@@ -112,7 +112,7 @@ export function InternalDashboardScreen() {
                       onClick={() => setActiveTab("Strategies")}
                       style={{
                         fontSize: 16,
-                        color: activeTab === "Diffs" ? "#fff" : "#aaa",
+                        color: activeTab === "Strategies" ? "#fff" : "#aaa",
                         fontWeight: activeTab === "Diffs" ? 600 : 400,
                         paddingBottom: 4,
                         background: "transparent",
