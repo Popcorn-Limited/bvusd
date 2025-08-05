@@ -1,6 +1,11 @@
-import { BTC_PRICE, MFONE_PRICE } from "../../constants";
+import { BTC_PRICE } from "../../constants";
 
 import { duneFetch, type DuneResponse, isDuneResponse } from "../../dune";
+
+type PricePoint = {
+  price: number;
+  time: string;
+};
 
 const isDuneValidResponse = (
   data: unknown
@@ -47,9 +52,45 @@ export const fetchDailyBTCPrice = async ({
     validate: isDuneValidResponse,
   });
 
-//   console.log(rows);
-  return rows.map((r) => ({
-    time: r.day.substring(0,10),
-    price: r.btc_price
-  }));
+  //   console.log(rows);
+  return monthlyAvgPrice(
+    rows.map((r) => ({
+      time: r.day.substring(0, 10),
+      price: r.btc_price,
+    }))
+  );
 };
+
+function monthlyAvgPrice(
+  data: PricePoint[]
+): { month: string; average: number }[] {
+  // Parse and sort the data
+  const parsed = data
+    .map((d) => ({
+      date: new Date(d.time),
+      price: d.price,
+    }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  const monthlyGroups: Record<string, number[]> = {};
+
+  parsed.forEach((point) => {
+    const key = `${point.date.getUTCFullYear()}-${String(
+      point.date.getUTCMonth() + 1
+    ).padStart(2, "0")}`;
+    if (!monthlyGroups[key]) {
+      monthlyGroups[key] = [];
+    }
+    monthlyGroups[key].push(point.price);
+  });
+
+  // avg
+  const result: { month: string; average: number }[] = [];
+
+  for (const [month, prices] of Object.entries(monthlyGroups)) {
+    const avg = prices.reduce((sum, p) => sum + p, 0) / prices.length;
+    result.push({ month, average: avg });
+  }
+
+  return result;
+}
