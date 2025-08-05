@@ -1,7 +1,7 @@
 import type { BlockTag, Provider } from "@ethersproject/abstract-provider";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Decimal } from "@liquity/lib-base";
-import { fetchMFOneVaultPrice } from "./queries";
+import { fetchDailyBTCPrice, fetchMFOneVaultPrice } from "./queries";
 
 const mapObj = <T extends Record<string, any>, U>(
   t: T,
@@ -28,13 +28,24 @@ export const fetchAllStrategies = async ({
     network: "mainnet",
   };
 
-  const [mfOnePrice] = await Promise.all([
+  const [mfOnePrice, btcPrice] = await Promise.all([
     // mf one vault price
     fetchMFOneVaultPrice(fetchConfig),
+
+    // btc price 
+    fetchDailyBTCPrice(fetchConfig),
   ]);
 
   return {
     mfOnePrice: mfOnePrice!.map((price) =>
+      mapObj(
+        {
+          ...price,
+        },
+        (x) => `${x}`
+      )
+    ),
+    btcPrice: btcPrice!.map((price) =>
       mapObj(
         {
           ...price,

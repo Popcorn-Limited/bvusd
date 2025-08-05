@@ -7,7 +7,7 @@ type PricePoint = {
   time: string;
 };
 
-const isDuneSpAverageApyResponse = (
+const isDuneValidResponse = (
   data: unknown
 ): data is DuneResponse<{
   event_price: number;
@@ -49,10 +49,8 @@ export const fetchMFOneVaultPrice = async ({
     apiKey,
     id: url,
     maxResults: "10",
-    validate: isDuneSpAverageApyResponse,
+    validate: isDuneValidResponse,
   });
-
-  console.log(rows);
 
   const data: PricePoint[] = rows.map((r) => ({
     price: r.event_price,

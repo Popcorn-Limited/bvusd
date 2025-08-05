@@ -9,3 +9,4 @@ export const bvUSD_HOLDERS = "5517514";
 export const SUSHI_VOLUME = "5523901";
 export const SUSHI_SWAPS = "5529727";
 export const MFONE_PRICE= "5445262";
+export const BTC_PRICE= "5584070";
