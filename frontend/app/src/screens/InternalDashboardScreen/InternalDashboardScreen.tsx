@@ -11,9 +11,10 @@ import { GatedContent } from "./Gate";
 import { PoolSwaps } from "./PoolSwaps";
 import Diffs from "./Diffs";
 import { useState } from "react";
+import StrategiesKPI from "./StrategiesKPI";
 
 export function InternalDashboardScreen() {
-  const [activeTab, setActiveTab] = useState<"Data" | "Diffs">("Data");
+  const [activeTab, setActiveTab] = useState<"Data" | "Diffs" | "Strategies">("Data");
 
   const liquityStats = useLiquityStats();
   const loadingState =
@@ -107,6 +108,20 @@ export function InternalDashboardScreen() {
                     >
                       Diffs
                     </button>
+                    <button
+                      onClick={() => setActiveTab("Strategies")}
+                      style={{
+                        fontSize: 16,
+                        color: activeTab === "Diffs" ? "#fff" : "#aaa",
+                        fontWeight: activeTab === "Diffs" ? 600 : 400,
+                        paddingBottom: 4,
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Strategies
+                    </button>
                   </div>
                   {activeTab === "Data" && (
                     <div
@@ -134,6 +149,19 @@ export function InternalDashboardScreen() {
                       }}
                     >
                       <Diffs />
+                    </div>
+                  )}
+                  {activeTab === "Strategies" && (
+                    <div
+                      style={{
+                        maxWidth: 1400,
+                        margin: "0 auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "32px",
+                      }}
+                    >
+                      <StrategiesKPI />
                     </div>
                   )}
                 </div>

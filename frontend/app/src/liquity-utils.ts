@@ -43,6 +43,7 @@ import {
   DIFFS_STATS_URL,
   ENV_BRANCHES,
   LIQUITY_STATS_URL,
+  STRATEGIES_URL,
 } from "@/src/env";
 import { useContinuousBoldGains } from "@/src/liquity-stability-pool";
 import {
@@ -756,7 +757,7 @@ const StatsSchema = v.pipe(
         token1: v.string(),
         time: v.string(),
         txHash: v.string(),
-        type: v.string()
+        type: v.string(),
       })
     ),
   }),
@@ -834,7 +835,7 @@ const StatsSchema = v.pipe(
         depositor: deposit.depositor,
         time: deposit.time,
         collateralAsset: deposit.collateral,
-        amount: deposit.amount
+        amount: deposit.amount,
       };
     }),
     poolDepth: value.poolDepth.map((tick) => {
@@ -859,8 +860,8 @@ const StatsSchema = v.pipe(
         token0: v.token0,
         token1: v.token1,
         volume1d: v.total_volume_1d,
-        volume7d: v.total_volume_7d
-      }
+        volume7d: v.total_volume_7d,
+      };
     }),
     poolSwaps: value.poolSwaps.map((s) => {
       return {
@@ -872,9 +873,40 @@ const StatsSchema = v.pipe(
         token1: s.token1,
         time: s.time,
         txHash: s.txHash,
-        type: s.type
-      }
-    })
+        type: s.type,
+      };
+    }),
+  }))
+);
+
+const StrategiesSchema = v.pipe(
+  v.object({
+    mfOnePrice: v.array(
+      v.object({
+        month: v.string(),
+        apy: v.string(),
+      })
+    ),
+    btcPrice: v.array(
+      v.object({
+        month: v.string(),
+        average: v.string(),
+      })
+    ),
+  }),
+  v.transform((value) => ({
+    mfOnePrice: value.mfOnePrice.map((r) => {
+      return {
+        month: r.month,
+        apy: r.apy,
+      };
+    }),
+    btcPrice: value.btcPrice.map((b) => {
+      return {
+        month: b.month,
+        avgPrice: b.average,
+      };
+    }),
   }))
 );
 
@@ -917,6 +949,21 @@ export function useLiquityStats() {
       return v.parse(StatsSchema, json);
     },
     enabled: Boolean(LIQUITY_STATS_URL),
+  });
+}
+
+export function useStrategiesData() {
+  return useQuery({
+    queryKey: ["strategies-data"],
+    queryFn: async () => {
+      if (!STRATEGIES_URL) {
+        throw new Error("LIQUITY_STATS_URL is not defined");
+      }
+      const response = await fetch(STRATEGIES_URL);
+      const json = await response.json();
+      return v.parse(StrategiesSchema, json);
+    },
+    enabled: Boolean(STRATEGIES_URL),
   });
 }
 
