@@ -49,7 +49,7 @@ export const fetchDailyBTCPrice = async ({
 
 //   console.log(rows);
   return rows.map((r) => ({
-    time: r.day,
+    time: r.day.substring(0,10),
     price: r.btc_price
   }));
 };
