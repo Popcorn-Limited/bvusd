@@ -15,6 +15,7 @@ type Outputs = {
   lpPayment: number;
   loanInterest: number;
   netProfit: number;
+  yieldToBreakeven: number;
 };
 
 const sliceAmount = (amount: string) => {
@@ -70,7 +71,14 @@ export default function StrategiesKPI() {
   };
 
   const [outputs, setOutputs] = useState<Outputs[]>([
-    { loan: 0, strategyYield: 0, lpPayment: 0, netProfit: 0, loanInterest: 0 },
+    {
+      loan: 0,
+      strategyYield: 0,
+      lpPayment: 0,
+      netProfit: 0,
+      loanInterest: 0,
+      yieldToBreakeven: 0,
+    },
   ]);
 
   // compute outputs
@@ -83,12 +91,17 @@ export default function StrategiesKPI() {
         const lpPayment =
           (parseFloat(row.avgPrice) * inputs.btcAmount * inputs.lpApy) / 12;
         const loanInterest = (loan * inputs.borrowRate) / 12;
+        const netProfit = strategyYield - loanInterest - lpPayment;
+        const toBreakeven = parseFloat(
+          sliceAmount((((loanInterest + lpPayment) * 100) / loan).toString())
+        );
         return {
           loan,
           strategyYield,
           lpPayment,
           loanInterest,
-          netProfit: strategyYield - loanInterest - lpPayment,
+          netProfit,
+          yieldToBreakeven: toBreakeven,
         };
       });
 
@@ -173,7 +186,7 @@ export default function StrategiesKPI() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
               alignItems: "center",
               gap: 16,
               fontSize: 14,
@@ -189,8 +202,9 @@ export default function StrategiesKPI() {
             <div>USD LOAN AMOUNT</div>
             <div>Lp Payment</div>
             <div>Loan Interest</div>
-            <div>Strategy Yield</div>
+            <div>Monthly Yield</div>
             <div>Net Profit</div>
+            <div>Yield To Breakeven</div>
           </div>
 
           {/* Scrollable Table Body */}
@@ -206,7 +220,7 @@ export default function StrategiesKPI() {
                   key={idx}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
                     alignItems: "center",
                     gap: 16,
                     padding: "12px",
@@ -227,7 +241,7 @@ export default function StrategiesKPI() {
                           strategies.data.mfOnePrice[idx].apy
                         ).toString()
                       )}
-                      ) %
+                      %)
                     </span>
                   </div>
                   {outputs[idx].netProfit > 0 ? (
@@ -253,6 +267,7 @@ export default function StrategiesKPI() {
                       </span>
                     </div>
                   )}
+                  <div>{display(outputs[idx].yieldToBreakeven)}%</div>
                 </div>
               ))
             ) : (
