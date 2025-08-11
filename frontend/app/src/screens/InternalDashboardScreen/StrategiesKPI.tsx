@@ -56,7 +56,7 @@ export default function StrategiesKPI() {
       }));
     } else {
       if (!isNaN(parsed)) {
-        if (field !== "btcAmount")
+        if (field !== "btcAmount" && field !== "ltv")
           setInputs((prev) => ({
             ...prev,
             [field]: parsed / 100,
@@ -294,7 +294,7 @@ const Field: React.FC<FieldProps> = ({ label, value, onChange }) => (
     <input
       type="number"
       value={value === "0" ? "" : value}
-      step="1"
+      step="0.01"
       onChange={(e) => onChange(e.target.value)}
       style={{
         padding: "6px 8px",
