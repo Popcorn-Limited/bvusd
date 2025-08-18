@@ -22,6 +22,7 @@ import { TrovesPanel } from "./TrovesPanel";
 import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
 import { HoldersPanel } from "./HoldersPanel";
+import { VaultsApy } from "./VaultsApy";
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
@@ -152,6 +153,7 @@ export function StatsScreen() {
                       collateralReserves={liquityStats.data.reserveAssets}
                     />
                     <VaultsPanel />
+                    <VaultsApy data={liquityStats.data.vaultsApy}/>
                     <TrovesPanel troves={liquityStats.data.troves} />
                     <SPDepositsPanel deposits={liquityStats.data.spDeposits} />
                   </div>

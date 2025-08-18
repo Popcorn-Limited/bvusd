@@ -5,6 +5,7 @@ import tokenBvusd from "../../../../uikit/src/token-icons/bvusd.svg";
 import tokenBtcb from "../../../../uikit/src/token-icons/btcb.svg";
 import tokenUsdc from "../../../../uikit/src/token-icons/usdc.svg";
 import eth from "../../../../uikit/src/token-icons/eth.svg";
+import katana from "../../../../uikit/src/token-icons/katana.svg";
 import { PanelHeader } from "./PanelTitle";
 import {
   PieChart,
@@ -26,7 +27,7 @@ interface VaultRow {
 const colors = ["#F6B73C", "#4BA4F0"];
 
 // values: Strategy Name - Vault Address - Chain -APY?
-const vaultsData: VaultRow[] = [
+export const vaultsData: VaultRow[] = [
   {
     icon: tokenUsdc,
     label: "USDC",
@@ -39,18 +40,18 @@ const vaultsData: VaultRow[] = [
     icon: tokenBvusd,
     label: "bvUSD",
     strategy: "bvUSD Vault",
-    address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
-    chain: "Ethereum",
-    chainIcon: eth,
+    address: "0x24e2ae2f4c59b8b7a03772142d439fdf13aaf15b",
+    chain: "Katana",
+    chainIcon: katana,
   },
-  {
-    icon: tokenBtcb,
-    label: "LBTC",
-    strategy: "LBTC Vault",
-    address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
-    chain: "Ethereum",
-    chainIcon: eth,
-  },
+  // {
+  //   icon: tokenBtcb,
+  //   label: "LBTC",
+  //   strategy: "LBTC Vault",
+  //   address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
+  //   chain: "Ethereum",
+  //   chainIcon: eth,
+  // },
 ];
 
 export function VaultsPanel() {

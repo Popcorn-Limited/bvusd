@@ -759,6 +759,13 @@ const StatsSchema = v.pipe(
         type: v.string()
       })
     ),
+    vaultsApy: v.array(
+      v.object({
+        day: v.string(),
+        apy: v.string(),
+        vault: v.string()
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -873,6 +880,13 @@ const StatsSchema = v.pipe(
         time: s.time,
         txHash: s.txHash,
         type: s.type
+      }
+    }),
+    vaultsApy: value.vaultsApy.map((apy) => {
+      return {
+        apy: apy.apy,
+        day: apy.day,
+        vault: apy.vault
       }
     })
   }))
