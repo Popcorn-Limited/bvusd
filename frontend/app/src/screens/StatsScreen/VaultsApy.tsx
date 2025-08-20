@@ -61,7 +61,7 @@ export function VaultsApy({ data }: ApyData) {
     return acc;
   }, {});
 
-  const groupedByVault = data.reduce((acc, { vault, day, apy }) => {
+  const groupedByVault = data.filter(v => Object.keys(vaultLabels).includes(v.vault.toLowerCase())).reduce((acc, { vault, day, apy }) => {
     const key = vault.toLowerCase();
     if (!acc[key]) acc[key] = [];
     acc[key].push({
