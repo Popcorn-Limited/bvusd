@@ -56,6 +56,11 @@ type ApyData = {
 };
 
 export function VaultsApy({ data }: ApyData) {
+  const vaultLabels = vaultsData.reduce((acc, { address, label, strategy }) => {
+    acc[address.toLowerCase()] = strategy;
+    return acc;
+  }, {});
+
   const groupedByVault = data.reduce((acc, { vault, day, apy }) => {
     const key = vault.toLowerCase();
     if (!acc[key]) acc[key] = [];
@@ -96,15 +101,6 @@ export function VaultsApy({ data }: ApyData) {
 
     return { mergedData: merged, vaultKeys: Object.keys(groupedByVault) };
   }, [groupedByVault]);
-
-  const vaultLabels = vaultsData.reduce((acc, { address, label, strategy }) => {
-    const key = address.toLowerCase();
-    if (!acc[key]) acc[key] = [];
-    acc[key].push({
-        label, strategy
-    });
-    return acc;
-  }, {});
 
   return (
     <div
@@ -158,11 +154,10 @@ export function VaultsApy({ data }: ApyData) {
               tick={CustomXAxisTick}
             />
 
-            <Tooltip content={<CustomTooltip transformValue={displayApy} />} formatter={(value) => [displayApy(value as number), ""] as [string, string]}/>
-            <Legend formatter={(v) => vaultLabels[v as string][0].strategy} />
+            <Tooltip content={<CustomTooltip transformValue={displayApy} extraPayload={vaultLabels}/>} />
+            <Legend formatter={(v) => vaultLabels[v as string]} />
 
             {vaultKeys.map((vault, idx) => (
-                
               <Line
                 key={vault}
                 type="monotone"
