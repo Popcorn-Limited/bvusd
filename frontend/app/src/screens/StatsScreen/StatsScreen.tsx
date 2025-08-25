@@ -23,11 +23,11 @@ import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
 import { HoldersPanel } from "./HoldersPanel";
 import { VaultsApy } from "./VaultsApy";
-import { AllocationBox, AllocationPanel } from "./Allocations";
+import { AllocationPanel } from "./Allocations";
 
 export function StatsScreen() {
-  const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
-    "Protocol"
+  const [activeTab, setActiveTab] = useState<"Core" | "transparency">(
+    "Core"
   );
 
   const liquityStats = useLiquityStats();
@@ -94,18 +94,18 @@ export function StatsScreen() {
                   }}
                 >
                   <button
-                    onClick={() => setActiveTab("Protocol")}
+                    onClick={() => setActiveTab("Core")}
                     style={{
                       fontSize: 16,
-                      color: activeTab === "Protocol" ? "#fff" : "#aaa",
-                      fontWeight: activeTab === "Protocol" ? 600 : 400,
+                      color: activeTab === "Core" ? "#fff" : "#aaa",
+                      fontWeight: activeTab === "Core" ? 600 : 400,
                       paddingBottom: 4,
                       background: "transparent",
                       border: "none",
                       cursor: "pointer",
                     }}
                   >
-                    Protocol
+                    Core
                   </button>
                   <button
                     onClick={() => setActiveTab("transparency")}
@@ -123,7 +123,7 @@ export function StatsScreen() {
                   </button>
                 </div>
 
-                {activeTab === "Protocol" && (
+                {activeTab === "Core" && (
                   <div
                     style={{
                       maxWidth: 1400,
@@ -144,11 +144,11 @@ export function StatsScreen() {
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
                     />
+                    <AllocationPanel data={liquityStats.data.allocations}/>
                     <ChartsPanel
                       data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
-                    <AllocationPanel data={liquityStats.data.allocations}/>
                     {/* TODO add branch collaterals when present*/}
                     <ReservesPanel
                       collateralReserves={liquityStats.data.reserveAssets}
@@ -156,8 +156,6 @@ export function StatsScreen() {
                     <VaultsPanel />
                     <VaultsApy data={liquityStats.data.vaultsApy}/>
                     <HoldersPanel holders={liquityStats.data.holders} />
-                    {/* <TrovesPanel troves={liquityStats.data.troves} />
-                    <SPDepositsPanel deposits={liquityStats.data.spDeposits} /> */}
                   </div>
                 )}
 
