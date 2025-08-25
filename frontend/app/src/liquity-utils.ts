@@ -766,6 +766,12 @@ const StatsSchema = v.pipe(
         vault: v.string()
       })
     ),
+    allocations: v.array(
+      v.object({
+        label: v.string(),
+        usdValue: v.string()
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -887,6 +893,12 @@ const StatsSchema = v.pipe(
         apy: apy.apy,
         day: apy.day,
         vault: apy.vault
+      }
+    }),
+    allocations: value.allocations.map((al) => {
+      return {
+        label: al.label,
+        usdValue: al.usdValue
       }
     })
   }))
