@@ -6,6 +6,7 @@ import { getProvider } from "./connection";
 import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from './env';
 import { getDiffs, formatDateUTC } from "./v2/diffs";
+import { getAllocations } from "./v2/queries/allocation";
 
 interface Tree extends Record<string, string | Tree> {}
   
@@ -35,9 +36,12 @@ export async function fetchAndUpdateStats() {
     })
   ]);
   
+  const allocations = await getAllocations(env.DEBANK_KEY);
+
   const v2Stats = {
     time: formatDateUTC(new Date()),
-    ...stats
+    ...stats,
+    allocations
   };
 
   // local storage
