@@ -772,6 +772,14 @@ const StatsSchema = v.pipe(
         usdValue: v.string()
       })
     ),
+    loans: v.array(
+      v.object({
+        protocol: v.string(),
+        wallet: v.string(),
+        collateralValue: v.string(),
+        loanValue: v.string()
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -899,6 +907,14 @@ const StatsSchema = v.pipe(
       return {
         label: al.label,
         usdValue: al.usdValue
+      }
+    }),
+    loans: value.loans.map((l) => {
+      return {
+        protocol: l.protocol,
+        wallet: l.wallet,
+        collateralValue: l.collateralValue,
+        loanValue: l.loanValue
       }
     })
   }))
