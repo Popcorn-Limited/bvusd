@@ -203,7 +203,7 @@ export function VaultPositionSummary({
                         + "deposits earned over the past 7 days.",
                       footerLink: {
                         label: "Check Dune for more details",
-                        href: "https://dune.com/liquity/liquity-v2",
+                        href: "https://dune.com/dna/bvusd",
                       },
                     }}
                   />

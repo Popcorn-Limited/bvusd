@@ -1,12 +1,13 @@
 "use client";
 
 import * as dn from "dnum";
-import { Positions } from "@/src/comps/Positions/Positions";
 import { fmtnum } from "@/src/formatting";
 import { usePrice } from "@/src/services/Prices";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
-import Link from "next/link";
+import { VaultPanel } from "../VaultScreen/VaultPanel";
+import { TokenCard } from "../AccountScreen/TokenCard";
+import PointsPanel from "../PointScreen/PointsPanel";
 
 
 export function HomeScreen() {
@@ -30,16 +31,21 @@ export function HomeScreen() {
         width: "100%",
       })}
     >
-      <Positions address={account.address ?? null} showNewPositionCard={false} />
-      <div>
+      {/* <Positions address={account.address ?? null} showNewPositionCard={false} /> */}
+      <div className={css({
+        background: "token(colors.neutralDimmed200)",
+        border: "1px solid token(colors.neutral100)",
+        borderRadius: 8,
+        padding: 16,
+      })}>
         <h1
           className={css({
-            fontSize: 32,
+            fontSize: 24,
             color: "content",
             userSelect: "none",
           })}
           style={{
-            paddingBottom: 32,
+            paddingBottom: 16,
           }}
         >
           My Tokens
@@ -93,7 +99,6 @@ export function HomeScreen() {
           />
           <TokenCard
             token="VCRAFT"
-            link={{ label: "Buy", href: "#" }}
             subValues={[
               {
                 label: "Value",
@@ -106,92 +111,45 @@ export function HomeScreen() {
           />
         </div>
       </div>
+      <div className={css({
+        display: "flex",
+        flexDirection: "row",
+        gap: 48,
+      })}>
+        <div className={css({
+          width: "60%",
+        })}>
+          <PointsPanel showHeader={true} />
+        </div>
+        <div
+          className={css({
+            width: "40%",
+          })}
+        >
+          <div
+            className={css({
+              background: "token(colors.neutralDimmed200)",
+              border: "1px solid token(colors.neutral100)",
+              borderRadius: 8,
+              padding: 16
+            })}
+          >
+            <h1
+              className={css({
+                fontSize: 24,
+                color: "content",
+                userSelect: "none",
+              })}
+              style={{
+                paddingBottom: 16,
+              }}
+            >
+              Earn
+            </h1>
+            <VaultPanel />
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
-
-export function TokenCard({
-  token,
-  link,
-  subValues
-}: {
-  token: string,
-  link?: { label: string, href: string },
-  subValues: { label: string, value: string }[]
-}) {
-  return (
-    <div className={css({
-      background: "token(colors.controlSurfaceAlt)",
-      border: "1px solid token(colors.neutral100)",
-      borderRadius: 8,
-      padding: 16,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-    })}>
-      <div className={css({
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "baseline",
-        paddingBottom: 12,
-      })}>
-        <h1
-          className={css({
-            fontSize: 24,
-            color: "content",
-          })}>
-          {token}
-        </h1>
-        <Link
-          href={link.href}
-          className={css({
-            color: "accent",
-            textDecoration: "none",
-            _hover: {
-              color: "goldLight",
-            },
-          })}>
-          {link.label}
-        </Link>
-      </div>
-      <div className={css({
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between"
-      })}>
-        {subValues.map((subValue, i) => (
-          <SubValue key={subValue.label} label={subValue.label} value={subValue.value} index={i} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-export function SubValue({ label, value, index }: { label: string, value: string, index: number }) {
-  return (
-    <div
-      className={css({
-        lineHeight: 1.2,
-      })}
-    >
-      <p
-        className={css({
-          fontSize: 16,
-          color: "contentAlt",
-          justifySelf: index === 0 ? "start" : "end",
-        })}
-      >
-        {label}
-      </p>
-      <p
-        className={css({
-          fontSize: 28,
-          justifySelf: index === 0 ? "start" : "end",
-        })}
-      >
-        {value}
-      </p>
-    </div>
-  )
 }

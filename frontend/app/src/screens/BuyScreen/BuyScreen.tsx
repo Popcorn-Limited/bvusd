@@ -33,7 +33,7 @@ export function BuyScreen() {
           <HFlex>
             {content.buyScreen.subheading(
               <TextButton label="Stake" onClick={() => {
-                router.push("/earn");
+                router.push("/");
               }} />,
               <TokenIcon symbol="bvUSD" size="mini"/>,
             )}
