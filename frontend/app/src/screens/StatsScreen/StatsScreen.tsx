@@ -156,7 +156,6 @@ export function StatsScreen() {
                     />
                     <VaultsPanel />
                     <VaultsApy data={liquityStats.data.vaultsApy}/>
-                    <HoldersPanel holders={liquityStats.data.holders} />
                   </div>
                 )}
 
