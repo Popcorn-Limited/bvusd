@@ -33,7 +33,7 @@ export function AllocationPanel({ data }: AllocationData) {
             lineHeight: "120%",
           }}
         >
-          Allocation Review
+          Allocation Overview
         </h3>
       </div>
       <div
