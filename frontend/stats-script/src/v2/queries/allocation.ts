@@ -9,7 +9,7 @@ type Res = {
 export const getAllocations = async (debank: string) => {
   let res: Res[] = [];
 
-  for (const allocation of allocations) {
+  for (const allocation of allocations.allocations) {
     const usd_value = await getAllocation(debank, allocation.wallet);
     res.push({ label: allocation.label, usdValue: usd_value.toString() });
   }
