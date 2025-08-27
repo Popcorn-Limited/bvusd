@@ -665,6 +665,15 @@ const StatsSchema = v.pipe(
         chain: v.string(),
       })
     ),
+    sbvUSD: v.array(
+      v.object({
+        address: v.string(),
+        apy: v.string(),
+        supply: v.string(),
+        safe: v.string(),
+        chain: v.string(),
+      })
+    ),
     max_sp_apy: v.string(),
     day_supply: v.array(
       v.object({
@@ -795,6 +804,14 @@ const StatsSchema = v.pipe(
         balance: r.balance,
         wallet: r.wallet,
         chain: r.chain,
+      };
+    }),
+    sbvUSD: value.sbvUSD.map((s) => {
+      return {
+        apy: s.apy,
+        supply: s.supply,
+        safe: s.safe,
+        chain: s.chain,
       };
     }),
     maxSpApy: value.max_sp_apy,

@@ -144,6 +144,7 @@ export function StatsScreen() {
                       }
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
+                      sbvUSD={liquityStats.data.sbvUSD}
                     />
                     <AllocationPanel data={liquityStats.data.allocations}/>
                     <ChartsPanel
