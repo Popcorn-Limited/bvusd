@@ -142,10 +142,10 @@ function MetricBox({
         background: "rgba(20, 20, 22, 0.40)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <span
           style={{
-            fontSize: 16,
+            fontSize: 20,
             fontWeight: 400,
             fontFamily: "KHTeka",
             color: "#fff",
@@ -158,7 +158,7 @@ function MetricBox({
 
       <span
         style={{
-          fontSize: 26,
+          fontSize: 30,
           fontFamily: "KHTeka",
           fontWeight: 400,
         }}
@@ -318,7 +318,7 @@ function SBVUSDCard({
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              fontSize: "14px",
+              fontSize: 20,
             }}
           >
             <Image
@@ -330,7 +330,7 @@ function SBVUSDCard({
             />
           </div>
           <span
-            style={{ fontWeight: 400, fontSize: "16px", fontFamily: "KHTeka" }}
+            style={{ fontWeight: 400, fontSize: 20, fontFamily: "KHTeka" }}
           >
             {symbol}
           </span>
@@ -339,7 +339,7 @@ function SBVUSDCard({
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+        <div style={{ display: "flex", flexDirection: "column"}}>
           <span
             style={{ fontSize: "15px", color: "#666", fontFamily: "KHTeka" }}
           >
@@ -356,7 +356,6 @@ function SBVUSDCard({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "6px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center" }}>
