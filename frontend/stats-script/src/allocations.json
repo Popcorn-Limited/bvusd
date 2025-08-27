@@ -1,12 +1,23 @@
 {
-  "allocations": [{
-    "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7",
-    "label": "Test"
-  },
-  {
-    "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0",
-    "label": "Test2"
-  }],
+  "allocations": [
+    {
+      "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7",
+      "label": "Test"
+    },
+    {
+      "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0",
+      "label": "Test2"
+    },
+    {
+      "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0",
+      "label": "Test3"
+    },
+    {
+      "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7",
+      "label": "Test4"
+    }
+  ],
+
   "loans": {
     "morpho": [
       {
