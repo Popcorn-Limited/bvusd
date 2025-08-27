@@ -15,6 +15,8 @@ import { CONTRACT_CONVERTER, ENSO_API_KEY } from "@/src/env";
 import { Converter } from "../abi/Converter";
 import { getProtocolContract } from "../contracts";
 
+const ENSO_ROUTER = "0x3067BDBa0e6628497d527bEF511c22DA8b32cA3F"
+
 const RequestSchema = createRequestSchema(
   "convert",
   {
@@ -68,13 +70,12 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         />
       ),
       async commit(ctx) {
-        console.log(ctx.request.amount)
         return ctx.writeContract({
           address: getProtocolContract(ctx.request.inputToken).address,
           abi: erc20Abi,
           functionName: "approve",
           args: [
-            CONTRACT_CONVERTER,
+            ctx.request.mode === "buy" ? CONTRACT_CONVERTER : ENSO_ROUTER,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -113,13 +114,14 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const Converter = getProtocolContract("Converter");
+        const ensoRes = await fetch(`https://api.enso.finance/api/v1/shortcuts/route?chainId=747474&fromAddress=${ctx.account}&receiver=${ctx.account}&spender=${ctx.account}&refundReceiver=${ctx.account}&amountIn=${ctx.request.amount[0].toString()}&slippage=50&fee=10&feeReceiver=0x22f5413C075Ccd56D575A54763831C4c27A37Bdb&tokenIn=0x876aac7648D79f87245E73316eB2D100e75F3Df1&tokenOut=${getProtocolContract(ctx.request.outputToken).address}`)
+        const ensoData = await ensoRes.json()
 
-        return ctx.writeContract({
-          address: Converter.address,
-          abi: Converter.abi,
-          functionName: "withdraw",
-          args: [getProtocolContract(ctx.request.outputToken).address, ctx.request.amount[0], ctx.account],
+        return sendTransaction(ctx.wagmiConfig, {
+          account: ctx.account,
+          to: ensoData.tx.to,
+          data: ensoData.tx.data,
+          value: ensoData.tx.value,
         });
       },
 
@@ -135,7 +137,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       address: getProtocolContract(ctx.request.inputToken).address,
       abi: erc20Abi,
       functionName: "allowance",
-      args: [ctx.account, CONTRACT_CONVERTER],
+      args: [ctx.account, ctx.request.mode === "buy" ? CONTRACT_CONVERTER : ENSO_ROUTER],
     });
 
     const steps: string[] = [];
