@@ -1,5 +1,5 @@
 {
-  "time": "August 27, 2025 at 1:00 PM UTC",
+  "time": "August 27, 2025 at 1:18 PM UTC",
   "total_bold_supply": "21",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4552,12 +4552,12 @@
     },
     {
       "tick": "-3",
-      "liquidity": "5993688455745894",
+      "liquidity": "5993688455748512",
       "price": "0.9997000599900016"
     },
     {
       "tick": "-2",
-      "liquidity": "9166925336583307",
+      "liquidity": "8534970419461384",
       "price": "0.9998000299960005"
     },
     {
@@ -4567,7 +4567,7 @@
     },
     {
       "tick": "0",
-      "liquidity": "3003832952941951",
+      "liquidity": "3003832953251951",
       "price": "1"
     },
     {
@@ -4577,7 +4577,7 @@
     },
     {
       "tick": "2",
-      "liquidity": "65463535567589572",
+      "liquidity": "65463535567899572",
       "price": "1.00020001"
     },
     {
@@ -4607,12 +4607,12 @@
     },
     {
       "tick": "8",
-      "liquidity": "483577952371789",
+      "liquidity": "483577952374407",
       "price": "1.000800280056007"
     },
     {
       "tick": "9",
-      "liquidity": "944269821893887",
+      "liquidity": "312314904771964",
       "price": "1.0009003600840125"
     },
     {
@@ -9732,31 +9732,26 @@
   "allocations": [
     {
       "label": "Test",
-      "usdValue": "1837.5360693260448",
+      "usdValue": "1868.3829885384102",
       "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7"
     },
     {
       "label": "Test2",
-      "usdValue": "50383.777576014116",
+      "usdValue": "52680.88764566584",
       "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0"
     },
     {
       "label": "Test3",
-      "usdValue": "50383.77757612981",
+      "usdValue": "52680.88782958354",
       "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0"
-    },
-    {
-      "label": "Test4",
-      "usdValue": "1837.5358516854872",
-      "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7"
     }
   ],
   "loans": [
     {
       "protocol": "morpho",
       "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "567436.584251086",
-      "loanValue": "274517.30499212455"
+      "collateralValue": "566496.737828",
+      "loanValue": "274517.7880991446"
     }
   ]
 }
