@@ -778,7 +778,8 @@ const StatsSchema = v.pipe(
     allocations: v.array(
       v.object({
         label: v.string(),
-        usdValue: v.string()
+        usdValue: v.string(),
+        wallet: v.string()
       })
     ),
     loans: v.array(
@@ -923,7 +924,8 @@ const StatsSchema = v.pipe(
     allocations: value.allocations.map((al) => {
       return {
         label: al.label,
-        usdValue: al.usdValue
+        usdValue: al.usdValue,
+        wallet: al.wallet
       }
     }),
     loans: value.loans.map((l) => {

@@ -28,14 +28,14 @@ const colors = ["#F6B73C", "#4BA4F0"];
 
 // values: Strategy Name - Vault Address - Chain -APY?
 export const vaultsData: VaultRow[] = [
-  {
-    icon: tokenUsdc,
-    label: "USDC",
-    strategy: "USDC Vault",
-    address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
-    chain: "Ethereum",
-    chainIcon: eth,
-  },
+  // {
+  //   icon: tokenUsdc,
+  //   label: "USDC",
+  //   strategy: "USDC Vault",
+  //   address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
+  //   chain: "Ethereum",
+  //   chainIcon: eth,
+  // },
   {
     icon: tokenBvusd,
     label: "bvUSD",

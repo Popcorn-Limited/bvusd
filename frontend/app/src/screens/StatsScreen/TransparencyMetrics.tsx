@@ -22,6 +22,19 @@ interface TransparencyMetricsProps {
   sbvUSD: sbvUSD[];
 }
 
+const reservesTooltip =
+  "This figure shows the total \n" +
+  "notional value of reserve assets, \n" +
+  "comprising funds contributed to \n" +
+  "mint bvUSD and assets \n" +
+  "deployed into yield generation strategies";
+
+const backingTooltip =
+  "This shows the ratio of total \n" +
+  "notional reserves to the total \n" +
+  "supply of bvUSD, indicating the \n" +
+  "protocol’s overall collateralization level.";
+
 export function TransparencyMetrics({
   totalBacking,
   avgCR,
@@ -36,16 +49,22 @@ export function TransparencyMetrics({
   const sbvUSDApy = sbvUSD[0].apy === "0" ? "n/a" : `${sbvUSD[0].apy}%`;
 
   const tooltipText =
-    sbvUSDApy === "0"
+    sbvUSDApy != "n/a"
       ? `sbvUSD APY: ${sbvUSDApy}.\n` +
-        `The APY is calculated using the trailing one-week average of daily protocol returns,\n` +
-        `which are distributed to the staking rewards contract.\n\n` +
-        `This is then divided by the average staked sbvUSD balance each day\n` +
-        `and annualized with weekly compounding.\n\n` +
-        `The displayed APY is an estimate and may fluctuate based on protocol performance.\n` +
-        `It is not a fixed or guaranteed rate.`
+        "The APY is calculated using the\n" +
+        "trailing one-week average of daily protocol returns,\n" +
+        "which are distributed to the \n" +
+        "staking rewards contract.\n\n" +
+        "This is then divided by the \n" +
+        "average staked sbvUSD balance each day\n" +
+        "and annualized with weekly compounding.\n\n" +
+        "The displayed APY is an estimate\n" +
+        "and may fluctuate based on protocol performance.\n" +
+        "It is not a fixed or guaranteed rate."
       : `sbvUSD APY: n/a. \n` +
-        `This value will be shown after one week of the protocol running`;
+        `This value will be shown after \n` +
+        `one week of the protocol running`;
+
   const sbvUSDTotalSupply = sbvUSD.reduce(
     (sum, vault) => sum + Number(vault.supply),
     0
@@ -78,13 +97,16 @@ export function TransparencyMetrics({
         value={`${fmtnum(Number(totalSupply), "2z")} bvUSD`}
       />
       <MetricBox
-        label="Total Backing"
+        label="Total Reserves"
         value={`$ ${fmtnum(Number(backing), "2z")}`}
+        tooltip={reservesTooltip}
+        above={true}
       />
-      <MetricBox label="Collateral Ratio" value={protocolBackingRatio} />
       <MetricBox
-        label="Total Value Locked"
-        value={`$ ${fmtnum(Number(tvl), "2z")}`}
+        label="Backing Ratio"
+        value={protocolBackingRatio}
+        tooltip={backingTooltip}
+        above={true}
       />
       <SBVUSDCard
         symbol="sbvUSD"
@@ -96,7 +118,17 @@ export function TransparencyMetrics({
   );
 }
 
-function MetricBox({ label, value }: { label: string; value: string }) {
+function MetricBox({
+  label,
+  value,
+  tooltip,
+  above
+}: {
+  label: string;
+  value: string;
+  tooltip?: string;
+  above?: boolean;
+}) {
   return (
     <div
       style={{
@@ -110,16 +142,20 @@ function MetricBox({ label, value }: { label: string; value: string }) {
         background: "rgba(20, 20, 22, 0.40)",
       }}
     >
-      <span
-        style={{
-          fontSize: 16,
-          fontWeight: 400,
-          fontFamily: "KHTeka",
-          color: "#fff",
-        }}
-      >
-        {label}
-      </span>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <span
+          style={{
+            fontSize: 16,
+            fontWeight: 400,
+            fontFamily: "KHTeka",
+            color: "#fff",
+          }}
+        >
+          {label}
+        </span>
+        {tooltip && <InfoTooltip text={tooltip} above={above}/>}
+      </div>
+
       <span
         style={{
           fontSize: 26,
@@ -133,7 +169,7 @@ function MetricBox({ label, value }: { label: string; value: string }) {
   );
 }
 
-function InfoTooltip({ text }: { text: string }) {
+function InfoTooltip({ text, above }: { text: string; above?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -163,7 +199,44 @@ function InfoTooltip({ text }: { text: string }) {
       </span>
 
       {/* Tooltip */}
-      {open && (
+      {open && above && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "150%",
+            transform: "translateX(-50%)",
+            background: "black",
+            color: "white",
+            padding: "8px 12px",
+            borderRadius: 6,
+            fontSize: 14,
+            wordBreak: "break-word",
+            whiteSpace: "pre",
+            maxWidth: 400,
+            zIndex: 100,
+            textAlign: "center",
+            border: "1px solid #fff",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+          }}
+        >
+          {text}
+          <div
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: "50%",
+              marginLeft: -5,
+              width: 0,
+              height: 0,
+              borderLeft: "5px solid transparent",
+              borderRight: "5px solid transparent",
+              borderTop: "5px solid black",
+            }}
+          />
+        </div>
+      )}
+
+      {open && !above && (
         <div
           style={{
             position: "absolute",
@@ -174,9 +247,12 @@ function InfoTooltip({ text }: { text: string }) {
             padding: "8px 12px",
             borderRadius: 6,
             fontSize: 14,
+            wordBreak: "break-word",
             whiteSpace: "pre",
             maxWidth: 400,
             zIndex: 100,
+            textAlign: "center",
+            border: "1px solid #fff",
             boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
           }}
         >
@@ -258,20 +334,21 @@ function SBVUSDCard({
           >
             {symbol}
           </span>
+          <InfoTooltip text={tooltip} />
         </div>
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           <span
-            style={{ fontSize: "26px", fontWeight: 400, fontFamily: "KHTeka" }}
-          >
-            {supply}
-          </span>
-          <span
             style={{ fontSize: "15px", color: "#666", fontFamily: "KHTeka" }}
           >
             Supply
+          </span>
+          <span
+            style={{ fontSize: "26px", fontWeight: 400, fontFamily: "KHTeka" }}
+          >
+            {supply}
           </span>
         </div>
 
@@ -282,6 +359,13 @@ function SBVUSDCard({
             gap: "6px",
           }}
         >
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              style={{ fontSize: "15px", fontFamily: "KHTeka", color: "#666" }}
+            >
+              APY
+            </span>
+          </div>
           <span
             style={{
               fontSize: "26px",
@@ -292,14 +376,6 @@ function SBVUSDCard({
           >
             {apy}
           </span>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <span
-              style={{ fontSize: "15px", fontFamily: "KHTeka", color: "#666" }}
-            >
-              APY
-            </span>
-            <InfoTooltip text={tooltip} />
-          </div>
         </div>
       </div>
     </div>

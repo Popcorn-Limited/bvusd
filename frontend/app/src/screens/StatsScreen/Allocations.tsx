@@ -5,10 +5,17 @@ type AllocationData = {
   data: {
     label: string;
     usdValue: string;
+    wallet: string;
   }[];
 };
 
+function sliceAddress(address: string): string {
+  return `${address.slice(0, 6)}...${address.slice(-3)}`;
+}
+
 export function AllocationPanel({ data }: AllocationData) {
+  const total = data.reduce((sum, allo) => sum + Number(allo.usdValue), 0);
+
   return (
     <div
       style={{
@@ -46,16 +53,30 @@ export function AllocationPanel({ data }: AllocationData) {
         {data.map((d) => (
           <MetricBox
             key={d.label}
-            label={d.label}
+            label={`${d.label} Allocation`}
+            wallet={d.wallet}
             value={`$ ${fmtnum(Number(d.usdValue), "2z")}`}
           />
         ))}
+        <MetricBox
+          key={"total"}
+          label={"Total Core TVL"}
+          value={`$ ${fmtnum(Number(total), "2z")}`}
+        />
       </div>
     </div>
   );
 }
 
-function MetricBox({ label, value }: { label: string; value: string }) {
+function MetricBox({
+  label,
+  value,
+  wallet,
+}: {
+  label: string;
+  value: string;
+  wallet?: string;
+}) {
   return (
     <div
       style={{
@@ -64,7 +85,6 @@ function MetricBox({ label, value }: { label: string; value: string }) {
         borderRadius: 16,
         padding: "20px",
         display: "flex",
-        gap: 24,
         flexDirection: "column",
         background: "rgba(20, 20, 22, 0.40)",
       }}
@@ -77,17 +97,34 @@ function MetricBox({ label, value }: { label: string; value: string }) {
           color: "#fff",
         }}
       >
-        {label} Allocation
+        {label}
       </span>
-      <span
-        style={{
-          fontSize: 30,
-          fontFamily: "KHTeka",
-          fontWeight: 400,
-        }}
-      >
-        {value}
-      </span>
+      {wallet && (
+        <div style={{ marginTop: 8 }}>
+          <span
+            style={{
+              fontSize: 20,
+              fontWeight: 400,
+              fontFamily: "KHTeka",
+              color: "#898888ff",
+            }}
+          >
+            Sub Account: {sliceAddress(wallet)}
+          </span>
+        </div>
+      )}
+
+      <div style={{ marginTop: 24 }}>
+        <span
+          style={{
+            fontSize: 30,
+            fontFamily: "KHTeka",
+            fontWeight: 400,
+          }}
+        >
+          {value}
+        </span>
+      </div>
     </div>
   );
 }
