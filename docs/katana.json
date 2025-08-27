@@ -1,5 +1,5 @@
 {
-  "time": "August 27, 2025 at 12:31 PM UTC",
+  "time": "August 27, 2025 at 1:00 PM UTC",
   "total_bold_supply": "21",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4567,7 +4567,7 @@
     },
     {
       "tick": "0",
-      "liquidity": "5410697628782237",
+      "liquidity": "3003832952941951",
       "price": "1"
     },
     {
@@ -4617,7 +4617,7 @@
     },
     {
       "tick": "10",
-      "liquidity": "5647188757100337",
+      "liquidity": "3240324081260051",
       "price": "1.001000450120021"
     },
     {
@@ -4747,7 +4747,7 @@
     },
     {
       "tick": "86",
-      "liquidity": "202092677846016",
+      "liquidity": "202092669409333",
       "price": "1.0086366525527033"
     },
     {
@@ -9732,27 +9732,31 @@
   "allocations": [
     {
       "label": "Test",
-      "usdValue": "1831.4544583147906"
+      "usdValue": "1837.5360693260448",
+      "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7"
     },
     {
       "label": "Test2",
-      "usdValue": "50126.54260045021"
+      "usdValue": "50383.777576014116",
+      "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0"
     },
     {
       "label": "Test3",
-      "usdValue": "50126.55609804036"
+      "usdValue": "50383.77757612981",
+      "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0"
     },
     {
       "label": "Test4",
-      "usdValue": "1831.4545848018909"
+      "usdValue": "1837.5358516854872",
+      "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7"
     }
   ],
   "loans": [
     {
       "protocol": "morpho",
       "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "566247.583226413",
-      "loanValue": "274516.06501587125"
+      "collateralValue": "567436.584251086",
+      "loanValue": "274517.30499212455"
     }
   ]
 }

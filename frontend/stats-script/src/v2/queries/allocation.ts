@@ -4,6 +4,7 @@ import allocations from "../../allocations.json";
 type Res = {
   label: string;
   usdValue: string;
+  wallet: string;
 };
 
 export const getAllocations = async (debank: string) => {
@@ -11,7 +12,7 @@ export const getAllocations = async (debank: string) => {
 
   for (const allocation of allocations.allocations) {
     const usd_value = await getAllocation(debank, allocation.wallet);
-    res.push({ label: allocation.label, usdValue: usd_value.toString() });
+    res.push({ label: allocation.label, usdValue: usd_value.toString(), wallet: allocation.wallet });
   }
   return res;
 };
