@@ -22,6 +22,7 @@ import {
   decimalify,
   fetchPoolSwaps,
   fetchVaultAPYFromDune,
+  latestApyByVault
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
 import { fetchLiquidityDepth } from "./queries/getPoolDepth";
@@ -90,9 +91,8 @@ export const fetchV2Stats = async ({
         provider
       ) as unknown as ERC20;
       return {
-        supply:
-          Number(await c.totalSupply({ blockTag })) /
-          10 ** 18,
+        address: vault.address,
+        supply: Number(await c.totalSupply({ blockTag })) / 10 ** 18,
         safe: vault.safe,
         chain: vault.chain,
       };
@@ -142,7 +142,6 @@ export const fetchV2Stats = async ({
             }))
           ),
 
-        
         // HISTORICAL SUPPLY
         fetchHistSupplyFromDune(fetchConfig),
 
@@ -171,7 +170,7 @@ export const fetchV2Stats = async ({
         fetchPoolSwaps(fetchConfig),
 
         // vaults daily apy
-        fetchVaultAPYFromDune(fetchConfig)
+        fetchVaultAPYFromDune(fetchConfig),
       ])
     : await Promise.all([
         Decimal.ZERO, // total_bold_supply
@@ -185,8 +184,10 @@ export const fetchV2Stats = async ({
         null,
         null,
         null,
-        null
+        null,
       ]);
+
+  const apyMap = latestApyByVault(vaultsApy!);
 
   const sp_apys = branches.map((b) => b.sp_apy).filter((x) => !isNaN(x));
 
@@ -219,6 +220,7 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...r,
+          apy: apyMap.get(r.address.trim().toLowerCase())?.apy ?? "0",
         },
         (x) => `${x}`
       )

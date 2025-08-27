@@ -9,6 +9,21 @@ type Entry = {
   apy: number;
 };
 
+type VaultApy = { day: string; apy: number; vault: string };
+
+export const latestApyByVault = (rows: VaultApy[]) => {
+  const map = new Map<string, VaultApy>();
+  for (const r of rows) {
+    const key = r.vault.trim().toLowerCase();
+    const prev = map.get(key);
+    if (!prev || new Date(r.day) > new Date(prev.day)) {
+      map.set(key, r);
+    }
+  }
+  return map;
+};
+
+
 const isDuneValidResponse = (data: unknown): data is DuneResponse<Entry> =>
   isDuneResponse(data) &&
   data.result.rows.every(
