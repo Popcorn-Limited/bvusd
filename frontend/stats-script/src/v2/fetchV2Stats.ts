@@ -82,6 +82,23 @@ export const fetchV2Stats = async ({
     })
   );
 
+  const sbvUSD = await Promise.all(
+    vaults.sbvUSD.map(async (vault) => {
+      const c = new Contract(
+        vault.address,
+        erc20Abi,
+        provider
+      ) as unknown as ERC20;
+      return {
+        supply:
+          Number(await c.totalSupply({ blockTag })) /
+          10 ** 18,
+        safe: vault.safe,
+        chain: vault.chain,
+      };
+    })
+  );
+
   const deployed = true;
 
   const [
@@ -191,6 +208,14 @@ export const fetchV2Stats = async ({
     total_vault_tvl: `${vault_tvl}`,
     total_reserve: `${reserves.map((r) => r.balance).reduce((a, b) => a + b)}`,
     reserves_assets: reserves!.map((r) =>
+      mapObj(
+        {
+          ...r,
+        },
+        (x) => `${x}`
+      )
+    ),
+    sbvUSD: sbvUSD!.map((r) =>
       mapObj(
         {
           ...r,

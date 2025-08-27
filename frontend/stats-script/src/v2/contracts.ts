@@ -16,8 +16,15 @@ interface VaultData {
   chain: string;
 }
 
+interface sbvUSD {
+  address: string;
+  safe: string;
+  chain: string;
+}
+
 export interface VaultsDeployment {
   stableVaults: VaultData[];
+  sbvUSD: sbvUSD[];
 }
 
 export interface LiquityV2Constants {

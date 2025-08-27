@@ -7,7 +7,7 @@ import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from './env';
 import { getDiffs, formatDateUTC } from "./v2/diffs";
 import { getAllocations } from "./v2/queries/allocation";
-import { getLoansTVL, getMorphoTVL } from "./v2/queries/morphoPosition";
+import { getLoansTVL } from "./v2/queries/morphoPosition";
 
 interface Tree extends Record<string, string | Tree> {}
   

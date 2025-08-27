@@ -7,5 +7,12 @@
             "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
             "chain": "Katana"
         }
+    ],
+    "sbvUSD": [
+        {
+            "address":"0x24E2aE2f4c59b8b7a03772142d439fDF13AAF15b",
+            "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
+            "chain": "Katana"
+        }
     ]
 }
