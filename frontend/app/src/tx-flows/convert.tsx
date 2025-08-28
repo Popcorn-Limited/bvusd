@@ -1,18 +1,14 @@
 import type { FlowDeclaration } from "@/src/services/TransactionFlow";
 
-import { Amount } from "@/src/comps/Amount/Amount";
 import { TransactionDetailsRow } from "@/src/screens/TransactionsScreen/TransactionsScreen";
 import { TransactionStatus } from "@/src/screens/TransactionsScreen/TransactionStatus";
-import { vAddress, vDnum, vUnderlyingToken } from "@/src/valibot-utils";
-import * as dn from "dnum";
+import { vDnum } from "@/src/valibot-utils";
 import * as v from "valibot";
 import { createRequestSchema, verifyTransaction } from "./shared";
 import { readContract, sendTransaction } from "wagmi/actions";
 import { erc20Abi, maxUint256 } from "viem";
 import { fmtnum } from "@/src/formatting";
-import { usePrice } from "@/src/services/Prices";
-import { CONTRACT_CONVERTER, ENSO_API_KEY } from "@/src/env";
-import { Converter } from "../abi/Converter";
+import { CONTRACT_CONVERTER } from "@/src/env";
 import { getProtocolContract } from "../contracts";
 
 const ENSO_ROUTER = "0x3067BDBa0e6628497d527bEF511c22DA8b32cA3F"

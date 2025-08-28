@@ -38,6 +38,7 @@ import { wrapToken, type WrapTokenRequest } from "@/src/tx-flows/wrapToken";
 import { vaultUpdate, type VaultUpdateRequest } from "@/src/tx-flows/vaultUpdate";
 import { convert, type ConvertRequest } from "@/src/tx-flows/convert";
 import { addToWhitelist, type AddToWhitelistRequest, removeFromWhitelist, type RemoveFromWhitelistRequest } from "@/src/tx-flows/whitelistAdmin";
+import { lockToken, type LockTokenRequest } from "@/src/tx-flows/lock";
 
 export type FlowRequestMap = {
   "claimCollateralSurplus": ClaimCollateralSurplusRequest;
@@ -54,7 +55,8 @@ export type FlowRequestMap = {
   "vaultUpdate": VaultUpdateRequest;
   "convert": ConvertRequest;
   "addToWhitelist" : AddToWhitelistRequest,
-  "removeFromWhitelist": RemoveFromWhitelistRequest
+  "removeFromWhitelist": RemoveFromWhitelistRequest,
+  "lockToken": LockTokenRequest
 };
 
 const FlowIdSchema = v.union([
@@ -72,7 +74,8 @@ const FlowIdSchema = v.union([
   v.literal("vaultUpdate"),
   v.literal("convert"),
   v.literal("addToWhitelist"),
-  v.literal("removeFromWhitelist")
+  v.literal("removeFromWhitelist"),
+  v.literal("lockToken")
 ]);
 
 export const flows: FlowsMap = {
@@ -90,7 +93,8 @@ export const flows: FlowsMap = {
   vaultUpdate,
   convert,
   addToWhitelist,
-  removeFromWhitelist
+  removeFromWhitelist,
+  lockToken
 };
 
 /* end of flows registration */

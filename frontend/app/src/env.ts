@@ -219,6 +219,8 @@ export const EnvSchema = v.pipe(
     CONTRACT_USDC: vAddress(),
     CONTRACT_USDT: vAddress(),
 
+    CONTRACT_TOKEN_LOCKER: vAddress(),
+
     ...vBranchEnvVars(0).entries
   }),
   v.transform((data) => {
@@ -336,6 +338,7 @@ const parsedEnv = v.safeParse(EnvSchema, {
 
   CONTRACT_CONVERTER: process.env.NEXT_PUBLIC_CONTRACT_CONVERTER,
   CONTRACT_STABLE_VAULT_ZAPPER: process.env.NEXT_PUBLIC_CONTRACT_STABLE_VAULT_ZAPPER,
+  CONTRACT_TOKEN_LOCKER: process.env.NEXT_PUBLIC_CONTRACT_TOKEN_LOCKER,
 
   CONTRACT_USDC: process.env.NEXT_PUBLIC_CONTRACT_USDC,
   CONTRACT_USDT: process.env.NEXT_PUBLIC_CONTRACT_USDT,
@@ -408,6 +411,7 @@ export const {
   CONTRACT_ROUTER,
   CONTRACT_CONVERTER,
   CONTRACT_STABLE_VAULT_ZAPPER,
+  CONTRACT_TOKEN_LOCKER,
   CONTRACT_USDC,
   CONTRACT_USDT,
   DEMO_MODE,

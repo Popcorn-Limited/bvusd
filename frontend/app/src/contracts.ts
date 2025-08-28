@@ -24,6 +24,7 @@ import { WhitelistAbi } from "@/src/abi/Whitelist";
 import { Converter } from "@/src/abi/Converter";
 import { StableToVaultZapper } from "./abi/StableToVaultZapper";
 import { Vault } from "./abi/Vault";
+import { TokenLocker } from "./abi/TokenLocker";
 import {
   CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
@@ -40,6 +41,7 @@ import {
   CONTRACT_USDT,
   CONTRACT_VAULT,
   CONTRACT_WETH,
+  CONTRACT_TOKEN_LOCKER,
   ENV_BRANCHES,
 } from "@/src/env";
 import { erc20Abi, zeroAddress } from "viem";
@@ -61,7 +63,8 @@ const protocolAbis = {
   USDT: erc20Abi,
   Vault:Vault,
   sbvUSD:Vault,
-  StableToVaultZapper:StableToVaultZapper
+  StableToVaultZapper:StableToVaultZapper,
+  TokenLocker:TokenLocker
 } as const;
 
 const BorrowerOperationsErrorsAbi = BorrowerOperations.filter((f) => f.type === "error");
@@ -151,6 +154,7 @@ export const CONTRACTS: Contracts = {
   Vault: { abi: abis.Vault, address: CONTRACT_VAULT },
   sbvUSD: { abi: abis.Vault, address: CONTRACT_VAULT },
   StableToVaultZapper: { abi: abis.StableToVaultZapper, address: CONTRACT_STABLE_VAULT_ZAPPER },
+  TokenLocker: { abi: abis.TokenLocker, address: CONTRACT_TOKEN_LOCKER },
   branches: ENV_BRANCHES.map(({ branchId, symbol, contracts }) => ({
     id: branchId,
     branchId,

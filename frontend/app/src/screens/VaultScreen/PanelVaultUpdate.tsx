@@ -1,40 +1,30 @@
-import type { BranchId, PositionEarn, RequestBalance, Token } from "@/src/types";
-import type { Dnum } from "dnum";
+import type { RequestBalance, Token } from "@/src/types";
 
-import { Amount } from "@/src/comps/Amount/Amount";
 import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
 import { Field } from "@/src/comps/Field/Field";
 import { InputTokenBadge } from "@/src/comps/InputTokenBadge/InputTokenBadge";
 import content from "@/src/content";
-import { DNUM_0, dnumMax } from "@/src/dnum-utils";
-import { parseInputFloat, parseInputFloatWithDecimals } from "@/src/form-utils";
+import { parseInputFloatWithDecimals } from "@/src/form-utils";
 import { fmtnum } from "@/src/formatting";
-import { getCollToken, isEarnPositionActive } from "@/src/liquity-utils";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
-import { infoTooltipProps } from "@/src/uikit-utils";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
-import { Button, bvUSD, Dropdown, HFlex, InfoTooltip, InputField, Tabs, TextButton, TokenIcon, USDT } from "@liquity2/uikit";
+import { Button, Dropdown, InputField, Tabs, TextButton, TokenIcon } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useEffect, useState } from "react";
-import { CONTRACT_BOLD_TOKEN, CONTRACT_VAULT } from "@/src/env";
 import { STABLE_SYMBOLS } from "../BuyScreen/PanelConvert";
 import { css } from "@/styled-system/css";
-import { readContract } from "viem/actions";
-import { getProtocolContract } from "@/src/contracts";
-import { useReadContract } from "wagmi";
-import { Address } from "viem";
 import ClaimAssets from "./ClaimAssets";
 
 
-async function getNextWithdrawalDate(): Promise<{ days: number, hours: number, minutes: number, seconds: number }> {
+export async function getNextWithdrawalDate(date?: number): Promise<{ days: number, hours: number, minutes: number, seconds: number, timeDiff: number }> {
   // Get current date in CET timezone
   const now = new Date();
 
   // Create a date for the first day of next month at 12:00 CET
-  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1, 12, 0, 0);
+  const targetDate = date ? new Date(date) : new Date(now.getFullYear(), now.getMonth() + 1, 1, 12, 0, 0);
 
   // Calculate time difference in milliseconds
-  const timeDiff = nextMonth.getTime() - now.getTime();
+  const timeDiff = targetDate.getTime() - now.getTime();
 
   // Convert to days, hours, minutes, seconds
   const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
@@ -47,6 +37,7 @@ async function getNextWithdrawalDate(): Promise<{ days: number, hours: number, m
     hours,
     minutes,
     seconds,
+    timeDiff
   };
 }
 
