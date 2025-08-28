@@ -7,11 +7,11 @@ import { css } from "@/styled-system/css";
 import { BottomBar } from "./BottomBar";
 import { TopBar } from "./TopBar";
 import Link from "next/link";
-import { TokenCard } from "@/src/screens/HomeScreen/HomeScreen";
 import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
 import { fmtnum } from "@/src/formatting";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
 import { usePrice } from "@/src/services/Prices";
+import { TokenCard } from "@/src/screens/AccountScreen/TokenCard";
 
 export const LAYOUT_WIDTH = 1392;
 

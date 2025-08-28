@@ -13,10 +13,10 @@ import { AccountButton } from "./AccountButton";
 import { Menu } from "./Menu";
 
 const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
-  [content.menu.earn, "/", IconEarn],
+  [content.menu.earn, "/vault", IconEarn],
   [content.menu.buy, "/buy", IconEarn],
   [content.menu.points, "/points", IconEarn],
-  [content.menu.portfolio, "/portfolio", IconDashboard],
+  [content.menu.portfolio, "/account", IconDashboard],
   [content.menu.dashboard, "/dashboard", IconEarn],
 ];
 

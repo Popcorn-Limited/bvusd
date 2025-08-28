@@ -15,7 +15,7 @@ import { blo } from "blo";
 import Image from "next/image";
 import Link from "next/link";
 
-const DISPLAYED_PRICES = ["bvUSD", "BVBTC"] as const;
+const DISPLAYED_PRICES = ["bvUSD"] as const;
 
 export function BottomBar() {
   const account = useAccount();
@@ -30,7 +30,7 @@ export function BottomBar() {
         padding: "0 24px",
       })}
     >
-      <BuildInfo />
+      {/* <BuildInfo /> */}
       <div
         className={css({
           display: "flex",
@@ -106,7 +106,7 @@ export function BottomBar() {
                 />
               </Link>
             )}
-            <Link
+            {/* <Link
               id="footer-redeem-button"
               href="/redeem"
               passHref
@@ -134,7 +134,7 @@ export function BottomBar() {
                   },
                 })}
               />
-            </Link>
+            </Link> */}
           </HFlex>
         </div>
       </div>

@@ -423,6 +423,16 @@ export default {
     },
   },
 
+  // Lock screen
+  lockScreen: {
+    lockPanel: {
+      label: "You lock bvUSD",
+    },
+    unlockPanel: {
+      label: "You unlock bvUSD",
+    },
+  },
+
   // Vault screen
   vaultScreen: {
     headline: "Earn best-in-class yield on your stablecoins",

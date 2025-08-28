@@ -9,7 +9,7 @@ import { useModal as useConnectKitModal } from "connectkit";
 import { match } from "ts-pattern";
 import { erc20Abi } from "viem";
 import { useAccount as useWagmiAccount, useEnsName, useReadContract } from "wagmi";
-import { CONTRACT_BOLD_TOKEN, CONTRACT_USDC, CONTRACT_USDT, CONTRACT_VAULT } from "./env";
+import { CONTRACT_BOLD_TOKEN, CONTRACT_TOKEN_LOCKER, CONTRACT_USDC, CONTRACT_USDT, CONTRACT_VAULT } from "./env";
 
 export function useBalance(
   address: Address | undefined,
@@ -39,6 +39,9 @@ export function useBalance(
         }
         if(symbol === "USDC") {
           return CONTRACT_USDC;
+        }
+        if(symbol === "LbvUSD") {
+          return CONTRACT_TOKEN_LOCKER;
         }
         else {
           // @ts-ignore

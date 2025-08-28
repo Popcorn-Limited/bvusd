@@ -142,6 +142,7 @@ export default function PointsPanel({ showHeader = true }: { showHeader?: boolea
           {POINTS_CAMPAIGNS.map((campaign) => (
             <RewardRow key={campaign.title} {...campaign} />
           ))}
+          <RewardRow key={"title"} reward={10} href={"https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x876aac7648D79f87245E73316eB2D100e75F3Df1"} title={"Hold bvUSD on Katana"} />
         </div>
       </div>
     </div >

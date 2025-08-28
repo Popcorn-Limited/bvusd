@@ -25,6 +25,12 @@ export const bvUSD: Token = {
   symbol: "bvUSD" as const,
 } as const;
 
+export const LbvUSD: Token = {
+  icon: bvusd,
+  name: "LbvUSD",
+  symbol: "LbvUSD" as const,
+} as const;
+
 export const sbvUSD: Token = {
   icon: sbvusd,
   name: "sbvUSD",
@@ -81,4 +87,5 @@ export const TOKENS_BY_SYMBOL = {
   WBTC,
   USDT,
   USDC,
+  LbvUSD
 } as const;

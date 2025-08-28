@@ -3,6 +3,7 @@
 import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
 import { Screen } from "@/src/comps/Screen/Screen";
 import PointsPanel from "@/src/screens/PointScreen/PointsPanel";
+import { TokenLockPanel } from "@/src/screens/PointScreen/TokenLockPanel";
 
 export default function Page() {
   return (
@@ -14,6 +15,7 @@ export default function Page() {
     >
       <ConnectWarningBox />
       <PointsPanel showHeader={false} />
+      <TokenLockPanel />
     </Screen>
   );
 }
