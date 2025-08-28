@@ -86,6 +86,7 @@ function MetricBox({
         padding: "20px",
         display: "flex",
         flexDirection: "column",
+                justifyContent: "space-between",
         background: "rgba(20, 20, 22, 0.40)",
       }}
     >

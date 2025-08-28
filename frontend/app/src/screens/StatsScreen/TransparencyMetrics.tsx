@@ -139,6 +139,7 @@ function MetricBox({
         display: "flex",
         gap: 24,
         flexDirection: "column",
+        justifyContent: "space-between",
         background: "rgba(20, 20, 22, 0.40)",
       }}
     >
@@ -174,7 +175,7 @@ function InfoTooltip({ text, above }: { text: string; above?: boolean }) {
 
   return (
     <div
-      style={{ position: "relative", display: "inline-block", marginLeft: 6 }}
+      style={{ position: "relative", display: "inline-block", marginLeft: 10}}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
@@ -297,6 +298,7 @@ function SBVUSDCard({
         display: "flex",
         gap: 24,
         flexDirection: "column",
+        justifyContent: "space-between",
         background: "rgba(20, 20, 22, 0.40)",
       }}
     >
@@ -307,7 +309,7 @@ function SBVUSDCard({
           alignItems: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center"}}>
           <div
             style={{
               width: "28px",
@@ -326,7 +328,7 @@ function SBVUSDCard({
               alt={"sbvUSD"}
               width={24}
               height={20}
-              style={{ borderRadius: "50%" }}
+              style={{ borderRadius: "50%", marginRight: "15px" }}
             />
           </div>
           <span
