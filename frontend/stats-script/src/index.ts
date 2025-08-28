@@ -6,6 +6,8 @@ import { getProvider } from "./connection";
 import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from './env';
 import { getDiffs, formatDateUTC } from "./v2/diffs";
+import { getAllocations } from "./v2/queries/allocation";
+import { getLoansTVL } from "./v2/queries/morphoPosition";
 
 interface Tree extends Record<string, string | Tree> {}
   
@@ -25,7 +27,10 @@ const writeTree = (parentDir: string, tree: Tree) => {
 
 export async function fetchAndUpdateStats() {
   const alchemyApiKey = env.ALCHEMY_KEY;
-  const katanaProvider = getProvider(747474, { alchemyApiKey });
+  const katanaApiKey = env.KATANA_KEY;
+  const katanaProvider = getProvider(747474, { alchemyApiKey: katanaApiKey });
+  const ethereumProvider = getProvider(1, {alchemyApiKey});
+  
   const [stats] = await Promise.all([
     fetchV2Stats({
       deployment: v2MainnetDeployment,
@@ -35,9 +40,15 @@ export async function fetchAndUpdateStats() {
     })
   ]);
   
+  const allocations = await getAllocations(env.DEBANK_KEY);
+
+  const loans = await getLoansTVL(env.DEBANK_KEY, ethereumProvider);
+
   const v2Stats = {
     time: formatDateUTC(new Date()),
-    ...stats
+    ...stats,
+    allocations,
+    loans
   };
 
   // local storage

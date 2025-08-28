@@ -665,6 +665,15 @@ const StatsSchema = v.pipe(
         chain: v.string(),
       })
     ),
+    sbvUSD: v.array(
+      v.object({
+        address: v.string(),
+        apy: v.string(),
+        supply: v.string(),
+        safe: v.string(),
+        chain: v.string(),
+      })
+    ),
     max_sp_apy: v.string(),
     day_supply: v.array(
       v.object({
@@ -759,6 +768,28 @@ const StatsSchema = v.pipe(
         type: v.string()
       })
     ),
+    vaultsApy: v.array(
+      v.object({
+        day: v.string(),
+        apy: v.string(),
+        vault: v.string()
+      })
+    ),
+    allocations: v.array(
+      v.object({
+        label: v.string(),
+        usdValue: v.string(),
+        wallet: v.string()
+      })
+    ),
+    loans: v.array(
+      v.object({
+        protocol: v.string(),
+        wallet: v.string(),
+        collateralValue: v.string(),
+        loanValue: v.string()
+      })
+    ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -774,6 +805,14 @@ const StatsSchema = v.pipe(
         balance: r.balance,
         wallet: r.wallet,
         chain: r.chain,
+      };
+    }),
+    sbvUSD: value.sbvUSD.map((s) => {
+      return {
+        apy: s.apy,
+        supply: s.supply,
+        safe: s.safe,
+        chain: s.chain,
       };
     }),
     maxSpApy: value.max_sp_apy,
@@ -873,6 +912,28 @@ const StatsSchema = v.pipe(
         time: s.time,
         txHash: s.txHash,
         type: s.type
+      }
+    }),
+    vaultsApy: value.vaultsApy.map((apy) => {
+      return {
+        apy: apy.apy,
+        day: apy.day,
+        vault: apy.vault
+      }
+    }),
+    allocations: value.allocations.map((al) => {
+      return {
+        label: al.label,
+        usdValue: al.usdValue,
+        wallet: al.wallet
+      }
+    }),
+    loans: value.loans.map((l) => {
+      return {
+        protocol: l.protocol,
+        wallet: l.wallet,
+        collateralValue: l.collateralValue,
+        loanValue: l.loanValue
       }
     })
   }))

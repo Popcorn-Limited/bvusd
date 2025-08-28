@@ -22,10 +22,13 @@ import { TrovesPanel } from "./TrovesPanel";
 import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
 import { HoldersPanel } from "./HoldersPanel";
+import { VaultsApy } from "./VaultsApy";
+import { AllocationPanel } from "./Allocations";
+import { LoansPanel } from "./LoansPanel";
 
 export function StatsScreen() {
-  const [activeTab, setActiveTab] = useState<"Protocol" | "transparency">(
-    "Protocol"
+  const [activeTab, setActiveTab] = useState<"Core" | "BTC Institutional">(
+    "Core"
   );
 
   const liquityStats = useLiquityStats();
@@ -92,36 +95,36 @@ export function StatsScreen() {
                   }}
                 >
                   <button
-                    onClick={() => setActiveTab("Protocol")}
+                    onClick={() => setActiveTab("Core")}
                     style={{
                       fontSize: 16,
-                      color: activeTab === "Protocol" ? "#fff" : "#aaa",
-                      fontWeight: activeTab === "Protocol" ? 600 : 400,
+                      color: activeTab === "Core" ? "#fff" : "#aaa",
+                      fontWeight: activeTab === "Core" ? 600 : 400,
                       paddingBottom: 4,
                       background: "transparent",
                       border: "none",
                       cursor: "pointer",
                     }}
                   >
-                    Protocol
+                    Core
                   </button>
                   <button
-                    onClick={() => setActiveTab("transparency")}
+                    onClick={() => setActiveTab("BTC Institutional")}
                     style={{
                       fontSize: 16,
-                      color: activeTab === "transparency" ? "#fff" : "#aaa",
-                      fontWeight: activeTab === "transparency" ? 600 : 400,
+                      color: activeTab === "BTC Institutional" ? "#fff" : "#aaa",
+                      fontWeight: activeTab === "BTC Institutional" ? 600 : 400,
                       paddingBottom: 4,
                       background: "transparent",
                       border: "none",
                       cursor: "pointer",
                     }}
                   >
-                    Transparency
+                    BTC Institutional
                   </button>
                 </div>
 
-                {activeTab === "Protocol" && (
+                {activeTab === "Core" && (
                   <div
                     style={{
                       maxWidth: 1400,
@@ -141,23 +144,23 @@ export function StatsScreen() {
                       }
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
+                      sbvUSD={liquityStats.data.sbvUSD}
                     />
+                    <AllocationPanel data={liquityStats.data.allocations}/>
                     <ChartsPanel
                       data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
-                    <HoldersPanel holders={liquityStats.data.holders} />
                     {/* TODO add branch collaterals when present*/}
                     <ReservesPanel
                       collateralReserves={liquityStats.data.reserveAssets}
                     />
                     <VaultsPanel />
-                    <TrovesPanel troves={liquityStats.data.troves} />
-                    <SPDepositsPanel deposits={liquityStats.data.spDeposits} />
+                    <VaultsApy data={liquityStats.data.vaultsApy}/>
                   </div>
                 )}
 
-                {activeTab === "transparency" && (
+                {activeTab === "BTC Institutional" && (
                   <div
                     style={{
                       maxWidth: 1400,
@@ -167,11 +170,7 @@ export function StatsScreen() {
                       gap: "32px",
                     }}
                   >
-                    <AttestationsAndProofPanel />
-                    {/* <MarketStatPanel />
-                  <MarketChartPanel />
-                  <FundingBreakdownPanel />
-                  <SpreadAndDistributionPanel /> */}
+                  <LoansPanel data={liquityStats.data.loans}/>
                   </div>
                 )}
               </div>

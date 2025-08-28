@@ -8,3 +8,4 @@ export const RESERVES_QUERY = "5492104";
 export const bvUSD_HOLDERS = "5517514";
 export const SUSHI_VOLUME = "5523901";
 export const SUSHI_SWAPS = "5529727";
+export const VAULT_APY="5651784";

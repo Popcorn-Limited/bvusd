@@ -55,9 +55,6 @@ const CustomXAxisTick = ({ x, y, payload, index }) => {
 export function ChartsPanel({ data, supply }: CRProps) {
   const day_CR = [...data]
     .reverse()
-    .filter((item, index) => {
-      return index === 0 || index % 24 === 0;
-    })
     .map((item) => ({
       day: item.day.split(" ")[0].slice(0, 7),
       CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
@@ -65,9 +62,6 @@ export function ChartsPanel({ data, supply }: CRProps) {
 
   const day_supply = [...supply]
     .reverse()
-    .filter((item, index) => {
-      return index === 0 || index % 5 === 0;
-    })
     .map((item) => ({
       day: item.day.split(" ")[0].slice(0, 7),
       supply: parseFloat(fmtnum(Number(item.supply), "2z").replace(/,/g, "")),

@@ -1,11 +1,14 @@
 import { TooltipProps } from 'recharts';
 
 
+type ExtraPayload = Record<string, string>;
+
 type CustomTooltipProps = TooltipProps<any, any> & {
   transformValue?: (value: number) => string;
+  extraPayload?: ExtraPayload;
 };
 
-export const CustomTooltip = ({ active, payload, transformValue }: CustomTooltipProps) => {
+export const CustomTooltip = ({ active, payload, transformValue, extraPayload }: CustomTooltipProps) => {
   if (!active || !payload || payload.length === 0) return null;
 
   return (
@@ -19,6 +22,9 @@ export const CustomTooltip = ({ active, payload, transformValue }: CustomTooltip
       }}
     >
       {payload.map((entry: any, index: number) => {
+        if(extraPayload) {
+          entry.name = extraPayload[entry.name];
+        }
         const color = entry.color || "#aaa";
         return (
           <div

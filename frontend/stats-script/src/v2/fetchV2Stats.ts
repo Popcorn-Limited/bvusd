@@ -21,6 +21,8 @@ import {
   fetchPoolVolume,
   decimalify,
   fetchPoolSwaps,
+  fetchVaultAPYFromDune,
+  latestApyByVault
 } from "./queries";
 import { Contract } from "@ethersproject/contracts";
 import { fetchLiquidityDepth } from "./queries/getPoolDepth";
@@ -81,6 +83,22 @@ export const fetchV2Stats = async ({
     })
   );
 
+  const sbvUSD = await Promise.all(
+    vaults.sbvUSD.map(async (vault) => {
+      const c = new Contract(
+        vault.address,
+        erc20Abi,
+        provider
+      ) as unknown as ERC20;
+      return {
+        address: vault.address,
+        supply: Number(await c.totalSupply({ blockTag })) / 10 ** 18,
+        safe: vault.safe,
+        chain: vault.chain,
+      };
+    })
+  );
+
   const deployed = true;
 
   const [
@@ -94,7 +112,8 @@ export const fetchV2Stats = async ({
     holders,
     poolDepth,
     poolVolume,
-    poolSwaps
+    poolSwaps,
+    vaultsApy,
   ] = deployed
     ? await Promise.all([
         // total bvUSD supply
@@ -123,7 +142,6 @@ export const fetchV2Stats = async ({
             }))
           ),
 
-        
         // HISTORICAL SUPPLY
         fetchHistSupplyFromDune(fetchConfig),
 
@@ -149,7 +167,10 @@ export const fetchV2Stats = async ({
         fetchPoolVolume(fetchConfig),
 
         // pool swaps
-        fetchPoolSwaps(fetchConfig)
+        fetchPoolSwaps(fetchConfig),
+
+        // vaults daily apy
+        fetchVaultAPYFromDune(fetchConfig),
       ])
     : await Promise.all([
         Decimal.ZERO, // total_bold_supply
@@ -162,8 +183,11 @@ export const fetchV2Stats = async ({
         null,
         null,
         null,
-        null
+        null,
+        null,
       ]);
+
+  const apyMap = latestApyByVault(vaultsApy!);
 
   const sp_apys = branches.map((b) => b.sp_apy).filter((x) => !isNaN(x));
 
@@ -188,6 +212,15 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...r,
+        },
+        (x) => `${x}`
+      )
+    ),
+    sbvUSD: sbvUSD!.map((r) =>
+      mapObj(
+        {
+          ...r,
+          apy: apyMap.get(r.address.trim().toLowerCase())?.apy ?? "0",
         },
         (x) => `${x}`
       )
@@ -298,6 +331,14 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...swaps,
+        },
+        (x) => `${x}`
+      )
+    ),
+    vaultsApy: vaultsApy!.map((apy) =>
+      mapObj(
+        {
+          ...apy,
         },
         (x) => `${x}`
       )
