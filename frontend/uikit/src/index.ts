@@ -39,3 +39,4 @@ export { InfoTooltip } from "./Tooltip/InfoTooltip";
 export { Tooltip } from "./Tooltip/Tooltip";
 export { UiKit } from "./UiKit/UiKit";
 export { ErrorMessage } from "./ErrorMessage/ErrorMessage";
+export { Spoiler } from "./Spoiler/Spoiler";

@@ -4,8 +4,8 @@ import { Screen } from "@/src/comps/Screen/Screen";
 import content from "@/src/content";
 import { css } from "@/styled-system/css";
 import { HFlex } from "@liquity2/uikit";
-import PointsPanel from "../PointScreen/PointsPanel";
 import { VaultPanel } from "./VaultPanel";
+import { VaultFAQPanel } from "./VaultFAQPanel";
 
 
 export function VaultPoolScreen() {
@@ -41,6 +41,7 @@ export function VaultPoolScreen() {
       }}
     >
       <VaultPanel />
+      <VaultFAQPanel />
     </Screen>
   );
 }

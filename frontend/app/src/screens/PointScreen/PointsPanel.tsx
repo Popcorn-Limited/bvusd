@@ -1,24 +1,26 @@
 "use client"
 
 import { useAccount } from "@/src/wagmi-utils";
-import { Button } from "@liquity2/uikit";
+import { Button, IconChevronDown, IconExternal, Spoiler } from "@liquity2/uikit";
 import { useEffect, useState } from "react";
 import { css } from "@/styled-system/css";
 import { zeroAddress } from "viem";
 import { useRouter } from "next/navigation";
 import { fmtnum } from "@/src/formatting";
 
-const POINTS_CAMPAIGNS: { title: string, reward: number, href: string, id: string }[] = [
+const POINTS_CAMPAIGNS: { title: string, reward: number, actionLink: string, claimLink: string, id: string }[] = [
   {
     title: "Hold bvUSD on Katana",
     reward: 10,
-    href: "https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x876aac7648D79f87245E73316eB2D100e75F3Df1",
+    actionLink: "https://app.bitvault.finance/buy",
+    claimLink: "https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x876aac7648D79f87245E73316eB2D100e75F3Df1",
     id: "0xf65a88715f3b07ef4a913b1bce62bf0608880b8932ba046482395b7975e6ea21"
   },
   {
     title: "Hold sbvUSD on Katana",
     reward: 20,
-    href: "https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x24E2aE2f4c59b8b7a03772142d439fDF13AAF15b",
+    actionLink: "https://app.bitvault.finance/vault",
+    claimLink: "https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x24E2aE2f4c59b8b7a03772142d439fDF13AAF15b",
     id: "0x2ebd974c00cd63a39f4a4a2fdb240c18d2ff99214afa530ed03bc502af47469d"
   }
 ]
@@ -134,23 +136,18 @@ export default function PointsPanel({ showHeader = true }: { showHeader?: boolea
           <p>Activities</p>
           <p>Daily Bits per 1$</p>
         </div>
-        <div className={css({
-          display: "flex",
-          flexDirection: "column",
-          gap: 16,
-        })}>
+        <Spoiler title="Season 0">
           {POINTS_CAMPAIGNS.map((campaign) => (
             <RewardRow key={campaign.title} {...campaign} />
           ))}
-          <RewardRow key={"title"} reward={10} href={"https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x876aac7648D79f87245E73316eB2D100e75F3Df1"} title={"Hold bvUSD on Katana"} />
-        </div>
+        </Spoiler>
       </div>
     </div >
   )
 }
 
 
-function RewardRow({ title, reward, href }: { title: string, reward: number, href: string }) {
+function RewardRow({ title, reward, actionLink, claimLink }: { title: string, reward: number, actionLink: string, claimLink: string }) {
   const router = useRouter();
 
   return (
@@ -187,11 +184,27 @@ function RewardRow({ title, reward, href }: { title: string, reward: number, hre
           <img src={`/icons/flame.png`} alt="flame" />
         </div>
         <div>
-          <p className={css({
-            fontSize: 20,
-            fontWeight: 400,
-          })}
-          >{title}</p>
+          <span className={css({
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 4,
+          })}>
+            <p className={css({
+              fontSize: 20,
+              fontWeight: 400,
+            })}
+            >
+              {title}
+            </p>
+            <div className={css({
+              cursor: "pointer"
+            })}
+              onClick={() => router.push(actionLink)}
+            >
+              <IconExternal size={16} />
+            </div>
+          </span>
           <p className={css({
             fontSize: 16,
             fontWeight: 300,
@@ -205,7 +218,7 @@ function RewardRow({ title, reward, href }: { title: string, reward: number, hre
         mode="primary"
         size="medium"
         shape="rectangular"
-        onClick={() => router.push(href)}
+        onClick={() => router.push(claimLink)}
       />
     </div>
   )

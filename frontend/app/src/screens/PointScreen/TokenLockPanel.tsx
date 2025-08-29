@@ -66,14 +66,32 @@ export function TokenLockPanel() {
 
   return (
     <div
-      style={{
+      className={css({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         width: "100%",
-        gap: 48,
-      }}
+        gap: 16,
+        padding: "24px 0 24px 0",
+        borderTop: "1px solid token(colors.fieldBorder)",
+      })}
     >
+      <div>
+        <h2
+          className={css({
+            fontSize: 24,
+          })}>
+          Lock bvUSD
+        </h2>
+        <p
+          className={css({
+            fontSize: 16,
+            color: "contentAlt",
+          })}
+        >
+          Lock your bvUSD to earn points.
+        </p>
+      </div>
       <Field
         field={
           <InputField
