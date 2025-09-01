@@ -116,12 +116,7 @@ export function HomeScreen() {
         flexDirection: "row",
         gap: 48,
       })}>
-        <div className={css({
-          width: "60%",
-        })}>
-          <PointsPanel showHeader={true} />
-        </div>
-        <div
+         <div
           className={css({
             width: "40%",
           })}
@@ -149,6 +144,13 @@ export function HomeScreen() {
             <VaultPanel />
           </div>
         </div>
+        
+        <div className={css({
+          width: "60%",
+        })}>
+          <PointsPanel showHeader={true} />
+        </div>
+       
       </div>
     </div>
   );
