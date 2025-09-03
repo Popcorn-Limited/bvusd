@@ -75,7 +75,7 @@ export default function CardsSection() {
           bullets={sbvUSDBullets}
           ctaText="Earn Now"
           onCta={() =>
-            window.open("https://app.bitvault.finance/earn", "_blank")
+            window.open("https://app.bitvault.finance/vault", "_blank")
           }
         />
 
