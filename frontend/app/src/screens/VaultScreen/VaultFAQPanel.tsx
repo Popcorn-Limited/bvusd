@@ -147,6 +147,21 @@ export function VaultFAQPanel() {
             sbvUSD accrues value over time. As yield is generated from strategy profits, it is reflected as a <span className={css({ fontWeight: 600, color: "white" })}>gradual increase in sbvUSD's exchange rate back to bvUSD</span>. There are <span className={css({ fontWeight: 600, color: "white" })}>no fixed payouts</span> — your holdings grow in value directly within your wallet.
           </p>
         </Spoiler>
+        <Spoiler title="Who manages the strategies behind sbvUSD?" marginBottom={4}>
+          <p className={css({
+            color: "contentAlt",
+          })}>
+            sbvUSD vaults are managed by <span className={css({ fontWeight: 600, color: "white" })}>whitelisted institutional partners</span>, including GSR, Re7 and LM5.
+            All curators are selected based on performance, transparency, and alignment with BitVault’s security and compliance standards.
+          </p>
+        </Spoiler>
+        <Spoiler title="Is sbvUSD available to everyone?" marginBottom={4}>
+          <p className={css({
+            color: "contentAlt",
+          })}>
+            sbvUSD is accessible anywhere except from Burma (Myanmar), Cuba, Iran, Sudan, Syria, the Western Balkans, Belarus, Côte d’Ivoire, Democratic Republic of the Congo, Iraq, Lebanon, Liberia, Libya, North Korea, Russia, certain sanctioned areas of Ukraine, Somalia, Venezuela, Yemen, Zimbabwe, or the United States of America (collectively, “Prohibited Jurisdictions”), or any other jurisdiction listed as a Specially Designated National by the United States Office of Foreign Asset Control (“OFAC”).
+          </p>
+        </Spoiler>
       </div>
     </div>
   )
