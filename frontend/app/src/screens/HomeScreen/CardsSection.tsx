@@ -18,7 +18,7 @@ const bvUSDBullets = [
   "KYB required, minimum 1 BTC",
 ];
 
-export function CardsSection() {
+export default function CardsSection() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
