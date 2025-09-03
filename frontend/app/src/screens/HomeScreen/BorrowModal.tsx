@@ -1,31 +1,28 @@
 import { useState } from "react";
-import { FORMSPREE } from "@/src/env";
+import axios from "axios";
 
 export function BorrowModal({ onClose }: { onClose: () => void }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [telegram, setTelegram] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const res = await fetch(`https://formspree.io/f/${FORMSPREE}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        telegram,
-      }),
-    });
+    try {
+      const res = await axios.post("/api/contact", { name, email, telegram });
 
-    if (res.ok) {
-      alert("Email sent successfully!");
-      onClose();
-    } else {
-      alert("Error sending email");
+      if (res.status !== 200) {
+        alert("Error");
+      } else {
+        alert("Submission Sent");
+        onClose();
+      }
+    } catch (e) {
+      alert("Error");
     }
   }
+
   return (
     <div
       style={{
