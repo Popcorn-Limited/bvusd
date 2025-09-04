@@ -24,10 +24,12 @@ export default function CardsSection() {
   return (
     <section
       style={{
-        width: "100%",
         maxWidth: "1200px",
         margin: "0 auto",
-        marginTop: "100px",
+        marginTop: "50px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       {/* Title */}
