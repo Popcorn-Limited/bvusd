@@ -15,25 +15,33 @@ type Props = {
   onCta: () => void;
 };
 
-export function Card({
-  tokenImage,
-  backgroundColor,
-  textColor,
-  imageUrl,
-  badgeText,
-  apy,
-  headline,
-  subhead,
-  bullets,
-  ctaText,
-  onCta,
-}: Props) {
+export function Card(props: Props) {
+  const {
+    tokenImage,
+    backgroundColor,
+    textColor,
+    imageUrl,
+    badgeText,
+    apy,
+    headline,
+    subhead,
+    bullets,
+    ctaText,
+    onCta,
+  } = props;
+
+  // constants for alignment
+  const INTRO_HEIGHT = "clamp(270px, 34vh, 380px)"; // banner + badge + APY + headline + divider
+  const APY_HEIGHT = "clamp(28px, 5vh, 44px)";
+
   return (
     <div
       style={{
+        height: "100%",
+        minHeight: 0,
         display: "flex",
         flexDirection: "column",
-        padding: "30px",
+        padding: "clamp(12px, 2.3vh, 30px)",
         background: backgroundColor,
         color: textColor,
         border: "1px solid #1f2833",
@@ -41,74 +49,100 @@ export function Card({
         overflow: "hidden",
         boxShadow:
           "0px 12px 30px rgba(0,0,0,0.35), 0px 2px 6px rgba(0,0,0,0.25)",
-        fontFamily:
-          'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+        fontFamily: "KHTeka",
+        boxSizing: "border-box",
       }}
     >
-      {/* Top content */}
-      <div>
-        {/* Image */}
+      {/* INTRO block with fixed height */}
+      <div
+        style={{
+          height: INTRO_HEIGHT,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          gap: "clamp(8px, 1.4vh, 14px)",
+        }}
+      >
+        {/* Banner */}
         <div
           style={{
             width: "100%",
-            borderRadius: 5,
-            height: 170,
+            aspectRatio: "16 / 5",
+            borderRadius: 8,
             backgroundImage: `url(${imageUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
 
-        {/* Badge / title row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            margin: "20px 0 16px",
-          }}
-        >
+        {/* Badge row */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Image
             src={tokenImage}
             alt={badgeText}
-            width={50}
-            height={40}
-            style={{ borderRadius: "50%" }}
+            style={{
+              width: "clamp(20px, 6vh, 30px)",
+              height: "clamp(20px, 6vh, 30px)",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
           />
-          <span style={{ fontSize: 25, color: textColor, fontWeight: 400 }}>
+          <span
+            style={{
+              fontSize: "clamp(18px, 2.2vh, 25px)",
+              fontWeight: 400,
+            }}
+          >
             {badgeText}
           </span>
         </div>
 
-        {/* Optional APY */}
-        {apy && (
-          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-            <div
-              style={{
-                fontSize: 40,
-                fontWeight: 600,
-                color: textColor,
-                letterSpacing: -0.5,
-              }}
-            >
-              {apy}
-            </div>
-            <div style={{ fontSize: 18, color: "white", fontWeight: 600 }}>
-              APY
-            </div>
-          </div>
-        )}
+        {/* APY row */}
+        <div
+          style={{
+            height: APY_HEIGHT,
+            display: "flex",
+            alignItems: "baseline",
+            gap: 8,
+          }}
+        >
+          {apy ? (
+            <>
+              <div
+                style={{
+                  fontSize: "clamp(24px, 3.2vh, 40px)",
+                  fontWeight: 600,
+                  letterSpacing: -0.5,
+                }}
+              >
+                {apy}
+              </div>
+              <div
+                style={{
+                  fontSize: "clamp(12px, 1.6vh, 18px)",
+                  fontWeight: 600,
+                }}
+              >
+                APY
+              </div>
+            </>
+          ) : null}
+        </div>
 
-        {!apy && <div style={{ marginTop: 100 }} />}
         {/* Headline + subhead */}
-        <div style={{ marginTop: 30 }}>
-          <div style={{ fontSize: 30, fontWeight: 400, color: textColor }}>
+        <div style={{ textAlign: "left" }}>
+          <div
+            style={{
+              fontSize: "clamp(20px, 2.8vh, 25px)",
+              fontWeight: 400,
+            }}
+          >
             {headline}
           </div>
           {subhead && (
             <div
               style={{
-                fontSize: 25,
+                fontSize: "clamp(14px, 2.2vh, 20px)",
                 fontWeight: 300,
                 color: "gray",
               }}
@@ -116,66 +150,68 @@ export function Card({
               {subhead}
             </div>
           )}
-          {!subhead && (
-            <div
-              style={{
-                marginTop: 73,
-              }}
-            />
-          )}
         </div>
+
         {/* Divider */}
         <div
           style={{
+            flex: "0 0 2px",
             height: 2,
-            background: `linear-gradient(90deg,gray,transparent)`,
-            marginTop: 31,
-            marginBottom: 15,
+            background: "linear-gradient(90deg,gray,transparent)",
+            marginTop: "auto",
           }}
         />
-
-        {/* Checklist */}
-        <ul
-          style={{
-            listStyle: "none",
-            padding: 0,
-            marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
-          {bullets.map((b, i) => (
-            <li
-              key={i}
-              style={{
-                display: "flex",
-                gap: 20,
-                alignItems: "flex-start",
-                marginBottom: 10,
-              }}
-            >
-              <span
-                aria-hidden
-                style={{
-                  width: 18,
-                  height: 18,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: 6,
-                  fontSize: 18,
-                  color: textColor,
-                }}
-              >
-                ✓
-              </span>
-              <span style={{ fontSize: 19, color: textColor }}>{b}</span>
-            </li>
-          ))}
-        </ul>
       </div>
 
-      {/* Button */}
-      <div style={{ marginTop: "auto", paddingTop: 40 }}>
+      {/* Checklist */}
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          marginTop: 15,
+          display: "flex",
+          flexDirection: "column",
+          gap: "clamp(6px, 1.2vh, 10px)",
+          fontSize: "clamp(13px, 2vh, 18px)",
+          minHeight: 0,
+        }}
+      >
+        {bullets.map((b, i) => (
+          <li
+            key={i}
+            style={{
+              textAlign: "left",
+              display: "flex",
+              gap: 12,
+              alignItems: "flex-start",
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 18,
+                height: 18,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 4,
+                fontSize: 18,
+              }}
+            >
+              ✓
+            </span>
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* CTA */}
+      <div
+        style={{
+          marginTop: "auto",
+          paddingTop: "clamp(20px, 2vh, 32px)",
+        }}
+      >
         <Button
           mode="primary"
           shape="rounded"

@@ -24,19 +24,21 @@ export default function CardsSection() {
   return (
     <section
       style={{
+        width: "63%",
         maxWidth: "1200px",
         margin: "0 auto",
-        marginBottom: "10px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        display: "grid",
+        gridTemplateRows: "auto auto 1fr",
+        justifyItems: "center",
+        textAlign: "center",
+        height: "100%",
+        boxSizing: "border-box",
       }}
     >
-      {/* Title */}
       <h1
         style={{
           color: "white",
-          fontSize: "3.75rem",
+          fontSize: "2.5rem",
           fontWeight: 400,
           lineHeight: 1,
           textAlign: "center",
@@ -46,7 +48,7 @@ export default function CardsSection() {
       </h1>
       <h2
         style={{
-          fontSize: 25,
+          fontSize: 18,
           fontWeight: 300,
           color: "#a2a2a2ff",
           textAlign: "center",
@@ -59,12 +61,14 @@ export default function CardsSection() {
       {/* Cards Container */}
       <div
         style={{
-          height: "70svh",
-          padding: "30px",
+          width: "100%",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "24px",
-          width: "95%",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: 24,
+          padding: 16,
+          boxSizing: "border-box",
+          height: "100%",
+          minHeight: 0,
         }}
       >
         <Card
