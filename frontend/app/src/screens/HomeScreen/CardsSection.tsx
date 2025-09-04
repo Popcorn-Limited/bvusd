@@ -64,7 +64,7 @@ export default function CardsSection() {
           width: "100%",
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
-          gap: 24,
+          gap: 32,
           padding: 16,
           boxSizing: "border-box",
           height: "100%",
@@ -73,7 +73,7 @@ export default function CardsSection() {
       >
         <Card
           tokenImage={tokensbvUSD}
-          backgroundColor="#1A1F2B"
+          backgroundColor="#23262F"
           textColor="white"
           imageUrl={"/sbvUSDBackground.jpg"}
           badgeText="sbvUSD"
@@ -89,8 +89,8 @@ export default function CardsSection() {
 
         <Card
           tokenImage={tokenbvUSD}
-          backgroundColor="#F9FAFB"
-          textColor="black"
+          backgroundColor="#353945"
+          textColor="white"
           imageUrl={"/bvUSDBackground.jpg"}
           badgeText="bvUSD"
           headline="Institutional Borrowing"

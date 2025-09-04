@@ -31,8 +31,8 @@ export function Card(props: Props) {
   } = props;
 
   // constants for alignment
-  const INTRO_HEIGHT = "clamp(270px, 34vh, 380px)"; // banner + badge + APY + headline + divider
-  const APY_HEIGHT = "clamp(28px, 5vh, 44px)";
+  const INTRO_HEIGHT = "clamp(280px, 34vh, 350px)"; // banner + badge + APY + headline + divider
+  const APY_HEIGHT = "clamp(28px, 5vh, 50px)";
 
   return (
     <div
