@@ -63,6 +63,7 @@ export default function CardsSection() {
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "24px",
+          width: "95%",
         }}
       >
         <Card
