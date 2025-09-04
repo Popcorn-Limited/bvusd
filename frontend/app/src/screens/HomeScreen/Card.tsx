@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Button  } from "@liquity2/uikit";
+import { Button } from "@liquity2/uikit";
 
 type Props = {
   tokenImage: string;
@@ -150,7 +150,7 @@ export function Card({
                 display: "flex",
                 gap: 20,
                 alignItems: "flex-start",
-                marginBottom: 22,
+                marginBottom: 10,
               }}
             >
               <span
@@ -175,14 +175,14 @@ export function Card({
       </div>
 
       {/* Button */}
-      <div style={{ marginTop: "auto", paddingTop: 80 }}>
+      <div style={{ marginTop: "auto", paddingTop: 40 }}>
         <Button
-                    mode="primary"
-                    shape="rounded"
-                    wide
-                    label={ctaText}
-                    onClick={onCta}
-                  />
+          mode="primary"
+          shape="rounded"
+          wide
+          label={ctaText}
+          onClick={onCta}
+        />
       </div>
     </div>
   );

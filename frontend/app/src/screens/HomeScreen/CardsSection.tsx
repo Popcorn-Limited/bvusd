@@ -26,7 +26,7 @@ export default function CardsSection() {
       style={{
         maxWidth: "1200px",
         margin: "0 auto",
-        marginTop: "50px",
+        marginBottom: "10px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -59,6 +59,7 @@ export default function CardsSection() {
       {/* Cards Container */}
       <div
         style={{
+          height: "70svh",
           padding: "30px",
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
