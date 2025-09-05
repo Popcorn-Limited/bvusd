@@ -123,7 +123,7 @@ export default function CardsSection() {
             tokenImage={tokensbvUSD}
             backgroundColor="#23262F"
             textColor="white"
-                        buttonColor="#F6AE3F"
+            buttonColor="#F6AE3F"
             buttonText="black"
             imageUrl={"/bvUSDBackground.jpg"}
             badgeText="bvUSD"

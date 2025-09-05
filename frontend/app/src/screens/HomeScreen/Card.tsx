@@ -133,7 +133,7 @@ export function Card(props: Props) {
         </div>
 
         {/* Headline + subhead */}
-        <div style={{ textAlign: "left", paddingTop: 50 }}>
+        <div style={{ textAlign: "left" }}>
           <div
             style={{
               fontSize: "clamp(20px, 2.8vh, 25px)",
