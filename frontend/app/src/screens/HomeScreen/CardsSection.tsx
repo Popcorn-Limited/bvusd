@@ -66,7 +66,7 @@ export default function CardsSection() {
       <h1
         style={{
           color: "white",
-          fontSize: "3rem",
+          fontSize: "2.7rem",
           fontWeight: 400,
           lineHeight: 1,
           textAlign: "center",
@@ -76,8 +76,8 @@ export default function CardsSection() {
       </h1>
       <h2
         style={{
-          marginTop: 10,
-          fontSize: 25,
+          marginTop: 3,
+          fontSize: 22,
           fontWeight: 300,
           color: "#a2a2a2ff",
           textAlign: "center",
@@ -90,7 +90,7 @@ export default function CardsSection() {
       <CardsRow>
         <div
           style={{
-            marginTop: 25,
+            marginTop: 20,
             width: "100%",
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
