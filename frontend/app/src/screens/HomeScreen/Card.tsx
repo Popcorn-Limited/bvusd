@@ -31,8 +31,8 @@ export function Card(props: Props) {
   } = props;
 
   // constants for alignment
-  const INTRO_HEIGHT = "clamp(280px, 34vh, 350px)"; // banner + badge + APY + headline + divider
-  const APY_HEIGHT = "clamp(28px, 5vh, 50px)";
+  const INTRO_HEIGHT = "var(--intro-h)";
+  const APY_HEIGHT = "var(--apy-h)";
 
   return (
     <div
@@ -41,7 +41,7 @@ export function Card(props: Props) {
         minHeight: 0,
         display: "flex",
         flexDirection: "column",
-        padding: "clamp(12px, 2.3vh, 30px)",
+        padding: 20,
         background: backgroundColor,
         color: textColor,
         border: "1px solid #1f2833",
@@ -49,7 +49,6 @@ export function Card(props: Props) {
         overflow: "hidden",
         boxShadow:
           "0px 12px 30px rgba(0,0,0,0.35), 0px 2px 6px rgba(0,0,0,0.25)",
-        fontFamily: "KHTeka",
         boxSizing: "border-box",
       }}
     >
@@ -60,7 +59,7 @@ export function Card(props: Props) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
-          gap: "clamp(8px, 1.4vh, 14px)",
+          gap: "10px",
         }}
       >
         {/* Banner */}
@@ -81,8 +80,8 @@ export function Card(props: Props) {
             src={tokenImage}
             alt={badgeText}
             style={{
-              width: "clamp(20px, 6vh, 30px)",
-              height: "clamp(20px, 6vh, 30px)",
+              width: "20px",
+              height: "20px",
               borderRadius: "50%",
               objectFit: "cover",
             }}
@@ -130,7 +129,7 @@ export function Card(props: Props) {
         </div>
 
         {/* Headline + subhead */}
-        <div style={{ textAlign: "left" }}>
+        <div style={{ textAlign: "left", marginTop: 30 }}>
           <div
             style={{
               fontSize: "clamp(20px, 2.8vh, 25px)",
@@ -168,7 +167,7 @@ export function Card(props: Props) {
         style={{
           listStyle: "none",
           padding: 0,
-          marginTop: 15,
+          marginTop: 30,
           display: "flex",
           flexDirection: "column",
           gap: "clamp(6px, 1.2vh, 10px)",
