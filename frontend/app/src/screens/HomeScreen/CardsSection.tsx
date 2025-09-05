@@ -104,7 +104,7 @@ export default function CardsSection() {
             tokenImage={tokensbvUSD}
             backgroundColor="#23262F"
             textColor="white"
-            imageUrl={"/images/sbvUSDBackground.jpg"}
+            imageUrl={"/sbvUSDBackground.jpg"}
             badgeText="sbvUSD"
             apy="12%"
             headline="Institutional-Grade Yield"
@@ -120,7 +120,7 @@ export default function CardsSection() {
             tokenImage={tokenbvUSD}
             backgroundColor="#353945"
             textColor="white"
-            imageUrl={"/images/bvUSDBackground.jpg"}
+            imageUrl={"/bvUSDBackground.jpg"}
             badgeText="bvUSD"
             headline="Institutional Borrowing"
             bullets={bvUSDBullets}

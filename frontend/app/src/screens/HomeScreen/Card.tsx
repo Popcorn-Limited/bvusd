@@ -66,7 +66,7 @@ export function Card(props: Props) {
         <div
           style={{
             width: "100%",
-            aspectRatio: "16 / 5",
+            aspectRatio: "16 / 7",
             borderRadius: 8,
             backgroundImage: `url(${imageUrl})`,
             backgroundSize: "cover",
@@ -80,8 +80,8 @@ export function Card(props: Props) {
             src={tokenImage}
             alt={badgeText}
             style={{
-              width: "20px",
-              height: "20px",
+              width: "30px",
+              height: "30px",
               borderRadius: "50%",
               objectFit: "cover",
             }}
@@ -129,7 +129,7 @@ export function Card(props: Props) {
         </div>
 
         {/* Headline + subhead */}
-        <div style={{ textAlign: "left"}}>
+        <div style={{ textAlign: "left", marginTop: "30px" }}>
           <div
             style={{
               fontSize: "clamp(20px, 2.8vh, 25px)",
