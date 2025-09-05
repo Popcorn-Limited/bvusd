@@ -5,6 +5,8 @@ type Props = {
   tokenImage: string;
   backgroundColor: string;
   textColor: string;
+  buttonColor: string;
+  buttonText: string;
   imageUrl: string;
   badgeText: string;
   apy?: string;
@@ -20,6 +22,8 @@ export function Card(props: Props) {
     tokenImage,
     backgroundColor,
     textColor,
+    buttonColor,
+    buttonText,
     imageUrl,
     badgeText,
     apy,
@@ -80,8 +84,8 @@ export function Card(props: Props) {
             src={tokenImage}
             alt={badgeText}
             style={{
-              width: "25px",
-              height: "25px",
+              width: "35px",
+              height: "35px",
               borderRadius: "50%",
               objectFit: "cover",
             }}
@@ -129,7 +133,7 @@ export function Card(props: Props) {
         </div>
 
         {/* Headline + subhead */}
-        <div style={{ textAlign: "left" }}>
+        <div style={{ textAlign: "left", paddingTop: 50 }}>
           <div
             style={{
               fontSize: "clamp(20px, 2.8vh, 25px)",
@@ -142,8 +146,8 @@ export function Card(props: Props) {
             <div
               style={{
                 fontSize: "clamp(14px, 2.2vh, 20px)",
-                fontWeight: 300,
-                color: "gray",
+                fontWeight: 400,
+                color: "black",
               }}
             >
               {subhead}
@@ -208,7 +212,7 @@ export function Card(props: Props) {
       <div
         style={{
           marginTop: "auto",
-          paddingTop: "clamp(20px, 2vh, 32px)",
+          paddingTop: "50px",
         }}
       >
         <Button
@@ -217,6 +221,13 @@ export function Card(props: Props) {
           wide
           label={ctaText}
           onClick={onCta}
+          style={
+            {
+              "--color": `${buttonText}`,
+              "--background": `${buttonColor}`,
+              "--backgroundHover": `${buttonColor}`,
+            } as React.CSSProperties
+          }
         />
       </div>
     </div>

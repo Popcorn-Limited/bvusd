@@ -66,7 +66,7 @@ export default function CardsSection() {
       <h1
         style={{
           color: "white",
-          fontSize: "2.5rem",
+          fontSize: "3rem",
           fontWeight: 400,
           lineHeight: 1,
           textAlign: "center",
@@ -76,20 +76,21 @@ export default function CardsSection() {
       </h1>
       <h2
         style={{
-          fontSize: 18,
+          marginTop: 10,
+          fontSize: 25,
           fontWeight: 300,
           color: "#a2a2a2ff",
           textAlign: "center",
         }}
       >
-        Unlock capital efficiency with Bitcoin-backed borrowing or
-        institutional-yield strategies
+        Choose between the two options below to start earning:
       </h2>
 
       {/* Cards Container */}
       <CardsRow>
         <div
           style={{
+            marginTop: 25,
             width: "100%",
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
@@ -101,9 +102,11 @@ export default function CardsSection() {
           }}
         >
           <Card
-            tokenImage={tokensbvUSD}
-            backgroundColor="#23262F"
-            textColor="white"
+            tokenImage={tokenbvUSD}
+            backgroundColor="#F6AE3F"
+            textColor="black"
+            buttonColor="black"
+            buttonText="#F6AE3F"
             imageUrl={"/sbvUSDBackground.jpg"}
             badgeText="sbvUSD"
             apy="12%"
@@ -117,9 +120,11 @@ export default function CardsSection() {
           />
 
           <Card
-            tokenImage={tokenbvUSD}
-            backgroundColor="#353945"
+            tokenImage={tokensbvUSD}
+            backgroundColor="#23262F"
             textColor="white"
+                        buttonColor="#F6AE3F"
+            buttonText="black"
             imageUrl={"/bvUSDBackground.jpg"}
             badgeText="bvUSD"
             headline="Institutional Borrowing"
