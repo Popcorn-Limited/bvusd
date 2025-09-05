@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import tokenbvUSD from "../../../../uikit/src/token-icons/bvusd.svg";
 import tokensbvUSD from "../../../../uikit/src/token-icons/sbvusd.svg";
 import { Card } from "./Card";
@@ -24,7 +24,7 @@ function useSharedHeights() {
     ["--apy-h" as any]: "36px",
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const calc = () => {
       const intro = Math.max(280, Math.min(window.innerHeight * 0.34, 380));
       const apy = Math.max(28, Math.min(window.innerHeight * 0.05, 44));
