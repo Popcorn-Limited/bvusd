@@ -328,11 +328,11 @@ function SBVUSDCard({
               alt={"sbvUSD"}
               width={24}
               height={20}
-              style={{ borderRadius: "50%", marginRight: "15px" }}
+              style={{ borderRadius: "50%"}}
             />
           </div>
           <span
-            style={{ fontWeight: 400, fontSize: 20, fontFamily: "KHTeka" }}
+            style={{ fontWeight: 400, fontSize: 20, fontFamily: "KHTeka", marginLeft: "5px" }}
           >
             {symbol}
           </span>

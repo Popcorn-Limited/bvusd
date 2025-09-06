@@ -14,6 +14,7 @@ export function AccountScreen() {
         flexDirection: "column",
         gap: 64,
         width: "100%",
+        padding: "0 12px",
       })}
     >
       {/* <Positions address={account.address ?? null} showNewPositionCard={false} /> */}
