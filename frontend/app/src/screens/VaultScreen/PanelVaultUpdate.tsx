@@ -173,7 +173,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               start: null,
               end: balances[inputSymbol].data && (
                 <TextButton
-                  label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data, 2)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
+                  label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
                   onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
                 />
               )
