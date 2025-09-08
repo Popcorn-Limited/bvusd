@@ -5,7 +5,7 @@ import { Card } from "./Card";
 import { BorrowModal } from "./BorrowModal";
 
 const sbvUSDBullets = [
-  "Allocated to market-neutral & private credit",
+  "Allocated to market-neutral strategies & private credit",
   "Managed by institutional partners",
   "Backed 100% by bluechip stablecoins",
   "Open to all (ex. U.S. persons)",
