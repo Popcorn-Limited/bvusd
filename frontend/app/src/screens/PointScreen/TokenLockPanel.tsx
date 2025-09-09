@@ -1,4 +1,4 @@
-import type { Address, Token } from "@/src/types";
+import type { Address } from "@/src/types";
 import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
 import { Field } from "@/src/comps/Field/Field";
 import content from "@/src/content";
@@ -143,7 +143,7 @@ export function TokenLockPanel() {
               start: null,
               end: balance.data && (
                 <TextButton
-                  label={dn.gt(balance.data, 0) ? `Max ${fmtnum(balance.data, 2)} bvUSD` : `Max 0.00 bvUSD`}
+                  label={dn.gt(balance.data, 0) ? `Max ${fmtnum(balance.data)} bvUSD` : `Max 0.00 bvUSD`}
                   onClick={() => setValue(dn.toString(balance.data))}
                 />
               )

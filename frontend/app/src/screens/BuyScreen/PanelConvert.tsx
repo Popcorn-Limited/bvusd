@@ -1,19 +1,13 @@
-import type { BranchId, PositionEarn, Token } from "@/src/types";
-import type { Dnum } from "dnum";
+import type { Token } from "@/src/types";
 
-import { Amount } from "@/src/comps/Amount/Amount";
 import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
 import { Field } from "@/src/comps/Field/Field";
-import { InputTokenBadge } from "@/src/comps/InputTokenBadge/InputTokenBadge";
 import content from "@/src/content";
-import { DNUM_0, dnumMax } from "@/src/dnum-utils";
-import { parseInputFloat, parseInputFloatWithDecimals } from "@/src/form-utils";
+import { parseInputFloatWithDecimals } from "@/src/form-utils";
 import { fmtnum } from "@/src/formatting";
-import { getCollToken, isEarnPositionActive } from "@/src/liquity-utils";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
-import { infoTooltipProps } from "@/src/uikit-utils";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
-import { Button, bvUSD, Dropdown, HFlex, InfoTooltip, InputField, map, Tabs, TextButton, TokenIcon, USDT } from "@liquity2/uikit";
+import { Button, Dropdown,InputField, Tabs, TextButton, TokenIcon } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useState } from "react";
 
@@ -130,7 +124,7 @@ export function PanelConvert() {
               start: null,
               end: balances[inputSymbol].data && (
                 <TextButton
-                  label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data, 2)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
+                  label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
                   onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
                 />
               )
