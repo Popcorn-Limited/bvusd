@@ -47,7 +47,8 @@ export async function verifyTransaction(
   );
 
   // wait for the block number to be indexed by the subgraph
-  await verifyBlockNumberIndexation(tx.blockNumber);
+  // @TODO: Uncomment this when we actually use LiquityV2 since the subgraph is required to display correct trove data
+  // await verifyBlockNumberIndexation(tx.blockNumber);
 
   return tx;
 }
