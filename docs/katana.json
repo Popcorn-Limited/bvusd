@@ -1,5 +1,5 @@
 {
-  "time": "September 10, 2025 at 12:48 PM UTC",
+  "time": "September 10, 2025 at 1:08 PM UTC",
   "total_bold_supply": "61.318988",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4627,7 +4627,7 @@
     },
     {
       "tick": "-3",
-      "liquidity": "8451639243981802",
+      "liquidity": "8451639155293874",
       "price": "0.9997000599900016"
     },
     {
@@ -4642,7 +4642,7 @@
     },
     {
       "tick": "0",
-      "liquidity": "4085695310435941",
+      "liquidity": "4085675557552080",
       "price": "1"
     },
     {
@@ -4652,7 +4652,7 @@
     },
     {
       "tick": "2",
-      "liquidity": "38342414477389347",
+      "liquidity": "38342394724505486",
       "price": "1.00020001"
     },
     {
@@ -4682,7 +4682,7 @@
     },
     {
       "tick": "8",
-      "liquidity": "553347370359531",
+      "liquidity": "553347281671603",
       "price": "1.000800280056007"
     },
     {
@@ -4873,19 +4873,19 @@
       "holder": "0x22f5413c075ccd56d575a54763831c4c27a37bdb"
     }
   ],
-  "poolVolume": {},
-  "poolSwaps": {},
-  "vaultsApy": {},
-  "totalAllocations": "30.19246630100146",
+  "poolVolume": [],
+  "poolSwaps": [],
+  "vaultsApy": [],
+  "totalAllocations": "30.21596464692636",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "29.192666261009457",
+      "usdValue": "29.21606463692736",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "0.9998000399920016",
+      "usdValue": "0.9999000099990001",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     }
   ],
@@ -4893,8 +4893,8 @@
     {
       "protocol": "morpho",
       "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "576753.763640561",
-      "loanValue": "275026.32674394513"
+      "collateralValue": "579100.678697277",
+      "loanValue": "275026.6995773884"
     }
   ]
 }
