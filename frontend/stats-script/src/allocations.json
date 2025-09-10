@@ -1,16 +1,12 @@
 {
   "allocations": [
     {
-      "wallet": "0x6c73b1cA08bBC3F44340603b1Fb9E331C2ABaCa7",
-      "label": "Test"
+      "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21",
+      "label": "Fordefi"
     },
     {
-      "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0",
-      "label": "Test2"
-    },
-    {
-      "wallet": "0xD8D6fFE342210057BF4DCc31DA28D006f253cEF0",
-      "label": "Test3"
+      "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6",
+      "label": "LM5"
     }
   ],
 
