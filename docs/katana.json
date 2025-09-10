@@ -1,5 +1,5 @@
 {
-  "time": "September 10, 2025 at 12:38 PM UTC",
+  "time": "September 10, 2025 at 12:48 PM UTC",
   "total_bold_supply": "61.318988",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -449,8 +449,8 @@
   ],
   "collateral_ratio": [
     {
-      "avg_cr": "100",
-      "time": "2025-08-27 11:00:00"
+      "avg_cr": "78.43134534271753",
+      "time": "2025-09-10 11:00:00"
     },
     {
       "avg_cr": "78.43134534271753",
@@ -4873,11 +4873,14 @@
       "holder": "0x22f5413c075ccd56d575a54763831c4c27a37bdb"
     }
   ],
-  "totalAllocations": "30.171022164474827",
+  "poolVolume": {},
+  "poolSwaps": {},
+  "vaultsApy": {},
+  "totalAllocations": "30.19246630100146",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "29.171222124482824",
+      "usdValue": "29.192666261009457",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
@@ -4890,8 +4893,8 @@
     {
       "protocol": "morpho",
       "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "577152.9512033",
-      "loanValue": "275026.11500415526"
+      "collateralValue": "576753.763640561",
+      "loanValue": "275026.32674394513"
     }
   ]
 }
