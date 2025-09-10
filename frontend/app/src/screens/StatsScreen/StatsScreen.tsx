@@ -84,6 +84,7 @@ export function StatsScreen() {
             if (!liquityStats) {
               <HFlex gap={8}>Invalid Data</HFlex>;
             }
+            console.log(liquityStats)
             return (
               <div style={{ width: "100%", minHeight: "calc(100vh - 80px)"}}>
                 <div
@@ -138,40 +139,39 @@ export function StatsScreen() {
                       totalBacking={{
                         totalCollaterals: liquityStats.data.totalCollValue,
                         totalReserves: liquityStats.data.totalReserves,
+                        totalAllocations: liquityStats.data.totalAllocations
                       }}
-                      avgCR={
-                        liquityStats.data.historicalGlobalCR[0].collateral_ratio
-                      }
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
                       sbvUSD={liquityStats.data.sbvUSD}
                     />
-                    <AllocationPanel data={liquityStats.data.allocations}/>
+                    {/* <AllocationPanel data={liquityStats.data.allocations}/> */}
                     <ChartsPanel
-                      data={liquityStats.data.historicalGlobalCR}
+                      // data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
                     {/* TODO add branch collaterals when present*/}
-                    <ReservesPanel
+                    {/* <ReservesPanel
                       collateralReserves={liquityStats.data.reserveAssets}
-                    />
+                    /> */}
                     <VaultsPanel />
-                    <VaultsApy data={liquityStats.data.vaultsApy}/>
+                    {/* <VaultsApy data={liquityStats.data.vaultsApy}/> */}
                   </div>
                 )}
 
                 {activeTab === "BTC Institutional" && (
-                  <div
-                    style={{
-                      maxWidth: 1400,
-                      margin: "0 auto",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "32px",
-                    }}
-                  >
-                  <LoansPanel data={liquityStats.data.loans}/>
-                  </div>
+                  "Coming Soon..."
+                  // <div
+                  //   style={{
+                  //     maxWidth: 1400,
+                  //     margin: "0 auto",
+                  //     display: "flex",
+                  //     flexDirection: "column",
+                  //     gap: "32px",
+                  //   }}
+                  // >
+                  // <LoansPanel data={liquityStats.data.loans}/>
+                  // </div>
                 )}
               </div>
             );

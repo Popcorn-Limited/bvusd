@@ -6,6 +6,7 @@ import { useState } from "react";
 interface BackingData {
   totalCollaterals: string;
   totalReserves: string;
+  totalAllocations: string;
 }
 
 interface sbvUSD {
@@ -16,7 +17,6 @@ interface sbvUSD {
 
 interface TransparencyMetricsProps {
   totalBacking: BackingData;
-  avgCR: string;
   totalSupply: string;
   tvl: string;
   sbvUSD: sbvUSD[];
@@ -37,14 +37,13 @@ const backingTooltip =
 
 export function TransparencyMetrics({
   totalBacking,
-  avgCR,
   totalSupply,
   tvl,
   sbvUSD,
 }: TransparencyMetricsProps) {
   const backing =
-    Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves);
-  const protocolBackingRatio = `${fmtnum(Number(avgCR), "2z")} %`;
+    Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves) + Number(totalBacking.totalAllocations);
+  const protocolBackingRatio = `${fmtnum(Number(backing) / Number(totalSupply) * 100, "2z")} %`;
 
   const sbvUSDApy = sbvUSD[0].apy === "0" ? "n/a" : `${sbvUSD[0].apy}%`;
 

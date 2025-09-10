@@ -782,6 +782,7 @@ const StatsSchema = v.pipe(
         wallet: v.string()
       })
     ),
+    totalAllocations: v.string(),
     loans: v.array(
       v.object({
         protocol: v.string(),
@@ -928,6 +929,7 @@ const StatsSchema = v.pipe(
         wallet: al.wallet
       }
     }),
+    totalAllocations: value.totalAllocations,
     loans: value.loans.map((l) => {
       return {
         protocol: l.protocol,

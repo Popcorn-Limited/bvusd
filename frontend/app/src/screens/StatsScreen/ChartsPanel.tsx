@@ -20,7 +20,7 @@ import { CustomTooltip } from "./CustomTooltip";
 import { fmtnum } from "@/src/formatting";
 
 type CRProps = {
-  data: {
+  data?: {
     day: string;
     collateral_ratio: string;
   }[];
@@ -53,12 +53,12 @@ const CustomXAxisTick = ({ x, y, payload, index }) => {
 
 // TODO - build query in dune of collaterals backing amount over time
 export function ChartsPanel({ data, supply }: CRProps) {
-  const day_CR = [...data]
+  const day_CR = data ? [...data]
     .reverse()
     .map((item) => ({
       day: item.day.split(" ")[0].slice(0, 7),
       CR: parseFloat(fmtnum(Number(item.collateral_ratio)).replace(/,/g, "")),
-    }));
+    })) : null;
 
   const day_supply = [...supply]
     .reverse()
@@ -147,7 +147,8 @@ export function ChartsPanel({ data, supply }: CRProps) {
       </div>
 
       {/* Right Card: Collateral Ratio Historical */}
-      <div
+      {day_CR && (
+              <div
         style={{
           flex: 1,
           display: "flex",
@@ -199,6 +200,7 @@ export function ChartsPanel({ data, supply }: CRProps) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      )}
     </div>
   );
 }
