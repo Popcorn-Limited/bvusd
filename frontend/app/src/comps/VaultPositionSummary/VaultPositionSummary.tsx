@@ -167,7 +167,7 @@ export function VaultPositionSummary({
                   <InfoTooltip
                     content={{
                       heading: "Current APR",
-                      body: "The annualized rate this stability pool’s "
+                      body: "The annualized rate sbvUSD "
                         + "deposits earned over the last 24 hours.",
                       footerLink: {
                         label: "Check Dune for more details",
@@ -199,7 +199,7 @@ export function VaultPositionSummary({
                   <InfoTooltip
                     content={{
                       heading: "APR (last 7 days)",
-                      body: "The annualized percentage rate this stability pool’s "
+                      body: "The annualized percentage rate sbvUSD "
                         + "deposits earned over the past 7 days.",
                       footerLink: {
                         label: "Check Dune for more details",
