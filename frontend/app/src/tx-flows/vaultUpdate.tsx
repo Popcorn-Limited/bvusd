@@ -106,7 +106,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -122,7 +122,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -138,7 +138,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -154,7 +154,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
     claimWithdrawal: {
@@ -169,7 +169,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       }
     }
   },

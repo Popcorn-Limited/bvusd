@@ -179,7 +179,7 @@ export const openLeveragePosition: FlowDeclaration<OpenLeveragePositionRequest> 
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -243,7 +243,7 @@ export const openLeveragePosition: FlowDeclaration<OpenLeveragePositionRequest> 
       },
 
       async verify(ctx, hash) {
-        const receipt = await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        const receipt = await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
 
         // Extract trove ID from logs
         const collToken = getCollToken(ctx.request.loan.branchId);

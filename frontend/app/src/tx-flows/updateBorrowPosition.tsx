@@ -162,7 +162,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -199,7 +199,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -234,7 +234,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -264,7 +264,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -295,7 +295,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -324,7 +324,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -353,7 +353,7 @@ export const updateBorrowPosition: FlowDeclaration<UpdateBorrowPositionRequest> 
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
   },

@@ -9,7 +9,7 @@ async function safeApiCall(path: string) {
   if (!SAFE_API_URL) {
     throw new Error("SAFE_API_URL is not set");
   }
-  return fetch(`${SAFE_API_URL}/v1${path}`, {
+  return fetch(`${SAFE_API_URL}/${path}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -26,14 +26,15 @@ export const SafeTransactionSchema = v.object({
   transactionHash: v.union([v.null(), v.string()]),
 });
 
-export async function getSafeTransaction(safeTxHash: string): Promise<
+export async function getSafeTransaction(account: Address, safeTxHash: string): Promise<
   v.InferOutput<typeof SafeTransactionSchema>
 > {
-  const response = await safeApiCall(`/multisig-transactions/${safeTxHash}`);
+  const response = await safeApiCall(`v2/safes/${account}/multisig-transactions/?transaction_hash=${safeTxHash}`);
   if (!response.ok) {
     throw new Error(response.statusText);
   }
-  return v.parse(SafeTransactionSchema, await response.json());
+  const data = await response.json()
+  return v.parse(SafeTransactionSchema, data.results[0]);
 }
 
 export const SafeStatusSchema = v.object({
@@ -46,7 +47,7 @@ export const SafeStatusSchema = v.object({
 export async function getSafeStatus(safeAddress: Address): Promise<
   v.InferOutput<typeof SafeStatusSchema> | null
 > {
-  const response = await safeApiCall(`/safes/${safeAddress}`);
+  const response = await safeApiCall(`v1/safes/${safeAddress}`);
 
   if (response.status === 404) {
     return null;
@@ -59,10 +60,10 @@ export async function getSafeStatus(safeAddress: Address): Promise<
   return v.parse(SafeStatusSchema, await response.json());
 }
 
-export async function waitForSafeTransaction(safeTxHash: string): Promise<`0x${string}`> {
+export async function waitForSafeTransaction(account: Address, safeTxHash: string): Promise<`0x${string}`> {
   while (true) {
     try {
-      const safeTransaction = await getSafeTransaction(safeTxHash);
+      const safeTransaction = await getSafeTransaction(account, safeTxHash);
       if (safeTransaction.transactionHash !== null) {
         return safeTransaction.transactionHash as `0x${string}`;
       }

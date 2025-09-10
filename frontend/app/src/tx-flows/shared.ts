@@ -5,6 +5,7 @@ import { BlockNumberQuery, graphQuery } from "@/src/subgraph-queries";
 import { sleep } from "@/src/utils";
 import * as v from "valibot";
 import { waitForTransactionReceipt } from "wagmi/actions";
+import { Address } from "viem";
 
 export function createRequestSchema<
   Id extends string,
@@ -30,13 +31,15 @@ export function createRequestSchema<
 
 export async function verifyTransaction(
   wagmiConfig: WagmiConfig,
+  account: Address,
   hash: string,
   isSafe: boolean,
 ) {
+  
   const tx = await (
     isSafe
       // safe tx
-      ? waitForSafeTransaction(hash).then((txHash) => (
+      ? waitForSafeTransaction(account, hash).then((txHash) => (
         // return the same object than a non-safe tx
         waitForTransactionReceipt(wagmiConfig, { hash: txHash as `0x${string}` })
       ))

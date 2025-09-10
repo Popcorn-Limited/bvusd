@@ -252,7 +252,7 @@ export const openBorrowPosition: FlowDeclaration<OpenBorrowPositionRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -296,7 +296,7 @@ export const openBorrowPosition: FlowDeclaration<OpenBorrowPositionRequest> = {
       },
 
       async verify(ctx, hash) {
-        const receipt = await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        const receipt = await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
 
         // extract trove ID from logs
         const branch = getBranch(ctx.request.branchId);

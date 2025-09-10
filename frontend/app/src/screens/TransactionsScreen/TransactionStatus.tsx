@@ -46,9 +46,7 @@ function TxLink({ txHash }: { txHash: string }) {
   return (
     <AnchorTextButton
       label="transaction"
-      href={account.safeStatus === null
-        ? `${CHAIN_BLOCK_EXPLORER?.url}tx/${txHash}`
-        : `https://app.safe.global/transactions/tx?id=multisig_${account.address}_${txHash}&safe=sep:${account.address}`}
+      href={`${CHAIN_BLOCK_EXPLORER?.url}tx/${txHash}`}
       external
     />
   );

@@ -59,7 +59,7 @@ export const removeFromWhitelist: FlowDeclaration<RemoveFromWhitelistRequest> =
           });
         },
         async verify(ctx, hash) {
-          await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+          await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
         },
       },
     },
@@ -122,7 +122,7 @@ export const addToWhitelist: FlowDeclaration<AddToWhitelistRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
   },

@@ -79,7 +79,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         });
       },
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -100,7 +100,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -122,13 +122,14 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
   },
 
   async getSteps(ctx) {
     // Check if approval is needed
+    // @ts-ignore
     const allowance = await readContract(ctx.wagmiConfig, {
       address: getProtocolContract(ctx.request.inputToken).address,
       abi: erc20Abi,

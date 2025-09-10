@@ -262,7 +262,7 @@ export const updateLoanInterestRate: FlowDeclaration<UpdateLoanInterestRateReque
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -299,7 +299,7 @@ export const updateLoanInterestRate: FlowDeclaration<UpdateLoanInterestRateReque
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -352,7 +352,7 @@ export const updateLoanInterestRate: FlowDeclaration<UpdateLoanInterestRateReque
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
 
@@ -385,7 +385,7 @@ export const updateLoanInterestRate: FlowDeclaration<UpdateLoanInterestRateReque
       },
 
       async verify(ctx, hash) {
-        await verifyTransaction(ctx.wagmiConfig, hash, ctx.isSafe);
+        await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
       },
     },
   },
