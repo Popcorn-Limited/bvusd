@@ -47,6 +47,7 @@ export async function fetchAndUpdateStats() {
   const v2Stats = {
     time: formatDateUTC(new Date()),
     ...stats,
+    totalAllocations: `${allocations.map((r) => Number(r.usdValue)).reduce((a, b) => a + b)}`,
     allocations,
     loans
   };

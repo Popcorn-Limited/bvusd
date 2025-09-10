@@ -1,5 +1,5 @@
 {
-  "time": "September 10, 2025 at 1:08 PM UTC",
+  "time": "September 10, 2025 at 1:30 PM UTC",
   "total_bold_supply": "61.318988",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -18,7 +18,7 @@
   "sbvUSD": [
     {
       "address": "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
-      "supply": "15.1",
+      "supply": "16.1",
       "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
       "chain": "Katana",
       "apy": "0"
@@ -4627,7 +4627,7 @@
     },
     {
       "tick": "-3",
-      "liquidity": "8451639155293874",
+      "liquidity": "8451639155293996",
       "price": "0.9997000599900016"
     },
     {
@@ -4642,7 +4642,7 @@
     },
     {
       "tick": "0",
-      "liquidity": "4085675557552080",
+      "liquidity": "4085675557615941",
       "price": "1"
     },
     {
@@ -4652,7 +4652,7 @@
     },
     {
       "tick": "2",
-      "liquidity": "38342394724505486",
+      "liquidity": "38342394724569347",
       "price": "1.00020001"
     },
     {
@@ -4682,7 +4682,7 @@
     },
     {
       "tick": "8",
-      "liquidity": "553347281671603",
+      "liquidity": "553347281671725",
       "price": "1.000800280056007"
     },
     {
@@ -4822,7 +4822,7 @@
     },
     {
       "tick": "86",
-      "liquidity": "201944037275109",
+      "liquidity": "201943710172546",
       "price": "1.0086366525527033"
     },
     {
@@ -4873,19 +4873,47 @@
       "holder": "0x22f5413c075ccd56d575a54763831c4c27a37bdb"
     }
   ],
-  "poolVolume": [],
-  "poolSwaps": [],
-  "vaultsApy": [],
-  "totalAllocations": "30.21596464692636",
+  "poolVolume": [
+    {
+      "pool": "0xb59df770b2c00eec2635c7b3978e0fef07a9aa98",
+      "swap_count_1d": "0",
+      "swap_count_7d": "3",
+      "token0": "bvUSD",
+      "token1": "USDC",
+      "total_volume_1d": "0",
+      "total_volume_7d": "1.122881"
+    }
+  ],
+  "poolSwaps": [
+    {
+      "amount0": "0.1249",
+      "amount1": "0.12550281183563466",
+      "pool": "0xb59df770b2c00eec2635c7b3978e0fef07a9aa98",
+      "sender": "0x3615bee1ad0cb537d0869442f3641dff95e5e3c2",
+      "time": "2025-09-03 15:16:20.000 UTC",
+      "token0": "bvUSD",
+      "token1": "USDC",
+      "txHash": "0x8530a6b46f6c8c73551ae0a8bd06161a5bb8a48e591e021f37f406f729674577",
+      "type": "sell"
+    }
+  ],
+  "vaultsApy": [
+    {
+      "day": "2025-09-08 09:00:00.000 UTC",
+      "apy": "0",
+      "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
+    }
+  ],
+  "totalAllocations": "30.1738651371204",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "29.21606463692736",
+      "usdValue": "29.1740650971284",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "0.9999000099990001",
+      "usdValue": "0.9998000399920016",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     }
   ],
@@ -4893,8 +4921,8 @@
     {
       "protocol": "morpho",
       "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "579100.678697277",
-      "loanValue": "275026.6995773884"
+      "collateralValue": "579186.295332717",
+      "loanValue": "275027.0631894638"
     }
   ]
 }
