@@ -235,6 +235,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               amount: parsedValue,
               inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
               outputToken: outputSymbol as "bvUSD" | "sbvUSD",
+              slippage: 50,
             });
           }}
         />

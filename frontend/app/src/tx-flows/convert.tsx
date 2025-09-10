@@ -8,11 +8,9 @@ import { createRequestSchema, verifyTransaction } from "./shared";
 import { readContract, sendTransaction } from "wagmi/actions";
 import { erc20Abi, maxUint256 } from "viem";
 import { fmtnum } from "@/src/formatting";
-import { CONTRACT_CONVERTER } from "@/src/env";
 import { getProtocolContract } from "../contracts";
 import { getEnsoRoute } from "../enso-utils";
-
-const ENSO_ROUTER = "0x3067BDBa0e6628497d527bEF511c22DA8b32cA3F"
+import { ENSO_ROUTER } from "../env";
 
 const RequestSchema = createRequestSchema(
   "convert",
@@ -73,7 +71,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           abi: erc20Abi,
           functionName: "approve",
           args: [
-            ctx.request.mode === "buy" ? CONTRACT_CONVERTER : ENSO_ROUTER,
+            ENSO_ROUTER,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -91,14 +89,30 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const Converter = getProtocolContract("Converter");
-
-        return ctx.writeContract({
-          address: Converter.address,
-          abi: Converter.abi,
-          functionName: "deposit",
-          args: [getProtocolContract(ctx.request.inputToken).address, ctx.request.amount[0]],
+        const ensoData = await getEnsoRoute({
+          inputValue: ctx.request.amount[0].toString(),
+          inputSymbol: ctx.request.inputToken,
+          outputSymbol: ctx.request.outputToken,
+          account: ctx.account,
+          slippage: ctx.request.slippage
         });
+
+        return sendTransaction(ctx.wagmiConfig, {
+          account: ctx.account,
+          to: ensoData.tx.to,
+          data: ensoData.tx.data,
+          value: ensoData.tx.value,
+        });
+
+        // Only using Enso for now
+        // const Converter = getProtocolContract("Converter");
+
+        // return ctx.writeContract({
+        //   address: Converter.address,
+        //   abi: Converter.abi,
+        //   functionName: "deposit",
+        //   args: [getProtocolContract(ctx.request.inputToken).address, ctx.request.amount[0]],
+        // });
       },
 
       async verify(ctx, hash) {
@@ -112,7 +126,13 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const ensoData = await getEnsoRoute({ inputValue: ctx.request.amount[0].toString(), inputSymbol: ctx.request.inputToken, outputSymbol: ctx.request.outputToken, account: ctx.account, slippage: ctx.request.slippage });
+        const ensoData = await getEnsoRoute({
+          inputValue: ctx.request.amount[0].toString(),
+          inputSymbol: ctx.request.inputToken,
+          outputSymbol: ctx.request.outputToken,
+          account: ctx.account,
+          slippage: ctx.request.slippage
+        });
 
         return sendTransaction(ctx.wagmiConfig, {
           account: ctx.account,
@@ -135,7 +155,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       address: getProtocolContract(ctx.request.inputToken).address,
       abi: erc20Abi,
       functionName: "allowance",
-      args: [ctx.account, ctx.request.mode === "buy" ? CONTRACT_CONVERTER : ENSO_ROUTER],
+      args: [ctx.account, ENSO_ROUTER],
     });
 
     const steps: string[] = [];

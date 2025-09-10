@@ -1,24 +1,18 @@
-import type { FlowDeclaration, FlowParams } from "@/src/services/TransactionFlow";
+import type { FlowDeclaration } from "@/src/services/TransactionFlow";
 
-import { Amount } from "@/src/comps/Amount/Amount";
-import { DNUM_0 } from "@/src/dnum-utils";
-import { getBranch, getCollToken } from "@/src/liquity-utils";
 import { TransactionDetailsRow } from "@/src/screens/TransactionsScreen/TransactionsScreen";
 import { TransactionStatus } from "@/src/screens/TransactionsScreen/TransactionStatus";
-import { usePrice } from "@/src/services/Prices";
-import { vAddress, vBranchId, vDnum, vPositionEarn } from "@/src/valibot-utils";
-import * as dn from "dnum";
+import { vDnum } from "@/src/valibot-utils";
 import * as v from "valibot";
 import { createRequestSchema, verifyTransaction } from "./shared";
-import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
-import { Address, erc20Abi, erc4626Abi, getAddress, maxUint256, zeroAddress } from "viem";
-import { readContract, sendTransaction, writeContract } from "wagmi/actions";
-import { CONTRACT_ROUTER, CONTRACT_STABLE_VAULT_ZAPPER, CONTRACT_VAULT, ENSO_API_KEY } from "@/src/env";
+import { erc20Abi, erc4626Abi, maxUint256 } from "viem";
+import { readContract, sendTransaction } from "wagmi/actions";
+import { CONTRACT_STABLE_VAULT_ZAPPER, CONTRACT_VAULT, ENSO_ROUTER } from "@/src/env";
 import { fmtnum } from "../formatting";
 import { getProtocolContract } from "../contracts";
 import { STABLE_SYMBOLS } from "../screens/BuyScreen/PanelConvert";
-import { StableToVaultZapper } from "../abi/StableToVaultZapper";
 import { Vault } from "../abi/Vault";
+import { getEnsoRoute } from "../enso-utils";
 
 const RequestSchema = createRequestSchema(
   "vaultUpdate",
@@ -27,6 +21,7 @@ const RequestSchema = createRequestSchema(
     inputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD"), v.literal("sbvUSD")]),
     outputToken: v.union([v.literal("bvUSD"), v.literal("sbvUSD")]),
     mode: v.union([v.literal("remove"), v.literal("add"), v.literal("claim")]),
+    slippage: v.number(),
   },
 );
 
@@ -91,7 +86,6 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         />
       ),
       async commit(ctx) {
-        console.log(ctx.request.amount)
         return ctx.writeContract({
           address: getProtocolContract(ctx.request.inputToken).address,
           abi: erc20Abi,
@@ -130,12 +124,26 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       name: () => "Zap Deposit",
       Status: TransactionStatus,
       async commit(ctx) {
-        return ctx.writeContract({
-          address: CONTRACT_STABLE_VAULT_ZAPPER,
-          abi: StableToVaultZapper,
-          functionName: "deposit",
-          args: [getProtocolContract(ctx.request.inputToken).address, ctx.request.amount[0]],
+        const ensoData = await getEnsoRoute({
+          inputValue: ctx.request.amount[0].toString(),
+          inputSymbol: ctx.request.inputToken,
+          outputSymbol: ctx.request.outputToken,
+          account: ctx.account,
+          slippage: ctx.request.slippage
         });
+
+        return sendTransaction(ctx.wagmiConfig, {
+          account: ctx.account,
+          to: ensoData.tx.to,
+          data: ensoData.tx.data,
+          value: ensoData.tx.value,
+        });
+        // return ctx.writeContract({
+        //   address: CONTRACT_STABLE_VAULT_ZAPPER,
+        //   abi: StableToVaultZapper,
+        //   functionName: "deposit",
+        //   args: [getProtocolContract(ctx.request.inputToken).address, ctx.request.amount[0]],
+        // });
       },
       async verify(ctx, hash) {
         await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
@@ -180,6 +188,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
 
     switch (mode) {
       case "add":
+        // @ts-ignore
         const addAllowance = await readContract(ctx.wagmiConfig, {
           address: getProtocolContract(inputToken).address,
           abi: erc20Abi,
@@ -187,7 +196,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
           args: [
             ctx.account,
             // @ts-ignore
-            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? CONTRACT_STABLE_VAULT_ZAPPER : CONTRACT_VAULT
+            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? ENSO_ROUTER : CONTRACT_VAULT
           ],
         });
         if (addAllowance < amount[0]) {
@@ -202,6 +211,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
         }
         return steps
       case "remove":
+        // @ts-ignore
         const removeAllowance = await readContract(ctx.wagmiConfig, {
           address: getProtocolContract(inputToken).address,
           abi: erc20Abi,

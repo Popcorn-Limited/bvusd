@@ -168,6 +168,7 @@ export const EnvSchema = v.pipe(
       }),
     ),
     ENSO_API_KEY: v.string(),
+    ENSO_ROUTER: vAddress(),
     FORMSPREE: v.string(),
     DEFILLAMA_API_KEY: v.string(),
     CONTRACTS_COMMIT_HASH: v.string(),
@@ -304,6 +305,7 @@ const parsedEnv = v.safeParse(EnvSchema, {
   COINGECKO_API_KEY: process.env.NEXT_PUBLIC_COINGECKO_API_KEY,
   DEFILLAMA_API_KEY: process.env.NEXT_PUBLIC_DEFILLAMA_API_KEY,
   ENSO_API_KEY: process.env.NEXT_PUBLIC_ENSO_API_KEY,
+  ENSO_ROUTER: process.env.NEXT_PUBLIC_ENSO_ROUTER,
   CONTRACTS_COMMIT_HASH: (
     // CONTRACTS_COMMIT_HASH_FROM_BUILD is set at build time (see next.config.js)
     // and gets overridden by NEXT_PUBLIC_CONTRACTS_COMMIT_HASH if set.
@@ -396,6 +398,7 @@ export const {
   COINGECKO_API_KEY,
   DEFILLAMA_API_KEY,
   ENSO_API_KEY,
+  ENSO_ROUTER,
   ENV_BRANCHES,
   FORMSPREE,
   CONTRACTS_COMMIT_HASH,
