@@ -84,6 +84,7 @@ export function StatsScreen() {
             if (!liquityStats) {
               <HFlex gap={8}>Invalid Data</HFlex>;
             }
+            console.log(liquityStats)
             return (
               <div style={{ width: "100%", minHeight: "calc(100vh - 80px)"}}>
                 <div
@@ -138,17 +139,15 @@ export function StatsScreen() {
                       totalBacking={{
                         totalCollaterals: liquityStats.data.totalCollValue,
                         totalReserves: liquityStats.data.totalReserves,
+                        totalAllocations: liquityStats.data.totalAllocations
                       }}
-                      avgCR={
-                        liquityStats.data.historicalGlobalCR[0].collateral_ratio
-                      }
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
                       sbvUSD={liquityStats.data.sbvUSD}
                     />
                     <AllocationPanel data={liquityStats.data.allocations}/>
                     <ChartsPanel
-                      data={liquityStats.data.historicalGlobalCR}
+                      // data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
                     />
                     {/* TODO add branch collaterals when present*/}

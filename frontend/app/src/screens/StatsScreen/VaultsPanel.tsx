@@ -28,30 +28,14 @@ const colors = ["#F6B73C", "#4BA4F0"];
 
 // values: Strategy Name - Vault Address - Chain -APY?
 export const vaultsData: VaultRow[] = [
-  // {
-  //   icon: tokenUsdc,
-  //   label: "USDC",
-  //   strategy: "USDC Vault",
-  //   address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
-  //   chain: "Ethereum",
-  //   chainIcon: eth,
-  // },
   {
     icon: tokenBvusd,
     label: "bvUSD",
     strategy: "bvUSD Vault",
-    address: "0x24e2ae2f4c59b8b7a03772142d439fdf13aaf15b",
+    address: "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
     chain: "Katana",
     chainIcon: katana,
   },
-  // {
-  //   icon: tokenBtcb,
-  //   label: "LBTC",
-  //   strategy: "LBTC Vault",
-  //   address: "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
-  //   chain: "Ethereum",
-  //   chainIcon: eth,
-  // },
 ];
 
 export function VaultsPanel() {
