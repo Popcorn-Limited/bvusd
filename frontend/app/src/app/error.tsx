@@ -59,7 +59,7 @@ export default function Error({
               mode="secondary"
               size="medium"
               shape="rectangular"
-              label="Go to dashboard"
+              label="Go to home page"
             />
           </Link>
           <Button

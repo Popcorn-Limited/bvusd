@@ -53,7 +53,7 @@ export default function NotFoundPage() {
             mode="primary"
             size="medium"
             shape="rectangular"
-            label="Go to dashboard"
+            label="Go to home page"
           />
         </Link>
       </div>
