@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import { STABLE_SYMBOLS } from "../BuyScreen/PanelConvert";
 import { css } from "@/styled-system/css";
 import ClaimAssets from "./ClaimAssets";
+import useEnsoForecast from "@/src/enso-utils";
+import EnsoPreview from "@/src/comps/EnsoPreview";
 
 
 export async function getNextWithdrawalDate(date?: number): Promise<{ days: number, hours: number, minutes: number, seconds: number, timeDiff: number }> {
@@ -72,6 +74,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     // @ts-ignore
     STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
   );
+  const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
@@ -170,7 +173,9 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
             value={value_}
             placeholder="0.00"
             secondary={{
-              start: null,
+              start: mode === "add"
+                ? <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />
+                : <EnsoPreview value={value_ || "0"} status={"success"} outputSymbol={outputSymbol} />,
               end: balances[inputSymbol].data && (
                 <TextButton
                   label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}

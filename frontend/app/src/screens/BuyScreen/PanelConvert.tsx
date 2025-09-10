@@ -7,9 +7,11 @@ import { parseInputFloatWithDecimals } from "@/src/form-utils";
 import { fmtnum } from "@/src/formatting";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
-import { Button, Dropdown,InputField, Tabs, TextButton, TokenIcon } from "@liquity2/uikit";
+import { Button, Dropdown, InputField, Tabs, TextButton, TokenIcon } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useState } from "react";
+import useEnsoForecast from "@/src/enso-utils";
+import EnsoPreview from "@/src/comps/EnsoPreview";
 
 type ConvertMode = "buy" | "sell";
 
@@ -25,7 +27,9 @@ export function PanelConvert() {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
 
+
   const parsedValue = parseInputFloatWithDecimals(value, inputSymbol === "bvUSD" ? 18 : 6);
+  const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
@@ -97,7 +101,7 @@ export function PanelConvert() {
                   onSelect={(index, { origin, event }) => {
                     setMode(index === 1 ? "sell" : "buy");
                     setValue("");
-                    if(index === 1) {
+                    if (index === 1) {
                       setInputSymbol("bvUSD");
                       setOutputSymbol("USDC");
                     }
@@ -121,7 +125,7 @@ export function PanelConvert() {
             value={value_}
             placeholder="0.00"
             secondary={{
-              start: null,
+              start: <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />,
               end: balances[inputSymbol].data && (
                 <TextButton
                   label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
@@ -167,6 +171,7 @@ export function PanelConvert() {
               amount: parsedValue,
               inputToken: inputSymbol as "USDC" | "USDT" | "bvUSD",
               outputToken: outputSymbol as "USDC" | "USDT" | "bvUSD",
+              slippage: 50,
             });
           }}
         />
