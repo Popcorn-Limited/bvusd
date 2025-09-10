@@ -6,7 +6,6 @@ import { useAbout } from "@/src/comps/About/About";
 import { Amount } from "@/src/comps/Amount/Amount";
 import { Logo } from "@/src/comps/Logo/Logo";
 import { ACCOUNT_SCREEN } from "@/src/env";
-import { useLiquityStats } from "@/src/liquity-utils";
 import { usePrice } from "@/src/services/Prices";
 import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
@@ -14,14 +13,20 @@ import { AnchorTextButton, HFlex, shortenAddress, TextButton, TokenIcon } from "
 import { blo } from "blo";
 import Image from "next/image";
 import Link from "next/link";
+import { useReadContract } from "wagmi";
+import { getProtocolContract } from "@/src/contracts";
+import { erc20Abi } from "viem";
+import { dnum18 } from "@/src/dnum-utils";
 
 const DISPLAYED_PRICES = ["bvUSD"] as const;
 
 export function BottomBar() {
   const account = useAccount();
-  const stats = useLiquityStats();
-
-  const tvl = 200_000_000 //stats.data?.totalValueLocked;
+  const totalSupply = useReadContract({
+    address: getProtocolContract("bvUSD").address,
+    abi: erc20Abi,
+    functionName: "totalSupply",
+  });
 
   return (
     <div
@@ -52,12 +57,12 @@ export function BottomBar() {
             <Logo size={16} />
             <span>TVL</span>{" "}
             <span>
-              {tvl && (
+              {totalSupply.data && (
                 <Amount
                   fallback="…"
                   format="compact"
                   prefix="$"
-                  value={tvl}
+                  value={dnum18(totalSupply.data ?? 0n)}
                 />
               )}
             </span>
