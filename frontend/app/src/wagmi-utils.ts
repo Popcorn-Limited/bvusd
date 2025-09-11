@@ -8,8 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useModal as useConnectKitModal } from "connectkit";
 import { match } from "ts-pattern";
 import { erc20Abi } from "viem";
-import { useAccount as useWagmiAccount, useEnsName, useReadContract } from "wagmi";
+import { useAccount as useWagmiAccount, useEnsName, useReadContract, useSwitchChain } from "wagmi";
 import { CONTRACT_BOLD_TOKEN, CONTRACT_TOKEN_LOCKER, CONTRACT_USDC, CONTRACT_USDT, CONTRACT_VAULT } from "./env";
+import { useEffect, useRef } from "react";
 
 export function useBalance(
   address: Address | undefined,
@@ -72,6 +73,31 @@ export function useBalance(
   // });
 
   return tokenBalance;
+}
+
+export function useEnforceChain(targetChainId: number) {
+  const account = useWagmiAccount();
+  const status = account.status;
+  const chainId = account.chainId;
+  const { switchChainAsync, isPending } = useSwitchChain();
+  const lastTried = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (status !== "connected") return;
+    if (!chainId) return;
+    if (chainId === targetChainId) return;
+
+    if (lastTried.current === chainId) return;
+    if (isPending) return;
+    
+    (async () => {
+      try {
+        await switchChainAsync({ chainId: targetChainId });
+      } catch (err) {
+        console.warn("Failed to switch chain:", err);
+      }
+    })();
+  }, [status, chainId, targetChainId, switchChainAsync, isPending]);
 }
 
 export function useAccount():
