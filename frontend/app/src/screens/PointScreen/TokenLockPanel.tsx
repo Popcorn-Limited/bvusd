@@ -56,13 +56,14 @@ export function TokenLockPanel() {
 
   const unlockDate = useUnlockDate(account.address);
 
+  const insufficientLockedBalance = parsedValue && lockedBalance.data && dn.lt(lockedBalance.data, parsedValue);
   const insufficientBalance = parsedValue && balance.data && dn.lt(balance.data, parsedValue);
 
   const allowSubmit = account.isConnected
     && parsedValue
     && dn.gt(parsedValue, 0)
     && !insufficientBalance
-    && (mode === "unlock" ? unlockDate.data?.timeDiff <= 0 : true)
+    && (mode === "unlock" ? (unlockDate.data?.timeDiff <= 0 && !insufficientLockedBalance) : true)
 
   return (
     <div
@@ -95,10 +96,14 @@ export function TokenLockPanel() {
       <Field
         field={
           <InputField
-            drawer={insufficientBalance
+            drawer={mode === "lock" && insufficientBalance
               ? {
                 mode: "error",
                 message: `Insufficient balance. You have ${fmtnum(balance.data ?? 0)} bvUSD.`,
+              }
+              : mode === "unlock" && insufficientLockedBalance ? {
+                mode: "error",
+                message: `Insufficient balance. You have ${fmtnum(lockedBalance.data ?? 0)} lbvUSD.`,
               }
               : null
             }
@@ -143,8 +148,8 @@ export function TokenLockPanel() {
               start: null,
               end: balance.data && (
                 <TextButton
-                  label={dn.gt(balance.data, 0) ? `Max ${fmtnum(balance.data)} bvUSD` : `Max 0.00 bvUSD`}
-                  onClick={() => setValue(dn.toString(balance.data))}
+                  label={mode === "lock" ? `Max ${fmtnum(balance.data)} bvUSD` : `Max ${fmtnum(lockedBalance.data)} lbvUSD`}
+                  onClick={() => setValue(dn.toString(mode === "lock" ? balance.data: lockedBalance.data))}
                 />
               )
             }}
