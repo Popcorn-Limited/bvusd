@@ -14,6 +14,7 @@ export function BalancesPanel() {
   const bvusdBalance = useBalance(account.address, "bvUSD");
   const sbvusdBalance = useBalance(account.address, "sbvUSD");
   const vcraftBalance = useBalance(account.address, "VCRAFT");
+  const lockedBvUSDBalance = useBalance(account.address, "LbvUSD");
 
   const bvusdPrice = usePrice("bvUSD");
   const sbvusdPrice = usePrice("sbvUSD");
@@ -61,8 +62,8 @@ export function BalancesPanel() {
             },
             {
               label: "Locked",
-              value: `$${sbvusdBalance.data && sbvusdPrice.data
-                ? fmtnum(dn.mul(sbvusdBalance.data, sbvusdPrice.data), "2z")
+              value: `$${lockedBvUSDBalance.data && bvusdPrice.data
+                ? fmtnum(dn.mul(lockedBvUSDBalance.data, bvusdPrice.data), "2z")
                 : "0.00"
                 }`
             },
