@@ -9,7 +9,7 @@ import { TopBar } from "./TopBar";
 import Link from "next/link";
 import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
 import { fmtnum } from "@/src/formatting";
-import { useAccount, useBalance } from "@/src/wagmi-utils";
+import { useAccount, useBalance, useEnforceChain } from "@/src/wagmi-utils";
 import { usePrice } from "@/src/services/Prices";
 import { TokenCard } from "@/src/screens/AccountScreen/TokenCard";
 
@@ -20,6 +20,8 @@ export function AppLayout({
 }: {
   children: ReactNode;
 }) {
+  useEnforceChain(747474);
+
   return (
     <div
       className={css({
