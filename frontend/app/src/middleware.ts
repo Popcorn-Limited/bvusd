@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server'
 
 const BLOCKED = new Set(['US'])
 
-export const config = { matcher: ['/(.*)'] }
-
+export const config = {
+  matcher: [
+    '/((?!block).*)',
+  ],
+}
 export default function geoBlock(req: NextRequest) {
   const country = req.geo?.country || req.headers.get('x-vercel-ip-country') || null;
 
