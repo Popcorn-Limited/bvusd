@@ -8,6 +8,7 @@ import { css } from "@/styled-system/css";
 import { bvUSD, IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@liquity2/uikit";
 import * as dn from "dnum";
 import Link from "next/link";
+import { DNUM_0 } from "@/src/dnum-utils";
 
 export function VaultPositionSummary({
   prevEarnPosition,
@@ -25,16 +26,16 @@ export function VaultPositionSummary({
   const collToken = bvUSD
   const vault = useVault()
 
-  const { totalDeposited: totalPoolDeposit } = vault.data;
+  const { totalDeposited } = vault.data;
 
   let share = dn.from(0, 18);
   let prevShare = dn.from(0, 18);
-  if (totalPoolDeposit && dn.gt(totalPoolDeposit, 0)) {
+  if (totalDeposited && dn.gt(totalDeposited, 0)) {
     if (earnPosition) {
-      share = dn.div(earnPosition.deposit, totalPoolDeposit);
+      share = dn.div(earnPosition.deposit, totalDeposited);
     }
     if (prevEarnPosition) {
-      prevShare = dn.div(prevEarnPosition.deposit, totalPoolDeposit);
+      prevShare = dn.div(prevEarnPosition.deposit, totalDeposited);
     }
   }
 
@@ -126,7 +127,7 @@ export function VaultPositionSummary({
                   fallback="-"
                   format="compact"
                   prefix="$"
-                  value={dn.mul(totalPoolDeposit, vault.data.price)}
+                  value={dn.mul(totalDeposited ?? DNUM_0, vault.data.price)}
                 />
               </div>
               <InfoTooltip heading="Total Value Locked (TVL)">
