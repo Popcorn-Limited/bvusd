@@ -634,7 +634,7 @@ function NoTransactionsScreen() {
           legacyBehavior
           passHref
         >
-          <AnchorTextButton label="Back to dashboard" />
+          <AnchorTextButton label="Back to home page" />
         </Link>
       </div>
     </div>
