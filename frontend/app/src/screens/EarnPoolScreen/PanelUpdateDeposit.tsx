@@ -276,7 +276,7 @@ export function PanelUpdateDeposit({
                 `/earn/${collateral.name.toLowerCase()}`,
                 "Back to editing",
               ],
-              successLink: ["/", "Go to the Dashboard"],
+              successLink: ["/", "Go to the home page"],
               successMessage: mode === "remove"
                 ? "The withdrawal has been processed successfully."
                 : "The deposit has been processed successfully.",

@@ -240,7 +240,7 @@ export function PanelInterestRate({
                   `/loan/rate?id=${loan.branchId}:${loan.troveId}`,
                   "Back to editing",
                 ],
-                successLink: ["/", "Go to the dashboard"],
+                successLink: ["/", "Go to the home page"],
                 successMessage: "The position interest rate has been updated successfully.",
 
                 prevLoan: { ...loan },

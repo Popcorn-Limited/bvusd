@@ -350,7 +350,7 @@ function ClaimCollateralSurplus({
                   `/loan?id=${loan.branchId}:${loan.troveId}`,
                   "Back to the loan",
                 ],
-                successLink: ["/", "Go to the dashboard"],
+                successLink: ["/", "Go to the home page"],
                 successMessage: "The loan position has been closed successfully.",
                 borrower: loan.borrower,
                 branchId: loan.branchId,

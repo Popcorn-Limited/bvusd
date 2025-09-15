@@ -259,7 +259,7 @@ export function RedeemScreen() {
                   txFlow.start({
                     flowId: "redeemCollateral",
                     backLink: ["/redeem", "Back"],
-                    successLink: ["/", "Go to the Dashboard"],
+                    successLink: ["/", "Go to the home page"],
                     successMessage: "The redemption was successful.",
 
                     time: Date.now(),

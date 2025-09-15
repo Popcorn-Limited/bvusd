@@ -470,7 +470,7 @@ export function PanelUpdateBorrowPosition({
               txFlow.start({
                 flowId: "updateBorrowPosition",
                 backLink: [`/loan?id=${loan.branchId}:${loan.troveId}`, "Back to editing"],
-                successLink: ["/", "Go to the dashboard"],
+                successLink: ["/", "Go to the home page"],
                 successMessage: "The position has been updated successfully.",
 
                 prevLoan: { ...loan },

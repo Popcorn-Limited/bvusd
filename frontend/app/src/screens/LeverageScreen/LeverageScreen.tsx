@@ -364,7 +364,7 @@ export function LeverageScreen() {
                   txFlow.start({
                     flowId: "openLeveragePosition",
                     backLink: ["/multiply", "Back to editing"],
-                    successLink: ["/", "Go to the Dashboard"],
+                    successLink: ["/", "Go to the home page"],
                     successMessage: "The leveraged position has been created successfully.",
 
                     ownerIndex: nextOwnerIndex.data,

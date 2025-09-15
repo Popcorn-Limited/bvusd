@@ -229,7 +229,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
                 `/vault`,
                 "Back to editing",
               ],
-              successLink: ["/", "Go to the Dashboard"],
+              successLink: ["/", "Go to the home page"],
               successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
               mode: mode,
               amount: parsedValue,

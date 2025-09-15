@@ -165,7 +165,7 @@ export function PanelConvert() {
                 `/buy`,
                 "Back to editing",
               ],
-              successLink: ["/", "Go to the Dashboard"],
+              successLink: ["/", "Go to the home page"],
               successMessage: "Your order has been processed successfully.",
               mode: mode,
               amount: parsedValue,

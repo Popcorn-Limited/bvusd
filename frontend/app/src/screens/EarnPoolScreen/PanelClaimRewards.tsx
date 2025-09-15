@@ -101,7 +101,7 @@ export function PanelClaimRewards({
               `/earn/${collateral.name.toLowerCase()}`,
               "Back to earn position",
             ],
-            successLink: ["/", "Go to the Dashboard"],
+            successLink: ["/", "Go to the home page"],
             successMessage: "The rewards have been claimed successfully.",
             earnPosition: position,
           });

@@ -36,7 +36,7 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
           setValue(res.value)
           setStatus(res.status)
         });
-    }, 100);
+    }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [inputValue, inputSymbol, outputSymbol, account, slippage]);

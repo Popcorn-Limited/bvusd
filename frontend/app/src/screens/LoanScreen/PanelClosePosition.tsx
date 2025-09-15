@@ -267,7 +267,7 @@ export function PanelClosePosition({
                   `/loan/close?id=${loan.branchId}:${loan.troveId}`,
                   "Back to editing",
                 ],
-                successLink: ["/", "Go to the dashboard"],
+                successLink: ["/", "Go to the home page"],
                 successMessage: "The loan position has been closed successfully.",
 
                 loan: { ...loan },

@@ -92,7 +92,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
           functionName: "approve",
           args: [
             // @ts-ignore
-            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? CONTRACT_STABLE_VAULT_ZAPPER : CONTRACT_VAULT,
+            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? ENSO_ROUTER : CONTRACT_VAULT,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount

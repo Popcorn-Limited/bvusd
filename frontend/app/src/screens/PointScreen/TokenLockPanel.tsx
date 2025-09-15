@@ -193,7 +193,7 @@ export function TokenLockPanel() {
                 `/point`,
                 "Back to Points",
               ],
-              successLink: ["/", "Go to the Dashboard"],
+              successLink: ["/", "Go to the home page"],
               successMessage: "Your lock has been processed successfully.",
               mode: mode,
               amount: parsedValue,

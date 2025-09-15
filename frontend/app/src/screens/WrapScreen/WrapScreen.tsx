@@ -150,7 +150,7 @@ export function WrapScreen() {
                       `/wrap`,
                       "Back to wrapping",
                     ],
-                    successLink: ["/", "Go to the Dashboard"],
+                    successLink: ["/", "Go to the home page"],
                     successMessage: "The position has been created successfully.",
                     amount: [sellAmount.parsed[0] / BigInt(10 ** 10), 8],
                     token: "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",

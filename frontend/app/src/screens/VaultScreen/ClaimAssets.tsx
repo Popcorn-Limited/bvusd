@@ -61,7 +61,7 @@ export default function ClaimAssets({ requestBalance }: { requestBalance: Reques
                 `/vault`,
                 "Back to editing",
               ],
-              successLink: ["/", "Go to the Dashboard"],
+              successLink: ["/", "Go to the home page"],
               successMessage: `Your claim has been processed successfully.`,
               mode: "claim",
               amount: requestBalance.claimableAssets,

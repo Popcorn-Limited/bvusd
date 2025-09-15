@@ -408,7 +408,7 @@ export function BorrowScreen() {
                                 `/borrow/${collSymbol.toLowerCase()}`,
                                 "Back to editing",
                               ],
-                              successLink: ["/", "Go to the Dashboard"],
+                              successLink: ["/", "Go to the home page"],
                               successMessage: "The position has been created successfully.",
 
                               branchId: branch.id,

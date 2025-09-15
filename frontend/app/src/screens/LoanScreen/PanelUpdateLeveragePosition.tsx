@@ -490,7 +490,7 @@ export function PanelUpdateLeveragePosition({
                   `/loan?id=${loan.branchId}:${loan.troveId}`,
                   "Back to editing",
                 ],
-                successLink: ["/", "Go to the dashboard"],
+                successLink: ["/", "Go to the home page"],
                 successMessage: "The position has been updated successfully.",
 
                 depositChange: (!depositChange.parsed || dn.eq(depositChange.parsed, 0))
