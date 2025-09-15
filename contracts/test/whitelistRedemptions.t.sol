@@ -21,9 +21,38 @@ contract WhitelistedRedemptions is Redemptions, WhitelistTestSetup {
         // whitelist users
         whitelistedUsers = [A, B, C, D, E];
         for (uint8 i = 0; i < 5; i++) {
-            _addToWhitelist(address(borrowerOperations), whitelistedUsers[i]);
-            _addToWhitelist(address(stabilityPool), whitelistedUsers[i]);
-            _addToWhitelist(address(troveManager), whitelistedUsers[i]);
+            _addToWhitelist(
+                address(borrowerOperations),
+                BorrowerOperations.openTrove.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(borrowerOperations),
+                BorrowerOperations
+                    .openTroveAndJoinInterestBatchManager
+                    .selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(borrowerOperations),
+                AddRemoveManagers.setRemoveManagerWithReceiver.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(stabilityPool),
+                IStabilityPool.provideToSP.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(troveManager),
+                TroveManager.urgentRedemption.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(troveManager),
+                TroveManager.redeemCollateral.selector,
+                whitelistedUsers[i]
+            );
         }
 
         // set a non whitelisted address
@@ -34,7 +63,11 @@ contract WhitelistedRedemptions is Redemptions, WhitelistTestSetup {
     // all branch troves are skipped and remain untouched
     // redeemer bold balance is not burned
     function test_NonWhitelistedRedemption() public {
-        (uint256 coll,, ABCDEF memory troveIDs) = _setupForRedemptionAscendingInterest();
+        (
+            uint256 coll,
+            ,
+            ABCDEF memory troveIDs
+        ) = _setupForRedemptionAscendingInterest();
 
         uint256 debt_A = troveManager.getTroveEntireDebt(troveIDs.A);
         uint256 coll_A = troveManager.getTroveEntireColl(troveIDs.A);

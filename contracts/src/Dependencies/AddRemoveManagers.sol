@@ -42,7 +42,11 @@ contract AddRemoveManagers is HasWhitelist, IAddRemoveManagers {
 
     event TroveNFTAddressChanged(address _newTroveNFTAddress);
     event AddManagerUpdated(uint256 indexed _troveId, address _newAddManager);
-    event RemoveManagerAndReceiverUpdated(uint256 indexed _troveId, address _newRemoveManager, address _newReceiver);
+    event RemoveManagerAndReceiverUpdated(
+        uint256 indexed _troveId,
+        address _newRemoveManager,
+        address _newReceiver
+    );
 
     constructor(IAddressesRegistry _addressesRegistry) {
         troveNFT = _addressesRegistry.troveNFT();
@@ -59,18 +63,30 @@ contract AddRemoveManagers is HasWhitelist, IAddRemoveManagers {
         emit AddManagerUpdated(_troveId, _manager);
     }
 
-    function setRemoveManagerWithReceiver(uint256 _troveId, address _manager, address _receiver) public {
+    function setRemoveManagerWithReceiver(
+        uint256 _troveId,
+        address _manager,
+        address _receiver
+    ) public {
         _requireCallerIsBorrower(_troveId);
-        
+
         IWhitelist _whitelist = whitelist;
         if (address(_whitelist) != address(0)) {
-            _requireWhitelisted(_whitelist, _receiver);
+            _requireWhitelisted(
+                _whitelist,
+                this.setRemoveManagerWithReceiver.selector,
+                _receiver
+            );
         }
 
         _setRemoveManagerAndReceiver(_troveId, _manager, _receiver);
     }
 
-    function _setRemoveManagerAndReceiver(uint256 _troveId, address _manager, address _receiver) internal {
+    function _setRemoveManagerAndReceiver(
+        uint256 _troveId,
+        address _manager,
+        address _receiver
+    ) internal {
         // _requireNonZeroManagerUnlessWiping(_manager, _receiver);
         if (_manager == address(0) && _receiver != address(0)) {
             revert EmptyManager();
@@ -99,18 +115,24 @@ contract AddRemoveManagers is HasWhitelist, IAddRemoveManagers {
         }
     }
 
-    function _requireSenderIsOwnerOrAddManager(uint256 _troveId, address _owner) internal view {
+    function _requireSenderIsOwnerOrAddManager(
+        uint256 _troveId,
+        address _owner
+    ) internal view {
         address addManager = addManagerOf[_troveId];
-        if (msg.sender != _owner && addManager != address(0) && msg.sender != addManager) {
+        if (
+            msg.sender != _owner &&
+            addManager != address(0) &&
+            msg.sender != addManager
+        ) {
             revert NotOwnerNorAddManager();
         }
     }
 
-    function _requireSenderIsOwnerOrRemoveManagerAndGetReceiver(uint256 _troveId, address _owner)
-        internal
-        view
-        returns (address)
-    {
+    function _requireSenderIsOwnerOrRemoveManagerAndGetReceiver(
+        uint256 _troveId,
+        address _owner
+    ) internal view returns (address) {
         address manager = removeManagerReceiverOf[_troveId].manager;
         address receiver = removeManagerReceiverOf[_troveId].receiver;
         if (msg.sender != _owner && msg.sender != manager) {

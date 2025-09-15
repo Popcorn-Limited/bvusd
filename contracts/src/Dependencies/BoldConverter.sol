@@ -7,8 +7,9 @@ import {ReentrancyGuard} from "openzeppelin-contracts/contracts/security/Reentra
 import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {IBoldToken} from "../Interfaces/IBoldToken.sol";
 import "./Owned.sol";
+import "./HasWhitelist.sol";
 
-contract BoldConverter is Owned, ReentrancyGuard {
+contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
     uint256 public constant MAX_FEE = 10000;
 
     IBoldToken public bvUSD;
@@ -33,6 +34,8 @@ contract BoldConverter is Owned, ReentrancyGuard {
         bvUSD = IBoldToken(bvUSD_);
     }
 
+    // --- View functions ---
+
     function isValidPath(
         IERC20Metadata underlying
     ) external view returns (bool) {
@@ -45,12 +48,19 @@ contract BoldConverter is Owned, ReentrancyGuard {
         path = _underlyingPaths[underlying];
     }
 
+    // --- Deposit functions ---
+
     // amount in underlying token decimals
     function deposit(
         IERC20Metadata underlying,
         uint256 amount,
         address to
-    ) public nonReentrant returns (uint256 boldAmount) {
+    )
+        public
+        nonReentrant
+        checkWhitelisted(bytes4(keccak256("deposit(address,uint256,address)")))
+        returns (uint256 boldAmount)
+    {
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -77,12 +87,18 @@ contract BoldConverter is Owned, ReentrancyGuard {
         return deposit(underlying, amount, msg.sender);
     }
 
+    // --- Withdraw functions ---
 
     function withdraw(
         IERC20Metadata underlying,
         uint256 amount,
         address to
-    ) public nonReentrant returns (uint256 underlyingOut) {
+    )
+        public
+        nonReentrant
+        checkWhitelisted(bytes4(keccak256("withdraw(address,uint256,address)")))
+        returns (uint256 underlyingOut)
+    {
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -114,6 +130,8 @@ contract BoldConverter is Owned, ReentrancyGuard {
     ) external returns (uint256 underlyingOut) {
         return withdraw(underlying, amount, msg.sender);
     }
+
+    // --- Path management functions ---
 
     function deletePaths(
         IERC20Metadata[] memory underlyings
@@ -157,5 +175,11 @@ contract BoldConverter is Owned, ReentrancyGuard {
 
             emit NewPath(underlying);
         }
+    }
+
+    // --- Whitelist management functions ---
+
+    function setWhitelist(IWhitelist _whitelist) external onlyOwner {
+        _setWhitelist(_whitelist);
     }
 }
