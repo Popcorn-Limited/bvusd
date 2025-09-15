@@ -9,8 +9,15 @@ import { PanelVaultUpdate } from "./PanelVaultUpdate";
 import { getProtocolContract } from "@/src/contracts";
 import { useReadContract } from "wagmi";
 import { RequestBalance } from "@/src/types";
-import { dnum18 } from "@/src/dnum-utils";
+import { dnum18, DNUM_0 } from "@/src/dnum-utils";
 import { zeroAddress } from "viem";
+
+const EMPTY_REQUEST_BALANCE: RequestBalance = {
+  pendingShares: DNUM_0,
+  requestTime: 0,
+  claimableShares: DNUM_0,
+  claimableAssets: DNUM_0,
+};
 
 export function VaultPanel() {
   const account = useAccount();
@@ -32,6 +39,7 @@ export function VaultPanel() {
     },
   });
   const loadingState = vault.isLoading || requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
+  console.log({ loadingState, vault: vault.isLoading, requestBalance: requestBalance.isLoading, vaultPosition: vaultPosition.status })
 
   const tabsTransition = useTransition(loadingState, {
     from: { opacity: 0 },
@@ -66,7 +74,7 @@ export function VaultPanel() {
           >
             <VaultPositionSummary
               earnPosition={vaultPosition.data}
-              requestBalance={requestBalance.data as RequestBalance}
+              requestBalance={requestBalance.data as RequestBalance ?? EMPTY_REQUEST_BALANCE}
             />
           </a.div>
         )
@@ -84,7 +92,7 @@ export function VaultPanel() {
               opacity: style.opacity,
             }}
           >
-            <PanelVaultUpdate requestBalance={requestBalance.data as RequestBalance} />
+            <PanelVaultUpdate requestBalance={requestBalance.data as RequestBalance ?? EMPTY_REQUEST_BALANCE} />
           </a.div>
         )
       ))}
