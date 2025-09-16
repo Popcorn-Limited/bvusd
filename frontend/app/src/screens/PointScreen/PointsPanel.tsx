@@ -68,7 +68,7 @@ export default function PointsPanel({ showHeader = true }: { showHeader?: boolea
             className={css({
               fontSize: 40,
             })}>
-            VCRAFT Bits Program
+            Bits Program
           </h2>
           <p
             className={css({
@@ -76,7 +76,7 @@ export default function PointsPanel({ showHeader = true }: { showHeader?: boolea
               color: "contentAlt",
             })}
           >
-            Earn Bits by contributing to BitVault’s ecosystem-whether minting bvUSD, staking for sbvUSD, or adding liquidity. The VCRAFT Bits Program rewards users for actions that strengthen protocol utility and growth, with evolving incentives across future seasons.
+            Earn Bits by contributing to BitVault’s ecosystem-whether minting bvUSD, staking for sbvUSD, or adding liquidity. The Bits Program rewards users for actions that strengthen protocol utility and growth, with evolving incentives across future seasons.
           </p>
         </div>
       }

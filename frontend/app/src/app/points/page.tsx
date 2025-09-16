@@ -9,13 +9,13 @@ export default function Page() {
   return (
     <Screen
       heading={{
-        title: "VCRAFT Bits Program",
-        subtitle: "Earn Bits by contributing to BitVault’s ecosystem-whether minting bvUSD, staking for sbvUSD, or adding liquidity. The VCRAFT Bits Program rewards users for actions that strengthen protocol utility and growth, with evolving incentives across future seasons.",
+        title: "Bits Program",
+        subtitle: "Earn Bits by contributing to BitVault’s ecosystem-whether minting bvUSD, staking for sbvUSD, or adding liquidity. The Bits Program rewards users for actions that strengthen protocol utility and growth, with evolving incentives across future seasons.",
       }} 
     >
       <ConnectWarningBox />
       <PointsPanel showHeader={false} />
-      <TokenLockPanel />
+      {/* <TokenLockPanel /> */}
     </Screen>
   );
 }
