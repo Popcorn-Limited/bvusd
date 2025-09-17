@@ -2,13 +2,13 @@ import type { PositionEarn, RequestBalance } from "@/src/types";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
+import { DNUM_0, dnumOrNull } from "@/src/dnum-utils";
 import { fmtnum } from "@/src/formatting";
-import { isEarnPositionActive, useVault } from "@/src/liquity-utils";
+import { isEarnPositionActive, useLiquityStats, useVault } from "@/src/liquity-utils";
 import { css } from "@/styled-system/css";
 import { bvUSD, IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@liquity2/uikit";
 import * as dn from "dnum";
 import Link from "next/link";
-import { DNUM_0 } from "@/src/dnum-utils";
 
 export function VaultPositionSummary({
   prevEarnPosition,
@@ -26,6 +26,7 @@ export function VaultPositionSummary({
   console.log({ requestBalance })
   const collToken = bvUSD
   const vault = useVault()
+  const stats = useLiquityStats();
 
   const { totalDeposited } = vault.data;
 
@@ -42,7 +43,7 @@ export function VaultPositionSummary({
 
   const active = txPreviewMode || isEarnPositionActive(earnPosition);
 
-  return collToken && earnPosition && vault.data && (
+  return collToken && earnPosition && vault.data && stats.data && (
     <div
       className={css({
         position: "relative",
@@ -128,7 +129,7 @@ export function VaultPositionSummary({
                   fallback="-"
                   format="compact"
                   prefix="$"
-                  value={dn.mul(totalDeposited ?? DNUM_0, vault.data.price)}
+                  value={dnumOrNull(stats.data.totalValueLocked, 4)}
                 />
               </div>
               <InfoTooltip heading="Total Value Locked (TVL)">
@@ -163,7 +164,7 @@ export function VaultPositionSummary({
                       fallback="-%"
                       format="1z"
                       percentage
-                      value={vault.data?.apr}
+                      value={dnumOrNull(Number(stats.data.sbvUSD[0].apy) / 100, 4)}
                     />
                   </div>
                   <InfoTooltip
@@ -196,7 +197,7 @@ export function VaultPositionSummary({
                     fallback="-%"
                     format="1z"
                     percentage
-                    value={vault.data?.apr7d}
+                    value={dnumOrNull(Number(stats.data.sbvUSD[0].apy) / 100, 4)}
                   />
                   <InfoTooltip
                     content={{
