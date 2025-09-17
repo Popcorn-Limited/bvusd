@@ -1,4 +1,4 @@
-import { STABLE_VAULT_TVL_QUERY } from "../../constants";
+import { SBVUSD_TVL_QUERY } from "../../constants";
 import { duneFetch, type DuneResponse, isDuneResponse } from "../../dune";
 import { Decimal } from "@liquity/lib-base";
 
@@ -27,7 +27,7 @@ export const fetchStableVaultTVLFromDune = async ({
   apiKey: string;
   network: "bnb" | "mainnet" | "katana";
 }) => {
-  const url = STABLE_VAULT_TVL_QUERY;
+  const url = SBVUSD_TVL_QUERY;
 
   if (!url) {
     return Decimal.ZERO;
@@ -38,7 +38,7 @@ export const fetchStableVaultTVLFromDune = async ({
   } = await duneFetch({
     apiKey,
     id: url,
-    maxResults: "1000",
+    maxResults: "10",
     validate: isDuneTVLResponse,
   });
 
