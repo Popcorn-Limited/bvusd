@@ -23,9 +23,38 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         // whitelist all users involved in base tests
         whitelistedUsers = [A, B, C, D, E];
         for (uint8 i = 0; i < 5; i++) {
-            _addToWhitelist(address(contractsArray[0].borrowerOperations), whitelistedUsers[i]);
-            _addToWhitelist(address(contractsArray[0].stabilityPool), whitelistedUsers[i]);
-            _addToWhitelist(address(contractsArray[0].troveManager), whitelistedUsers[i]);
+            _addToWhitelist(
+                address(contractsArray[0].borrowerOperations),
+                BorrowerOperations.openTrove.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(contractsArray[0].borrowerOperations),
+                BorrowerOperations
+                    .openTroveAndJoinInterestBatchManager
+                    .selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(contractsArray[0].borrowerOperations),
+                AddRemoveManagers.setRemoveManagerWithReceiver.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(contractsArray[0].stabilityPool),
+                IStabilityPool.provideToSP.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(contractsArray[0].troveManager),
+                TroveManager.urgentRedemption.selector,
+                whitelistedUsers[i]
+            );
+            _addToWhitelist(
+                address(contractsArray[0].troveManager),
+                TroveManager.redeemCollateral.selector,
+                whitelistedUsers[i]
+            );
         }
 
         // set a non whitelisted address
@@ -34,10 +63,23 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
 
     function deployNewCollateralBranch()
         public
-        returns (ITroveManager newTroveManager, IERC20Metadata newCollateralToken)
+        returns (
+            ITroveManager newTroveManager,
+            IERC20Metadata newCollateralToken
+        )
     {
-        TestDeployer.TroveManagerParams[] memory troveManagerParamsArray = new TestDeployer.TroveManagerParams[](1);
-        troveManagerParamsArray[0] = TestDeployer.TroveManagerParams(150e16, 110e16, 10e16, 110e16, 5e16, 10e16);
+        TestDeployer.TroveManagerParams[]
+            memory troveManagerParamsArray = new TestDeployer.TroveManagerParams[](
+                1
+            );
+        troveManagerParamsArray[0] = TestDeployer.TroveManagerParams(
+            150e16,
+            110e16,
+            10e16,
+            110e16,
+            5e16,
+            10e16
+        );
 
         TestDeployer.LiquityContractsDev memory _contractsArray;
 
@@ -48,8 +90,13 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
             1 days //         _tapPeriod
         );
 
-        (_contractsArray,) =
-            deployer.deployBranch(troveManagerParamsArray[0], collToken, WETH, boldToken, collateralRegistry);
+        (_contractsArray, ) = deployer.deployBranch(
+            troveManagerParamsArray[0],
+            collToken,
+            WETH,
+            boldToken,
+            collateralRegistry
+        );
 
         contractsArray.push(_contractsArray);
 
@@ -62,11 +109,17 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         for (uint256 i = 0; i < 6; i++) {
             // A to F
             giveAndApproveCollateral(
-                collToken, accountsList[i], initialCollateralAmount, address(contractsArray[4].borrowerOperations)
+                collToken,
+                accountsList[i],
+                initialCollateralAmount,
+                address(contractsArray[4].borrowerOperations)
             );
             // Approve WETH for gas compensation in all branches
             vm.startPrank(accountsList[i]);
-            WETH.approve(address(contractsArray[4].borrowerOperations), type(uint256).max);
+            WETH.approve(
+                address(contractsArray[4].borrowerOperations),
+                type(uint256).max
+            );
             vm.stopPrank();
         }
 
@@ -95,7 +148,10 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
     // add a branch after initialisation and then perform a multicollateral redemption
     function test_addNewBranch_multiCollateralRedemption() public {
         // deploy the branch
-        (ITroveManager troveManager, IERC20Metadata collateralToken) = deployNewCollateralBranch();
+        (
+            ITroveManager troveManager,
+            IERC20Metadata collateralToken
+        ) = deployNewCollateralBranch();
 
         IERC20Metadata[] memory _tokens = new IERC20Metadata[](1);
         _tokens[0] = collateralToken;
@@ -118,24 +174,62 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         uint256 redeemAmount = 1600e18;
 
         // First collateral unbacked Bold: 10k (SP empty) - but whitelisted
-        testValues1.troveId = openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 10e18, 10000e18, 5e16);
+        testValues1.troveId = openMulticollateralTroveNoHints100pctWithIndex(
+            0,
+            A,
+            0,
+            10e18,
+            10000e18,
+            5e16
+        );
 
         // Second collateral unbacked Bold: 5k
-        testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 100e18, 10000e18, 5e16);
+        testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(
+            1,
+            A,
+            0,
+            100e18,
+            10000e18,
+            5e16
+        );
         makeMulticollateralSPDepositAndClaim(1, A, 5000e18);
 
         // Third collateral unbacked Bold: 1k
-        testValues3.troveId = openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 10e18, 10000e18, 5e16);
+        testValues3.troveId = openMulticollateralTroveNoHints100pctWithIndex(
+            2,
+            A,
+            0,
+            10e18,
+            10000e18,
+            5e16
+        );
         makeMulticollateralSPDepositAndClaim(2, A, 9000e18);
 
         // Fourth collateral unbacked Bold: 0
-        testValues4.troveId = openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 10e18, 10000e18, 5e16);
+        testValues4.troveId = openMulticollateralTroveNoHints100pctWithIndex(
+            3,
+            A,
+            0,
+            10e18,
+            10000e18,
+            5e16
+        );
         makeMulticollateralSPDepositAndClaim(3, A, 10000e18);
 
         // Fifth collateral unbacked Bold: 1k
-        testValues5.troveId = openMulticollateralTroveNoHints100pctWithIndex(4, A, 0, 10e18, 10000e18, 5e16);
+        testValues5.troveId = openMulticollateralTroveNoHints100pctWithIndex(
+            4,
+            A,
+            0,
+            10e18,
+            10000e18,
+            5e16
+        );
         vm.prank(A);
-        boldToken.approve(address(contractsArray[4].stabilityPool), type(uint256).max);
+        boldToken.approve(
+            address(contractsArray[4].stabilityPool),
+            type(uint256).max
+        );
 
         makeMulticollateralSPDepositAndClaim(4, A, 9000e18);
 
@@ -143,11 +237,21 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         vm.warp(block.timestamp + 1 days);
 
         // initial balances
-        testValues1.collInitialBalance = contractsArray[0].collToken.balanceOf(nonWhitelistedUser);
-        testValues2.collInitialBalance = contractsArray[1].collToken.balanceOf(nonWhitelistedUser);
-        testValues3.collInitialBalance = contractsArray[2].collToken.balanceOf(nonWhitelistedUser);
-        testValues4.collInitialBalance = contractsArray[3].collToken.balanceOf(nonWhitelistedUser);
-        testValues5.collInitialBalance = contractsArray[4].collToken.balanceOf(nonWhitelistedUser);
+        testValues1.collInitialBalance = contractsArray[0].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues2.collInitialBalance = contractsArray[1].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues3.collInitialBalance = contractsArray[2].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues4.collInitialBalance = contractsArray[3].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues5.collInitialBalance = contractsArray[4].collToken.balanceOf(
+            nonWhitelistedUser
+        );
 
         testValues1.price = contractsArray[0].priceFeed.getPrice();
         testValues2.price = contractsArray[1].priceFeed.getPrice();
@@ -155,34 +259,77 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         testValues4.price = contractsArray[3].priceFeed.getPrice();
         testValues5.price = contractsArray[4].priceFeed.getPrice();
 
-        testValues1.unbackedPortion = contractsArray[0].troveManager.getTroveEntireDebt(testValues1.troveId);
-        testValues2.unbackedPortion = contractsArray[1].troveManager.getTroveEntireDebt(testValues2.troveId) - 5000e18;
-        testValues3.unbackedPortion = contractsArray[2].troveManager.getTroveEntireDebt(testValues3.troveId) - 9000e18;
-        testValues4.unbackedPortion = contractsArray[3].troveManager.getTroveEntireDebt(testValues4.troveId) - 10000e18;
-        testValues5.unbackedPortion = contractsArray[4].troveManager.getTroveEntireDebt(testValues4.troveId) - 9000e18;
+        testValues1.unbackedPortion = contractsArray[0]
+            .troveManager
+            .getTroveEntireDebt(testValues1.troveId);
+        testValues2.unbackedPortion =
+            contractsArray[1].troveManager.getTroveEntireDebt(
+                testValues2.troveId
+            ) -
+            5000e18;
+        testValues3.unbackedPortion =
+            contractsArray[2].troveManager.getTroveEntireDebt(
+                testValues3.troveId
+            ) -
+            9000e18;
+        testValues4.unbackedPortion =
+            contractsArray[3].troveManager.getTroveEntireDebt(
+                testValues4.troveId
+            ) -
+            10000e18;
+        testValues5.unbackedPortion =
+            contractsArray[4].troveManager.getTroveEntireDebt(
+                testValues4.troveId
+            ) -
+            9000e18;
 
         // branch 1 is not counted as it's skipped
-        uint256 totalUnbacked = testValues2.unbackedPortion + testValues3.unbackedPortion + testValues4.unbackedPortion
-            + testValues5.unbackedPortion;
+        uint256 totalUnbacked = testValues2.unbackedPortion +
+            testValues3.unbackedPortion +
+            testValues4.unbackedPortion +
+            testValues5.unbackedPortion;
 
         // testValues1.redeemAmount = redeemAmount * testValues1.unbackedPortion / totalUnbacked; // whitelisted branch
-        testValues2.redeemAmount = redeemAmount * testValues2.unbackedPortion / totalUnbacked;
-        testValues3.redeemAmount = redeemAmount * testValues3.unbackedPortion / totalUnbacked;
-        testValues4.redeemAmount = redeemAmount * testValues4.unbackedPortion / totalUnbacked;
-        testValues5.redeemAmount = redeemAmount * testValues5.unbackedPortion / totalUnbacked;
+        testValues2.redeemAmount =
+            (redeemAmount * testValues2.unbackedPortion) /
+            totalUnbacked;
+        testValues3.redeemAmount =
+            (redeemAmount * testValues3.unbackedPortion) /
+            totalUnbacked;
+        testValues4.redeemAmount =
+            (redeemAmount * testValues4.unbackedPortion) /
+            totalUnbacked;
+        testValues5.redeemAmount =
+            (redeemAmount * testValues5.unbackedPortion) /
+            totalUnbacked;
 
         // fees
-        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInBold(redeemAmount);
+        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInBold(
+            redeemAmount
+        );
         // testValues1.fee = fee * testValues1.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues1.price;
-        testValues2.fee = fee * testValues2.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues2.price;
-        testValues3.fee = fee * testValues3.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues3.price;
-        testValues4.fee = fee * testValues4.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues4.price;
-        testValues5.fee = fee * testValues5.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues5.price;
+        testValues2.fee =
+            (((fee * testValues2.redeemAmount) / redeemAmount) *
+                DECIMAL_PRECISION) /
+            testValues2.price;
+        testValues3.fee =
+            (((fee * testValues3.redeemAmount) / redeemAmount) *
+                DECIMAL_PRECISION) /
+            testValues3.price;
+        testValues4.fee =
+            (((fee * testValues4.redeemAmount) / redeemAmount) *
+                DECIMAL_PRECISION) /
+            testValues4.price;
+        testValues5.fee =
+            (((fee * testValues5.redeemAmount) / redeemAmount) *
+                DECIMAL_PRECISION) /
+            testValues5.price;
 
         // Check redemption rate
         assertApproxEqAbs(
             collateralRegistry.getRedemptionFeeWithDecay(redeemAmount),
-            redeemAmount * (INITIAL_BASE_RATE / 16 + REDEMPTION_FEE_FLOOR) / DECIMAL_PRECISION,
+            (redeemAmount * (INITIAL_BASE_RATE / 16 + REDEMPTION_FEE_FLOOR)) /
+                DECIMAL_PRECISION,
             1e7,
             "Wrong redemption fee with decay"
         );
@@ -190,7 +337,11 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         // Transfer bold from A to nonWhitelistedUser for redemption
         vm.prank(A);
         boldToken.transfer(nonWhitelistedUser, 16000e18);
-        assertEq(boldToken.balanceOf(nonWhitelistedUser), 16000e18, "Wrong Bold balance before redemption");
+        assertEq(
+            boldToken.balanceOf(nonWhitelistedUser),
+            16000e18,
+            "Wrong Bold balance before redemption"
+        );
 
         uint256 initialBoldSupply = boldToken.totalSupply();
 
@@ -200,45 +351,77 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         // Check redemption rate
         assertApproxEqAbs(
             collateralRegistry.getRedemptionRate(),
-            INITIAL_BASE_RATE / 16 + REDEMPTION_FEE_FLOOR + redeemAmount * DECIMAL_PRECISION / initialBoldSupply,
+            INITIAL_BASE_RATE /
+                16 +
+                REDEMPTION_FEE_FLOOR +
+                (redeemAmount * DECIMAL_PRECISION) /
+                initialBoldSupply,
             1e5,
             "Wrong redemption rate"
         );
 
         // Check bold balance
-        assertApproxEqAbs(boldToken.balanceOf(nonWhitelistedUser), 14400e18, 10, "Wrong Bold balance after redemption");
+        assertApproxEqAbs(
+            boldToken.balanceOf(nonWhitelistedUser),
+            14400e18,
+            10,
+            "Wrong Bold balance after redemption"
+        );
 
         // Check collateral balances
         // final balances
-        testValues1.collFinalBalance = contractsArray[0].collToken.balanceOf(nonWhitelistedUser);
-        testValues2.collFinalBalance = contractsArray[1].collToken.balanceOf(nonWhitelistedUser);
-        testValues3.collFinalBalance = contractsArray[2].collToken.balanceOf(nonWhitelistedUser);
-        testValues4.collFinalBalance = contractsArray[3].collToken.balanceOf(nonWhitelistedUser);
-        testValues5.collFinalBalance = contractsArray[4].collToken.balanceOf(nonWhitelistedUser);
+        testValues1.collFinalBalance = contractsArray[0].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues2.collFinalBalance = contractsArray[1].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues3.collFinalBalance = contractsArray[2].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues4.collFinalBalance = contractsArray[3].collToken.balanceOf(
+            nonWhitelistedUser
+        );
+        testValues5.collFinalBalance = contractsArray[4].collToken.balanceOf(
+            nonWhitelistedUser
+        );
 
         // first branch was not redeemed
-        assertApproxEqAbs(testValues1.collFinalBalance, testValues1.collInitialBalance, 1, "Wrong Collateral 1 balance");
+        assertApproxEqAbs(
+            testValues1.collFinalBalance,
+            testValues1.collInitialBalance,
+            1,
+            "Wrong Collateral 1 balance"
+        );
         assertApproxEqAbs(
             testValues2.collFinalBalance - testValues2.collInitialBalance,
-            testValues2.redeemAmount * DECIMAL_PRECISION / testValues2.price - testValues2.fee,
+            (testValues2.redeemAmount * DECIMAL_PRECISION) /
+                testValues2.price -
+                testValues2.fee,
             1e14,
             "Wrong Collateral 2 balance"
         );
         assertApproxEqAbs(
             testValues3.collFinalBalance - testValues3.collInitialBalance,
-            testValues3.redeemAmount * DECIMAL_PRECISION / testValues3.price - testValues3.fee,
+            (testValues3.redeemAmount * DECIMAL_PRECISION) /
+                testValues3.price -
+                testValues3.fee,
             1e13,
             "Wrong Collateral 3 balance"
         );
         assertApproxEqAbs(
             testValues4.collFinalBalance - testValues4.collInitialBalance,
-            testValues4.redeemAmount * DECIMAL_PRECISION / testValues4.price - testValues4.fee,
+            (testValues4.redeemAmount * DECIMAL_PRECISION) /
+                testValues4.price -
+                testValues4.fee,
             1e11,
             "Wrong Collateral 4 balance"
         );
         assertApproxEqAbs(
             testValues5.collFinalBalance - testValues5.collInitialBalance,
-            testValues5.redeemAmount * DECIMAL_PRECISION / testValues5.price - testValues5.fee,
+            (testValues5.redeemAmount * DECIMAL_PRECISION) /
+                testValues5.price -
+                testValues5.fee,
             1e11,
             "Wrong Collateral 5 balance"
         );
@@ -275,7 +458,7 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         ITroveManager[] memory validManager = new ITroveManager[](1);
         validManager[0] = troveManager;
 
-        // in constructor 
+        // in constructor
         vm.expectRevert(CollateralRegistry.ZeroAddress.selector);
         new CollateralRegistry(boldToken, zeroAddressColl, validManager, A);
 
@@ -284,7 +467,7 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
 
         // in addCollaterals
         vm.startPrank(boldToken.owner());
-        
+
         vm.expectRevert(CollateralRegistry.ZeroAddress.selector);
         collateralRegistry.addNewCollaterals(zeroAddressColl, validManager);
 
@@ -311,7 +494,10 @@ contract CollateralRegistryTest is MulticollateralTest, WhitelistTestSetup {
         assertEq(collateralRegistry.totalCollaterals(), 5);
 
         assertEq(address(collateralRegistry.getToken(4)), address(_tokens[0]));
-        assertEq(address(collateralRegistry.getTroveManager(4)), address(_troveManagers[0]));
+        assertEq(
+            address(collateralRegistry.getTroveManager(4)),
+            address(_troveManagers[0])
+        );
 
         // only owner can remove branch
         vm.expectRevert("Owned/not-owner");
