@@ -10,12 +10,19 @@ import {
   } from "react";
 import { CHAINS } from "../config/chains";
 import * as v from "valibot";
+import { vAddress } from "@/src/valibot-utils";
 
 // TODO all contracts schema
 export const ChainSchema = v.object({
-  CONTRACTS: v.object({
-    VAULT: v.string(),
+  CHAIN_CURRENCY: v.object({
+    name: v.string(),
+    symbol: v.string(),
+    decimals: v.number()
   }),
+  CHAIN_NAME: v.string(),
+  CHAIN_RPC_URL: v.string(),
+  CONTRACT_VAULT: vAddress(),
+  ENSO_ROUTER: vAddress()
 });
 
 export type ChainEnv = v.InferOutput<typeof ChainSchema>;

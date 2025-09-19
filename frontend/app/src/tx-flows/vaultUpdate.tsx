@@ -7,7 +7,9 @@ import * as v from "valibot";
 import { createRequestSchema, verifyTransaction } from "./shared";
 import { erc20Abi, erc4626Abi, maxUint256 } from "viem";
 import { readContract, sendTransaction } from "wagmi/actions";
-import { CONTRACT_STABLE_VAULT_ZAPPER, CONTRACT_VAULT, ENSO_ROUTER } from "@/src/env";
+import { CONTRACT_STABLE_VAULT_ZAPPER} from "@/src/env";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
+
 import { fmtnum } from "../formatting";
 import { getProtocolContract } from "../contracts";
 import { STABLE_SYMBOLS } from "../screens/BuyScreen/PanelConvert";
@@ -24,6 +26,8 @@ const RequestSchema = createRequestSchema(
     slippage: v.number(),
   },
 );
+
+const { config } = useChainConfig();
 
 export type VaultUpdateRequest = v.InferOutput<typeof RequestSchema>;
 
@@ -92,7 +96,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
           functionName: "approve",
           args: [
             // @ts-ignore
-            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? ENSO_ROUTER : CONTRACT_VAULT,
+            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? config.ENSO_ROUTER : config.CONTRACT_VAULT,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -109,7 +113,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       Status: TransactionStatus,
       async commit(ctx) {
         return ctx.writeContract({
-          address: CONTRACT_VAULT,
+          address: config.CONTRACT_VAULT,
           abi: erc4626Abi,
           functionName: "deposit",
           args: [ctx.request.amount[0], ctx.account],
@@ -155,7 +159,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       Status: TransactionStatus,
       async commit(ctx) {
         return ctx.writeContract({
-          address: CONTRACT_VAULT,
+          address: config.CONTRACT_VAULT,
           abi: Vault,
           functionName: "requestRedeem",
           args: [ctx.request.amount[0]],
@@ -170,7 +174,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       Status: TransactionStatus,
       async commit(ctx) {
         return ctx.writeContract({
-          address: CONTRACT_VAULT,
+          address: config.CONTRACT_VAULT,
           abi: Vault,
           functionName: "redeem",
           args: [ctx.request.amount[0]],
@@ -196,7 +200,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
           args: [
             ctx.account,
             // @ts-ignore
-            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? ENSO_ROUTER : CONTRACT_VAULT
+            STABLE_SYMBOLS.includes(ctx.request.inputToken) ? config.ENSO_ROUTER : config.CONTRACT_VAULT
           ],
         });
         if (addAllowance < amount[0]) {
@@ -216,7 +220,7 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
           address: getProtocolContract(inputToken).address,
           abi: erc20Abi,
           functionName: "allowance",
-          args: [ctx.account, CONTRACT_VAULT],
+          args: [ctx.account, config.CONTRACT_VAULT],
         });
         if (removeAllowance < amount[0]) {
           steps.push("approve");
