@@ -12,6 +12,7 @@ import * as dn from "dnum";
 import { useState } from "react";
 import useEnsoForecast from "@/src/enso-utils";
 import EnsoPreview from "@/src/comps/EnsoPreview";
+import { css } from "@/styled-system/css";
 
 type ConvertMode = "buy" | "sell";
 
@@ -58,82 +59,85 @@ export function PanelConvert() {
     >
       <Field
         field={
-          <InputField
-            drawer={insufficientBalance
-              ? {
-                mode: "error",
-                message: `Insufficient balance. You have ${fmtnum(balances[inputSymbol].data ?? 0)} ${inputSymbol}.`,
-              }
-              : null
-            }
-            contextual={
-              <Dropdown
-                items={
-                  STABLE_SYMBOLS.map(symbol => ({
-                    icon: <TokenIcon symbol={symbol} />,
-                    label: symbol,
-                    value: account.isConnected
-                      ? fmtnum(balances[symbol]?.data ?? 0)
-                      : "−",
-                  }))
+          <>
+            <InputField
+              drawer={insufficientBalance
+                ? {
+                  mode: "error",
+                  message: `Insufficient balance. You have ${fmtnum(balances[inputSymbol].data ?? 0)} ${inputSymbol}.`,
                 }
-                menuPlacement="end"
-                menuWidth={300}
-                onSelect={(index) => {
-                  mode === "buy" ? setInputSymbol(STABLE_SYMBOLS[index]) : setOutputSymbol(STABLE_SYMBOLS[index]);
-                }}
-                // @ts-ignore
-                selected={mode === "buy" ? STABLE_SYMBOLS.indexOf(inputSymbol) : STABLE_SYMBOLS.indexOf(outputSymbol)}
-              />
-            }
-            id="input-deposit-change"
-            label={{
-              start: mode === "sell"
-                ? content.buyScreen.sellPanel.label
-                : content.buyScreen.buyPanel.label,
-              end: (
-                <Tabs
-                  compact
-                  items={[
-                    { label: "Buy", panelId: "panel-buy", tabId: "tab-buy" },
-                    { label: "Sell", panelId: "panel-sell", tabId: "tab-sell" },
-                  ]}
-                  onSelect={(index, { origin, event }) => {
-                    setMode(index === 1 ? "sell" : "buy");
-                    setValue("");
-                    if (index === 1) {
-                      setInputSymbol("bvUSD");
-                      setOutputSymbol("USDC");
-                    }
-                    else {
-                      setInputSymbol("USDC");
-                      setOutputSymbol("bvUSD");
-                    }
-                    if (origin !== "keyboard") {
-                      event.preventDefault();
-                      (event.target as HTMLElement).focus();
-                    }
+                : null
+              }
+              contextual={
+                <Dropdown
+                  items={
+                    STABLE_SYMBOLS.map(symbol => ({
+                      icon: <TokenIcon symbol={symbol} />,
+                      label: symbol,
+                      value: account.isConnected
+                        ? fmtnum(balances[symbol]?.data ?? 0)
+                        : "−",
+                    }))
+                  }
+                  menuPlacement="end"
+                  menuWidth={300}
+                  onSelect={(index) => {
+                    mode === "buy" ? setInputSymbol(STABLE_SYMBOLS[index]) : setOutputSymbol(STABLE_SYMBOLS[index]);
                   }}
-                  selected={mode === "sell" ? 1 : 0}
+                  // @ts-ignore
+                  selected={mode === "buy" ? STABLE_SYMBOLS.indexOf(inputSymbol) : STABLE_SYMBOLS.indexOf(outputSymbol)}
                 />
-              )
-            }}
-            labelHeight={32}
-            onFocus={() => setFocused(true)}
-            onChange={setValue}
-            onBlur={() => setFocused(false)}
-            value={value_}
-            placeholder="0.00"
-            secondary={{
-              start: <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />,
-              end: balances[inputSymbol].data && (
-                <TextButton
-                  label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
-                  onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
-                />
-              )
-            }}
-          />
+              }
+              id="input-deposit-change"
+              label={{
+                start: mode === "sell"
+                  ? content.buyScreen.sellPanel.label
+                  : content.buyScreen.buyPanel.label,
+                end: (
+                  <Tabs
+                    compact
+                    items={[
+                      { label: "Buy", panelId: "panel-buy", tabId: "tab-buy" },
+                      { label: "Sell", panelId: "panel-sell", tabId: "tab-sell" },
+                    ]}
+                    onSelect={(index, { origin, event }) => {
+                      setMode(index === 1 ? "sell" : "buy");
+                      setValue("");
+                      if (index === 1) {
+                        setInputSymbol("bvUSD");
+                        setOutputSymbol("USDC");
+                      }
+                      else {
+                        setInputSymbol("USDC");
+                        setOutputSymbol("bvUSD");
+                      }
+                      if (origin !== "keyboard") {
+                        event.preventDefault();
+                        (event.target as HTMLElement).focus();
+                      }
+                    }}
+                    selected={mode === "sell" ? 1 : 0}
+                  />
+                )
+              }}
+              labelHeight={32}
+              onFocus={() => setFocused(true)}
+              onChange={setValue}
+              onBlur={() => setFocused(false)}
+              value={value_}
+              placeholder="0.00"
+              secondary={{
+                start: <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />,
+                end: balances[inputSymbol].data && (
+                  <TextButton
+                    label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
+                    onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
+                  />
+                )
+              }}
+            />
+            <p className={css({ color: "contentAlt2", fontSize: "14px" })}>Built with Enso</p>
+          </>
         }
       />
 

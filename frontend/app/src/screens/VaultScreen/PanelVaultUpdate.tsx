@@ -103,6 +103,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     >
       <Field
         field={
+          <>
           <InputField
             drawer={insufficientBalance
               ? {
@@ -184,8 +185,11 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               )
             }}
           />
+          <p className={css({color: "contentAlt2", fontSize: "14px"})}>Built with Enso</p>
+          </>
         }
       />
+      
 
       {mode === "remove" && requestBalance && dn.gt(requestBalance.claimableAssets, 0) &&
         <ClaimAssets requestBalance={requestBalance} />
