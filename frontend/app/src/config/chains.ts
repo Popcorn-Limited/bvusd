@@ -5,12 +5,18 @@ export type AppChainConfig = {
   CHAIN_NAME: string;
   CHAIN_CURRENCY: { name: string; symbol: string; decimals: number };
   CHAIN_RPC_URL: string;
-  CHAIN_BLOCK_EXPLORER?: string | null;
-  CHAIN_CONTRACT_ENS_REGISTRY?: `0x${string}` | null;
-  CHAIN_CONTRACT_ENS_RESOLVER?: `0x${string}` | null;
-  CHAIN_CONTRACT_MULTICALL?: `0x${string}` | null;
+  CHAIN_BLOCK_EXPLORER?: string;
+  CHAIN_CONTRACT_ENS_REGISTRY?: `0x${string}`;
+  CHAIN_CONTRACT_ENS_RESOLVER?: `0x${string}`;
+  CHAIN_CONTRACT_MULTICALL?: `0x${string}`;
   CONTRACT_VAULT: `0x${string}`;
-  ENSO_ROUTER: `0x${string}` | null;
+  ENSO_ROUTER?: `0x${string}`;
+  CONTRACT_BOLD_TOKEN: `0x${string}`;
+  STATS_URL?: string;
+  CONTRACT_CONVERTER?: `0x${string}`;
+  CONTRACT_USDC: `0x${string}`;
+  CONTRACT_USDT: `0x${string}`;
+  CONTRACT_WETH: `0x${string}`;
   // ...all env contracts
   // any other env field
 };
@@ -23,11 +29,15 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CHAIN_NAME: "Katana",
     CHAIN_RPC_URL: "https://rpc.katana.network",
     CHAIN_BLOCK_EXPLORER: "https://explorer.katanarpc.com/",
-    CHAIN_CONTRACT_ENS_REGISTRY: null,
-    CHAIN_CONTRACT_ENS_RESOLVER: null,
     CHAIN_CONTRACT_MULTICALL: "0xcA11bde05977b3631167028862bE2a173976CA11",
-    CONTRACT_VAULT: "0x24E2aE2f4c59b8b7a03772142d439fDF13AAF15b",
+    CONTRACT_VAULT: "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
     ENSO_ROUTER: "0x3067BDBa0e6628497d527bEF511c22DA8b32cA3F",
+    CONTRACT_BOLD_TOKEN: "0x876aac7648D79f87245E73316eB2D100e75F3Df1",
+    STATS_URL: "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
+    CONTRACT_CONVERTER: "0x03E5DC6aB97eDF11b75d46E3A29896B5344620Fe",
+    CONTRACT_USDC: "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
+    CONTRACT_USDT: "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
+    CONTRACT_WETH: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
   },
   1: {
     CHAIN_ID: 1,
@@ -35,10 +45,11 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CHAIN_CURRENCY: { name: "Ethereum", symbol: "ETH", decimals: 18 },
     CHAIN_RPC_URL: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     CHAIN_BLOCK_EXPLORER: "https://etherscan.io/",
-    CHAIN_CONTRACT_ENS_REGISTRY: null,
-    CHAIN_CONTRACT_ENS_RESOLVER: null,
     CHAIN_CONTRACT_MULTICALL: "0xcA11bde05977b3631167028862bE2a173976CA11",
-    CONTRACT_VAULT: "0x06C0c876419a76E89AD55D1225bB335939C25150",
-    ENSO_ROUTER: null
+    CONTRACT_VAULT: "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
+    CONTRACT_BOLD_TOKEN: "0x9bc2f611fa2196e097496b722f1cbcdfe2303855",
+    CONTRACT_USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    CONTRACT_USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    CONTRACT_WETH: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
   },
 };

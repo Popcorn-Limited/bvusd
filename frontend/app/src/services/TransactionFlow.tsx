@@ -35,7 +35,7 @@ import { updateBorrowPosition, type UpdateBorrowPositionRequest } from "@/src/tx
 import { updateLeveragePosition, type UpdateLeveragePositionRequest } from "@/src/tx-flows/updateLeveragePosition";
 import { updateLoanInterestRate, type UpdateLoanInterestRateRequest } from "@/src/tx-flows/updateLoanInterestRate";
 import { wrapToken, type WrapTokenRequest } from "@/src/tx-flows/wrapToken";
-import { vaultUpdate, type VaultUpdateRequest } from "@/src/tx-flows/vaultUpdate";
+import { vaultUpdate as vaultUpdateF, type VaultUpdateRequest } from "@/src/tx-flows/vaultUpdate";
 import { convert, type ConvertRequest } from "@/src/tx-flows/convert";
 import { addToWhitelist, type AddToWhitelistRequest, removeFromWhitelist, type RemoveFromWhitelistRequest } from "@/src/tx-flows/whitelistAdmin";
 import { lockToken, type LockTokenRequest } from "@/src/tx-flows/lock";
@@ -78,6 +78,8 @@ const FlowIdSchema = v.union([
   v.literal("lockToken")
 ]);
 
+// const vaultUpdate = vaultUpdateF();
+
 export const flows: FlowsMap = {
   claimCollateralSurplus,
   closeLoanPosition,
@@ -90,7 +92,7 @@ export const flows: FlowsMap = {
   updateLeveragePosition,
   updateLoanInterestRate,
   wrapToken,
-  vaultUpdate,
+  vaultUpdate: vaultUpdateF(),
   convert,
   addToWhitelist,
   removeFromWhitelist,
@@ -381,7 +383,7 @@ function useSteps(
 
       return flowDeclaration.getSteps({
         account: account.address,
-        contracts: CONTRACTS,
+        contracts: CONTRACTS(),
         isSafe: account.safeStatus !== null,
         preferredApproveMethod: storedState.preferredApproveMethod,
         readContract: getReadContract(wagmiConfig),
@@ -434,7 +436,7 @@ function useFlowManager(account: Address | null, isSafe: boolean = false) {
       const params: FlowParams<FlowRequestMap[keyof FlowRequestMap]> = {
         readContract: getReadContract(wagmiConfig),
         account,
-        contracts: CONTRACTS,
+        contracts: CONTRACTS(),
         isSafe,
         preferredApproveMethod: storedState.preferredApproveMethod,
         request: flow.request,

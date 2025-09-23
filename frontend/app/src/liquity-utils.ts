@@ -39,10 +39,8 @@ import {
 } from "@/src/dnum-utils";
 import {
   CHAIN_BLOCK_EXPLORER,
-  CONTRACT_VAULT,
   DIFFS_STATS_URL,
   ENV_BRANCHES,
-  LIQUITY_STATS_URL,
 } from "@/src/env";
 import { useContinuousBoldGains } from "@/src/liquity-stability-pool";
 import {
@@ -76,6 +74,7 @@ import {
   useReadContract,
   useReadContracts,
 } from "wagmi";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 import { readContract, readContracts } from "wagmi/actions";
 import { graphQuery, InterestBatchesQuery } from "./subgraph-queries";
 import { WhitelistAbi } from "./abi/Whitelist";
@@ -196,17 +195,18 @@ export function useEarnPool(branchId: null | BranchId) {
 
 export function useVault() {
   const collateral = USDT;
+  const { config } = useChainConfig();
 
   const vaultReads = useReadContracts({
     // @ts-ignore
     contracts: [
       {
-        address: CONTRACT_VAULT,
+        address: config.CONTRACT_VAULT,
         abi: erc4626Abi,
         functionName: "totalAssets",
       },
       {
-        address: CONTRACT_VAULT,
+        address: config.CONTRACT_VAULT,
         abi: erc4626Abi,
         functionName: "totalSupply",
       },
@@ -361,8 +361,10 @@ export function useEarnPosition(
 export function useVaultPosition(
   account: null | Address
 ): UseQueryResult<PositionEarn | null> {
+  const { config } = useChainConfig();
+  console.log("Lol", config.CONTRACT_VAULT);
   const balance = useReadContract({
-    address: CONTRACT_VAULT,
+    address: config.CONTRACT_VAULT,
     abi: erc4626Abi,
     functionName: "balanceOf",
     args: [account ?? zeroAddress],
@@ -393,11 +395,13 @@ export function useTroveNftUrl(
   branchId: null | BranchId,
   troveId: null | TroveId
 ) {
+  const { config } = useChainConfig();
+
   const TroveNft = getBranchContract(branchId, "TroveNFT");
   return (
     TroveNft &&
     troveId &&
-    `${CHAIN_BLOCK_EXPLORER?.url}nft/${TroveNft.address}/${BigInt(troveId)}`
+    `${config.CHAIN_BLOCK_EXPLORER}nft/${TroveNft.address}/${BigInt(troveId)}`
   );
 }
 
@@ -968,18 +972,21 @@ export function useDiffs() {
   });
 }
 
+
 export function useLiquityStats() {
+  const { config } = useChainConfig();
+
   return useQuery({
     queryKey: ["liquity-stats"],
     queryFn: async () => {
-      if (!LIQUITY_STATS_URL) {
-        throw new Error("LIQUITY_STATS_URL is not defined");
+      if (!config.STATS_URL) {
+        throw new Error("config.STATS_URL is not defined");
       }
-      const response = await fetch(LIQUITY_STATS_URL);
+      const response = await fetch(config.STATS_URL);
       const json = await response.json();
       return v.parse(StatsSchema, json);
     },
-    enabled: Boolean(LIQUITY_STATS_URL),
+    enabled: Boolean(config.STATS_URL),
   });
 }
 

@@ -24,6 +24,7 @@ export function VaultPanel() {
 
   const vaultPosition = useVaultPosition(account.address ?? null);
   const vault = useVault();
+  // console.log(vault.)
   const requestBalance = useReadContract({
     address: getProtocolContract("Vault").address,
     abi: getProtocolContract("Vault").abi,

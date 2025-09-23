@@ -14,6 +14,7 @@ import { vAddress } from "@/src/valibot-utils";
 
 // TODO all contracts schema
 export const ChainSchema = v.object({
+  CHAIN_ID: v.number(),
   CHAIN_CURRENCY: v.object({
     name: v.string(),
     symbol: v.string(),
@@ -21,8 +22,18 @@ export const ChainSchema = v.object({
   }),
   CHAIN_NAME: v.string(),
   CHAIN_RPC_URL: v.string(),
+  CHAIN_BLOCK_EXPLORER: v.string(),
+  CHAIN_CONTRACT_ENS_REGISTRY: v.optional(v.string()),
+  CHAIN_CONTRACT_ENS_RESOLVER: v.optional(v.string()),
+  CHAIN_CONTRACT_MULTICALL: v.optional(vAddress()),
   CONTRACT_VAULT: vAddress(),
-  ENSO_ROUTER: vAddress()
+  ENSO_ROUTER: v.optional(vAddress()),
+  CONTRACT_BOLD_TOKEN: vAddress(),
+  STATS_URL: v.optional(v.string()),
+  CONTRACT_CONVERTER: v.optional(vAddress()),
+  CONTRACT_USDC: vAddress(),
+  CONTRACT_USDT: vAddress(),
+  CONTRACT_WETH: vAddress()
 });
 
 export type ChainEnv = v.InferOutput<typeof ChainSchema>;
