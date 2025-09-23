@@ -136,7 +136,11 @@ export function PanelConvert() {
                 )
               }}
             />
-            <p className={css({ color: "contentAlt2", fontSize: "14px" })}>Built with Enso</p>
+            <span className={css({ display: "flex", alignItems: "center", gap: 4, color: "contentAlt2", fontSize: "14px" })}>
+              <p>Built with </p>
+              <img src="/icons/enso-gray.svg" alt="Enso" width={14} height={14} className={css({ color: "contentAlt2" })} />
+              <p>Enso</p>
+            </span>
           </>
         }
       />
