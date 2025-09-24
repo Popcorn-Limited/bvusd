@@ -175,7 +175,7 @@ contract CollateralRegistry is Owned, ICollateralRegistry {
                 bool redeemable
             ) = troveManager.getUnbackedPortionPriceAndRedeemability();
             prices[index] = price;
-            if (redeemable && troveManager.isWhitelisted(msg.sender)) {
+            if (redeemable && troveManager.isWhitelisted(msg.sender, ITroveManager.redeemCollateral.selector)) {
                 totals.unbacked += unbackedPortion;
                 unbackedPortions[index] = unbackedPortion;
             }
@@ -189,7 +189,7 @@ contract CollateralRegistry is Owned, ICollateralRegistry {
                 ITroveManager troveManager = getTroveManager(index);
                 (, , bool redeemable) = troveManager
                     .getUnbackedPortionPriceAndRedeemability();
-                if (redeemable && troveManager.isWhitelisted(msg.sender)) {
+                if (redeemable && troveManager.isWhitelisted(msg.sender, ITroveManager.redeemCollateral.selector)) {
                     uint256 unbackedPortion = troveManager
                         .getEntireBranchDebt();
                     totals.unbacked += unbackedPortion;

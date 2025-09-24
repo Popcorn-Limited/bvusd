@@ -7,17 +7,22 @@ import {ReentrancyGuard} from "openzeppelin-contracts/contracts/security/Reentra
 import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {IBoldToken} from "../Interfaces/IBoldToken.sol";
 import "./Owned.sol";
+import "./HasWhitelist.sol";
 
-contract BoldConverter is Owned, ReentrancyGuard {
+struct Path {
+    address underlyingReceiver;
+    uint256 underlyingDecimals;
+    uint256 withdrawalFee;
+}
+
+contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
     uint256 public constant MAX_FEE = 10000;
+    bytes4 public constant DEPOSIT_SELECTOR =
+        bytes4(keccak256("deposit(address,uint256,address)"));
+    bytes4 public constant WITHDRAW_SELECTOR =
+        bytes4(keccak256("withdraw(address,uint256,address)"));
 
     IBoldToken public bvUSD;
-
-    struct Path {
-        address underlyingReceiver;
-        uint256 underlyingDecimals;
-        uint256 withdrawalFee;
-    }
 
     mapping(IERC20Metadata => Path) private _underlyingPaths;
 
@@ -33,6 +38,8 @@ contract BoldConverter is Owned, ReentrancyGuard {
         bvUSD = IBoldToken(bvUSD_);
     }
 
+    // --- View functions ---
+
     function isValidPath(
         IERC20Metadata underlying
     ) external view returns (bool) {
@@ -45,12 +52,19 @@ contract BoldConverter is Owned, ReentrancyGuard {
         path = _underlyingPaths[underlying];
     }
 
+    // --- Deposit functions ---
+
     // amount in underlying token decimals
     function deposit(
         IERC20Metadata underlying,
         uint256 amount,
         address to
-    ) public nonReentrant returns (uint256 boldAmount) {
+    )
+        public
+        nonReentrant
+        checkWhitelistedSenderAndOrigin(DEPOSIT_SELECTOR)
+        returns (uint256 boldAmount)
+    {
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -77,12 +91,18 @@ contract BoldConverter is Owned, ReentrancyGuard {
         return deposit(underlying, amount, msg.sender);
     }
 
+    // --- Withdraw functions ---
 
     function withdraw(
         IERC20Metadata underlying,
         uint256 amount,
         address to
-    ) public nonReentrant returns (uint256 underlyingOut) {
+    )
+        public
+        nonReentrant
+        checkWhitelistedSenderAndOrigin(WITHDRAW_SELECTOR)
+        returns (uint256 underlyingOut)
+    {
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -114,6 +134,8 @@ contract BoldConverter is Owned, ReentrancyGuard {
     ) external returns (uint256 underlyingOut) {
         return withdraw(underlying, amount, msg.sender);
     }
+
+    // --- Path management functions ---
 
     function deletePaths(
         IERC20Metadata[] memory underlyings
@@ -157,5 +179,33 @@ contract BoldConverter is Owned, ReentrancyGuard {
 
             emit NewPath(underlying);
         }
+    }
+
+    // --- Whitelist management functions ---
+
+    function setWhitelist(IWhitelist _whitelist) external onlyOwner {
+        _setWhitelist(_whitelist);
+    }
+
+    modifier checkWhitelistedSenderAndOrigin(bytes4 funcSig) {
+        IWhitelist _whitelist = whitelist;
+        if (address(_whitelist) != address(0)) {
+            bool isWhitelisted = _whitelist.isWhitelisted(
+                address(this),
+                funcSig,
+                msg.sender
+            );
+            if (!isWhitelisted && msg.sender != tx.origin) {
+                isWhitelisted = _whitelist.isWhitelisted(
+                    address(this),
+                    funcSig,
+                    tx.origin
+                );
+            }
+            if (!isWhitelisted) {
+                revert NotWhitelisted(msg.sender);
+            }
+        }
+        _;
     }
 }
