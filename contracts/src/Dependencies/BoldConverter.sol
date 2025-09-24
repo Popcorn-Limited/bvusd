@@ -9,6 +9,12 @@ import {IBoldToken} from "../Interfaces/IBoldToken.sol";
 import "./Owned.sol";
 import "./HasWhitelist.sol";
 
+struct Path {
+    address underlyingReceiver;
+    uint256 underlyingDecimals;
+    uint256 withdrawalFee;
+}
+
 contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
     uint256 public constant MAX_FEE = 10000;
     bytes4 public constant DEPOSIT_SELECTOR =
@@ -17,12 +23,6 @@ contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
         bytes4(keccak256("withdraw(address,uint256,address)"));
 
     IBoldToken public bvUSD;
-
-    struct Path {
-        address underlyingReceiver;
-        uint256 underlyingDecimals;
-        uint256 withdrawalFee;
-    }
 
     mapping(IERC20Metadata => Path) private _underlyingPaths;
 
