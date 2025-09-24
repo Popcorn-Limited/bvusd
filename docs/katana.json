@@ -1,6 +1,6 @@
 {
-  "time": "September 24, 2025 at 7:37 AM UTC",
-  "total_bold_supply": "50093.024774",
+  "time": "September 24, 2025 at 10:07 AM UTC",
+  "total_bold_supply": "50305.786445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
   "total_sp_deposits": "0",
@@ -4557,7 +4557,7 @@
     },
     {
       "tick": "-64",
-      "liquidity": "202380233043527",
+      "liquidity": "202380245112466",
       "price": "0.9936207543165446"
     },
     {
@@ -4662,7 +4662,7 @@
     },
     {
       "tick": "-6",
-      "liquidity": "17376676363543",
+      "liquidity": "17376676359791",
       "price": "0.9994002099440127"
     },
     {
@@ -4672,12 +4672,12 @@
     },
     {
       "tick": "-4",
-      "liquidity": "7580953784982949",
+      "liquidity": "7580196134151641",
       "price": "0.9996000999800035"
     },
     {
       "tick": "-3",
-      "liquidity": "20441350805690797",
+      "liquidity": "20441350805680795",
       "price": "0.9997000599900016"
     },
     {
@@ -4687,7 +4687,7 @@
     },
     {
       "tick": "-1",
-      "liquidity": "31830129055098071",
+      "liquidity": "31830129055088069",
       "price": "0.9999000099990001"
     },
     {
@@ -4717,7 +4717,7 @@
     },
     {
       "tick": "5",
-      "liquidity": "51890198503478",
+      "liquidity": "51890198499726",
       "price": "1.0005001000100004"
     },
     {
@@ -4737,7 +4737,7 @@
     },
     {
       "tick": "9",
-      "liquidity": "8990199237878",
+      "liquidity": "8232548406570",
       "price": "1.0009003600840125"
     },
     {
@@ -4962,16 +4962,16 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "50344.50201715053",
+  "totalAllocations": "50349.599967777685",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "50339.43466265008",
+      "usdValue": "50344.518469512244",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "5.067354500453955",
+      "usdValue": "5.0814982654437575",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     }
   ],
@@ -4979,8 +4979,8 @@
     {
       "protocol": "morpho",
       "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "573218.408144285",
-      "loanValue": "275593.86455952097"
+      "collateralValue": "574976.759794634",
+      "loanValue": "275599.55722370965"
     }
   ]
 }
