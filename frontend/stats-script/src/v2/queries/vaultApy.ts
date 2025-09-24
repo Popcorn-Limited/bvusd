@@ -7,6 +7,7 @@ type Entry = {
   quote: string;
   share_price: number;
   apy: number;
+  apy_7d: number;
 };
 
 type VaultApy = { day: string; apy: number; vault: string };
@@ -39,7 +40,9 @@ const isDuneValidResponse = (data: unknown): data is DuneResponse<Entry> =>
       "quote" in row &&
       typeof row.quote === "string" &&
       "apy" in row &&
-      typeof row.apy === "number"
+      typeof row.apy === "number" && 
+      "apy_7d" in row &&
+      typeof row.apy_7d === "number"
   );
 
 export const fetchVaultAPYFromDune = async ({
@@ -66,7 +69,7 @@ export const fetchVaultAPYFromDune = async ({
 
   return apys.map(apy => ({
     day: apy.day,
-    apy: apy.apy,
+    apy: apy.apy_7d,
     vault: apy.base,
   }));
 };
