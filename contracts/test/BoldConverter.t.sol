@@ -29,6 +29,7 @@ contract TestToken is ERC20 {
 contract StableCoinConverterTest is Test {
     struct TestParams {
         address from;
+        address origin;
         address to;
         uint256 amount;
         IERC20Metadata asset;
@@ -76,15 +77,12 @@ contract StableCoinConverterTest is Test {
     // --- Helper functions ---
 
     function _deposit(
-        address _from,
-        address _to,
-        uint256 _amount,
-        IERC20Metadata _asset
+        TestParams memory params
     ) internal returns (uint256 bvUSDOut) {
-        vm.startPrank(_from);
-        _asset.approve(address(converter), _amount);
+        vm.startPrank(params.from, params.origin);
+        params.asset.approve(address(converter), params.amount);
 
-        bvUSDOut = converter.deposit(_asset, _amount, _to);
+        bvUSDOut = converter.deposit(params.asset, params.amount, params.to);
         vm.stopPrank();
     }
 
@@ -103,7 +101,7 @@ contract StableCoinConverterTest is Test {
         uint256 bvUSDSupply0 = bvUSD.totalSupply();
 
         if (params.amount == 0) {
-            vm.startPrank(params.from);
+            vm.startPrank(params.from, params.origin);
             params.asset.approve(address(converter), params.amount);
 
             vm.expectRevert("out = 0");
@@ -111,12 +109,7 @@ contract StableCoinConverterTest is Test {
             vm.stopPrank();
         } else {
             // deposit
-            uint256 bvUSDOut = _deposit(
-                params.from,
-                params.to,
-                params.amount,
-                params.asset
-            );
+            uint256 bvUSDOut = _deposit(params);
             // No assets or bvUSD in converter
             assertEq(
                 params.asset.balanceOf(address(converter)),
@@ -162,12 +155,12 @@ contract StableCoinConverterTest is Test {
 
     function test_deposit(uint256 depositAmount) public {
         vm.assume(depositAmount < 1000000000000000000000);
-        _testDeposit(TestParams(userA, userA, depositAmount, asset));
+        _testDeposit(TestParams(userA, userA, userA, depositAmount, asset));
     }
 
     function test_depositTo(uint256 depositAmount) public {
         vm.assume(depositAmount < 1000000000000000000000);
-        _testDeposit(TestParams(userA, userB, depositAmount, asset));
+        _testDeposit(TestParams(userA, userA, userB, depositAmount, asset));
     }
 
     function test_deposit_invalidPath() public {
@@ -196,15 +189,20 @@ contract StableCoinConverterTest is Test {
         vm.prank(_assetReceiver);
         params.asset.approve(address(converter), params.amount);
 
-        vm.prank(params.from);
+        vm.prank(params.from, params.origin);
         if (
             (assetDecimals != 18 && params.amount < 1e12) || params.amount == 0
         ) {
             vm.expectRevert("out = 0");
             converter.withdraw(params.asset, params.amount, params.to);
         } else {
-            uint256 assetOut = converter.withdraw(params.asset, params.amount, params.to);
-            uint256 scaledWithdraw = params.amount / (10 ** (18 - assetDecimals));
+            uint256 assetOut = converter.withdraw(
+                params.asset,
+                params.amount,
+                params.to
+            );
+            uint256 scaledWithdraw = params.amount /
+                (10 ** (18 - assetDecimals));
             uint256 expectedFee = (scaledWithdraw * _fee) / 10000;
 
             assertEq(assetOut, scaledWithdraw - expectedFee, "Fee amount");
@@ -258,8 +256,11 @@ contract StableCoinConverterTest is Test {
         vm.assume(depositAmount >= withdrawAmount);
         vm.assume(depositAmount < 1000000000000000000000);
 
-        _testDeposit(TestParams(userA, userA, depositAmount, asset));
-        _testWithdraw(TestParams(userA, userA, withdrawAmount, asset), 100);
+        _testDeposit(TestParams(userA, userA, userA, depositAmount, asset));
+        _testWithdraw(
+            TestParams(userA, userA, userA, withdrawAmount, asset),
+            100
+        );
     }
 
     function test_withdrawTo(
@@ -269,15 +270,18 @@ contract StableCoinConverterTest is Test {
         vm.assume(depositAmount >= withdrawAmount);
         vm.assume(depositAmount < 1000000000000000000000);
 
-        _testDeposit(TestParams(userA, userA, depositAmount, asset));
-        _testWithdraw(TestParams(userA, userB, withdrawAmount, asset), 100);
+        _testDeposit(TestParams(userA, userA, userA, depositAmount, asset));
+        _testWithdraw(
+            TestParams(userA, userA, userB, withdrawAmount, asset),
+            100
+        );
     }
 
     function test_withdraw_noReceiverApproval() public {
         deal(address(asset), userA, 10e18);
 
         // deposit
-        _deposit(userA, userA, 10e18, asset);
+        _deposit(TestParams(userA, userA, userA, 10e18, asset));
 
         // underlying asset holder does not approve assets to be pulled
         vm.expectRevert("ERC20: insufficient allowance");
@@ -322,8 +326,11 @@ contract StableCoinConverterTest is Test {
 
         assertTrue(converter.isValidPath(newAsset));
 
-        _testDeposit(TestParams(userA, userA, depositAmount, newAsset));
-        _testWithdraw(TestParams(userA, userA, withdrawAmount, newAsset), 100);
+        _testDeposit(TestParams(userA, userA, userA, depositAmount, newAsset));
+        _testWithdraw(
+            TestParams(userA, userA, userA, withdrawAmount, newAsset),
+            100
+        );
     }
 
     // --- Path management tests ---
@@ -377,33 +384,6 @@ contract StableCoinConverterTest is Test {
         converter.deletePaths(assets);
     }
 
-    function test_failing() public {
-        uint256 depositAmount = 489877346851431045;
-        uint256 withdrawAmount = 3;
-
-        IERC20Metadata newAsset = IERC20Metadata(
-            new TestToken(18, "USDC2", "USDC2")
-        );
-
-        address receiver2 = makeAddr("receiverB");
-
-        assertFalse(converter.isValidPath(newAsset));
-
-        BoldConverter.Path[] memory paths = new BoldConverter.Path[](1);
-        paths[0] = BoldConverter.Path(receiver2, 0, 100);
-
-        IERC20Metadata[] memory assets = new IERC20Metadata[](1);
-        assets[0] = newAsset;
-
-        vm.prank(address(this));
-        converter.setPaths(assets, paths);
-
-        assertTrue(converter.isValidPath(newAsset));
-
-        _testDeposit(TestParams(userA, receiver2, depositAmount, newAsset));
-        _testWithdraw(TestParams(userA, receiver2, withdrawAmount, newAsset), 100);
-    }
-
     // --- Whitelist management tests ---
 
     function test_setWhitelist() public {
@@ -425,17 +405,20 @@ contract StableCoinConverterTest is Test {
         whitelist.addToWhitelist(address(converter), depositSelector, userA);
         vm.stopPrank();
 
-        _testDeposit(TestParams(userA, userA, 1e18, asset));
+        _testDeposit(TestParams(userA, userA, userA, 1e18, asset));
     }
 
-    function test_depositTo_whitelisted() public {
+    function test_deposit_whitelisted_origin() public {
         vm.startPrank(bvUSD.owner());
         whitelist.addWhitelistedFunc(address(converter), depositSelector);
-        whitelist.addToWhitelist(address(converter), depositSelector, userA);
         whitelist.addToWhitelist(address(converter), depositSelector, userB);
         vm.stopPrank();
 
-        _testDeposit(TestParams(userA, userB, 1e18, asset));
+        vm.startPrank(userB);
+        asset.approve(address(converter), 1e18);
+        vm.stopPrank();
+
+        _testDeposit(TestParams(userA, userB, userB, 1e18, asset));
     }
 
     function test_withdraw_whitelisted() public {
@@ -444,19 +427,18 @@ contract StableCoinConverterTest is Test {
         whitelist.addToWhitelist(address(converter), withdrawSelector, userA);
         vm.stopPrank();
 
-        _testDeposit(TestParams(userA, userA, 1e18, asset));
-        _testWithdraw(TestParams(userA, userA, 1e18, asset), 100);
+        _testDeposit(TestParams(userA, userA, userA, 1e18, asset));
+        _testWithdraw(TestParams(userA, userA, userA, 1e18, asset), 100);
     }
 
-    function test_withdrawTo_whitelisted() public {
+    function test_withdraw_whitelisted_origin() public {
         vm.startPrank(bvUSD.owner());
         whitelist.addWhitelistedFunc(address(converter), withdrawSelector);
-        whitelist.addToWhitelist(address(converter), withdrawSelector, userA);
         whitelist.addToWhitelist(address(converter), withdrawSelector, userB);
         vm.stopPrank();
 
-        _testDeposit(TestParams(userA, userA, 1e18, asset));
-        _testWithdraw(TestParams(userA, userB, 1e18, asset), 100);
+        _testDeposit(TestParams(userA, userA, userA, 1e18, asset));
+        _testWithdraw(TestParams(userA, userB, userB, 1e18, asset), 100);
     }
 
     function test_deposit_notWhitelisted() public {
@@ -471,19 +453,6 @@ contract StableCoinConverterTest is Test {
         converter.deposit(asset, 1e18);
     }
 
-    function test_depositTo_notWhitelisted() public {
-        vm.startPrank(bvUSD.owner());
-        whitelist.addWhitelistedFunc(address(converter), depositSelector);
-        whitelist.addToWhitelist(address(converter), depositSelector, userA);
-        vm.stopPrank();
-
-        vm.startPrank(userA);
-        vm.expectRevert(
-            abi.encodeWithSelector(HasWhitelist.NotWhitelisted.selector, userB)
-        );
-        converter.deposit(asset, 1e18, userB);
-    }
-
     function test_withdraw_notWhitelisted() public {
         vm.startPrank(bvUSD.owner());
         whitelist.addWhitelistedFunc(address(converter), withdrawSelector);
@@ -494,18 +463,5 @@ contract StableCoinConverterTest is Test {
             abi.encodeWithSelector(HasWhitelist.NotWhitelisted.selector, userA)
         );
         converter.withdraw(asset, 1e18, userA);
-    }
-
-    function test_withdrawTo_notWhitelisted() public {
-        vm.startPrank(bvUSD.owner());
-        whitelist.addWhitelistedFunc(address(converter), withdrawSelector);
-        whitelist.addToWhitelist(address(converter), withdrawSelector, userA);
-        vm.stopPrank();
-
-        vm.startPrank(userA);
-        vm.expectRevert(
-            abi.encodeWithSelector(HasWhitelist.NotWhitelisted.selector, userB)
-        );
-        converter.withdraw(asset, 1e18, userB);
     }
 }

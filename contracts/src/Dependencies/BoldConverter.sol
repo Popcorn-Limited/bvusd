@@ -11,8 +11,10 @@ import "./HasWhitelist.sol";
 
 contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
     uint256 public constant MAX_FEE = 10000;
-    bytes4 public constant DEPOSIT_SELECTOR = bytes4(keccak256("deposit(address,uint256,address)"));
-    bytes4 public constant WITHDRAW_SELECTOR = bytes4(keccak256("withdraw(address,uint256,address)"));
+    bytes4 public constant DEPOSIT_SELECTOR =
+        bytes4(keccak256("deposit(address,uint256,address)"));
+    bytes4 public constant WITHDRAW_SELECTOR =
+        bytes4(keccak256("withdraw(address,uint256,address)"));
 
     IBoldToken public bvUSD;
 
@@ -60,16 +62,9 @@ contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
     )
         public
         nonReentrant
-        checkWhitelisted(DEPOSIT_SELECTOR)
+        checkWhitelistedSenderAndOrigin(DEPOSIT_SELECTOR)
         returns (uint256 boldAmount)
     {
-        if (msg.sender != to) {
-            IWhitelist _whitelist = whitelist;
-            if (address(_whitelist) != address(0)) {
-                _requireWhitelisted(_whitelist, DEPOSIT_SELECTOR, to);
-            }
-        }
-
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -105,16 +100,9 @@ contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
     )
         public
         nonReentrant
-        checkWhitelisted(WITHDRAW_SELECTOR)
+        checkWhitelistedSenderAndOrigin(WITHDRAW_SELECTOR)
         returns (uint256 underlyingOut)
     {
-        if (msg.sender != to) {
-            IWhitelist _whitelist = whitelist;
-            if (address(_whitelist) != address(0)) {
-                _requireWhitelisted(_whitelist, WITHDRAW_SELECTOR, to);
-            }
-        }
-
         Path memory path = _underlyingPaths[underlying];
         require(path.underlyingReceiver != address(0), "Invalid path");
 
@@ -197,5 +185,27 @@ contract BoldConverter is Owned, HasWhitelist, ReentrancyGuard {
 
     function setWhitelist(IWhitelist _whitelist) external onlyOwner {
         _setWhitelist(_whitelist);
+    }
+
+    modifier checkWhitelistedSenderAndOrigin(bytes4 funcSig) {
+        IWhitelist _whitelist = whitelist;
+        if (address(_whitelist) != address(0)) {
+            bool isWhitelisted = _whitelist.isWhitelisted(
+                address(this),
+                funcSig,
+                msg.sender
+            );
+            if (!isWhitelisted && msg.sender != tx.origin) {
+                isWhitelisted = _whitelist.isWhitelisted(
+                    address(this),
+                    funcSig,
+                    tx.origin
+                );
+            }
+            if (!isWhitelisted) {
+                revert NotWhitelisted(msg.sender);
+            }
+        }
+        _;
     }
 }
