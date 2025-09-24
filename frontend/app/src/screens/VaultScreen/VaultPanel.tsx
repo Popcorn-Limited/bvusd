@@ -11,6 +11,7 @@ import { useReadContract } from "wagmi";
 import { RequestBalance } from "@/src/types";
 import { dnum18, DNUM_0 } from "@/src/dnum-utils";
 import { zeroAddress } from "viem";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 const EMPTY_REQUEST_BALANCE: RequestBalance = {
   pendingShares: DNUM_0,
@@ -24,10 +25,12 @@ export function VaultPanel() {
 
   const vaultPosition = useVaultPosition(account.address ?? null);
   const vault = useVault();
+  const { config } = useChainConfig();
+
   // console.log(vault.)
   const requestBalance = useReadContract({
-    address: getProtocolContract("Vault").address,
-    abi: getProtocolContract("Vault").abi,
+    address: getProtocolContract(config, "Vault").address,
+    abi: getProtocolContract(config, "Vault").abi,
     functionName: "getRequestBalance",
     args: [account.address ?? zeroAddress],
     query: {

@@ -15,6 +15,7 @@ import * as v from "valibot";
 import { createPublicClient } from "viem";
 import { http, useConfig as useWagmiConfig } from "wagmi";
 import { createRequestSchema, verifyTransaction } from "./shared";
+import { useChainConfig } from "../services/ChainConfigProvider";
 
 const RequestSchema = createRequestSchema(
   "redeemCollateral",
@@ -87,9 +88,9 @@ export const redeemCollateral: FlowDeclaration<RedeemCollateralRequest> = {
     approve: {
       name: () => "Approve bvUSD",
       Status: TransactionStatus,
-      async commit({ request, writeContract }) {
-        const CollateralRegistry = getProtocolContract("CollateralRegistry");
-        const BoldToken = getProtocolContract("BoldToken");
+      async commit({ request, writeContract, contractConfig}) {
+        const CollateralRegistry = getProtocolContract(contractConfig, "CollateralRegistry");
+        const BoldToken = getProtocolContract(contractConfig, "BoldToken");
 
         return writeContract({
           ...BoldToken,
@@ -104,8 +105,8 @@ export const redeemCollateral: FlowDeclaration<RedeemCollateralRequest> = {
     redeemCollateral: {
       name: () => "Redeem bvUSD",
       Status: TransactionStatus,
-      async commit({ request, writeContract }) {
-        const CollateralRegistry = getProtocolContract("CollateralRegistry");
+      async commit({ request, writeContract, contractConfig }) {
+        const CollateralRegistry = getProtocolContract(contractConfig, "CollateralRegistry");
         return writeContract({
           ...CollateralRegistry,
           functionName: "redeemCollateral",
@@ -127,11 +128,11 @@ export const redeemCollateral: FlowDeclaration<RedeemCollateralRequest> = {
 
     // check for allowance
     const boldAllowance = await ctx.readContract({
-      ...getProtocolContract("BoldToken"),
+      ...getProtocolContract(ctx.contractConfig, "BoldToken"),
       functionName: "allowance",
       args: [
         ctx.account,
-        getProtocolContract("CollateralRegistry").address,
+        getProtocolContract(ctx.contractConfig, "CollateralRegistry").address,
       ],
     });
     if (dn.gt(ctx.request.amount, dnum18(boldAllowance))) {
@@ -164,11 +165,13 @@ export function useSimulatedBalancesChange({
   request: RedeemCollateralRequest;
 }) {
   const wagmiConfig = useWagmiConfig();
+  const {config} = useChainConfig();
+
   return useQuery({
     queryKey: ["simulatedBalancesChange", account, jsonStringifyWithDnum(request)],
     queryFn: async () => {
-      const CollateralRegistry = getProtocolContract("CollateralRegistry");
-      const BoldToken = getProtocolContract("BoldToken");
+      const CollateralRegistry = getProtocolContract(config, "CollateralRegistry");
+      const BoldToken = getProtocolContract(config, "BoldToken");
 
       let stored: v.InferOutput<typeof StoredBalancesChangeSchema> | null = null;
       try {

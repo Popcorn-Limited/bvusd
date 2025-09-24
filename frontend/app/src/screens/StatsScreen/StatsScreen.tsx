@@ -3,30 +3,37 @@
 import { getBranches, useLiquityStats } from "@/src/liquity-utils";
 import { TransparencyMetrics } from "./TransparencyMetrics";
 import { ChartsPanel } from "./ChartsPanel";
-import { VenueAndSupplyPanel } from "./VenueAndSupplyPanels";
-import { BackingTablePanel } from "./BackingTablePanel";
-import { AttestationsAndProofPanel } from "./AttestationsAndProofPanel";
+// import { VenueAndSupplyPanel } from "./VenueAndSupplyPanels";
+// import { BackingTablePanel } from "./BackingTablePanel";
+// import { AttestationsAndProofPanel } from "./AttestationsAndProofPanel";
 import { useState } from "react";
-import { MarketStatPanel } from "./MarketStatsPanel";
-import { MarketChartPanel } from "./MarketChartPanel";
-import { FundingBreakdownPanel } from "./FundingBreakdownPanel";
-import { SpreadAndDistributionPanel } from "./SpreadAndDistributionPanel";
+// import { MarketStatPanel } from "./MarketStatsPanel";
+// import { MarketChartPanel } from "./MarketChartPanel";
+// import { FundingBreakdownPanel } from "./FundingBreakdownPanel";
+// import { SpreadAndDistributionPanel } from "./SpreadAndDistributionPanel";
 import { match } from "ts-pattern";
 import { HFlex, LoadingSurface } from "@liquity2/uikit";
 import { css } from "@/styled-system/css";
 import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
-import { fmtnum } from "@/src/formatting";
-import { COLLATERALS, USDT } from "@liquity2/uikit";
-import { ReservesPanel } from "./ReservesPanel";
-import { TrovesPanel } from "./TrovesPanel";
-import { SPDepositsPanel } from "./SPDepositsPanel";
+// import { fmtnum } from "@/src/formatting";
+// import { COLLATERALS, USDT } from "@liquity2/uikit";
+// import { ReservesPanel } from "./ReservesPanel";
+// import { TrovesPanel } from "./TrovesPanel";
+// import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
-import { HoldersPanel } from "./HoldersPanel";
-import { VaultsApy } from "./VaultsApy";
-import { AllocationPanel } from "./Allocations";
-import { LoansPanel } from "./LoansPanel";
+// import { HoldersPanel } from "./HoldersPanel";
+// import { VaultsApy } from "./VaultsApy";
+// import { AllocationPanel } from "./Allocations";
+// import { LoansPanel } from "./LoansPanel";
+
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
+
 
 export function StatsScreen() {
+  const { config } = useChainConfig();
+
+  console.log("YO", config.CHAIN_RPC_URL);
+
   const [activeTab, setActiveTab] = useState<"Core" | "BTC Institutional">(
     "Core"
   );
@@ -84,7 +91,6 @@ export function StatsScreen() {
             if (!liquityStats) {
               <HFlex gap={8}>Invalid Data</HFlex>;
             }
-            console.log(liquityStats)
             return (
               <div style={{ width: "100%", minHeight: "calc(100vh - 80px)"}}>
                 <div

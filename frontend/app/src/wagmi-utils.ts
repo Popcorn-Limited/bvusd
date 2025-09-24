@@ -14,11 +14,14 @@ import type { Chain } from "viem/chains";
 import { createConfig, http, useAccount as useWagmiAccount, useEnsName, useReadContract, useSwitchChain } from "wagmi";
 import { CHAINS } from "./config/chains";
 import { CONTRACT_BOLD_TOKEN, CONTRACT_TOKEN_LOCKER, CONTRACT_USDC, CONTRACT_USDT, CONTRACT_VAULT } from "./env";
+import { useChainConfig } from "./services/ChainConfigProvider";
 
 export function useBalance(
   address: Address | undefined,
   token: Token["symbol"] | undefined,
 ) {
+  const {config} = useChainConfig();
+
   const tokenAddress = match(token)
     .when(
       (symbol) => Boolean(symbol),
@@ -27,10 +30,10 @@ export function useBalance(
           return null;
         }
         if (symbol === "bvUSD") {
-          return CONTRACT_BOLD_TOKEN;
+          return config.CONTRACT_BOLD_TOKEN;
         }
         if (symbol === "sbvUSD") {
-          return CONTRACT_VAULT;
+          return config.CONTRACT_VAULT;
         }
         if (symbol === "VCRAFT") {
           return "0xc6675024FD3A9D37EDF3fE421bbE8ec994D9c262";
@@ -39,10 +42,10 @@ export function useBalance(
           return "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c";
         }
         if (symbol === "USDT") {
-          return CONTRACT_USDT;
+          return config.CONTRACT_USDT;
         }
         if (symbol === "USDC") {
-          return CONTRACT_USDC;
+          return config.CONTRACT_USDC;
         }
         if (symbol === "LbvUSD") {
           return CONTRACT_TOKEN_LOCKER;

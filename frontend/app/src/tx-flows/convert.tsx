@@ -11,6 +11,7 @@ import { fmtnum } from "@/src/formatting";
 import { getProtocolContract } from "../contracts";
 import { getEnsoRoute } from "../enso-utils";
 import { ENSO_ROUTER } from "../env";
+import { ChainEnv } from "../services/ChainConfigProvider";
 
 const RequestSchema = createRequestSchema(
   "convert",
@@ -67,7 +68,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       ),
       async commit(ctx) {
         return ctx.writeContract({
-          address: getProtocolContract(ctx.request.inputToken).address,
+          address: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
           abi: erc20Abi,
           functionName: "approve",
           args: [
@@ -90,6 +91,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
 
       async commit(ctx) {
         const ensoData = await getEnsoRoute({
+          config: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
           inputSymbol: ctx.request.inputToken,
           outputSymbol: ctx.request.outputToken,
@@ -104,8 +106,8 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           value: ensoData.tx.value,
         });
 
-        // Only using Enso for now
-        // const Converter = getProtocolContract("Converter");
+          // Only using Enso for now
+          // const Converter = getProtocolContract("Converter");
 
         // return ctx.writeContract({
         //   address: Converter.address,
@@ -127,6 +129,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
 
       async commit(ctx) {
         const ensoData = await getEnsoRoute({
+          config: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
           inputSymbol: ctx.request.inputToken,
           outputSymbol: ctx.request.outputToken,
@@ -152,7 +155,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
     // Check if approval is needed
     // @ts-ignore
     const allowance = await readContract(ctx.wagmiConfig, {
-      address: getProtocolContract(ctx.request.inputToken).address,
+      address: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
       abi: erc20Abi,
       functionName: "allowance",
       args: [ctx.account, ENSO_ROUTER],

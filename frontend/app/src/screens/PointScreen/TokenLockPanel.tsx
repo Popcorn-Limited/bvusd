@@ -15,14 +15,16 @@ import { getNextWithdrawalDate } from "../VaultScreen/PanelVaultUpdate";
 import { useQuery } from "@tanstack/react-query";
 import { useConfig as useWagmiConfig } from "wagmi";
 import { readContract } from "wagmi/actions";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 type ConvertMode = "lock" | "unlock";
 
 export function useUnlockDate(account: Address) {
   const wagmiConfig = useWagmiConfig();
+  const { config } = useChainConfig();
 
   let queryFn = async () => {
-    const tokenLocker = getProtocolContract("TokenLocker");
+    const tokenLocker = getProtocolContract(config, "TokenLocker");
     const unlockDate = await readContract(wagmiConfig, {
       address: tokenLocker.address,
       abi: tokenLocker.abi,

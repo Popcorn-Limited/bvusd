@@ -23,7 +23,6 @@ export function VaultPositionSummary({
   linkToScreen?: boolean;
   txPreviewMode?: boolean;
 }) {
-  console.log({ requestBalance })
   const collToken = bvUSD
   const vault = useVault()
   const stats = useLiquityStats();

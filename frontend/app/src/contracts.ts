@@ -47,7 +47,7 @@ import {
   ENV_BRANCHES,
 } from "@/src/env";
 
-// import { useChainConfig } from "@/src/services/ChainConfigProvider";
+import { ChainEnv, useChainConfig } from "@/src/services/ChainConfigProvider";
 
 import { erc20Abi, zeroAddress } from "viem";
 
@@ -130,12 +130,10 @@ export type Contracts = ProtocolContractMap & {
   }>;
 };
 
-export const CONTRACTS = (): Contracts => {
-  // const { config } = useChainConfig();
-
+export const CONTRACTS = (config: ChainEnv): Contracts => {
   return {
-    BoldToken: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
-    bvUSD: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
+    BoldToken: { abi: abis.BoldToken, address: config.CONTRACT_BOLD_TOKEN },
+    bvUSD: { abi: abis.BoldToken, address: config.CONTRACT_BOLD_TOKEN },
     CollateralRegistry: {
       abi: abis.CollateralRegistry,
       address: CONTRACT_COLLATERAL_REGISTRY,
@@ -153,12 +151,12 @@ export const CONTRACTS = (): Contracts => {
       abi: abis.MultiTroveGetter,
       address: CONTRACT_MULTI_TROVE_GETTER,
     },
-    WETH: { abi: abis.WETH, address: CONTRACT_WETH },
-    USDC: { abi: abis.USDC, address: CONTRACT_USDC },
-    USDT: { abi: abis.USDT, address: CONTRACT_USDT },
-    Converter: { abi: abis.Converter, address: CONTRACT_CONVERTER },
-    Vault: { abi: abis.Vault, address: CONTRACT_VAULT },
-    sbvUSD: { abi: abis.Vault, address: CONTRACT_VAULT },
+    WETH: { abi: abis.WETH, address: config.CONTRACT_WETH },
+    USDC: { abi: abis.USDC, address: config.CONTRACT_USDC },
+    USDT: { abi: abis.USDT, address: config.CONTRACT_USDT },
+    Converter: { abi: abis.Converter, address: config.CONTRACT_CONVERTER },
+    Vault: { abi: abis.Vault, address: config.CONTRACT_VAULT },
+    sbvUSD: { abi: abis.Vault, address: config.CONTRACT_VAULT },
     StableToVaultZapper: {
       abi: abis.StableToVaultZapper,
       address: CONTRACT_STABLE_VAULT_ZAPPER,
@@ -303,31 +301,36 @@ export const CONTRACTS = (): Contracts => {
 // };
 
 export function getProtocolContract<CN extends ProtocolContractName>(
+  config: ChainEnv,
   name: CN
 ): ProtocolContractMap[CN] {
-  return CONTRACTS()[name];
+  return CONTRACTS(config)[name];
 }
 
 export function getBranchContract(
+  config: ChainEnv,
   branchIdOrSymbol: null,
   contractName: CollateralContractName
 ): null;
 export function getBranchContract<CN extends CollateralContractName>(
+  config: ChainEnv,
   branchIdOrSymbol: CollateralSymbol | BranchId,
   contractName: CN
 ): Contract<CN>;
 export function getBranchContract<CN extends CollateralContractName>(
+  config: ChainEnv,
   branchIdOrSymbol: CollateralSymbol | BranchId | null,
   contractName: CN
 ): Contract<CN> | null;
 export function getBranchContract<CN extends CollateralContractName>(
+  config: ChainEnv,
   branchIdOrSymbol: CollateralSymbol | BranchId | null,
   contractName: CN
 ): Contract<CN> | null {
   if (branchIdOrSymbol === null) {
     return null;
   }
-  const { branches } = CONTRACTS();
+  const { branches } = CONTRACTS(config);
 
   const branch =
     typeof branchIdOrSymbol === "number"

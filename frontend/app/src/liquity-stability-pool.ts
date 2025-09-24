@@ -10,6 +10,7 @@ import { getCollToken } from "@/src/liquity-utils";
 import { useStabilityPoolDeposit, useStabilityPoolEpochScale } from "@/src/subgraph-hooks";
 import { useQuery } from "@tanstack/react-query";
 import { serialize, useReadContracts } from "wagmi";
+import { useChainConfig } from "./services/ChainConfigProvider";
 
 const DECIMAL_PRECISION = 10n ** 18n;
 const SCALE_FACTOR = 10n ** 9n;
@@ -98,8 +99,10 @@ type DepositParameters = {
 };
 
 function useSpYieldGainParameters(symbol: CollateralSymbol | null) {
-  const ActivePool = getBranchContract(symbol, "ActivePool");
-  const StabilityPool = getBranchContract(symbol, "StabilityPool");
+  const { config } = useChainConfig();
+
+  const ActivePool = getBranchContract(config, symbol, "ActivePool");
+  const StabilityPool = getBranchContract(config, symbol, "StabilityPool");
 
   const AP = ActivePool as NonNullable<typeof ActivePool>;
   const SP = StabilityPool as NonNullable<typeof StabilityPool>;

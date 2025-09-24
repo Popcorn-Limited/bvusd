@@ -13,15 +13,18 @@ import { useQuery } from "@tanstack/react-query";
 import * as dn from "dnum";
 import * as v from "valibot";
 import { useReadContract } from "wagmi";
+import { useChainConfig } from "./ChainConfigProvider";
 
 type PriceToken = "bvUSD" | "BOLD" | CollateralSymbol | "sbvUSD" | "VCRAFT" | "WBTC" | "USDT";
 
 function useCollateralPrice(
   symbol: null | CollateralSymbol
 ): UseQueryResult<Dnum> {
+  const { config } = useChainConfig();
+
   // "ETH" is a fallback when null is passed, so we can return a standard
   // query object from the PriceFeed ABI, while the query stays disabled
-  const PriceFeed = getBranchContract(symbol ?? "BVBTC", "PriceFeed");
+  const PriceFeed = getBranchContract(config, symbol ?? "BVBTC", "PriceFeed");
 
   if (!PriceFeed) {
     throw new Error(`Price feed contract not found for ${symbol}`);

@@ -8,7 +8,6 @@ import { createRequestSchema, verifyTransaction } from "./shared";
 import { erc20Abi, erc4626Abi, maxUint256 } from "viem";
 import { readContract, sendTransaction } from "wagmi/actions";
 import { CONTRACT_STABLE_VAULT_ZAPPER } from "@/src/env";
-import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 import { fmtnum } from "../formatting";
 import { getProtocolContract } from "../contracts";
@@ -27,13 +26,9 @@ const RequestSchema = createRequestSchema(
   },
 );
 
-
 export type VaultUpdateRequest = v.InferOutput<typeof RequestSchema>;
 
-export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
-  const { config } = useChainConfig();
-
-  return {
+export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
     title: "Review & Send Transaction",
 
     Summary({ request }) {
@@ -94,12 +89,12 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
         ),
         async commit(ctx) {
           return ctx.writeContract({
-            address: getProtocolContract(ctx.request.inputToken).address,
+            address: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
             abi: erc20Abi,
             functionName: "approve",
             args: [
               // @ts-ignore
-              STABLE_SYMBOLS.includes(ctx.request.inputToken) ? config.ENSO_ROUTER : config.CONTRACT_VAULT,
+              STABLE_SYMBOLS.includes(ctx.request.inputToken) ? ctx.contractConfig.ENSO_ROUTER : ctx.contractConfig.CONTRACT_VAULT,
               ctx.preferredApproveMethod === "approve-infinite"
                 ? maxUint256 // infinite approval
                 : ctx.request.amount[0], // exact amount
@@ -116,7 +111,7 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
         Status: TransactionStatus,
         async commit(ctx) {
           return ctx.writeContract({
-            address: config.CONTRACT_VAULT,
+            address: ctx.contractConfig.CONTRACT_VAULT,
             abi: erc4626Abi,
             functionName: "deposit",
             args: [ctx.request.amount[0], ctx.account],
@@ -132,6 +127,7 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
         Status: TransactionStatus,
         async commit(ctx) {
           const ensoData = await getEnsoRoute({
+            config: ctx.contractConfig,
             inputValue: ctx.request.amount[0].toString(),
             inputSymbol: ctx.request.inputToken,
             outputSymbol: ctx.request.outputToken,
@@ -162,7 +158,7 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
         Status: TransactionStatus,
         async commit(ctx) {
           return ctx.writeContract({
-            address: config.CONTRACT_VAULT,
+            address: ctx.contractConfig.CONTRACT_VAULT,
             abi: Vault,
             functionName: "requestRedeem",
             args: [ctx.request.amount[0]],
@@ -177,7 +173,7 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
         Status: TransactionStatus,
         async commit(ctx) {
           return ctx.writeContract({
-            address: config.CONTRACT_VAULT,
+            address: ctx.contractConfig.CONTRACT_VAULT,
             abi: Vault,
             functionName: "redeem",
             args: [ctx.request.amount[0]],
@@ -192,18 +188,18 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
     async getSteps(ctx) {
       const steps: string[] = [];
       const { inputToken, outputToken, mode, amount } = ctx.request;
-
+      
       switch (mode) {
         case "add":
           // @ts-ignore
           const addAllowance = await readContract(ctx.wagmiConfig, {
-            address: getProtocolContract(inputToken).address,
+            address: getProtocolContract(ctx.contractConfig, inputToken).address,
             abi: erc20Abi,
             functionName: "allowance",
             args: [
               ctx.account,
               // @ts-ignore
-              STABLE_SYMBOLS.includes(ctx.request.inputToken) ? config.ENSO_ROUTER : config.CONTRACT_VAULT
+              STABLE_SYMBOLS.includes(ctx.request.inputToken) ? ctx.contractConfig.ENSO_ROUTER : ctx.contractConfig.CONTRACT_VAULT
             ],
           });
           if (addAllowance < amount[0]) {
@@ -220,10 +216,10 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
         case "remove":
           // @ts-ignore
           const removeAllowance = await readContract(ctx.wagmiConfig, {
-            address: getProtocolContract(inputToken).address,
+            address: getProtocolContract(ctx.contractConfig, inputToken).address,
             abi: erc20Abi,
             functionName: "allowance",
-            args: [ctx.account, config.CONTRACT_VAULT],
+            args: [ctx.account, ctx.contractConfig.CONTRACT_VAULT],
           });
           if (removeAllowance < amount[0]) {
             steps.push("approve");
@@ -239,5 +235,4 @@ export const vaultUpdate = (): FlowDeclaration<VaultUpdateRequest> => {
     parseRequest(request) {
       return v.parse(RequestSchema, request);
     },
-  }
 };
