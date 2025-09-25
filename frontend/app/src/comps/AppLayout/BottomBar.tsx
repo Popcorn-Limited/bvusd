@@ -23,10 +23,10 @@ const DISPLAYED_PRICES = ["bvUSD"] as const;
 
 export function BottomBar() {
   const account = useAccount();
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   const totalSupply = useReadContract({
-    address: getProtocolContract(config, "bvUSD").address,
+    address: getProtocolContract(chainConfig, "bvUSD").address,
     abi: erc20Abi,
     functionName: "totalSupply",
   });

@@ -10,8 +10,6 @@ import { erc20Abi, maxUint256 } from "viem";
 import { fmtnum } from "@/src/formatting";
 import { getProtocolContract } from "../contracts";
 import { getEnsoRoute } from "../enso-utils";
-import { ENSO_ROUTER } from "../env";
-import { ChainEnv } from "../services/ChainConfigProvider";
 
 const RequestSchema = createRequestSchema(
   "convert",
@@ -72,7 +70,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           abi: erc20Abi,
           functionName: "approve",
           args: [
-            ENSO_ROUTER,
+            ctx.contractConfig.ENSO_ROUTER,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -91,7 +89,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
 
       async commit(ctx) {
         const ensoData = await getEnsoRoute({
-          config: ctx.contractConfig,
+          chainConfig: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
           inputSymbol: ctx.request.inputToken,
           outputSymbol: ctx.request.outputToken,
@@ -129,7 +127,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
 
       async commit(ctx) {
         const ensoData = await getEnsoRoute({
-          config: ctx.contractConfig,
+          chainConfig: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
           inputSymbol: ctx.request.inputToken,
           outputSymbol: ctx.request.outputToken,
@@ -158,7 +156,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       address: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
       abi: erc20Abi,
       functionName: "allowance",
-      args: [ctx.account, ENSO_ROUTER],
+      args: [ctx.account, ctx.contractConfig.ENSO_ROUTER],
     });
 
     const steps: string[] = [];

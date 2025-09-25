@@ -30,10 +30,6 @@ import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 
 export function StatsScreen() {
-  const { config } = useChainConfig();
-
-  console.log("YO", config.CHAIN_RPC_URL);
-
   const [activeTab, setActiveTab] = useState<"Core" | "BTC Institutional">(
     "Core"
   );

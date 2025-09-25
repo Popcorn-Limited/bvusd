@@ -304,7 +304,7 @@ export function TransactionFlow({
   const router = useRouter();
   const storedState = useStoredState();
   const wagmiConfig = useWagmiConfig();
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   const {
     clearError,
@@ -338,10 +338,10 @@ export function TransactionFlow({
         flowDeclaration,
         flowParams: flow && account.address
           ? {
-            contractConfig: config,
+            contractConfig: chainConfig,
             ...flow,
             account: account.address,
-            contracts: CONTRACTS(config),
+            contracts: CONTRACTS(chainConfig),
             isSafe: account.safeStatus !== null,
             preferredApproveMethod: storedState.preferredApproveMethod,
             readContract: getReadContract(wagmiConfig),
@@ -365,7 +365,7 @@ function useSteps(
   const account = useAccount();
   const storedState = useStoredState();
   const wagmiConfig = useWagmiConfig();
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   return useQuery({
     enabled,
@@ -385,9 +385,9 @@ function useSteps(
       }
 
       return flowDeclaration.getSteps({
-        contractConfig: config,
+        contractConfig: chainConfig,
         account: account.address,
-        contracts: CONTRACTS(config),
+        contracts: CONTRACTS(chainConfig),
         isSafe: account.safeStatus !== null,
         preferredApproveMethod: storedState.preferredApproveMethod,
         readContract: getReadContract(wagmiConfig),
@@ -406,7 +406,7 @@ function useFlowManager(account: Address | null, isSafe: boolean = false) {
   const wagmiConfig = useWagmiConfig();
   const storedState = useStoredState();
   const runningStepRef = useRef<string | null>(null);
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   useEffect(() => {
     if (!account || (flow && flow.account !== account)) {
@@ -439,10 +439,10 @@ function useFlowManager(account: Address | null, isSafe: boolean = false) {
       runningStepRef.current = stepKey;
 
       const params: FlowParams<FlowRequestMap[keyof FlowRequestMap]> = {
-        contractConfig: config,
+        contractConfig: chainConfig,
         readContract: getReadContract(wagmiConfig),
         account,
-        contracts: CONTRACTS(config),
+        contracts: CONTRACTS(chainConfig),
         isSafe,
         preferredApproveMethod: storedState.preferredApproveMethod,
         request: flow.request,

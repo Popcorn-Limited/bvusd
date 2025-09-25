@@ -28,9 +28,7 @@ import { StableToVaultZapper } from "./abi/StableToVaultZapper";
 import { Vault } from "./abi/Vault";
 import { TokenLocker } from "./abi/TokenLocker";
 import {
-  CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
-  CONTRACT_CONVERTER,
   CONTRACT_EXCHANGE_HELPERS,
   CONTRACT_GOVERNANCE,
   CONTRACT_HINT_HELPERS,
@@ -39,10 +37,6 @@ import {
   CONTRACT_LUSD_TOKEN,
   CONTRACT_MULTI_TROVE_GETTER,
   CONTRACT_STABLE_VAULT_ZAPPER,
-  CONTRACT_USDC,
-  CONTRACT_USDT,
-  CONTRACT_VAULT,
-  CONTRACT_WETH,
   CONTRACT_TOKEN_LOCKER,
   ENV_BRANCHES,
 } from "@/src/env";

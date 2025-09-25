@@ -1,20 +1,19 @@
 import type { FlowStepDeclaration } from "@/src/services/TransactionFlow";
 import type { ComponentPropsWithoutRef } from "react";
-
-import { CHAIN_BLOCK_EXPLORER } from "@/src/env";
 import { useStoredState } from "@/src/services/StoredState";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { useAccount } from "@/src/wagmi-utils";
 import { css, cx } from "@/styled-system/css";
 import { AnchorTextButton, Dropdown, IconChevronDown, TextButton } from "@liquity2/uikit";
 import { match } from "ts-pattern";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 export function TransactionStatus(
   props: ComponentPropsWithoutRef<FlowStepDeclaration["Status"]> & {
     approval?: "all" | "approve-only" | null;
   },
 ) {
-  console.log("props", props);
+  // console.log("props", props);
   const { preferredApproveMethod } = useStoredState();
   return (
     <div
@@ -43,10 +42,12 @@ export function TransactionStatus(
 
 function TxLink({ txHash }: { txHash: string }) {
   const account = useAccount();
+  const { chainConfig } = useChainConfig();
+
   return (
     <AnchorTextButton
       label="transaction"
-      href={`${CHAIN_BLOCK_EXPLORER?.url}tx/${txHash}`}
+      href={`${chainConfig.CHAIN_BLOCK_EXPLORER}tx/${txHash}`}
       external
     />
   );

@@ -20,11 +20,11 @@ type PriceToken = "bvUSD" | "BOLD" | CollateralSymbol | "sbvUSD" | "VCRAFT" | "W
 function useCollateralPrice(
   symbol: null | CollateralSymbol
 ): UseQueryResult<Dnum> {
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   // "ETH" is a fallback when null is passed, so we can return a standard
   // query object from the PriceFeed ABI, while the query stays disabled
-  const PriceFeed = getBranchContract(config, symbol ?? "BVBTC", "PriceFeed");
+  const PriceFeed = getBranchContract(chainConfig, symbol ?? "BVBTC", "PriceFeed");
 
   if (!PriceFeed) {
     throw new Error(`Price feed contract not found for ${symbol}`);

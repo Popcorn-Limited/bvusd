@@ -22,7 +22,7 @@ export type EnsoForecast = {
 export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoForecastProps): EnsoForecast {
   const [value, setValue] = useState("0");
   const [status, setStatus] = useState<EnsoForecast["status"]>("idle");
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   useEffect(() => {
     if (!inputValue || inputValue === "0") {
@@ -33,7 +33,7 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
 
     const timeoutId = setTimeout(() => {
       setStatus("loading");
-      getOutputValue({ config, inputValue, inputSymbol, outputSymbol, account, slippage })
+      getOutputValue({ chainConfig, inputValue, inputSymbol, outputSymbol, account, slippage })
         .then(res => {
           setValue(res.value)
           setStatus(res.status)
@@ -50,7 +50,7 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
 }
 
 interface EnsoRouteProps {
-  config: ChainEnv;
+  chainConfig: ChainEnv;
   inputValue: string;
   inputSymbol: Token["symbol"];
   outputSymbol: Token["symbol"];
@@ -58,12 +58,12 @@ interface EnsoRouteProps {
   slippage?: number
 }
 
-async function getOutputValue({ config, inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoRouteProps): Promise<EnsoForecast> {
+async function getOutputValue({ chainConfig, inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoRouteProps): Promise<EnsoForecast> {
   if (!inputValue || inputValue === "0") {
     return { value: "0", status: "success" };
   }
 
-  const url = `https://api.enso.finance/api/v1/shortcuts/route?chainId=747474&slippage=${slippage}&destinationChainId=747474&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${getProtocolContract(config, inputSymbol).address}&tokenOut=${getProtocolContract(config, outputSymbol).address}&routingStrategy=router`;
+  const url = `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${getProtocolContract(chainConfig, inputSymbol).address}&tokenOut=${getProtocolContract(chainConfig, outputSymbol).address}&routingStrategy=router`;
   const options = { method: 'GET', headers: { Accept: 'application/json', Authorization: `Bearer ${ENSO_API_KEY}` }, body: undefined };
 
   try {
@@ -78,8 +78,8 @@ async function getOutputValue({ config, inputValue, inputSymbol, outputSymbol, a
   }
 }
 
-export async function getEnsoRoute({ config, inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoRouteProps): Promise<any> {
-  const url = `https://api.enso.finance/api/v1/shortcuts/route?chainId=747474&slippage=${slippage}&destinationChainId=747474&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${getProtocolContract(config, inputSymbol).address}&tokenOut=${getProtocolContract(config, outputSymbol).address}&routingStrategy=router`;
+export async function getEnsoRoute({ chainConfig, inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoRouteProps): Promise<any> {
+  const url = `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${getProtocolContract(chainConfig, inputSymbol).address}&tokenOut=${getProtocolContract(chainConfig, outputSymbol).address}&routingStrategy=router`;
   const options = { method: 'GET', headers: { Accept: 'application/json', Authorization: `Bearer ${ENSO_API_KEY}` }, body: undefined };
 
   const response = await fetch(url, options);

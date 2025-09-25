@@ -21,10 +21,10 @@ type ConvertMode = "lock" | "unlock";
 
 export function useUnlockDate(account: Address) {
   const wagmiConfig = useWagmiConfig();
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   let queryFn = async () => {
-    const tokenLocker = getProtocolContract(config, "TokenLocker");
+    const tokenLocker = getProtocolContract(chainConfig, "TokenLocker");
     const unlockDate = await readContract(wagmiConfig, {
       address: tokenLocker.address,
       abi: tokenLocker.abi,

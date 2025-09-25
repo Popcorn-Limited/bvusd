@@ -5,7 +5,6 @@ import type { Dnum } from "dnum";
 import { SP_YIELD_SPLIT } from "@/src/constants";
 import { getBranchContract } from "@/src/contracts";
 import { dnum18 } from "@/src/dnum-utils";
-import { CHAIN_CONTRACT_MULTICALL } from "@/src/env";
 import { getCollToken } from "@/src/liquity-utils";
 import { useStabilityPoolDeposit, useStabilityPoolEpochScale } from "@/src/subgraph-hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -99,10 +98,10 @@ type DepositParameters = {
 };
 
 function useSpYieldGainParameters(symbol: CollateralSymbol | null) {
-  const { config } = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
-  const ActivePool = getBranchContract(config, symbol, "ActivePool");
-  const StabilityPool = getBranchContract(config, symbol, "StabilityPool");
+  const ActivePool = getBranchContract(chainConfig, symbol, "ActivePool");
+  const StabilityPool = getBranchContract(chainConfig, symbol, "StabilityPool");
 
   const AP = ActivePool as NonNullable<typeof ActivePool>;
   const SP = StabilityPool as NonNullable<typeof StabilityPool>;
@@ -118,7 +117,7 @@ function useSpYieldGainParameters(symbol: CollateralSymbol | null) {
       { ...SP, functionName: "getTotalBoldDeposits" },
       { ...SP, functionName: "getYieldGainsPending" },
     ],
-    multicallAddress: CHAIN_CONTRACT_MULTICALL,
+    multicallAddress: chainConfig.CHAIN_CONTRACT_MULTICALL,
     query: {
       refetchInterval: 30_000,
       select: ([

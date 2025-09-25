@@ -7,7 +7,6 @@ import * as v from "valibot";
 import { createRequestSchema, verifyTransaction } from "./shared";
 import { erc20Abi, erc4626Abi, maxUint256 } from "viem";
 import { readContract, sendTransaction } from "wagmi/actions";
-import { CONTRACT_STABLE_VAULT_ZAPPER } from "@/src/env";
 
 import { fmtnum } from "../formatting";
 import { getProtocolContract } from "../contracts";
@@ -127,7 +126,7 @@ export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
         Status: TransactionStatus,
         async commit(ctx) {
           const ensoData = await getEnsoRoute({
-            config: ctx.contractConfig,
+            chainConfig: ctx.contractConfig,
             inputValue: ctx.request.amount[0].toString(),
             inputSymbol: ctx.request.inputToken,
             outputSymbol: ctx.request.outputToken,

@@ -49,7 +49,7 @@ function parseChain(id: number): ChainEnv {
   return parsed.output;
 }
 
-type Ctx = { config: ChainEnv; setChainId: (id: number) => void };
+type Ctx = { chainConfig: ChainEnv; setChainId: (id: number) => void };
 const ChainConfigContext = createContext<Ctx | null>(null);
 const DEFAULT_CHAIN_ID = 747474;
 
@@ -61,7 +61,7 @@ export function ChainConfigProvider({
   children: ReactNode;
   initialChainId?: number;
 }) {
-  const [config, setConfig] = useState<ChainEnv>(() => {
+  const [chainConfig, setConfig] = useState<ChainEnv>(() => {
     try {
       return parseChain(initialChainId ?? DEFAULT_CHAIN_ID);
     } catch {
@@ -85,7 +85,7 @@ export function ChainConfigProvider({
     setConfig(parsed.output);
   }, []);
 
-  const value = useMemo(() => ({ config, setChainId }), [config, setChainId]);
+  const value = useMemo(() => ({ chainConfig, setChainId }), [chainConfig, setChainId]);
   return <ChainConfigContext.Provider value={value}>{children}</ChainConfigContext.Provider>;
 }
 
