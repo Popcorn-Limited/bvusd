@@ -75,6 +75,11 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
   );
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
+  const outputAmount = parseInputFloatWithDecimals(
+    valOut,
+    // @ts-ignore
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+  );
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
@@ -90,6 +95,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     && parsedValue
     && dn.gt(parsedValue, 0)
     && !insufficientBalance
+    && valOutStatus === "success"
 
   return (
     <div
@@ -233,6 +239,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
               mode: mode,
               amount: parsedValue,
+              outputAmount: outputAmount,
               inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
               outputToken: outputSymbol as "bvUSD" | "sbvUSD",
               slippage: 50,

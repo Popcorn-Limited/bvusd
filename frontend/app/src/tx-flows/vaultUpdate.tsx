@@ -18,6 +18,7 @@ const RequestSchema = createRequestSchema(
   "vaultUpdate",
   {
     amount: vDnum(),
+    outputAmount: vDnum(),
     inputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD"), v.literal("sbvUSD")]),
     outputToken: v.union([v.literal("bvUSD"), v.literal("sbvUSD")]),
     mode: v.union([v.literal("remove"), v.literal("add"), v.literal("claim")]),
@@ -53,8 +54,9 @@ export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
     },
 
     Details({ request }) {
-      const { amount, inputToken, outputToken } = request;
+      const { amount, outputAmount, inputToken, outputToken } = request;
 
+      console.log("OUT", outputAmount);
 
       return (
         <>
@@ -67,7 +69,7 @@ export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
           <TransactionDetailsRow
             label="Output Amount"
             value={[
-              `${fmtnum(amount)} ${outputToken}`,
+              `${fmtnum(outputAmount)} ${outputToken}`,
             ]}
           />
         </>

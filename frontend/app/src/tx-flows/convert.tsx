@@ -15,6 +15,7 @@ const RequestSchema = createRequestSchema(
   "convert",
   {
     amount: vDnum(),
+    outputAmount: vDnum(),
     inputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD")]),
     outputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD")]),
     mode: v.union([v.literal("buy"), v.literal("sell")]),
@@ -32,7 +33,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
   },
 
   Details({ request }) {
-    const { amount, inputToken, outputToken } = request;
+    const { amount, outputAmount, inputToken, outputToken } = request;
 
     return (
       <>
@@ -45,7 +46,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         <TransactionDetailsRow
           label="Output Amount"
           value={[
-            `${fmtnum(amount)} ${outputToken}`,
+            `${fmtnum(outputAmount)} ${outputToken}`,
           ]}
         />
       </>
