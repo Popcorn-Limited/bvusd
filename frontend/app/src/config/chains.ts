@@ -1,4 +1,15 @@
 import { ALCHEMY_API_KEY } from "../env";
+import eth from "../../../uikit/src/token-icons/eth.svg";
+import katana from "../../../uikit/src/token-icons/katana.svg";
+
+type ChainIcons = {
+  [name: string]: any;
+};
+
+export const supportedChainIcons: ChainIcons = {
+  "katana": katana,
+  "ethereum": eth
+}
 
 export type AppChainConfig = {
   CHAIN_ID: number;
@@ -21,7 +32,7 @@ export type AppChainConfig = {
   // any other env field
 };
 
-// TODO Schema and data
+
 export const CHAINS: Record<number, AppChainConfig> = {
   747474: {
     CHAIN_ID: 747474,
@@ -39,7 +50,7 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_USDT: "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
     CONTRACT_WETH: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
   },
-  1: {
+  1: { // TODO remove
     CHAIN_ID: 1,
     CHAIN_NAME: "Ethereum",
     CHAIN_CURRENCY: { name: "Ethereum", symbol: "ETH", decimals: 18 },
