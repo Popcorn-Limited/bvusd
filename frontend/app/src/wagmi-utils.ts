@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
 import { match } from "ts-pattern";
 import { erc20Abi } from "viem";
 import type { Chain } from "viem/chains";
-import { createConfig, http, useAccount as useWagmiAccount, useEnsName, useReadContract, useSwitchChain } from "wagmi";
+import { createConfig, http, useAccount as useWagmiAccount, useEnsName, useReadContract, useSwitchChain, createStorage, cookieStorage } from "wagmi";
 import { CHAINS } from "./config/chains";
 import { CONTRACT_TOKEN_LOCKER } from "./env";
 import { useChainConfig } from "./services/ChainConfigProvider";
@@ -175,27 +175,26 @@ function toWagmiChain(c: {
   };
 }
 
-export function useAllChains() {
-  const wagmiChainsArr: Chain[] = Object.values(CHAINS).map(toWagmiChain);
-  if (wagmiChainsArr.length === 0) {
-    throw new Error("Empty Chains.");
-  }
-  const wagmiChains = wagmiChainsArr as [Chain, ...Chain[]];
+const wagmiChainsArr = Object.values(CHAINS).map(toWagmiChain);
+if (wagmiChainsArr.length === 0) throw new Error('Empty Chains.');
+const chains = wagmiChainsArr as [typeof wagmiChainsArr[0], ...typeof wagmiChainsArr];
 
-  const transports = Object.fromEntries(
-    Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(c.CHAIN_RPC_URL)]),
-  );
+const transports = Object.fromEntries(
+  Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(c.CHAIN_RPC_URL)])
+);
 
-  return createConfig(
-    getDefaultConfigFromConnectKit({
-      appName: content.appName,
-      appDescription: content.appDescription,
-      appUrl: content.appUrl,
-      appIcon: content.appIcon,
-      chains: wagmiChains,
-      transports,
-      ssr: true,
-      walletConnectProjectId: WALLET_CONNECT_PROJECT_ID!,
-    }),
-  );
-}
+const base = getDefaultConfigFromConnectKit({
+  appName: content.appName,
+  appDescription: content.appDescription,
+  appUrl: content.appUrl,
+  appIcon: content.appIcon,
+  chains,
+  transports,
+  walletConnectProjectId: WALLET_CONNECT_PROJECT_ID!,
+  ssr: true,
+});
+
+export const wagmiChains = createConfig({
+  ...base,
+  storage: createStorage({ storage: cookieStorage, key: 'wagmi' }),
+});
