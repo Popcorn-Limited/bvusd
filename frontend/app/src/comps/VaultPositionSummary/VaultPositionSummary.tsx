@@ -157,7 +157,7 @@ export function VaultPositionSummary({
                       color: "contentAlt2",
                     })}
                   >
-                    APR
+                    APY
                   </div>
                   <div>
                     <Amount
@@ -169,7 +169,7 @@ export function VaultPositionSummary({
                   </div>
                   <InfoTooltip
                     content={{
-                      heading: "Current APR",
+                      heading: "Current APY",
                       body: "The annualized rate sbvUSD "
                         + "deposits earned over the last 24 hours.",
                       footerLink: {
@@ -191,7 +191,7 @@ export function VaultPositionSummary({
                       color: "contentAlt2",
                     })}
                   >
-                    7d APR
+                    7d APY
                   </div>
                   <Amount
                     fallback="-%"
@@ -201,7 +201,7 @@ export function VaultPositionSummary({
                   />
                   <InfoTooltip
                     content={{
-                      heading: "APR (last 7 days)",
+                      heading: "APY (last 7 days)",
                       body: "The annualized percentage rate sbvUSD "
                         + "deposits earned over the past 7 days.",
                       footerLink: {

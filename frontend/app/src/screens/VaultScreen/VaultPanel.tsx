@@ -39,7 +39,6 @@ export function VaultPanel() {
     },
   });
   const loadingState = vault.isLoading || requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
-  console.log({ loadingState, vault: vault.isLoading, requestBalance: requestBalance.isLoading, vaultPosition: vaultPosition.status })
 
   const tabsTransition = useTransition(loadingState, {
     from: { opacity: 0 },
