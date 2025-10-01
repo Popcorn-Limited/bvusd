@@ -3,6 +3,9 @@ import tokenbvUSD from "../../../../uikit/src/token-icons/bvusd.svg";
 import tokensbvUSD from "../../../../uikit/src/token-icons/sbvusd.svg";
 import { Card } from "./Card";
 import { BorrowModal } from "./BorrowModal";
+import { WhitelistModal } from "./WhitelistModal";
+import { useRouter } from "next/navigation";
+import { useModal } from "@/src/services/ModalService";
 
 const sbvUSDBullets = [
   "Allocated to market-neutral strategies & private credit",
@@ -13,7 +16,7 @@ const sbvUSDBullets = [
 ];
 
 const bvUSDBullets = [
-  "Earn REAL YIELD on your Bitcoin by",
+  "Earn REAL YIELD on your Bitcoin",
   "Overcollateralized Borrowing",
   "KYB required, minimum 1 BTC",
 ];
@@ -47,7 +50,8 @@ export function CardsRow({ children }: { children: React.ReactNode }) {
 }
 
 export default function CardsSection() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
+  const router = useRouter();
 
   return (
     <section
@@ -105,37 +109,59 @@ export default function CardsSection() {
             tokenImage={tokenbvUSD}
             backgroundColor="#F6AE3F"
             textColor="black"
-            buttonColor="black"
-            buttonText="#F6AE3F"
             imageUrl={"/sbvUSDBackground.jpg"}
             badgeText="sbvUSD"
             apy="12%"
             headline="Institutional-Grade Yield"
             subhead="Open to All"
             bullets={sbvUSDBullets}
-            ctaText="Earn Now"
-            onCta={() =>
-              window.open("https://app.bitvault.finance/vault")
-            }
+            cta={{
+              label: "Earn Now",
+              onClick: () => router.push("https://app.bitvault.finance/vault"),
+              textColor: "#F6AE3F",
+              textHoverColor: "white",
+              buttonColor: "black",
+              hoverColor: "#23262F",
+              borderColor: "black",
+              borderHoverColor: "#23262F",
+            }}
+            cta2={{
+              label: "Join Whitelist",
+              onClick: () => {
+                setModalContent(<WhitelistModal />);
+                setModalVisibility(true);
+              },
+              textColor: "black",
+              textHoverColor: "black",
+              buttonColor: "#F6AE3F",
+              hoverColor: "#E49D2F",
+              borderColor: "black",
+              borderHoverColor: "black",
+            }}
           />
 
           <Card
             tokenImage={tokensbvUSD}
             backgroundColor="#23262F"
             textColor="white"
-            buttonColor="#F6AE3F"
-            buttonText="black"
             imageUrl={"/bvUSDBackground.jpg"}
             badgeText="bvUSD"
             headline="Institutional Borrowing"
             bullets={bvUSDBullets}
-            ctaText="Borrow Now"
-            onCta={() => setIsOpen(true)}
+            cta={{
+              label: "Borrow Now",
+              onClick: () => {
+                setModalContent(<BorrowModal />);
+                setModalVisibility(true);
+              },
+              textColor: "#F6AE3F",
+              textHoverColor: "black",
+              buttonColor: "black",
+              hoverColor: "#F6AE3F",
+            }}
           />
         </div>
       </CardsRow>
-
-      {isOpen && <BorrowModal onClose={() => setIsOpen(false)} />}
     </section>
   );
 }

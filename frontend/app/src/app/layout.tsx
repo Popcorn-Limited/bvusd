@@ -2,7 +2,7 @@
 import "@liquity2/uikit/index.css";
 
 import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { About } from "@/src/comps/About/About";
 import { AppLayout } from "@/src/comps/AppLayout/AppLayout";
@@ -16,6 +16,7 @@ import { TransactionFlow } from "@/src/services/TransactionFlow";
 import { UiKit } from "@liquity2/uikit";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
+import { ModalProvider, ModalRoot } from "@/src/services/ModalService";
 
 export const metadata: Metadata = {
   title: content.appName,
@@ -44,9 +45,12 @@ export default function Layout({
                 <Blocking>
                   <TransactionFlow>
                     <About>
-                      <AppLayout>
-                        {children}
-                      </AppLayout>
+                      <ModalProvider>
+                        <AppLayout>
+                          <ModalRoot />
+                          {children}
+                        </AppLayout>
+                      </ModalProvider>
                     </About>
                   </TransactionFlow>
                 </Blocking>

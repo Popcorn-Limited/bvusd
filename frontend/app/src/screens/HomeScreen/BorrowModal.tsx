@@ -1,10 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
+import { useModal } from "@/src/services/ModalService";
+import { SuccessModalContent } from "./WhitelistModal";
 
-export function BorrowModal({ onClose }: { onClose: () => void }) {
+export function BorrowModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [telegram, setTelegram] = useState("");
+  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -15,8 +18,8 @@ export function BorrowModal({ onClose }: { onClose: () => void }) {
       if (res.status !== 200) {
         alert("Error");
       } else {
-        alert("Submission Sent");
-        onClose();
+        setModalContent(<SuccessModalContent />);
+        setModalVisibility(true);
       }
     } catch (e) {
       alert("Error");
@@ -24,133 +27,37 @@ export function BorrowModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.7)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-      }}
-    >
-      <div
+    <>
+      {/* Title */}
+      <h2
         style={{
-          background: "#111315",
-          borderRadius: "18px",
-          padding: "40px",
-          width: "600px",
-          maxWidth: "90%",
-          color: "#fff",
-          position: "relative",
-          fontFamily:
-            'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+          fontSize: "22px",
+          fontWeight: 600,
+          textAlign: "center",
+          marginBottom: "8px",
         }}
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "20px",
-            right: "20px",
-            border: "none",
-            background: "transparent",
-            fontSize: "22px",
-            color: "#aaa",
-            cursor: "pointer",
-          }}
-        >
-          ×
-        </button>
+        Request access to borrow bvUSD
+      </h2>
 
-        {/* Title */}
-        <h2
-          style={{
-            fontSize: "22px",
-            fontWeight: 600,
-            textAlign: "center",
-            marginBottom: "8px",
-          }}
-        >
-          Request access to borrow bvUSD
-        </h2>
+      {/* Subtitle */}
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: "16px",
+          color: "#aaa",
+          marginBottom: "32px",
+          lineHeight: 1.4,
+        }}
+      >
+        Please complete the form below and a member of the Bitvault team will
+        reach out with the next steps
+      </p>
 
-        {/* Subtitle */}
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: "15px",
-            color: "#aaa",
-            marginBottom: "32px",
-            lineHeight: 1.4,
-          }}
-        >
-          Please complete the form below and a member of the Bitvault team will
-          reach out with the next steps
-        </p>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
-          <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <div style={{ flex: 1 }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  marginBottom: "6px",
-                  color: "#ccc",
-                }}
-              >
-                Name
-              </label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder=""
-                style={{
-                  width: "100%",
-                  background: "transparent",
-                  border: "1px solid #333",
-                  borderRadius: "6px",
-                  padding: "12px",
-                  color: "#fff",
-                  fontSize: "14px",
-                }}
-              />
-            </div>
-
-            <div style={{ flex: 1 }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  marginBottom: "6px",
-                  color: "#ccc",
-                }}
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder=""
-                style={{
-                  width: "100%",
-                  background: "transparent",
-                  border: "1px solid #333",
-                  borderRadius: "6px",
-                  padding: "12px",
-                  color: "#fff",
-                  fontSize: "14px",
-                }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "24px" }}>
+      {/* Form */}
+      <form onSubmit={handleSubmit}>
+        <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+          <div style={{ flex: 1 }}>
             <label
               style={{
                 display: "block",
@@ -159,15 +66,12 @@ export function BorrowModal({ onClose }: { onClose: () => void }) {
                 color: "#ccc",
               }}
             >
-              Telegram{" "}
-              <span style={{ color: "#777", fontSize: "12px" }}>
-                (optional)
-              </span>
+              Name
             </label>
             <input
-              value={telegram}
-              onChange={(e) => setTelegram(e.target.value)}
-              placeholder="@handle"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="John Doe"
               style={{
                 width: "100%",
                 background: "transparent",
@@ -180,24 +84,82 @@ export function BorrowModal({ onClose }: { onClose: () => void }) {
             />
           </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
+          <div style={{ flex: 1 }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "13px",
+                marginBottom: "6px",
+                color: "#ccc",
+              }}
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@example.com"
+              style={{
+                width: "100%",
+                background: "transparent",
+                border: "1px solid #333",
+                borderRadius: "6px",
+                padding: "12px",
+                color: "#fff",
+                fontSize: "14px",
+              }}
+            />
+          </div>
+        </div>
+
+        <div style={{ marginBottom: "24px" }}>
+          <label
             style={{
-              width: "100%",
-              background: "#f4b400",
-              border: "none",
-              borderRadius: "6px",
-              padding: "14px",
-              fontSize: "16px",
-              fontWeight: 600,
-              cursor: "pointer",
+              display: "block",
+              fontSize: "13px",
+              marginBottom: "6px",
+              color: "#ccc",
             }}
           >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+            Telegram{" "}
+            <span style={{ color: "#777", fontSize: "12px" }}>
+              (optional)
+            </span>
+          </label>
+          <input
+            value={telegram}
+            onChange={(e) => setTelegram(e.target.value)}
+            placeholder="@MyTelegramHandle"
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "1px solid #333",
+              borderRadius: "6px",
+              padding: "12px",
+              color: "#fff",
+              fontSize: "14px",
+            }}
+          />
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          style={{
+            width: "100%",
+            background: "#f4b400",
+            border: "none",
+            borderRadius: "6px",
+            padding: "14px",
+            fontSize: "16px",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          Submit
+        </button>
+      </form>
+    </>
   );
 }

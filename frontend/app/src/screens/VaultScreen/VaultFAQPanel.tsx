@@ -110,7 +110,7 @@ export function VaultFAQPanel() {
                 Collateral volatility (backed by BTC, but over-collateralized ≥150%)
               </li>
             </ul>
-            <p >
+            <p style={{ marginTop: "12px" }}>
               However, sbvUSD minimizes risk through:
             </p>
             <ul style={{ listStyleType: "disc", listStylePosition: "inside" }}>
