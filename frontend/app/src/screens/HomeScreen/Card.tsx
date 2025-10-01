@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Button } from "@liquity2/uikit";
-import { css } from "@/styled-system/css";
 import { useState } from "react";
 
 type CTA = {
@@ -185,6 +183,7 @@ export function Card(props: Props) {
           flexDirection: "column",
           gap: "clamp(6px, 1.2vh, 10px)",
           fontSize: "clamp(13px, 2vh, 18px)",
+          fontWeight: 400,
           minHeight: 0,
         }}
       >

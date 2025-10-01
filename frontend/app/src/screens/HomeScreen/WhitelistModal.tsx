@@ -212,12 +212,13 @@ export function WhitelistModal() {
 
         {/* Submit */}
         <Button
-          label="Submit"
+          label="Join Whitelist"
           mode="primary"
           size="medium"
           shape="rectangular"
           wide
           disabled={(!email && !telegram) || !evmAddress}
+          type="submit"
         />
       </form>
 

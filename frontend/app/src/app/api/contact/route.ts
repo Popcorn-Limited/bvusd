@@ -3,13 +3,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, telegram } = await req.json();
+    const { name, email, telegram, amount, assets, newsletter } = await req.json();
 
     const form = new FormData();
     form.append("type", "contact");
     if (name) form.append("name", name);
     if (email) form.append("email", email);
     if (telegram) form.append("telegram", telegram);
+    if (amount) form.append("amount", amount);
+    if (assets) form.append("assets", assets);
+    if (newsletter) form.append("newsletter", newsletter);
 
     const upstream = await fetch(`https://formspree.io/f/${FORMSPREE}`, {
       method: "POST",

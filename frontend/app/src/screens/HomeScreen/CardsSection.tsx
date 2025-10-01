@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/src/services/ModalService";
 
 const sbvUSDBullets = [
-  "Allocated to market-neutral strategies & private credit",
+  "Allocated to market-neutral strategies and private credit",
   "Managed by institutional partners",
   "Backed 100% by bluechip stablecoins",
   "Open to all (ex. U.S. persons)",
-  "No minimums",
+  "No minimums for public access (coming soon)",
 ];
 
 const bvUSDBullets = [
@@ -113,7 +113,7 @@ export default function CardsSection() {
             badgeText="sbvUSD"
             apy="12%"
             headline="Institutional-Grade Yield"
-            subhead="Open to All"
+            subhead="Open to Select Partners"
             bullets={sbvUSDBullets}
             cta={{
               label: "Earn Now",

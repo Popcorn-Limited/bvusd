@@ -2,18 +2,28 @@ import { useState } from "react";
 import axios from "axios";
 import { useModal } from "@/src/services/ModalService";
 import { SuccessModalContent } from "./WhitelistModal";
+import { Button, Checkbox, TokenIcon, TokenSymbol } from "@liquity2/uikit";
+
+const ASSETS = {
+  "btc": false,
+  "usdc": false,
+  "usdt": false,
+}
 
 export function BorrowModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [telegram, setTelegram] = useState("");
+  const [amount, setAmount] = useState("<$1M");
+  const [assets, setAssets] = useState<{ [key: string]: boolean }>(ASSETS);
+  const [newsletter, setNewsletter] = useState(false);
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/contact", { name, email, telegram });
+      const res = await axios.post("/api/contact", { name, email, telegram, amount, assets, newsletter });
 
       if (res.status !== 200) {
         alert("Error");
@@ -37,7 +47,7 @@ export function BorrowModal() {
           marginBottom: "8px",
         }}
       >
-        Request access to borrow bvUSD
+        Request Access
       </h2>
 
       {/* Subtitle */}
@@ -46,32 +56,33 @@ export function BorrowModal() {
           textAlign: "center",
           fontSize: "16px",
           color: "#aaa",
-          marginBottom: "32px",
+          margin: "0 auto",
           lineHeight: 1.4,
+          width: "60%",
         }}
       >
-        Please complete the form below and a member of the Bitvault team will
-        reach out with the next steps
+        Provide info below and a team member
+        will be in touch with you shortly.
       </p>
 
       {/* Form */}
-      <form onSubmit={handleSubmit}>
-        <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-          <div style={{ flex: 1 }}>
+      <form onSubmit={handleSubmit} style={{ marginTop: "32px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+          <div style={{ gridColumn: "span 2" }}>
             <label
               style={{
                 display: "block",
-                fontSize: "13px",
+                fontSize: "14px",
                 marginBottom: "6px",
                 color: "#ccc",
               }}
             >
-              Name
+              Name of Fund / Institutions
             </label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="John Doe"
+              placeholder="Your fund / institutions name"
               style={{
                 width: "100%",
                 background: "transparent",
@@ -84,11 +95,47 @@ export function BorrowModal() {
             />
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div style={{ gridColumn: "span 1" }}>
             <label
               style={{
                 display: "block",
-                fontSize: "13px",
+                fontSize: "14px",
+                marginBottom: "6px",
+                color: "#ccc",
+              }}
+            >
+              Investing Asset
+            </label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
+              <AssetButton label="BTC" symbol="BVBTC" active={assets.btc} onClick={() => setAssets({ ...assets, btc: !assets.btc })} />
+              <AssetButton label="USDC" symbol="USDC" active={assets.usdc} onClick={() => setAssets({ ...assets, usdc: !assets.usdc })} />
+              <AssetButton label="USDT" symbol="USDT" active={assets.usdt} onClick={() => setAssets({ ...assets, usdt: !assets.usdt })} />
+            </div>
+          </div>
+
+          <div style={{ gridColumn: "span 1" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "14px",
+                marginBottom: "6px",
+                color: "#ccc",
+              }}
+            >
+              Amount to Invest
+            </label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
+              <AmountToggle amount="$1M-$5M" active={amount === "$1M-$5M"} onClick={() => setAmount("$1M-$5M")} />
+              <AmountToggle amount="$5M-$10M" active={amount === "$5M-$10M"} onClick={() => setAmount("$5M-$10M")} />
+              <AmountToggle amount="$50M" active={amount === "$50M"} onClick={() => setAmount("$50M")} />
+            </div>
+          </div>
+
+          <div style={{ gridColumn: "span 1" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "14px",
                 marginBottom: "6px",
                 color: "#ccc",
               }}
@@ -111,55 +158,86 @@ export function BorrowModal() {
               }}
             />
           </div>
-        </div>
 
-        <div style={{ marginBottom: "24px" }}>
-          <label
-            style={{
-              display: "block",
-              fontSize: "13px",
-              marginBottom: "6px",
-              color: "#ccc",
-            }}
-          >
-            Telegram{" "}
-            <span style={{ color: "#777", fontSize: "12px" }}>
-              (optional)
+          <div style={{ gridColumn: "span 1" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "13px",
+                marginBottom: "6px",
+                color: "#ccc",
+              }}
+            >
+              Telegram{" "}
+              <span style={{ color: "#777", fontSize: "12px" }}>
+                (optional)
+              </span>
+            </label>
+            <input
+              value={telegram}
+              onChange={(e) => setTelegram(e.target.value)}
+              placeholder="@MyTelegramHandle"
+              style={{
+                width: "100%",
+                background: "transparent",
+                border: "1px solid #333",
+                borderRadius: "6px",
+                padding: "12px",
+                color: "#fff",
+                fontSize: "14px",
+              }}
+            />
+          </div>
+
+          <div style={{ gridColumn: "span 2" }}>
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ width: "24px", height: "24px" }}>
+                <Checkbox checked={newsletter} onChange={() => setNewsletter(!newsletter)} appearance="checkbox" />
+              </div>
+              <p style={{ fontSize: "12px", fontWeight: 400, color: "#FFFFFF80", textAlign: "left", margin: "4px 0 0 8px" }}>
+                Subscribe to the BitVault newsletter for up-to-date alerts, tutorials, and partner drops. Unsubscribe anytime.
+              </p>
             </span>
-          </label>
-          <input
-            value={telegram}
-            onChange={(e) => setTelegram(e.target.value)}
-            placeholder="@MyTelegramHandle"
-            style={{
-              width: "100%",
-              background: "transparent",
-              border: "1px solid #333",
-              borderRadius: "6px",
-              padding: "12px",
-              color: "#fff",
-              fontSize: "14px",
-            }}
-          />
+          </div>
         </div>
 
         {/* Submit */}
-        <button
+        <Button
+          label="Request Access"
+          mode="primary"
+          size="medium"
+          shape="rectangular"
+          wide
           type="submit"
-          style={{
-            width: "100%",
-            background: "#f4b400",
-            border: "none",
-            borderRadius: "6px",
-            padding: "14px",
-            fontSize: "16px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          Submit
-        </button>
+          disabled={!name || !email || !amount || !Object.values(assets).some(Boolean)}
+        />
       </form>
     </>
   );
+}
+
+
+function AssetButton({ label, symbol, active, onClick }: { label: string, symbol: TokenSymbol, active: boolean, onClick: () => void }) {
+  return (
+    <div
+      style={{ background: "transparent", borderRadius: "18px", padding: "4px 8px", cursor: "pointer", border: active ? "1px solid #f4b400" : "1px solid #333" }}
+      onClick={onClick}
+    >
+      <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <TokenIcon symbol={symbol} size="small" />
+        <p style={{ fontSize: "14px", color: "#fff" }}>{label}</p>
+      </span>
+    </div>
+  )
+}
+
+function AmountToggle({ amount, active, onClick }: { amount: string, active: boolean, onClick: () => void }) {
+  return (
+    <div
+      style={{ background: "transparent", borderRadius: "18px", padding: "4px 8px", cursor: "pointer", border: active ? "1px solid #f4b400" : "1px solid #333" }}
+      onClick={onClick}
+    >
+      <p style={{ fontSize: "14px", color: "#fff", textAlign: "center" }}>{amount}</p>
+    </div>
+  )
 }
