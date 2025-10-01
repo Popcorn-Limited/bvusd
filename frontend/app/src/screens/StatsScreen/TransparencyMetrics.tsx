@@ -174,7 +174,7 @@ function InfoTooltip({ text, above }: { text: string; above?: boolean }) {
 
   return (
     <div
-      style={{ position: "relative", display: "inline-block", marginLeft: 10}}
+      style={{ position: "relative", display: "inline-block", marginLeft: 10, marginTop: -6}}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >

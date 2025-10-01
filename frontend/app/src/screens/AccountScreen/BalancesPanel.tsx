@@ -61,14 +61,7 @@ export function BalancesPanel() {
                 ? fmtnum(dn.mul(bvusdBalance.data, bvusdPrice.data), "2z")
                 : "0.00"
                 }`
-            },
-            {
-              label: "Locked",
-              value: `$${lockedBvUSDBalance.data && bvusdPrice.data
-                ? fmtnum(dn.mul(lockedBvUSDBalance.data, bvusdPrice.data), "2z")
-                : "0.00"
-                }`
-            },
+            }
           ]}
         />
         <TokenCard
