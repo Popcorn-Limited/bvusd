@@ -268,7 +268,7 @@ export function SuccessModalContent() {
       {/* Buttons */}
       <div style={{ display: "flex", gap: "16px", margin: "24px 0" }}>
         <Button label="Follow on X" mode="primary" size="medium" shape="rectangular" wide onClick={() => window.open("https://x.com/BitVaultFinance", "_blank")} />
-        <Button label="Join Telegram" mode="primary" size="medium" shape="rectangular" wide onClick={() => window.open("https://t.me/BitVaultFinance", "_blank")} />
+        <Button label="Join Telegram" mode="primary" size="medium" shape="rectangular" wide onClick={() => window.open("https://t.me/bitvaultTG", "_blank")} />
         {/* <Button label="Get a referral link" mode="primary" size="medium" shape="rectangular" wide /> */}
       </div>
     </>
