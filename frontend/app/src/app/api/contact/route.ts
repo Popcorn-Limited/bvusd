@@ -1,31 +1,25 @@
-import { FORMSPREE } from "@/src/env";
 import { NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js'
+import { SUPABASE_KEY, SUPABASE_URL } from "@/src/env";
 
 export async function POST(req: Request) {
   try {
     const { name, email, telegram, amount, assets, newsletter } = await req.json();
+    const assetsArray = Object.keys(assets).filter(key => assets[key]).join(', ');
 
-    const form = new FormData();
-    form.append("type", "contact");
-    if (name) form.append("name", name);
-    if (email) form.append("email", email);
-    if (telegram) form.append("telegram", telegram);
-    if (amount) form.append("amount", amount);
-    if (assets) form.append("assets", assets);
-    if (newsletter) form.append("newsletter", newsletter);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-    const upstream = await fetch(`https://formspree.io/f/${FORMSPREE}`, {
-      method: "POST",
-      body: form,
-      headers: { Accept: "application/json" },
-    });
+    const { data, error } = await supabase
+      .from('Instititutional')
+      .insert([
+        { name, email, telegram, amount, assets: assetsArray, newsletter },
+      ])
+      .select()
 
-    const data = await upstream.json().catch(() => ({}));
-
-    if (!upstream.ok || data?.ok === false) {
+    if (error) {
       return NextResponse.json(
-        { error: "Formspree error" },
-        { status: upstream.status || 422 }
+        { error: "Supabase error" },
+        { status: 422 }
       );
     }
 
