@@ -4,24 +4,22 @@ import { SUPABASE_KEY, SUPABASE_URL } from "@/src/env";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, telegram, amount, assets, newsletter } = await req.json();
-    const assetsArray = Object.keys(assets).filter(key => assets[key]).join(', ');
+    const { email, telegram, evmAddress, newsletter } = await req.json();
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
     const { data, error } = await supabase
-      .from('Instititutional')
+      .from('Whitelist')
       .insert([
-        { name, email, telegram, amount, assets: assetsArray, newsletter },
+        { email, telegram, evmAddress, newsletter },
       ])
       .select()
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Supabase error" },
-        { status: 422 }
-      );
-    }
+      if (error) {
+        return NextResponse.json(
+          { error: "Supabase error" },
+          { status: 422 }
+        );
+      }
 
     return NextResponse.json({ ok: true, data }, { status: 200 });
   } catch {

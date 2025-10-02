@@ -122,8 +122,11 @@ export function useButtonStyles({
     justifyContent: "center",
     whiteSpace: "nowrap",
     cursor: "pointer",
-    transition: "background 50ms",
-    color: "var(--color)",
+    transition: "background 50ms, color 50ms",
+    color: {
+      base: "var(--color)",
+      _hover: "var(--colorHover, var(--color))",
+    },
     textDecoration: "none",
     background: {
       base: "var(--background)",

@@ -1,6 +1,6 @@
 "use client";
 
-import { getBranches, useLiquityStats } from "@/src/liquity-utils";
+import { useLiquityStats } from "@/src/liquity-utils";
 import { TransparencyMetrics } from "./TransparencyMetrics";
 import { ChartsPanel } from "./ChartsPanel";
 // import { VenueAndSupplyPanel } from "./VenueAndSupplyPanels";
@@ -25,9 +25,6 @@ import { VaultsPanel } from "./VaultsPanel";
 // import { VaultsApy } from "./VaultsApy";
 // import { AllocationPanel } from "./Allocations";
 // import { LoansPanel } from "./LoansPanel";
-
-import { useChainConfig } from "@/src/services/ChainConfigProvider";
-
 
 export function StatsScreen() {
   const [activeTab, setActiveTab] = useState<"Core" | "BTC Institutional">(

@@ -6,6 +6,7 @@ import { usePrice } from "@/src/services/Prices";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
 import { TokenCard } from "./TokenCard";
+import { useLiquityStats } from "@/src/liquity-utils";
 
 
 export function BalancesPanel() {
@@ -15,6 +16,7 @@ export function BalancesPanel() {
   const sbvusdBalance = useBalance(account.address, "sbvUSD");
   const vcraftBalance = useBalance(account.address, "VCRAFT");
   const lockedBvUSDBalance = useBalance(account.address, "LbvUSD");
+  const stats = useLiquityStats();
 
   const bvusdPrice = usePrice("bvUSD");
   const sbvusdPrice = usePrice("sbvUSD");
@@ -59,14 +61,7 @@ export function BalancesPanel() {
                 ? fmtnum(dn.mul(bvusdBalance.data, bvusdPrice.data), "2z")
                 : "0.00"
                 }`
-            },
-            {
-              label: "Locked",
-              value: `$${lockedBvUSDBalance.data && bvusdPrice.data
-                ? fmtnum(dn.mul(lockedBvUSDBalance.data, bvusdPrice.data), "2z")
-                : "0.00"
-                }`
-            },
+            }
           ]}
         />
         <TokenCard
@@ -82,7 +77,10 @@ export function BalancesPanel() {
             },
             {
               label: "Apy",
-              value: "10%"
+              value: `${stats.data
+                ? fmtnum(Number(stats.data.sbvUSD[0].apy))
+                : "0.00"
+                }%`
             },
           ]}
         />

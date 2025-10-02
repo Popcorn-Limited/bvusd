@@ -109,89 +109,97 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     >
       <Field
         field={
-          <InputField
-            drawer={insufficientBalance
-              ? {
-                mode: "error",
-                message: `Insufficient balance. You have ${fmtnum(balances[inputSymbol].data ?? 0)} ${inputSymbol}.`,
-              }
-              : null
-            }
-            contextual={mode === "add" ?
-              <Dropdown
-                items={
-                  ["bvUSD", ...STABLE_SYMBOLS].map(symbol => ({
-                    icon: <TokenIcon symbol={symbol as Token["symbol"]} />,
-                    label: symbol,
-                    value: account.isConnected
-                      ? fmtnum(balances[symbol]?.data ?? 0)
-                      : "−",
-                  }))
+          <>
+            <InputField
+              drawer={insufficientBalance
+                ? {
+                  mode: "error",
+                  message: `Insufficient balance. You have ${fmtnum(balances[inputSymbol].data ?? 0)} ${inputSymbol}.`,
                 }
-                menuPlacement="end"
-                menuWidth={300}
-                onSelect={(index) => setInputSymbol(["bvUSD", ...STABLE_SYMBOLS][index] as Token["symbol"])}
-                // @ts-ignore
-                selected={["bvUSD", ...STABLE_SYMBOLS].indexOf(inputSymbol)}
-              />
-              : <InputTokenBadge
-                background={false}
-                icon={<TokenIcon symbol="bvUSD" />}
-                label="bvUSD"
-              />
-            }
-            id="input-deposit-change"
-            label={{
-              start: mode === "add"
-                ? content.earnScreen.depositPanel.label
-                : content.earnScreen.withdrawPanel.label,
-              end: (
-                <Tabs
-                  compact
-                  items={[
-                    { label: "Deposit", panelId: "panel-deposit", tabId: "tab-deposit" },
-                    { label: "Withdraw", panelId: "panel-withdraw", tabId: "tab-withdraw" },
-                  ]}
-                  onSelect={(index, { origin, event }) => {
-                    setMode(index === 1 ? "remove" : "add");
-                    setValue("");
-                    if (index === 1) {
-                      setInputSymbol("sbvUSD");
-                      setOutputSymbol("bvUSD");
-                    }
-                    else {
-                      setInputSymbol("bvUSD");
-                      setOutputSymbol("sbvUSD");
-                    }
-                    if (origin !== "keyboard") {
-                      event.preventDefault();
-                      (event.target as HTMLElement).focus();
-                    }
-                  }}
-                  selected={mode === "remove" ? 1 : 0}
+                : null
+              }
+              contextual={mode === "add" ?
+                <Dropdown
+                  items={
+                    ["bvUSD", ...STABLE_SYMBOLS].map(symbol => ({
+                      icon: <TokenIcon symbol={symbol as Token["symbol"]} />,
+                      label: symbol,
+                      value: account.isConnected
+                        ? fmtnum(balances[symbol]?.data ?? 0)
+                        : "−",
+                    }))
+                  }
+                  menuPlacement="end"
+                  menuWidth={300}
+                  onSelect={(index) => setInputSymbol(["bvUSD", ...STABLE_SYMBOLS][index] as Token["symbol"])}
+                  // @ts-ignore
+                  selected={["bvUSD", ...STABLE_SYMBOLS].indexOf(inputSymbol)}
                 />
-              )
-            }}
-            labelHeight={32}
-            onFocus={() => setFocused(true)}
-            onChange={setValue}
-            onBlur={() => setFocused(false)}
-            value={value_}
-            placeholder="0.00"
-            secondary={{
-              start: mode === "add"
-                ? <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />
-                : <EnsoPreview value={value_ || "0"} status={"success"} outputSymbol={outputSymbol} />,
-              end: balances[inputSymbol].data && (
-                <TextButton
-                  label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
-                  onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
+                : <InputTokenBadge
+                  background={false}
+                  icon={<TokenIcon symbol="bvUSD" />}
+                  label="bvUSD"
                 />
-              )
-            }}
-          />
+              }
+              id="input-deposit-change"
+              label={{
+                start: mode === "add"
+                  ? content.earnScreen.depositPanel.label
+                  : content.earnScreen.withdrawPanel.label,
+                end: (
+                  <Tabs
+                    compact
+                    items={[
+                      { label: "Deposit", panelId: "panel-deposit", tabId: "tab-deposit" },
+                      { label: "Withdraw", panelId: "panel-withdraw", tabId: "tab-withdraw" },
+                    ]}
+                    onSelect={(index, { origin, event }) => {
+                      setMode(index === 1 ? "remove" : "add");
+                      setValue("");
+                      if (index === 1) {
+                        setInputSymbol("sbvUSD");
+                        setOutputSymbol("bvUSD");
+                      }
+                      else {
+                        setInputSymbol("bvUSD");
+                        setOutputSymbol("sbvUSD");
+                      }
+                      if (origin !== "keyboard") {
+                        event.preventDefault();
+                        (event.target as HTMLElement).focus();
+                      }
+                    }}
+                    selected={mode === "remove" ? 1 : 0}
+                  />
+                )
+              }}
+              labelHeight={32}
+              onFocus={() => setFocused(true)}
+              onChange={setValue}
+              onBlur={() => setFocused(false)}
+              value={value_}
+              placeholder="0.00"
+              secondary={{
+                start: mode === "add"
+                  ? <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />
+                  : <EnsoPreview value={value_ || "0"} status={"success"} outputSymbol={outputSymbol} />,
+                end: balances[inputSymbol].data && (
+                  <TextButton
+                    label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
+                    onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
+                  />
+                )
+              }}
+            />
+            <span className={css({ display: "flex", alignItems: "center", gap: 4, color: "contentAlt2", fontSize: "14px" })}>
+              <p>Built with </p>
+              <img src="/icons/enso-gray.svg" alt="Enso" width={14} height={14} className={css({ color: "contentAlt2" })} />
+              <p>Enso</p>
+            </span>
+          </>
         }
       />
+
 
       {mode === "remove" && requestBalance && dn.gt(requestBalance.claimableAssets, 0) &&
         <ClaimAssets requestBalance={requestBalance} />

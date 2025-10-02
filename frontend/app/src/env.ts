@@ -185,6 +185,8 @@ export const EnvSchema = v.pipe(
         "WALLET_CONNECT_PROJECT_ID must be set",
       ),
     ),
+    SUPABASE_URL: v.string(),
+    SUPABASE_KEY: v.string(),
 
     CONTRACT_COLLATERAL_REGISTRY: vAddress(),
     CONTRACT_EXCHANGE_HELPERS: vAddress(),
@@ -381,4 +383,6 @@ export const {
   SUBGRAPH_API_KEY,
   VERCEL_ANALYTICS,
   WALLET_CONNECT_PROJECT_ID,
+  SUPABASE_URL,
+  SUPABASE_KEY,
 } = parsedEnv.output;

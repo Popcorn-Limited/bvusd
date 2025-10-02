@@ -1,20 +1,29 @@
 import Image from "next/image";
-import { Button } from "@liquity2/uikit";
+import { useState } from "react";
+
+type CTA = {
+  label: string;
+  onClick: () => void;
+  textColor?: string;
+  textHoverColor?: string;
+  buttonColor?: string;
+  hoverColor?: string;
+  borderColor?: string;
+  borderHoverColor?: string;
+}
 
 type Props = {
   tokenImage: string;
   backgroundColor: string;
   textColor: string;
-  buttonColor: string;
-  buttonText: string;
   imageUrl: string;
   badgeText: string;
   apy?: string;
   headline: string;
   subhead?: string;
   bullets: string[];
-  ctaText: string;
-  onCta: () => void;
+  cta: CTA;
+  cta2?: CTA;
 };
 
 export function Card(props: Props) {
@@ -22,16 +31,14 @@ export function Card(props: Props) {
     tokenImage,
     backgroundColor,
     textColor,
-    buttonColor,
-    buttonText,
     imageUrl,
     badgeText,
     apy,
     headline,
     subhead,
     bullets,
-    ctaText,
-    onCta,
+    cta,
+    cta2,
   } = props;
 
   // constants for alignment
@@ -176,6 +183,7 @@ export function Card(props: Props) {
           flexDirection: "column",
           gap: "clamp(6px, 1.2vh, 10px)",
           fontSize: "clamp(13px, 2vh, 18px)",
+          fontWeight: 400,
           minHeight: 0,
         }}
       >
@@ -213,23 +221,50 @@ export function Card(props: Props) {
         style={{
           marginTop: "auto",
           paddingTop: "50px",
+          display: "flex",
+          flexDirection: "row",
+          gap: 10,
         }}
       >
-        <Button
-          mode="primary"
-          shape="rounded"
-          wide
-          label={ctaText}
-          onClick={onCta}
-          style={
-            {
-              "--color": `${buttonText}`,
-              "--background": `${buttonColor}`,
-              "--backgroundHover": `${buttonColor}`,
-            } as React.CSSProperties
-          }
-        />
+        {cta &&
+          <CTAButton {...cta} />
+        }
+        {cta && cta2 &&
+          <CTAButton {...cta2} />
+        }
       </div>
     </div>
   );
+}
+
+
+function CTAButton(cta: CTA) {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <button
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        height: 48,
+        width: "100%",
+        padding: "0 14px",
+        fontSize: 16,
+        borderRadius: 4,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        whiteSpace: "nowrap",
+        textDecoration: "none",
+        cursor: "pointer",
+        transition: "background 50ms, color 50ms, border 50ms",
+        color: isHovered ? cta.textHoverColor : cta.textColor,
+        background: isHovered ? cta.hoverColor : cta.buttonColor,
+        border: isHovered ? `2px solid ${cta.borderHoverColor ?? cta.hoverColor}` : `2px solid ${cta.borderColor ?? cta.buttonColor}`
+      }}
+      onClick={cta.onClick}
+    >
+      {cta.label}
+    </button>
+
+  )
 }
