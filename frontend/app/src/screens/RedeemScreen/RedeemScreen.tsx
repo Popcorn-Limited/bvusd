@@ -10,6 +10,7 @@ import { dnum18 } from "@/src/dnum-utils";
 import { parseInputPercentage, useInputFieldValue } from "@/src/form-utils";
 import { fmtnum } from "@/src/formatting";
 import { getBranches, getCollToken } from "@/src/liquity-utils";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
@@ -22,10 +23,11 @@ import { useReadContract } from "wagmi";
 export function RedeemScreen() {
   const account = useAccount();
   const txFlow = useTransactionFlow();
+  const { chainConfig } = useChainConfig();
 
   const boldBalance = useBalance(account.address, "bvUSD");
 
-  const CollateralRegistry = getProtocolContract("CollateralRegistry");
+  const CollateralRegistry = getProtocolContract(chainConfig, "CollateralRegistry");
   const redemptionRate = useReadContract({
     ...CollateralRegistry,
     functionName: "getRedemptionRateWithDecay",
@@ -49,7 +51,7 @@ export function RedeemScreen() {
     hasUpdatedRedemptionRate.current = true;
   }
 
-  const branches = getBranches();
+  const branches = getBranches(chainConfig);
 
   const allowSubmit = account.isConnected
     && amount.parsed

@@ -67,6 +67,7 @@ export default function ClaimAssets({ requestBalance }: { requestBalance: Reques
               amount: requestBalance.claimableAssets,
               inputToken: "sbvUSD",
               outputToken: "bvUSD",
+              slippage: 50,
             });
           }}
         >
