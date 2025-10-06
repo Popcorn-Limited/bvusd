@@ -23,7 +23,7 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
   const [status, setStatus] = useState<EnsoForecast["status"]>("idle");
 
   useEffect(() => {
-    if (!inputValue || inputValue === "0") {
+    if (!inputValue || inputValue === "0" || !account) {
       setValue("0");
       setStatus("idle");
       return;

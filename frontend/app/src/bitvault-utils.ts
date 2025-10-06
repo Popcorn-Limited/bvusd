@@ -92,12 +92,8 @@ export function useVaultPosition(
 export function useIsWhitelistedUser(
   callingContract: Address,
   funcSig: `0x${string}`,
-  user: Address
+  user: Address = zeroAddress
 ): boolean {
-  if (!callingContract || !funcSig || !user) {
-    return false;
-  }
-
   const whitelist = getBranchContract(0, "Whitelist");
   const isWhitelistedUser = useReadContract({
     address: whitelist.address,
@@ -105,7 +101,7 @@ export function useIsWhitelistedUser(
     functionName: "isWhitelisted",
     args: [callingContract, funcSig, user],
   });
-  
+
   return isWhitelistedUser.data !== undefined
     ? isWhitelistedUser.data
     : false;
