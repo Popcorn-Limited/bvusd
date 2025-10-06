@@ -16,6 +16,9 @@ import { css } from "@/styled-system/css";
 import ClaimAssets from "./ClaimAssets";
 import useEnsoForecast from "@/src/enso-utils";
 import EnsoPreview from "@/src/comps/EnsoPreview";
+import { useIsWhitelistedUser } from "@/src/bitvault-utils";
+import { WhitelistModal } from "../HomeScreen/WhitelistModal";
+import { useModal } from "@/src/services/ModalService";
 
 
 export async function getNextWithdrawalDate(date?: number): Promise<{ days: number, hours: number, minutes: number, seconds: number, timeDiff: number }> {
@@ -55,6 +58,9 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
   const [withdrawalDate, setWithdrawalDate] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
+
+  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
+  const isWhitelisted = useIsWhitelistedUser("0x2e9fD409760D17b1ed277e000374698d531d19CE", "0xf45346dc", account.address)
 
   useEffect(() => {
     // Initial call
@@ -219,34 +225,47 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
           </p>
         }
         <ConnectWarningBox />
-        <Button
-          disabled={!allowSubmit}
-          label={content.earnScreen.depositPanel.action}
-          mode="primary"
-          size="medium"
-          shape="rectangular"
-          wide
-          onClick={() => {
-            if (!account.address || !balances[inputSymbol].data) {
-              return;
-            }
+        {isWhitelisted ?
+          <Button
+            disabled={!allowSubmit}
+            label={content.earnScreen.depositPanel.action}
+            mode="primary"
+            size="medium"
+            shape="rectangular"
+            wide
+            onClick={() => {
+              if (!account.address || !balances[inputSymbol].data) {
+                return;
+              }
 
-            txFlow.start({
-              flowId: "vaultUpdate",
-              backLink: [
-                `/vault`,
-                "Back to editing",
-              ],
-              successLink: ["/", "Go to the home page"],
-              successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
-              mode: mode,
-              amount: parsedValue,
-              inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
-              outputToken: outputSymbol as "bvUSD" | "sbvUSD",
-              slippage: 50,
-            });
-          }}
-        />
+              txFlow.start({
+                flowId: "vaultUpdate",
+                backLink: [
+                  `/vault`,
+                  "Back to editing",
+                ],
+                successLink: ["/", "Go to the home page"],
+                successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
+                mode: mode,
+                amount: parsedValue,
+                inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
+                outputToken: outputSymbol as "bvUSD" | "sbvUSD",
+                slippage: 50,
+              });
+            }}
+          />
+          : <Button
+            label="Join the whitelist"
+            mode="primary"
+            size="medium"
+            shape="rectangular"
+            wide
+            onClick={() => {
+              setModalContent(<WhitelistModal />);
+              setModalVisibility(true);
+            }}
+          />
+        }
       </div>
     </div>
   );

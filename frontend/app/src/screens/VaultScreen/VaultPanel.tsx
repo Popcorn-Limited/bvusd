@@ -1,6 +1,5 @@
 "use client";
 
-import { useVault, useVaultPosition } from "@/src/liquity-utils";
 import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
 import { a, useTransition } from "@react-spring/web";
@@ -11,6 +10,7 @@ import { useReadContract } from "wagmi";
 import { RequestBalance } from "@/src/types";
 import { dnum18, DNUM_0 } from "@/src/dnum-utils";
 import { zeroAddress } from "viem";
+import { useVault, useVaultPosition } from "@/src/bitvault-utils";
 
 const EMPTY_REQUEST_BALANCE: RequestBalance = {
   pendingShares: DNUM_0,

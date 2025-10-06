@@ -5,9 +5,8 @@ import {
   getBranch,
   getBranches,
   getCollToken,
-  useIsWhitelistedUser,
-  useProtocolOwner,
 } from "@/src/liquity-utils";
+import { useIsWhitelistedUser, useProtocolOwner } from "@/src/bitvault-utils";
 import { Field } from "@/src/comps/Field/Field";
 import {
   Address,
@@ -25,6 +24,7 @@ import { getBranchContract } from "@/src/contracts";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zeroAddress } from "viem";
+import { WhitelistAbi } from "@/src/abi/Whitelist";
 
 export function WhitelistScreen() {
   const txFlow = useTransactionFlow();
@@ -71,8 +71,8 @@ export function WhitelistScreen() {
     disableWhitelist || whitelistedContract == zeroAddress || user == undefined;
 
   const isWhitelistedUser = useIsWhitelistedUser(
-    whitelist.address,
     whitelistedContract,
+    "0xfd877a10",
     user
   );
 

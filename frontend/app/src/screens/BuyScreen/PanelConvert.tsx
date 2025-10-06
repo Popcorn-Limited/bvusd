@@ -13,6 +13,9 @@ import { useState } from "react";
 import useEnsoForecast from "@/src/enso-utils";
 import EnsoPreview from "@/src/comps/EnsoPreview";
 import { css } from "@/styled-system/css";
+import { useIsWhitelistedUser } from "@/src/bitvault-utils";
+import { useModal } from "@/src/services/ModalService";
+import { WhitelistModal } from "../HomeScreen/WhitelistModal";
 
 type ConvertMode = "buy" | "sell";
 
@@ -28,6 +31,8 @@ export function PanelConvert() {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
 
+  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
+  const isWhitelisted = useIsWhitelistedUser("0x2e9fD409760D17b1ed277e000374698d531d19CE", "0xf45346dc", account.address)
 
   const parsedValue = parseInputFloatWithDecimals(value, inputSymbol === "bvUSD" ? 18 : 6);
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
@@ -155,34 +160,48 @@ export function PanelConvert() {
         }}
       >
         <ConnectWarningBox />
-        <Button
-          disabled={!allowSubmit}
-          label={content.earnScreen.depositPanel.action}
-          mode="primary"
-          size="medium"
-          shape="rectangular"
-          wide
-          onClick={() => {
-            if (!account.address || !balances[inputSymbol].data) {
-              return;
-            }
+        {isWhitelisted ?
+          <Button
+            disabled={!allowSubmit}
+            label={content.earnScreen.depositPanel.action}
+            mode="primary"
+            size="medium"
+            shape="rectangular"
+            wide
+            onClick={() => {
+              if (!account.address || !balances[inputSymbol].data) {
+                return;
+              }
 
-            txFlow.start({
-              flowId: "convert",
-              backLink: [
-                `/buy`,
-                "Back to editing",
-              ],
-              successLink: ["/", "Go to the home page"],
-              successMessage: "Your order has been processed successfully.",
-              mode: mode,
-              amount: parsedValue,
-              inputToken: inputSymbol as "USDC" | "USDT" | "bvUSD",
-              outputToken: outputSymbol as "USDC" | "USDT" | "bvUSD",
-              slippage: 50,
-            });
-          }}
-        />
+              txFlow.start({
+                flowId: "convert",
+                backLink: [
+                  `/buy`,
+                  "Back to editing",
+                ],
+                successLink: ["/", "Go to the home page"],
+                successMessage: "Your order has been processed successfully.",
+                mode: mode,
+                amount: parsedValue,
+                inputToken: inputSymbol as "USDC" | "USDT" | "bvUSD",
+                outputToken: outputSymbol as "USDC" | "USDT" | "bvUSD",
+                slippage: 50,
+              });
+            }}
+          />
+          :
+          <Button
+            label="Join the whitelist"
+            mode="primary"
+            size="medium"
+            shape="rectangular"
+            wide
+            onClick={() => {
+              setModalContent(<WhitelistModal />);
+              setModalVisibility(true);
+            }}
+          />
+        }
       </div>
     </div>
   );

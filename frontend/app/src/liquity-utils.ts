@@ -78,8 +78,6 @@ import {
 } from "wagmi";
 import { readContract, readContracts } from "wagmi/actions";
 import { graphQuery, InterestBatchesQuery } from "./subgraph-queries";
-import { WhitelistAbi } from "./abi/Whitelist";
-import { AddressesRegistry } from "./abi/AddressesRegistry";
 
 export function shortenTroveId(troveId: TroveId, chars = 8) {
   return troveId.length < chars * 2 + 2
@@ -194,86 +192,7 @@ export function useEarnPool(branchId: null | BranchId) {
   };
 }
 
-export function useVault() {
-  const collateral = USDT;
 
-  const vaultReads = useReadContracts({
-    // @ts-ignore
-    contracts: [
-      {
-        address: CONTRACT_VAULT,
-        abi: erc4626Abi,
-        functionName: "totalAssets",
-      },
-      {
-        address: CONTRACT_VAULT,
-        abi: erc4626Abi,
-        functionName: "totalSupply",
-      },
-    ],
-    allowFailure: false,
-    query: {
-      select: ([totalAssets, totalSupply]) => ({
-        totalAssets: dnum18(totalAssets),
-        totalSupply: dnum18(totalSupply),
-      }),
-    },
-  });
-
-  return {
-    ...vaultReads,
-    data: {
-      apr: dnumOrNull(0.099, 18),
-      apr7d: dnumOrNull(0.1, 18),
-      collateral,
-      totalDeposited: vaultReads.data?.totalAssets ?? null,
-      price:
-        vaultReads.data?.totalSupply && vaultReads.data?.totalSupply > DNUM_0
-          ? dn.div(vaultReads.data?.totalAssets, vaultReads.data?.totalSupply)
-          : dnum18(1),
-    },
-  };
-}
-
-export function useIsWhitelistedUser(
-  whitelist: Address,
-  callingContract: Address,
-  user: Address
-) {
-  const isWhitelistedUser = useReadContracts({
-    // @ts-ignore
-    contracts: [
-      {
-        address: whitelist,
-        abi: WhitelistAbi,
-        functionName: "isWhitelisted",
-        args: [callingContract, user],
-      },
-    ],
-    allowFailure: false,
-  });
-
-  return isWhitelistedUser.data !== undefined
-    ? isWhitelistedUser.data[0]
-    : undefined;
-}
-
-export function useProtocolOwner(addressesRegistry: Address) {
-  const admin = useReadContracts({
-    // @ts-ignore
-    contracts: [
-      {
-        address: addressesRegistry,
-        abi: AddressesRegistry,
-        functionName: "owner",
-        args: [],
-      },
-    ],
-    allowFailure: false,
-  });
-
-  return admin.data !== undefined ? admin.data[0] : undefined;
-}
 
 export function isEarnPositionActive(position: PositionEarn | null) {
   return Boolean(
@@ -355,37 +274,6 @@ export function useEarnPosition(
         getBoldGains.status === "success" &&
         spReads.status === "success"
     ),
-  });
-}
-
-export function useVaultPosition(
-  account: null | Address
-): UseQueryResult<PositionEarn | null> {
-  const balance = useReadContract({
-    address: CONTRACT_VAULT,
-    abi: erc4626Abi,
-    functionName: "balanceOf",
-    args: [account ?? zeroAddress],
-    query: {
-      select: dnum18,
-    },
-  });
-
-  return useQuery({
-    queryKey: ["useVaultPosition", account],
-    queryFn: () => {
-      return {
-        type: "earn" as const,
-        owner: account,
-        deposit: balance.data ?? DNUM_0,
-        branchId: 0,
-        rewards: {
-          bold: DNUM_0,
-          coll: DNUM_0,
-        },
-      };
-    },
-    enabled: balance.status === "success",
   });
 }
 
@@ -648,7 +536,7 @@ export async function getTroveOperationHints({
   return { upperHint, lowerHint };
 }
 
-const StatsSchema = v.pipe(
+export const StatsSchema = v.pipe(
   v.object({
     total_bold_supply: v.string(),
     total_debt_pending: v.string(),
