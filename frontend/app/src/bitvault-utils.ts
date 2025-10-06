@@ -1,0 +1,125 @@
+import { Address, erc4626Abi, zeroAddress } from "viem";
+import { useReadContract, useReadContracts } from "wagmi";
+import { AddressesRegistry } from "./abi/AddressesRegistry";
+import { WhitelistAbi } from "./abi/Whitelist";
+import { CONTRACT_VAULT, LIQUITY_STATS_URL } from "./env";
+import { bvUSD } from "@liquity2/uikit";
+import * as dn from "dnum";
+import { dnum18, DNUM_0, dnumOrNull } from "./dnum-utils";
+import { StatsSchema, useLiquityStats } from "./liquity-utils";
+import { getBranchContract } from "./contracts";
+import { PositionEarn } from "./types";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import * as v from "valibot";
+
+export function useVault() {
+  const vaultReads = useReadContracts({
+    // @ts-ignore
+    contracts: [
+      {
+        address: CONTRACT_VAULT,
+        abi: erc4626Abi,
+        functionName: "totalAssets",
+      },
+      {
+        address: CONTRACT_VAULT,
+        abi: erc4626Abi,
+        functionName: "totalSupply",
+      },
+    ],
+    allowFailure: false,
+    query: {
+      select: ([totalAssets, totalSupply]) => ({
+        totalAssets: dnum18(totalAssets),
+        totalSupply: dnum18(totalSupply),
+      }),
+    },
+  });
+
+  return useQuery({
+    queryKey: ["useVault"],
+    queryFn: async () => {
+      const collateral = bvUSD;
+      const response = await fetch(LIQUITY_STATS_URL);
+      const json = await response.json();
+      const stats = v.parse(StatsSchema, json);
+
+      return {
+        apr: dnumOrNull(Number(stats.sbvUSD[0].apy) / 100, 4),
+        apr7d: dnumOrNull(Number(stats.sbvUSD[0].apy) / 100, 4),
+        collateral,
+        totalDeposited: vaultReads.data?.totalAssets ?? null,
+        price:
+          vaultReads.data?.totalSupply && vaultReads.data?.totalSupply > DNUM_0
+            ? dn.div(vaultReads.data?.totalAssets, vaultReads.data?.totalSupply)
+            : dnum18(1),
+      };
+    },
+  });
+}
+
+export function useVaultPosition(
+  account: null | Address
+): UseQueryResult<PositionEarn | null> {
+  const balance = useReadContract({
+    address: CONTRACT_VAULT,
+    abi: erc4626Abi,
+    functionName: "balanceOf",
+    args: [account ?? zeroAddress],
+    query: {
+      select: dnum18,
+    },
+  });
+
+  return useQuery({
+    queryKey: ["useVaultPosition", account],
+    queryFn: () => {
+      return {
+        type: "earn" as const,
+        owner: account,
+        deposit: balance.data ?? DNUM_0,
+        branchId: 0,
+        rewards: {
+          bold: DNUM_0,
+          coll: DNUM_0,
+        },
+      };
+    },
+    enabled: balance.status === "success",
+  });
+}
+
+export function useIsWhitelistedUser(
+  callingContract: Address,
+  funcSig: `0x${string}`,
+  user: Address = zeroAddress
+): boolean {
+  const whitelist = getBranchContract(0, "Whitelist");
+  const isWhitelistedUser = useReadContract({
+    address: whitelist.address,
+    abi: WhitelistAbi,
+    functionName: "isWhitelisted",
+    args: [callingContract, funcSig, user],
+  });
+
+  return isWhitelistedUser.data !== undefined
+    ? isWhitelistedUser.data
+    : false;
+}
+
+export function useProtocolOwner(addressesRegistry: Address) {
+  const admin = useReadContracts({
+    // @ts-ignore
+    contracts: [
+      {
+        address: addressesRegistry,
+        abi: AddressesRegistry,
+        functionName: "owner",
+        args: [],
+      },
+    ],
+    allowFailure: false,
+  });
+
+  return admin.data !== undefined ? admin.data[0] : undefined;
+}
