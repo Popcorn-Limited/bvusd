@@ -13,6 +13,8 @@ jobs:
     env:
       ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
       DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
+      KATANA_API_KEY: ${{ secrets.KATANA_KEY }}
+      DEBANK_KEY: ${{ secrets.DEBANK_KEY }}
 
     defaults:
       run:

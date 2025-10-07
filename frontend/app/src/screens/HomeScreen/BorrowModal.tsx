@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { useModal } from "@/src/services/ModalService";
 import { SuccessModalContent } from "./WhitelistModal";
 import { Button, Checkbox, TokenIcon, TokenSymbol } from "@liquity2/uikit";
+import { postInstitutionalRequest } from "@/src/actions";
 
 const ASSETS = {
   "btc": false,
@@ -23,9 +23,9 @@ export function BorrowModal() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/contact", { name, email, telegram, amount, assets, newsletter });
-
-      if (res.status !== 200) {
+      const res = await postInstitutionalRequest({name, email, telegram, amount, assets, newsletter})
+      
+      if (res.error) {
         alert("Error");
       } else {
         setModalContent(<SuccessModalContent />);
