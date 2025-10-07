@@ -2,14 +2,13 @@
 
 import type { TypedDocumentString } from "@/src/graphql/graphql";
 import type { Token, TokenSymbol } from "@/src/types";
-
+import { createClient } from "@supabase/supabase-js";
 import * as v from "valibot";
 import { Address } from "viem";
-
 import { getProtocolContract } from "./contracts";
 import { fmtnum } from "./formatting";
 
-export type EnsoForecast = {
+type EnsoForecast = {
   value: string;
   status: "idle" | "loading" | "success" | "error";
 };
@@ -177,4 +176,73 @@ export async function getGraphQuery<TResult, TVariables>(
 
   const result = await response.json();
   return result;
+}
+
+type Assets = {
+  [key: string]: boolean;
+};
+
+type InstititutionalRequest = {
+  name: string;
+  email: string;
+  telegram: string;
+  amount: string;
+  assets: Assets;
+  newsletter: boolean;
+};
+
+export async function postInstitutionalRequest(req: InstititutionalRequest): Promise<any> {
+  try {
+    const { name, email, telegram, amount, assets, newsletter } = req;
+
+    const assetsArray = Object.keys(assets).filter((key) => assets[key]).join(", ");
+
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+    const { data, error } = await supabase
+      .from("Instititutional")
+      .insert([
+        { name, email, telegram, amount, assets: assetsArray, newsletter },
+      ])
+      .select();
+
+    if (error) {
+      return { error: "Supabase error" };
+    }
+
+    return { data };
+  } catch {
+    return { error: "Invalid body" };
+  }
+}
+
+type WhitelistRequest = {
+  email: string;
+  telegram: string;
+  evmAddress: string;
+  newsletter: boolean;
+};
+
+export async function postWhitelistRequest(req: WhitelistRequest): Promise<any> {
+  try {
+    const { email, telegram, evmAddress, newsletter } = req;
+
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+    const { data, error } = await supabase
+      .from("Whitelist")
+      .insert([
+        { email, telegram, evmAddress, newsletter },
+      ])
+      .select();
+
+    if (error) {
+      console.log("2")
+      return { error: "Supabase error" };
+    }
+
+    return { data };
+  } catch {
+    console.log("3")
+    return { error: "Invalid body" };
+  }
 }

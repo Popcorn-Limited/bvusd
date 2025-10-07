@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Checkbox } from "@liquity2/uikit";
 import { useModal } from "@/src/services/ModalService";
 import { BorrowModal } from "./BorrowModal";
-import axios from "axios";
+import { postWhitelistRequest } from "@/src/actions";
 
 const BENEFITS = [
   "Exact launch date/time + early how-tos",
@@ -22,9 +22,9 @@ export function WhitelistModal() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/whitelist", { email, telegram, evmAddress, newsletter });
+      const res = await postWhitelistRequest({ email, telegram, evmAddress, newsletter });
 
-      if (res.status !== 200) {
+      if (res.error) {
         alert("Error");
       } else {
         setModalContent(<SuccessModalContent />);
