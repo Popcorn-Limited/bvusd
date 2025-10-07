@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js'
-import { SUPABASE_KEY, SUPABASE_URL } from "@/src/env";
 
 export async function POST(req: Request) {
   try {
     const { email, telegram, evmAddress, newsletter } = await req.json();
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
     const { data, error } = await supabase
       .from('Whitelist')
       .insert([

@@ -146,31 +146,7 @@ export const EnvSchema = v.pipe(
       null,
     ),
     CHAIN_CONTRACT_MULTICALL: vAddress(),
-    COINGECKO_API_KEY: v.pipe(
-      v.optional(v.string(), ""),
-      v.rawTransform(({ dataset, addIssue, NEVER }) => {
-        const [apiType, apiKey] = dataset.value.split("|");
-        if (!apiKey) {
-          return null; // no API key
-        }
-        if (apiType !== "demo" && apiType !== "pro") {
-          addIssue({ message: `Invalid CoinGecko API type: ${apiType}` });
-          return NEVER;
-        }
-        if (!apiKey.trim()) {
-          addIssue({ message: `Invalid CoinGecko API key (empty)` });
-          return NEVER;
-        }
-        return {
-          apiType: apiType as "demo" | "pro",
-          apiKey,
-        };
-      }),
-    ),
-    ENSO_API_KEY: v.string(),
     ENSO_ROUTER: vAddress(),
-    FORMSPREE: v.string(),
-    DEFILLAMA_API_KEY: v.string(),
     CONTRACTS_COMMIT_HASH: v.string(),
     CONTRACTS_COMMIT_URL: v.pipe(
       vEnvUrlOrDefault(DEFAULT_COMMIT_URL),
@@ -189,8 +165,6 @@ export const EnvSchema = v.pipe(
     DIFFS_STATS_URL: v.optional(v.pipe(v.string(), v.url())),
     ALLOWLIST_URL: v.optional(v.pipe(v.string(), v.url())),
     SAFE_API_URL: v.optional(v.pipe(v.string(), v.url())),
-    SUBGRAPH_URL: v.pipe(v.string(), v.url()),
-    SUBGRAPH_API_KEY: v.string(),
     VERCEL_ANALYTICS: v.optional(vEnvFlag(), "false"),
     WALLET_CONNECT_PROJECT_ID: v.pipe(
       v.string(),
@@ -200,8 +174,6 @@ export const EnvSchema = v.pipe(
         "WALLET_CONNECT_PROJECT_ID must be set",
       ),
     ),
-    SUPABASE_URL: v.string(),
-    SUPABASE_KEY: v.string(),
 
     CONTRACT_BOLD_TOKEN: vAddress(),
     CONTRACT_COLLATERAL_REGISTRY: vAddress(),
@@ -304,9 +276,6 @@ const parsedEnv = v.safeParse(EnvSchema, {
   CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
   CHAIN_NAME: process.env.NEXT_PUBLIC_CHAIN_NAME,
   CHAIN_RPC_URL: process.env.NEXT_PUBLIC_CHAIN_RPC_URL,
-  COINGECKO_API_KEY: process.env.NEXT_PUBLIC_COINGECKO_API_KEY,
-  DEFILLAMA_API_KEY: process.env.NEXT_PUBLIC_DEFILLAMA_API_KEY,
-  ENSO_API_KEY: process.env.NEXT_PUBLIC_ENSO_API_KEY,
   ENSO_ROUTER: process.env.NEXT_PUBLIC_ENSO_ROUTER,
   CONTRACTS_COMMIT_HASH: (
     // CONTRACTS_COMMIT_HASH_FROM_BUILD is set at build time (see next.config.js)
@@ -317,19 +286,13 @@ const parsedEnv = v.safeParse(EnvSchema, {
   CONTRACTS_COMMIT_URL: process.env.NEXT_PUBLIC_CONTRACTS_COMMIT_URL,
   DEMO_MODE: process.env.NEXT_PUBLIC_DEMO_MODE,
   DEPLOYMENT_FLAVOR: process.env.NEXT_PUBLIC_DEPLOYMENT_FLAVOR,
-  FORMSPREE: process.env.NEXT_PUBLIC_FORMSPREE,
   KNOWN_INITIATIVES_URL: process.env.NEXT_PUBLIC_KNOWN_INITIATIVES_URL,
   LIQUITY_STATS_URL: process.env.NEXT_PUBLIC_LIQUITY_STATS_URL,
   DIFFS_STATS_URL: process.env.NEXT_PUBLIC_DIFFS_STATS_URL,
   ALLOWLIST_URL: process.env.NEXT_PUBLIC_ALLOWLIST_URL,
   SAFE_API_URL: process.env.NEXT_PUBLIC_SAFE_API_URL,
-  SUBGRAPH_URL: process.env.NEXT_PUBLIC_SUBGRAPH_URL,
-  SUBGRAPH_API_KEY: process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY,
   VERCEL_ANALYTICS: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS,
   WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
-
-  SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_KEY,
 
   CONTRACT_BOLD_TOKEN: process.env.NEXT_PUBLIC_CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY: process.env.NEXT_PUBLIC_CONTRACT_COLLATERAL_REGISTRY,
@@ -400,12 +363,8 @@ export const {
   CHAIN_ID,
   CHAIN_NAME,
   CHAIN_RPC_URL,
-  COINGECKO_API_KEY,
-  DEFILLAMA_API_KEY,
-  ENSO_API_KEY,
   ENSO_ROUTER,
   ENV_BRANCHES,
-  FORMSPREE,
   CONTRACTS_COMMIT_HASH,
   CONTRACTS_COMMIT_URL,
   CONTRACT_BOLD_TOKEN,
@@ -432,10 +391,6 @@ export const {
   DIFFS_STATS_URL,
   ALLOWLIST_URL,
   SAFE_API_URL,
-  SUBGRAPH_URL,
-  SUBGRAPH_API_KEY,
   VERCEL_ANALYTICS,
   WALLET_CONNECT_PROJECT_ID,
-  SUPABASE_URL,
-  SUPABASE_KEY,
 } = parsedEnv.output;

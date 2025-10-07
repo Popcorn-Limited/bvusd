@@ -7,12 +7,12 @@ import type { Dnum } from "dnum";
 import { PRICE_REFRESH_INTERVAL } from "@/src/constants";
 import { getBranchContract } from "@/src/contracts";
 import { dnum18 } from "@/src/dnum-utils";
-import { COINGECKO_API_KEY, DEFILLAMA_API_KEY } from "@/src/env";
 import { isCollateralSymbol } from "@liquity2/uikit";
 import { useQuery } from "@tanstack/react-query";
 import * as dn from "dnum";
 import * as v from "valibot";
 import { useReadContract } from "wagmi";
+import { getCoingeckoPrice, getDefiLlamaPrices } from "../actions";
 
 type PriceToken = "bvUSD" | "BOLD" | CollateralSymbol | "sbvUSD" | "VCRAFT" | "WBTC" | "USDT";
 
@@ -60,37 +60,7 @@ function useCoinGeckoPrice(
         throw new Error("Unsupported symbol");
       }
 
-      const url = new URL("https://api.coingecko.com/api/v3/simple/price");
-      url.searchParams.set("vs_currencies", "usd");
-      url.searchParams.set("ids", Object.values(coinGeckoTokenIds).join(","));
-
-      const headers: HeadersInit = { accept: "application/json" };
-
-      if (COINGECKO_API_KEY?.apiType === "demo") {
-        headers["x-cg-demo-api-key"] = COINGECKO_API_KEY.apiKey;
-      } else if (COINGECKO_API_KEY?.apiType === "pro") {
-        headers["x-cg-pro-api-key"] = COINGECKO_API_KEY.apiKey;
-      }
-
-      const response = await fetch(url, { headers });
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch price for ${Object.keys(coinGeckoTokenIds).join(
-            ","
-          )}`
-        );
-      }
-
-      const result = v.parse(
-        v.object(
-          v.entriesFromList(
-            Object.values(coinGeckoTokenIds),
-            v.object({ usd: v.number() })
-          )
-        ),
-        await response.json()
-      );
+      const result = await getCoingeckoPrice(coinGeckoTokenIds);
 
       const prices = {} as { [key in CoinGeckoSymbol]: Dnum | null };
 
@@ -117,7 +87,7 @@ function useCoinGeckoPrice(
 const defiLlamaTokenIds: {
   [key in CoinGeckoSymbol]: string;
 } = {
-  BVBTC: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+  BVBTC: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
 };
 
 function useDefiLlamaPrice(
@@ -130,21 +100,7 @@ function useDefiLlamaPrice(
         throw new Error("Unsupported symbol");
       }
 
-      const url = new URL(`https://pro-api.llama.fi/${DEFILLAMA_API_KEY}/coins/prices/current/ethereum:0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,ethereum:0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,ethereum:0xB8c77482e45F1F44dE1745F52C74426C631bDD52`);
-
-      const headers: HeadersInit = { accept: "application/json" };
-
-      const response = await fetch(url, { headers });
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch price for ${Object.keys(defiLlamaTokenIds).join(
-            ","
-          )}`
-        );
-      }
-
-      const result = await response.json()
+      const result = await getDefiLlamaPrices(defiLlamaTokenIds);
 
       const prices = {} as { [key in CoinGeckoSymbol]: Dnum | null };
       
@@ -170,7 +126,7 @@ function useDefiLlamaPrice(
 
 export function usePrice<PT extends PriceToken>(
   symbol: PT | null
-): UseQueryResult<Dnum> {
+): UseQueryResult<Dnum> { 
   const fromCoinGecko = symbol === "BVBTC";
   const fromPriceFeed =
     !fromCoinGecko && symbol !== null && isCollateralSymbol(symbol);
