@@ -23,8 +23,8 @@ function findSubgraphUrl(envFile: string, key: string) {
   }
 }
 
-const subgraphUrl = findSubgraphUrl(".env.local", "SUBGRAPH_URL") ?? findSubgraphUrl(".env", "SUBGRAPH_URL");
-const subgraphApiKey = findSubgraphUrl(".env.local", "SUBGRAPH_API_KEY") ?? findSubgraphUrl(".env", "SUBGRAPH_API_KEY");
+const subgraphUrl = process.env.SUBGRAPH_URL //findSubgraphUrl(".env.local", "SUBGRAPH_URL") ?? findSubgraphUrl(".env", "SUBGRAPH_URL");
+const subgraphApiKey = process.env.SUBGRAPH_API_KEY //findSubgraphUrl(".env.local", "SUBGRAPH_API_KEY") ?? findSubgraphUrl(".env", "SUBGRAPH_API_KEY");
 
 if (!subgraphUrl) {
   throw new Error(
