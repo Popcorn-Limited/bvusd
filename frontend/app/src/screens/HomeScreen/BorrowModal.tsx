@@ -23,8 +23,8 @@ export function BorrowModal() {
     e.preventDefault();
 
     try {
-      const res = await postInstitutionalRequest({name, email, telegram, amount, assets, newsletter})
-      
+      const res = await postInstitutionalRequest({ name, email, telegram, amount, assets, newsletter })
+
       if (res.error) {
         alert("Error");
       } else {
@@ -38,6 +38,13 @@ export function BorrowModal() {
 
   return (
     <>
+      <style jsx>{`
+        .newsletter-row { grid-column: span 1; }
+        @media (min-width: 768px) {
+          .newsletter-row { grid-column: span 2; }
+        }
+      `}
+      </style>
       {/* Title */}
       <h2
         style={{
@@ -69,7 +76,7 @@ export function BorrowModal() {
       {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginTop: "32px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", margin: "24px 0" }}>
-          <div style={{ gridColumn: "span 1" }}>
+          <div className="newsletter-row">
             <label
               style={{
                 display: "block",
@@ -190,7 +197,7 @@ export function BorrowModal() {
             />
           </div>
 
-          <div style={{ gridColumn: "span 1" }}>
+          <div className="newsletter-row">
             <span style={{ display: "flex", alignItems: "center" }}>
               <div style={{ width: "24px", height: "24px" }}>
                 <Checkbox checked={newsletter} onChange={() => setNewsletter(!newsletter)} appearance="checkbox" />
