@@ -47,9 +47,9 @@ export default function Layout({
                     <About>
                       <ModalProvider>
                         <AppLayout>
-                          <ModalRoot />
                           {children}
                         </AppLayout>
+                        <ModalRoot />
                       </ModalProvider>
                     </About>
                   </TransactionFlow>

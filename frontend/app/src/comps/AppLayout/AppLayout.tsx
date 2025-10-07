@@ -12,6 +12,14 @@ import { fmtnum } from "@/src/formatting";
 import { useAccount, useBalance, useEnforceChain } from "@/src/wagmi-utils";
 import { usePrice } from "@/src/services/Prices";
 import { TokenCard } from "@/src/screens/AccountScreen/TokenCard";
+import { Card } from "@/src/screens/HomeScreen/Card";
+import tokenbvUSD from "../../../../uikit/src/token-icons/bvusd.svg";
+import tokensbvUSD from "../../../../uikit/src/token-icons/sbvusd.svg";
+import { bvUSDBullets, sbvUSDBullets } from "@/src/screens/HomeScreen/CardsSection";
+import { useModal } from "@/src/services/ModalService";
+import { useRouter } from "next/navigation";
+import { WhitelistModal } from "@/src/screens/HomeScreen/WhitelistModal";
+import { BorrowModal } from "@/src/screens/HomeScreen/BorrowModal";
 
 export const LAYOUT_WIDTH = 1392;
 
@@ -76,6 +84,8 @@ export function AppLayout({
 
 function MobileScreen() {
   const account = useAccount();
+  const router = useRouter();
+  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
 
   const bvusdBalance = useBalance(account.address, "bvUSD");
   const sbvusdBalance = useBalance(account.address, "sbvUSD");
@@ -154,10 +164,66 @@ function MobileScreen() {
         <AccountButton size="mini" />
 
       </div>
+
       <div
         className={css({
           width: "90%",
           margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+        })}
+      >
+        <Card
+          tokenImage={tokenbvUSD}
+          backgroundColor="#F6AE3F"
+          textColor="black"
+          imageUrl={"/sbvUSDBackground.jpg"}
+          badgeText="sbvUSD"
+          apy="12%"
+          headline="Institutional-Grade Yield"
+          subhead="Open to Select Partners"
+          bullets={sbvUSDBullets}
+          cta={{
+            label: "Join Whitelist",
+            onClick: () => {
+              setModalContent(<WhitelistModal />);
+              setModalVisibility(true);
+            },
+            textColor: "#F6AE3F",
+            textHoverColor: "white",
+            buttonColor: "black",
+            hoverColor: "#23262F",
+            borderColor: "black",
+            borderHoverColor: "#23262F",
+          }}
+        />
+        <Card
+          tokenImage={tokensbvUSD}
+          backgroundColor="#23262F"
+          textColor="white"
+          imageUrl={"/bvUSDBackground.jpg"}
+          badgeText="bvUSD"
+          headline="Institutional Borrowing"
+          bullets={bvUSDBullets}
+          cta={{
+            label: "Borrow Now",
+            onClick: () => {
+              setModalContent(<BorrowModal />);
+              setModalVisibility(true);
+            },
+            textColor: "#F6AE3F",
+            textHoverColor: "black",
+            buttonColor: "black",
+            hoverColor: "#F6AE3F",
+          }}
+        />
+      </div>
+
+      <div
+        className={css({
+          width: "90%",
+          margin: "24px auto",
         })}
       >
         <h1
@@ -229,6 +295,7 @@ function MobileScreen() {
           />
         </div>
       </div>
+
     </div>
   )
 }

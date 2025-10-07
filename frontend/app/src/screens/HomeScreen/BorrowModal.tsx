@@ -55,10 +55,11 @@ export function BorrowModal() {
         style={{
           textAlign: "center",
           fontSize: "16px",
+          fontWeight: 400,
           color: "#aaa",
-          margin: "0 auto",
           lineHeight: 1.4,
           width: "60%",
+          margin: "8px auto 0 auto",
         }}
       >
         Provide info below and a team member
@@ -67,8 +68,8 @@ export function BorrowModal() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginTop: "32px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-          <div style={{ gridColumn: "span 2" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", margin: "24px 0" }}>
+          <div style={{ gridColumn: "span 1" }}>
             <label
               style={{
                 display: "block",
@@ -189,7 +190,7 @@ export function BorrowModal() {
             />
           </div>
 
-          <div style={{ gridColumn: "span 2" }}>
+          <div style={{ gridColumn: "span 1" }}>
             <span style={{ display: "flex", alignItems: "center" }}>
               <div style={{ width: "24px", height: "24px" }}>
                 <Checkbox checked={newsletter} onChange={() => setNewsletter(!newsletter)} appearance="checkbox" />

@@ -7,7 +7,7 @@ import { WhitelistModal } from "./WhitelistModal";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/src/services/ModalService";
 
-const sbvUSDBullets = [
+export const sbvUSDBullets = [
   "Allocated to market-neutral strategies and private credit",
   "Managed by institutional partners",
   "Backed 100% by bluechip stablecoins",
@@ -15,7 +15,7 @@ const sbvUSDBullets = [
   "No minimums for public access (coming soon)",
 ];
 
-const bvUSDBullets = [
+export const bvUSDBullets = [
   "Earn REAL YIELD on your Bitcoin",
   "Overcollateralized Borrowing",
   "KYB required, minimum 1 BTC",
