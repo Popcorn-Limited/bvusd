@@ -17,13 +17,16 @@ import { useReadContract } from "wagmi";
 import { getProtocolContract } from "@/src/contracts";
 import { erc20Abi } from "viem";
 import { dnum18 } from "@/src/dnum-utils";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 const DISPLAYED_PRICES = ["bvUSD"] as const;
 
 export function BottomBar() {
   const account = useAccount();
+  const { chainConfig } = useChainConfig();
+
   const totalSupply = useReadContract({
-    address: getProtocolContract("bvUSD").address,
+    address: getProtocolContract(chainConfig, "bvUSD").address,
     abi: erc20Abi,
     functionName: "totalSupply",
   });

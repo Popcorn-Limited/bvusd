@@ -1,4 +1,5 @@
 import type { ComponentPropsWithRef, ReactNode } from "react";
+import Image from "next/image";
 
 import content from "@/src/content";
 import { css } from "@/styled-system/css";
@@ -7,6 +8,7 @@ import { a, useTransition } from "@react-spring/web";
 import { ConnectKitButton } from "connectkit";
 import { match, P } from "ts-pattern";
 import { MenuItem } from "./MenuItem";
+import { supportedChainIcons } from "@/src/config/chains";
 
 export function AccountButton({ size = "small" }: { size?: "small" | "mini" }) {
   return (
@@ -67,6 +69,7 @@ function CKButton({
       {mode === "connected"
         ? (
           <ButtonConnected
+            chain={chain?.name ?? "Unknown"}
             label={ensName ?? shortenAddress(address, 3)}
             onClick={show}
             title={address}
@@ -92,11 +95,13 @@ function CKButton({
 }
 
 function ButtonConnected({
+  chain,
   label,
   onClick,
   title,
   size = "small",
 }: {
+  chain: string;
   label: ReactNode;
   onClick?: () => void;
   title?: string;
@@ -121,6 +126,19 @@ function ButtonConnected({
         background: "neutralDimmed300",
       })}
     >
+      {chain !== "unknown" && (
+        <div style={{
+          width: "50%",
+          height: "100%",
+        }}>{<Image
+          src={supportedChainIcons[chain.toLowerCase()]}
+          alt={supportedChainIcons[chain.toLowerCase()]}
+          width={24}
+          height={24}
+          style={{ borderRadius: "50%" }}
+        />}</div>
+      )}
+
       <MenuItem
         icon={undefined}
         label={label}

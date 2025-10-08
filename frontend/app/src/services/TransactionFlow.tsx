@@ -39,6 +39,7 @@ import { vaultUpdate, type VaultUpdateRequest } from "@/src/tx-flows/vaultUpdate
 import { convert, type ConvertRequest } from "@/src/tx-flows/convert";
 import { addToWhitelist, type AddToWhitelistRequest, removeFromWhitelist, type RemoveFromWhitelistRequest } from "@/src/tx-flows/whitelistAdmin";
 import { lockToken, type LockTokenRequest } from "@/src/tx-flows/lock";
+import { ChainEnv, useChainConfig } from "./ChainConfigProvider";
 
 export type FlowRequestMap = {
   "claimCollateralSurplus": ClaimCollateralSurplusRequest;
@@ -182,6 +183,7 @@ export type FlowParams<FlowRequest extends BaseFlowRequest = BaseFlowRequest> = 
   storedState: ReturnType<typeof useStoredState>;
   wagmiConfig: WagmiConfig;
   writeContract: ReturnType<typeof getWriteContract>;
+  contractConfig: ChainEnv;
 };
 
 function getReadContract(config: WagmiConfig) {
@@ -302,6 +304,7 @@ export function TransactionFlow({
   const router = useRouter();
   const storedState = useStoredState();
   const wagmiConfig = useWagmiConfig();
+  const { chainConfig } = useChainConfig();
 
   const {
     clearError,
@@ -335,9 +338,10 @@ export function TransactionFlow({
         flowDeclaration,
         flowParams: flow && account.address
           ? {
+            contractConfig: chainConfig,
             ...flow,
             account: account.address,
-            contracts: CONTRACTS,
+            contracts: CONTRACTS(chainConfig),
             isSafe: account.safeStatus !== null,
             preferredApproveMethod: storedState.preferredApproveMethod,
             readContract: getReadContract(wagmiConfig),
@@ -361,6 +365,7 @@ function useSteps(
   const account = useAccount();
   const storedState = useStoredState();
   const wagmiConfig = useWagmiConfig();
+  const { chainConfig } = useChainConfig();
 
   return useQuery({
     enabled,
@@ -380,8 +385,9 @@ function useSteps(
       }
 
       return flowDeclaration.getSteps({
+        contractConfig: chainConfig,
         account: account.address,
-        contracts: CONTRACTS,
+        contracts: CONTRACTS(chainConfig),
         isSafe: account.safeStatus !== null,
         preferredApproveMethod: storedState.preferredApproveMethod,
         readContract: getReadContract(wagmiConfig),
@@ -400,6 +406,7 @@ function useFlowManager(account: Address | null, isSafe: boolean = false) {
   const wagmiConfig = useWagmiConfig();
   const storedState = useStoredState();
   const runningStepRef = useRef<string | null>(null);
+  const { chainConfig } = useChainConfig();
 
   useEffect(() => {
     if (!account || (flow && flow.account !== account)) {
@@ -432,9 +439,10 @@ function useFlowManager(account: Address | null, isSafe: boolean = false) {
       runningStepRef.current = stepKey;
 
       const params: FlowParams<FlowRequestMap[keyof FlowRequestMap]> = {
+        contractConfig: chainConfig,
         readContract: getReadContract(wagmiConfig),
         account,
-        contracts: CONTRACTS,
+        contracts: CONTRACTS(chainConfig),
         isSafe,
         preferredApproveMethod: storedState.preferredApproveMethod,
         request: flow.request,

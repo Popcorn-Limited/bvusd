@@ -5,11 +5,11 @@ import type { Dnum } from "dnum";
 import { SP_YIELD_SPLIT } from "@/src/constants";
 import { getBranchContract } from "@/src/contracts";
 import { dnum18 } from "@/src/dnum-utils";
-import { CHAIN_CONTRACT_MULTICALL } from "@/src/env";
 import { getCollToken } from "@/src/liquity-utils";
 import { useStabilityPoolDeposit, useStabilityPoolEpochScale } from "@/src/subgraph-hooks";
 import { useQuery } from "@tanstack/react-query";
 import { serialize, useReadContracts } from "wagmi";
+import { useChainConfig } from "./services/ChainConfigProvider";
 
 const DECIMAL_PRECISION = 10n ** 18n;
 const SCALE_FACTOR = 10n ** 9n;
@@ -98,8 +98,10 @@ type DepositParameters = {
 };
 
 function useSpYieldGainParameters(symbol: CollateralSymbol | null) {
-  const ActivePool = getBranchContract(symbol, "ActivePool");
-  const StabilityPool = getBranchContract(symbol, "StabilityPool");
+  const { chainConfig } = useChainConfig();
+
+  const ActivePool = getBranchContract(chainConfig, symbol, "ActivePool");
+  const StabilityPool = getBranchContract(chainConfig, symbol, "StabilityPool");
 
   const AP = ActivePool as NonNullable<typeof ActivePool>;
   const SP = StabilityPool as NonNullable<typeof StabilityPool>;
@@ -115,7 +117,7 @@ function useSpYieldGainParameters(symbol: CollateralSymbol | null) {
       { ...SP, functionName: "getTotalBoldDeposits" },
       { ...SP, functionName: "getYieldGainsPending" },
     ],
-    multicallAddress: CHAIN_CONTRACT_MULTICALL,
+    multicallAddress: chainConfig.CHAIN_CONTRACT_MULTICALL,
     query: {
       refetchInterval: 30_000,
       select: ([

@@ -41,9 +41,12 @@ import {
 import * as dn from "dnum";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 export function LeverageScreen() {
-  const branches = getBranches();
+  const { chainConfig } = useChainConfig();
+
+  const branches = getBranches(chainConfig);
 
   // useParams() can return an array but not with the current
   // routing setup, so we can safely cast it to a string

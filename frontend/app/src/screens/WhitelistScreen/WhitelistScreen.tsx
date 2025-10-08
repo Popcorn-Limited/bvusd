@@ -24,14 +24,16 @@ import { getBranchContract } from "@/src/contracts";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zeroAddress } from "viem";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 import { WhitelistAbi } from "@/src/abi/Whitelist";
 
 export function WhitelistScreen() {
   const txFlow = useTransactionFlow();
   const account = useAccount();
   const router = useRouter();
+  const { chainConfig } = useChainConfig();
 
-  const branches = getBranches();
+  const branches = getBranches(chainConfig);
 
   const [collSymbol, setCollSymbol] = useState<string>(branches[0]?.symbol);
   const [contractIndex, setContractIndex] = useState<number>(0);
@@ -40,7 +42,7 @@ export function WhitelistScreen() {
     throw new Error(`Invalid collateral symbol: ${collSymbol}`);
   }
   
-  const addressesRegistry = getBranchContract(collSymbol, "AddressesRegistry");
+  const addressesRegistry = getBranchContract(chainConfig, collSymbol, "AddressesRegistry");
   const owner = useProtocolOwner(addressesRegistry.address);
 
   console.log("OWNER", owner);
@@ -58,7 +60,7 @@ export function WhitelistScreen() {
     protocolContractsFilter.includes(name)
   );
 
-  const whitelist = getBranchContract(branch.branchId, "Whitelist");
+  const whitelist = getBranchContract(chainConfig, branch.branchId, "Whitelist");
 
   const [user, setUser] = useState<Address>();
   const [whitelistedContract, setWhitelistedContract] = useState<Address>(

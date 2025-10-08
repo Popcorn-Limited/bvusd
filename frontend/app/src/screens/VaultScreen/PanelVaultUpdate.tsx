@@ -81,6 +81,11 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
   );
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
+  const outputAmount = parseInputFloatWithDecimals(
+    valOut,
+    // @ts-ignore
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+  );
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
@@ -96,6 +101,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     && parsedValue
     && dn.gt(parsedValue, 0)
     && !insufficientBalance
+    && valOutStatus === "success"
 
   return (
     <div

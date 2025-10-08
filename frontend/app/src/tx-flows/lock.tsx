@@ -57,11 +57,11 @@ export const lockToken: FlowDeclaration<LockTokenRequest> = {
       ),
       async commit(ctx) {
         return ctx.writeContract({
-          address: getProtocolContract(ctx.request.token).address,
+          address: getProtocolContract(ctx.contractConfig, ctx.request.token).address,
           abi: erc20Abi,
           functionName: "approve",
           args: [
-            getProtocolContract("TokenLocker").address,
+            getProtocolContract(ctx.contractConfig, "TokenLocker").address,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -79,7 +79,7 @@ export const lockToken: FlowDeclaration<LockTokenRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const locker = getProtocolContract("TokenLocker");
+        const locker = getProtocolContract(ctx.contractConfig, "TokenLocker");
         return ctx.writeContract({
           address: locker.address,
           abi: locker.abi,
@@ -99,7 +99,7 @@ export const lockToken: FlowDeclaration<LockTokenRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const locker = getProtocolContract("TokenLocker");
+        const locker = getProtocolContract(ctx.contractConfig, "TokenLocker");
         return ctx.writeContract({
           address: locker.address,
           abi: locker.abi,
@@ -121,10 +121,10 @@ export const lockToken: FlowDeclaration<LockTokenRequest> = {
     if (ctx.request.mode === "lock") {
       // Check if approval is needed
       const allowance = await readContract(ctx.wagmiConfig, {
-        address: getProtocolContract(ctx.request.token).address,
+        address: getProtocolContract(ctx.contractConfig, ctx.request.token).address,
         abi: erc20Abi,
         functionName: "allowance",
-        args: [ctx.account, getProtocolContract("TokenLocker").address],
+        args: [ctx.account, getProtocolContract(ctx.contractConfig, "TokenLocker").address],
       });
 
       if (allowance < ctx.request.amount[0]) {

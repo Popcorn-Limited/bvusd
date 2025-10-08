@@ -36,7 +36,11 @@ export function PanelConvert() {
 
   const parsedValue = parseInputFloatWithDecimals(value, inputSymbol === "bvUSD" ? 18 : 6);
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
-
+  const outputAmount = parseInputFloatWithDecimals(
+    valOut,
+    // @ts-ignore
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+  );
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
   const balances = Object.fromEntries([...STABLE_SYMBOLS, "bvUSD"].map((symbol) => ([
@@ -51,6 +55,7 @@ export function PanelConvert() {
     && parsedValue
     && dn.gt(parsedValue, 0)
     && !insufficientBalance
+    && valOutStatus === "success"
 
   return (
     <div
