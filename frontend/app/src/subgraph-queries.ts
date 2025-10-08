@@ -1,31 +1,14 @@
 import type { TypedDocumentString } from "@/src/graphql/graphql";
 
-import { SUBGRAPH_API_KEY, SUBGRAPH_URL } from "@/src/env";
 import { graphql } from "@/src/graphql";
+import { getGraphQuery } from "./actions";
 
 export async function graphQuery<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ) {
-  const response = await fetch(SUBGRAPH_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/graphql-response+json",
-      "Authorization": `Bearer ${SUBGRAPH_API_KEY}`
-    },
-    body: JSON.stringify(
-      { query, variables },
-      (_, value) => typeof value === "bigint" ? String(value) : value,
-    ),
-  });
   
-
-  if (!response.ok) {
-    throw new Error("Error while fetching data from the subgraph");
-  }
-
-  const result = await response.json();
+  const result = await getGraphQuery(query, variables)
 
   if (!result.data) {
     throw new Error("Invalid response from the subgraph");

@@ -9,7 +9,7 @@ import { readContract, sendTransaction } from "wagmi/actions";
 import { erc20Abi, maxUint256 } from "viem";
 import { fmtnum } from "@/src/formatting";
 import { getProtocolContract } from "../contracts";
-import { getEnsoRoute } from "../enso-utils";
+import { getEnsoRoute } from "@/src/actions";
 
 const RequestSchema = createRequestSchema(
   "convert",

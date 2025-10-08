@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { useModal } from "@/src/services/ModalService";
 import { SuccessModalContent } from "./WhitelistModal";
 import { Button, Checkbox, TokenIcon, TokenSymbol } from "@liquity2/uikit";
+import { postInstitutionalRequest } from "@/src/actions";
 
 const ASSETS = {
   "btc": false,
@@ -23,9 +23,9 @@ export function BorrowModal() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/contact", { name, email, telegram, amount, assets, newsletter });
+      const res = await postInstitutionalRequest({ name, email, telegram, amount, assets, newsletter })
 
-      if (res.status !== 200) {
+      if (res.error) {
         alert("Error");
       } else {
         setModalContent(<SuccessModalContent />);
@@ -38,6 +38,13 @@ export function BorrowModal() {
 
   return (
     <>
+      <style jsx>{`
+        .newsletter-row { grid-column: span 1; }
+        @media (min-width: 768px) {
+          .newsletter-row { grid-column: span 2; }
+        }
+      `}
+      </style>
       {/* Title */}
       <h2
         style={{
@@ -55,10 +62,11 @@ export function BorrowModal() {
         style={{
           textAlign: "center",
           fontSize: "16px",
+          fontWeight: 400,
           color: "#aaa",
-          margin: "0 auto",
           lineHeight: 1.4,
           width: "60%",
+          margin: "8px auto 0 auto",
         }}
       >
         Provide info below and a team member
@@ -67,8 +75,8 @@ export function BorrowModal() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginTop: "32px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-          <div style={{ gridColumn: "span 2" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", margin: "24px 0" }}>
+          <div className="newsletter-row">
             <label
               style={{
                 display: "block",
@@ -189,7 +197,7 @@ export function BorrowModal() {
             />
           </div>
 
-          <div style={{ gridColumn: "span 2" }}>
+          <div className="newsletter-row">
             <span style={{ display: "flex", alignItems: "center" }}>
               <div style={{ width: "24px", height: "24px" }}>
                 <Checkbox checked={newsletter} onChange={() => setNewsletter(!newsletter)} appearance="checkbox" />

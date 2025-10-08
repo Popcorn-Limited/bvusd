@@ -12,7 +12,7 @@ import { fmtnum } from "../formatting";
 import { getProtocolContract } from "../contracts";
 import { STABLE_SYMBOLS } from "../screens/BuyScreen/PanelConvert";
 import { Vault } from "../abi/Vault";
-import { getEnsoRoute } from "../enso-utils";
+import { getEnsoRoute } from "@/src/actions";
 
 const RequestSchema = createRequestSchema(
   "vaultUpdate",
