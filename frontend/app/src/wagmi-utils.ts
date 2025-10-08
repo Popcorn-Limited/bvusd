@@ -148,7 +148,6 @@ function toWagmiChain(c: {
   CHAIN_ID: number;
   CHAIN_NAME: string;
   CHAIN_CURRENCY: { name: string; symbol: string; decimals: number };
-  CHAIN_RPC_URL: string;
   CHAIN_BLOCK_EXPLORER?: string | null;
   CHAIN_CONTRACT_ENS_REGISTRY?: `0x${string}` | null;
   CHAIN_CONTRACT_ENS_RESOLVER?: `0x${string}` | null;
@@ -158,7 +157,7 @@ function toWagmiChain(c: {
     id: c.CHAIN_ID,
     name: c.CHAIN_NAME,
     nativeCurrency: c.CHAIN_CURRENCY,
-    rpcUrls: { default: { http: [c.CHAIN_RPC_URL] } },
+    rpcUrls: { default: { http: [`/api/rpc/${c.CHAIN_ID}`] } },
     blockExplorers: c.CHAIN_BLOCK_EXPLORER
       && { default: { name: "Explorer", url: c.CHAIN_BLOCK_EXPLORER } },
     contracts: {
@@ -180,7 +179,7 @@ if (wagmiChainsArr.length === 0) throw new Error('Empty Chains.');
 const chains = wagmiChainsArr as [typeof wagmiChainsArr[0], ...typeof wagmiChainsArr];
 
 const transports = Object.fromEntries(
-  Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(c.CHAIN_RPC_URL)])
+  Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(`/api/rpc/${c.CHAIN_ID}`)])
 );
 
 const base = getDefaultConfigFromConnectKit({

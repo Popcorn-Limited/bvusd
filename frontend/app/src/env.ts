@@ -82,7 +82,6 @@ function vBranchEnvVars(branchId: BranchId) {
 export const EnvSchema = v.pipe(
   v.object({
     ACCOUNT_SCREEN: v.optional(vEnvFlag(), "false"),
-    ALCHEMY_API_KEY: v.string(),
     APP_COMMIT_HASH: v.string(),
     APP_COMMIT_URL: v.pipe(
       vEnvUrlOrDefault(DEFAULT_COMMIT_URL),
@@ -235,7 +234,6 @@ const parsedEnv = v.safeParse(EnvSchema, {
     process.env.NEXT_PUBLIC_APP_VERSION_URL
     ?? DEFAULT_VERSION_URL
   ),
-  ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
   BLOCKING_LIST: process.env.NEXT_PUBLIC_BLOCKING_LIST,
   BLOCKING_VPNAPI: process.env.NEXT_PUBLIC_BLOCKING_VPNAPI,
   CONTRACTS_COMMIT_HASH: (
@@ -301,7 +299,6 @@ if (!parsedEnv.success) {
 
 export const {
   ACCOUNT_SCREEN,
-  ALCHEMY_API_KEY,
   APP_COMMIT_HASH,
   APP_COMMIT_URL,
   APP_VERSION,

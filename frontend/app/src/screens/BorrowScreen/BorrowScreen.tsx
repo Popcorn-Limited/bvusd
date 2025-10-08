@@ -40,6 +40,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { maxUint256 } from "viem";
 import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 const KNOWN_COLLATERAL_SYMBOLS = KNOWN_COLLATERALS.map(({ symbol }) => symbol);
 

@@ -21,7 +21,6 @@ export const ChainSchema = v.object({
     decimals: v.number()
   }),
   CHAIN_NAME: v.string(),
-  CHAIN_RPC_URL: v.string(),
   CHAIN_BLOCK_EXPLORER: v.string(),
   CHAIN_CONTRACT_ENS_REGISTRY: v.optional(v.string()),
   CHAIN_CONTRACT_ENS_RESOLVER: v.optional(v.string()),

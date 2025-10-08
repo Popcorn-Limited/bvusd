@@ -17,23 +17,21 @@ type EnsoForecast = {
 interface EnsoRouteProps {
   chainConfig: ChainEnv;
   inputValue: string;
-  inputSymbol: Token["symbol"];
+  inputAddress: string;
+  outputAddress: string;
   outputSymbol: Token["symbol"];
   account: Address;
   slippage?: number;
 }
 
 export async function getOutputValue(
-  { chainConfig, inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoRouteProps,
+  { chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage = 50 }: EnsoRouteProps,
 ): Promise<EnsoForecast> {
   if (!inputValue || inputValue === "0") {
     return { value: "0", status: "success" };
   }
-
   const url =
-    `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${
-      getProtocolContract(chainConfig, inputSymbol).address
-    }&tokenOut=${getProtocolContract(chainConfig, outputSymbol).address}&routingStrategy=router`;
+    `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${inputAddress}&tokenOut=${outputAddress}&routingStrategy=router`;
   const options = {
     method: "GET",
     headers: { Accept: "application/json", Authorization: `Bearer ${process.env.ENSO_API_KEY}` },
@@ -56,12 +54,10 @@ export async function getOutputValue(
 }
 
 export async function getEnsoRoute(
-  { chainConfig, inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoRouteProps,
+  { chainConfig, inputValue, inputAddress, outputAddress, account, slippage = 50 }: EnsoRouteProps,
 ): Promise<any> {
   const url =
-    `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${
-      getProtocolContract(chainConfig, inputSymbol).address
-    }&tokenOut=${getProtocolContract(chainConfig, outputSymbol).address}&routingStrategy=router`;
+    `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${inputAddress}&tokenOut=${outputAddress}&routingStrategy=router`;
   const options = {
     method: "GET",
     headers: { Accept: "application/json", Authorization: `Bearer ${process.env.ENSO_API_KEY}` },
