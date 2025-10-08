@@ -2,7 +2,6 @@ import { Address, erc4626Abi, zeroAddress } from "viem";
 import { useReadContract, useReadContracts } from "wagmi";
 import { AddressesRegistry } from "./abi/AddressesRegistry";
 import { WhitelistAbi } from "./abi/Whitelist";
-import { CONTRACT_VAULT, LIQUITY_STATS_URL } from "./env";
 import { bvUSD } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { dnum18, DNUM_0, dnumOrNull } from "./dnum-utils";
@@ -11,18 +10,21 @@ import { getBranchContract } from "./contracts";
 import { PositionEarn } from "./types";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import * as v from "valibot";
+import { useChainConfig } from "./services/ChainConfigProvider";
 
 export function useVault() {
+  const { chainConfig } = useChainConfig();
+
   const vaultReads = useReadContracts({
     // @ts-ignore
     contracts: [
       {
-        address: CONTRACT_VAULT,
+        address: chainConfig.CONTRACT_VAULT,
         abi: erc4626Abi,
         functionName: "totalAssets",
       },
       {
-        address: CONTRACT_VAULT,
+        address: chainConfig.CONTRACT_VAULT,
         abi: erc4626Abi,
         functionName: "totalSupply",
       },
@@ -40,7 +42,7 @@ export function useVault() {
     queryKey: ["useVault"],
     queryFn: async () => {
       const collateral = bvUSD;
-      const response = await fetch(LIQUITY_STATS_URL);
+      const response = await fetch(chainConfig.STATS_URL);
       const json = await response.json();
       const stats = v.parse(StatsSchema, json);
 
@@ -61,8 +63,10 @@ export function useVault() {
 export function useVaultPosition(
   account: null | Address
 ): UseQueryResult<PositionEarn | null> {
+  const { chainConfig } = useChainConfig();
+
   const balance = useReadContract({
-    address: CONTRACT_VAULT,
+    address: chainConfig.CONTRACT_VAULT,
     abi: erc4626Abi,
     functionName: "balanceOf",
     args: [account ?? zeroAddress],
@@ -94,7 +98,9 @@ export function useIsWhitelistedUser(
   funcSig: `0x${string}`,
   user: Address = zeroAddress
 ): boolean {
-  const whitelist = getBranchContract(0, "Whitelist");
+  const { chainConfig } = useChainConfig();
+
+  const whitelist = getBranchContract(chainConfig, 0, "Whitelist");
   const isWhitelistedUser = useReadContract({
     address: whitelist.address,
     abi: WhitelistAbi,

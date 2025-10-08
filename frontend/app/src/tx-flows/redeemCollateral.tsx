@@ -33,7 +33,9 @@ export const redeemCollateral: FlowDeclaration<RedeemCollateralRequest> = {
   Summary: () => null,
   Details(ctx) {
     const estimatedGains = useSimulatedBalancesChange(ctx);
-    const branches = getBranches();
+    const { chainConfig } = useChainConfig();
+
+    const branches = getBranches(chainConfig);
     const boldChange = estimatedGains.data?.find(({ symbol }) => symbol === "bvUSD")?.change;
     const collChanges = estimatedGains.data?.filter(({ symbol }) => symbol !== "bvUSD");
 
@@ -165,13 +167,13 @@ export function useSimulatedBalancesChange({
   request: RedeemCollateralRequest;
 }) {
   const wagmiConfig = useWagmiConfig();
-  const {config} = useChainConfig();
+  const { chainConfig } = useChainConfig();
 
   return useQuery({
     queryKey: ["simulatedBalancesChange", account, jsonStringifyWithDnum(request)],
     queryFn: async () => {
-      const CollateralRegistry = getProtocolContract(config, "CollateralRegistry");
-      const BoldToken = getProtocolContract(config, "BoldToken");
+      const CollateralRegistry = getProtocolContract(chainConfig, "CollateralRegistry");
+      const BoldToken = getProtocolContract(chainConfig, "BoldToken");
 
       let stored: v.InferOutput<typeof StoredBalancesChangeSchema> | null = null;
       try {
@@ -193,7 +195,7 @@ export function useSimulatedBalancesChange({
       const [rpcUrl] = chain.rpcUrls.default.http;
       const client = createPublicClient({ chain, transport: http(rpcUrl) });
 
-      const branches = getBranches();
+      const branches = getBranches(chainConfig);
       const branchesBalanceCalls = branches.map((branch) => ({
         to: branch.contracts.CollToken.address,
         abi: branch.contracts.CollToken.abi,

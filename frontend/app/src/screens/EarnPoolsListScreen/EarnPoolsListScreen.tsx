@@ -14,10 +14,12 @@ import { Amount } from "@/src/comps/Amount/Amount";
 import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
 import * as dn from "dnum";
 import { fmtnum } from "@/src/formatting";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 export function EarnPoolsListScreen() {
   const account = useAccount();
-  const branches = getBranches();
+  const { chainConfig } = useChainConfig()
+  const branches = getBranches(chainConfig);
   const collSymbols = branches.map((b) => b.symbol);
 
   const poolsTransition = useTransition(branches.map((c) => c.branchId), {

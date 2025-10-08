@@ -26,6 +26,7 @@ import { PanelClosePosition } from "./PanelClosePosition";
 import { PanelInterestRate } from "./PanelInterestRate";
 import { PanelUpdateBorrowPosition } from "./PanelUpdateBorrowPosition";
 import { PanelUpdateLeveragePosition } from "./PanelUpdateLeveragePosition";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 const TABS = [
   { label: "Update Loan", id: "colldebt" },
@@ -226,9 +227,10 @@ function ClaimCollateralSurplus({
   const txFlow = useTransactionFlow();
   const collToken = getCollToken(loan.branchId);
   const collPriceUsd = usePrice(collToken.symbol);
+  const { chainConfig } = useChainConfig();
 
   const collSurplus = useReadContract({
-    ...getBranchContract(loan.branchId, "CollSurplusPool"),
+    ...getBranchContract(chainConfig, loan.branchId, "CollSurplusPool"),
     functionName: "getCollateral",
     args: [loan.borrower],
     query: {
