@@ -26,6 +26,7 @@ export type AppChainConfig = {
   CONTRACT_USDC: `0x${string}`;
   CONTRACT_USDT: `0x${string}`;
   CONTRACT_WETH: `0x${string}`;
+  CONTRACT_WHITELIST: `0x${string}`;
   // ...all env contracts
 };
 
@@ -44,6 +45,7 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_USDC: "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
     CONTRACT_USDT: "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
     CONTRACT_WETH: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
+    CONTRACT_WHITELIST: "0x83BBAA022Cca1295a975EC101a073C44Ea336f79",
   },
   1: { // TODO remove
     CHAIN_ID: 1,
@@ -56,5 +58,6 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     CONTRACT_USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
     CONTRACT_WETH: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    CONTRACT_WHITELIST: "0x83BBAA022Cca1295a975EC101a073C44Ea336f79",
   },
 };

@@ -32,7 +32,8 @@ export const ChainSchema = v.object({
   CONTRACT_CONVERTER: v.optional(vAddress()),
   CONTRACT_USDC: vAddress(),
   CONTRACT_USDT: vAddress(),
-  CONTRACT_WETH: vAddress()
+  CONTRACT_WETH: vAddress(),
+  CONTRACT_WHITELIST: vAddress()
 });
 
 export type ChainEnv = v.InferOutput<typeof ChainSchema>;

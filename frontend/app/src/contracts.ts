@@ -204,7 +204,7 @@ export const CONTRACTS = (config: ChainEnv): Contracts => {
           abi: abis.TroveManager,
         },
         TroveNFT: { address: contracts.TROVE_NFT, abi: abis.TroveNFT },
-        Whitelist: { address: contracts.WHITELIST, abi: abis.Whitelist },
+        Whitelist: { address: config.CONTRACT_WHITELIST, abi: abis.Whitelist },
       },
     })),
   };

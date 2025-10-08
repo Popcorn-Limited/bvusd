@@ -25,7 +25,6 @@ const contractsEnvNames = [
   "STABILITY_POOL",
   "TROVE_MANAGER",
   "TROVE_NFT",
-  "WHITELIST",
 ] as const;
 
 type ContractEnvName = typeof contractsEnvNames[number];
@@ -49,7 +48,6 @@ function vBranchEnvVars(branchId: BranchId) {
     [`${prefix}_CONTRACT_STABILITY_POOL`]: v.optional(vAddress()),
     [`${prefix}_CONTRACT_TROVE_MANAGER`]: v.optional(vAddress()),
     [`${prefix}_CONTRACT_TROVE_NFT`]: v.optional(vAddress()),
-    [`${prefix}_CONTRACT_WHITELIST`]: v.optional(vAddress()),
     [`${prefix}_IC_STRATEGIES`]: v.optional(
       v.pipe(
         v.string(),
@@ -281,7 +279,6 @@ const parsedEnv = v.safeParse(EnvSchema, {
   COLL_0_CONTRACT_STABILITY_POOL: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_STABILITY_POOL,
   COLL_0_CONTRACT_TROVE_MANAGER: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_TROVE_MANAGER,
   COLL_0_CONTRACT_TROVE_NFT: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_TROVE_NFT,
-  COLL_0_CONTRACT_WHITELIST: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_WHITELIST,
 });
 
 if (!parsedEnv.success) {
