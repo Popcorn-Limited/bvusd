@@ -11,6 +11,7 @@ import { IconBorrow, IconDashboard, IconEarn } from "@liquity2/uikit";
 import Link from "next/link";
 import { AccountButton } from "./AccountButton";
 import { Menu } from "./Menu";
+import { TopBarLogo } from "@/src/comps/Logo/TopBarLogo";
 
 const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
   [content.menu.earn, "/vault", IconEarn],
@@ -69,7 +70,7 @@ export function TopBar() {
               flexShrink: 0,
             })}
           >
-            <Logo />
+            <TopBarLogo />
           </div>
           <div
             className={css({
@@ -80,7 +81,6 @@ export function TopBar() {
               whiteSpace: "nowrap",
             })}
           >
-            {content.appName}
             {DEPLOYMENT_FLAVOR && (
               <div
                 className={css({
