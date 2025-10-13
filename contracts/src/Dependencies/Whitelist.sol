@@ -7,27 +7,83 @@ import {Owned} from "./Owned.sol";
 import {IWhitelist} from "../Interfaces/IWhitelist.sol";
 
 contract Whitelist is IWhitelist, Owned {
-    // calling contract -> user -> whitelisted
-    mapping(address => mapping(address => bool)) whitelist;
+    // calling contract -> funcSig -> whitelisted
+    mapping(address => mapping(bytes4 => bool)) public whitelistedFunc;
+    // calling contract -> funcSig -> user -> whitelisted
+    mapping(address => mapping(bytes4 => mapping(address => bool))) whitelist;
 
-    event Whitelisted(address callingContract, address user);
-    event WhitelistRemoved(address callingContract, address user);
+    event WhitelistedFuncAdded(address callingContract, bytes4 funcSig);
+    event WhitelistFuncRemoved(
+        address callingContract,
+        bytes4 funcSig
+    );
+    event Whitelisted(address callingContract, bytes4 funcSig, address user);
+    event WhitelistRemoved(
+        address callingContract,
+        bytes4 funcSig,
+        address user
+    );
+
+    error FuncNotWhitelisted();
 
     constructor(address owner) Owned(owner) {}
 
-    function addToWhitelist(address callingContract, address user) external override onlyOwner {
-        whitelist[callingContract][user] = true;
+    function addWhitelistedFunc(
+        address callingContract,
+        bytes4 funcSig
+    ) external override onlyOwner {
+        whitelistedFunc[callingContract][funcSig] = true;
 
-        emit Whitelisted(callingContract, user);
+        emit WhitelistedFuncAdded(callingContract, funcSig);
     }
 
-    function removeFromWhitelist(address callingContract, address user) external override onlyOwner {
-        whitelist[callingContract][user] = false;
+    function removeWhitelistedFunc(
+        address callingContract,
+        bytes4 funcSig
+    ) external override onlyOwner {
+        whitelistedFunc[callingContract][funcSig] = false;
 
-        emit WhitelistRemoved(callingContract, user);
+        emit WhitelistFuncRemoved(callingContract, funcSig);
     }
 
-    function isWhitelisted(address callingContract, address user) external view override returns (bool) {
-        return whitelist[callingContract][user];
+    function addToWhitelist(
+        address callingContract,
+        bytes4 funcSig,
+        address user
+    ) external override onlyOwner {
+        if (!whitelistedFunc[callingContract][funcSig]) {
+            revert FuncNotWhitelisted();
+        }
+        whitelist[callingContract][funcSig][user] = true;
+
+        emit Whitelisted(callingContract, funcSig, user);
+    }
+
+    function removeFromWhitelist(
+        address callingContract,
+        bytes4 funcSig,
+        address user
+    ) external override onlyOwner {
+        whitelist[callingContract][funcSig][user] = false;
+
+        emit WhitelistRemoved(callingContract, funcSig, user);
+    }
+
+    function isWhitelisted(
+        address callingContract,
+        bytes4 funcSig,
+        address user
+    ) external view override returns (bool) {
+        if (!whitelistedFunc[callingContract][funcSig]) {
+            return true;
+        }
+        return whitelist[callingContract][funcSig][user];
+    }
+
+    function isWhitelistedFunc(
+        address callingContract,
+        bytes4 funcSig
+    ) external view returns (bool) {
+        return whitelistedFunc[callingContract][funcSig];
     }
 }

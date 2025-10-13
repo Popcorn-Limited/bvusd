@@ -33,7 +33,7 @@ interface ITroveManager is ILiquityBase {
     function updateCRs(uint256 newCCR, uint256 newSCR, uint256 newMCR) external;
     function updateLiquidationValues(uint256 newLiquidationPenaltySP, uint256 newliquidationPenaltyRedistribution)
         external;
-    function isWhitelisted(address user) external view returns (bool);
+    function isWhitelisted(address user, bytes4 funcSig) external view returns (bool);
 
     function Troves(uint256 _id)
         external
