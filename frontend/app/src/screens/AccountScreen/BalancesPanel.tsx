@@ -78,7 +78,7 @@ export function BalancesPanel() {
             {
               label: "Apy",
               value: `${stats.data
-                ? fmtnum(Number(stats.data.sbvUSD[0].apy))
+                ? fmtnum(Number(stats.data.sbvUSD[0].apy30d))
                 : "0.00"
                 }%`
             },

@@ -27,7 +27,7 @@ export function VaultPositionSummary({
 }) {
   const chain = useChainId()
   const collToken = bvUSD
-  const { data} = useVault({chainId: chain})
+  const { data } = useVault({chainId: chain})
 
   // leftover from old liquity component structure
   let share = dn.from(0, 18);
@@ -149,21 +149,21 @@ export function VaultPositionSummary({
                       color: "contentAlt2",
                     })}
                   >
-                    APY
+                    30d APY
                   </div>
                   <div>
                     <Amount
                       fallback="-%"
                       format="1z"
                       percentage
-                      value={data?.apr}
+                      value={data?.apr30d}
                     />
                   </div>
                   <InfoTooltip
                     content={{
-                      heading: "Current APY",
+                      heading: "APY (last 30 days)",
                       body: "The annualized rate sbvUSD "
-                        + "deposits earned over the last 24 hours.",
+                        + "deposits earned over the past 30 days.",
                       footerLink: {
                         label: "Check Dune for more details",
                         href: "https://dune.com/dna/bvusd",
@@ -189,7 +189,7 @@ export function VaultPositionSummary({
                     fallback="-%"
                     format="1z"
                     percentage
-                    value={data?.apr}
+                    value={data?.apr7d}
                   />
                   <InfoTooltip
                     content={{

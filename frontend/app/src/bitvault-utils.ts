@@ -44,8 +44,8 @@ export function useVault({ chainId }: { chainId: number }) {
       const totalSupply = vaultReads[1].status === "success" ? dnum18(vaultReads[1].result) : DNUM_0
      
       return {
-        apr: dnumOrNull(Number(stats.sbvUSD[0].apy) / 100, 4),
-        apr7d: dnumOrNull(Number(stats.sbvUSD[0].apy) / 100, 4),
+        apr7d: dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
+        apr30d: dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
         collateral,
         totalDeposited: totalAssets,
         price: totalSupply > DNUM_0 ? dn.div(totalAssets, totalSupply) : dnum18(1),

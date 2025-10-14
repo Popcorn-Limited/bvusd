@@ -564,7 +564,8 @@ export const StatsSchema = v.pipe(
     sbvUSD: v.array(
       v.object({
         address: v.string(),
-        apy: v.string(),
+        apy7: v.string(),
+        apy30: v.string(),
         supply: v.string(),
         safe: v.string(),
         chain: v.string(),
@@ -667,7 +668,8 @@ export const StatsSchema = v.pipe(
     vaultsApy: v.array(
       v.object({
         day: v.string(),
-        apy: v.string(),
+        apy7: v.string(),
+        apy30: v.string(),
         vault: v.string()
       })
     ),
@@ -706,7 +708,8 @@ export const StatsSchema = v.pipe(
     }),
     sbvUSD: value.sbvUSD.map((s) => {
       return {
-        apy: s.apy,
+        apy7d: s.apy7,
+        apy30d: s.apy30,
         supply: s.supply,
         safe: s.safe,
         chain: s.chain,
@@ -813,7 +816,8 @@ export const StatsSchema = v.pipe(
     }),
     vaultsApy: value.vaultsApy.map((apy) => {
       return {
-        apy: apy.apy,
+        apy7d: apy.apy7,
+        apy30d: apy.apy30,
         day: apy.day,
         vault: apy.vault
       }

@@ -12,7 +12,8 @@ interface BackingData {
 interface sbvUSD {
   supply: string;
   chain: string;
-  apy: string;
+  apy7d: string;
+  apy30d: string;
 }
 
 interface TransparencyMetricsProps {
@@ -45,7 +46,7 @@ export function TransparencyMetrics({
     Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves) + Number(totalBacking.totalAllocations);
   const protocolBackingRatio = `${fmtnum(Number(backing) / Number(totalSupply) * 100, "2z")} %`;
 
-  const sbvUSDApy = sbvUSD[0].apy === "0" ? "n/a" : `${Number(sbvUSD[0].apy).toFixed(2)}%`;
+  const sbvUSDApy = sbvUSD[0].apy7d === "0" ? "n/a" : `${Number(sbvUSD[0].apy7d).toFixed(2)}%`;
 
   const tooltipText =
     sbvUSDApy != "n/a"
