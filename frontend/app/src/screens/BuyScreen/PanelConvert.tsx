@@ -16,12 +16,16 @@ import { css } from "@/styled-system/css";
 import { useIsWhitelistedUser } from "@/src/bitvault-utils";
 import { useModal } from "@/src/services/ModalService";
 import { WhitelistModal } from "../HomeScreen/WhitelistModal";
+import { CHAINS } from "@/src/config/chains";
+import { zeroAddress } from "viem";
+import { useChainId } from "wagmi";
 
 type ConvertMode = "buy" | "sell";
 
 export const STABLE_SYMBOLS = ["USDC", "USDT"] as const;
 
 export function PanelConvert() {
+  const chain = useChainId();
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
@@ -32,7 +36,7 @@ export function PanelConvert() {
   const [focused, setFocused] = useState(false);
 
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
-  const isWhitelisted = useIsWhitelistedUser("0x2e9fD409760D17b1ed277e000374698d531d19CE", "0xf45346dc", account.address)
+  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
 
   const parsedValue = parseInputFloatWithDecimals(value, inputSymbol === "bvUSD" ? 18 : 6);
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
@@ -188,9 +192,11 @@ export function PanelConvert() {
                 successMessage: "Your order has been processed successfully.",
                 mode: mode,
                 amount: parsedValue,
+                outputAmount: outputAmount,
                 inputToken: inputSymbol as "USDC" | "USDT" | "bvUSD",
                 outputToken: outputSymbol as "USDC" | "USDT" | "bvUSD",
                 slippage: 50,
+                chainId: chain,
               });
             }}
           />

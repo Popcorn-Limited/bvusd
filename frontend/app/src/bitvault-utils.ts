@@ -1,5 +1,5 @@
-import { Address, erc4626Abi, zeroAddress } from "viem";
-import { useReadContract, useReadContracts } from "wagmi";
+import { Address, createPublicClient, erc4626Abi, http, zeroAddress } from "viem";
+import { useClient, usePublicClient, useReadContract, useReadContracts } from "wagmi";
 import { AddressesRegistry } from "./abi/AddressesRegistry";
 import { WhitelistAbi } from "./abi/Whitelist";
 import { bvUSD } from "@liquity2/uikit";
@@ -11,50 +11,44 @@ import { PositionEarn } from "./types";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import * as v from "valibot";
 import { useChainConfig } from "./services/ChainConfigProvider";
+import { useConfig as useWagmiConfig } from "wagmi";
+import { readContracts } from "wagmi/actions";
+import { CHAINS } from "./config/chains";
 
-export function useVault() {
-  const { chainConfig } = useChainConfig();
-
-  const vaultReads = useReadContracts({
-    // @ts-ignore
-    contracts: [
-      {
-        address: chainConfig.CONTRACT_VAULT,
-        abi: erc4626Abi,
-        functionName: "totalAssets",
-      },
-      {
-        address: chainConfig.CONTRACT_VAULT,
-        abi: erc4626Abi,
-        functionName: "totalSupply",
-      },
-    ],
-    allowFailure: false,
-    query: {
-      select: ([totalAssets, totalSupply]) => ({
-        totalAssets: dnum18(totalAssets),
-        totalSupply: dnum18(totalSupply),
-      }),
-    },
-  });
+export function useVault({ chainId }: { chainId: number }) {
+  const config = useWagmiConfig()
 
   return useQuery({
-    queryKey: ["useVault"],
+    queryKey: [`useVault:${chainId}`],
     queryFn: async () => {
       const collateral = bvUSD;
-      const response = await fetch(chainConfig.STATS_URL);
+      const response = await fetch(CHAINS[chainId].STATS_URL);
       const json = await response.json();
       const stats = v.parse(StatsSchema, json);
 
+      const vaultReads = await readContracts(config, {
+        contracts: [
+          {
+            address: CHAINS[chainId].CONTRACT_VAULT,
+            abi: erc4626Abi,
+            functionName: "totalAssets",
+          },
+          {
+            address: CHAINS[chainId].CONTRACT_VAULT,
+            abi: erc4626Abi,
+            functionName: "totalSupply",
+          },
+        ]
+      });
+      const totalAssets = vaultReads[0].status === "success" ? dnum18(vaultReads[0].result) : DNUM_0
+      const totalSupply = vaultReads[1].status === "success" ? dnum18(vaultReads[1].result) : DNUM_0
+     
       return {
         apr: dnumOrNull(Number(stats.sbvUSD[0].apy) / 100, 4),
         apr7d: dnumOrNull(Number(stats.sbvUSD[0].apy) / 100, 4),
         collateral,
-        totalDeposited: vaultReads.data?.totalAssets ?? null,
-        price:
-          vaultReads.data?.totalSupply && vaultReads.data?.totalSupply > DNUM_0
-            ? dn.div(vaultReads.data?.totalAssets, vaultReads.data?.totalSupply)
-            : dnum18(1),
+        totalDeposited: totalAssets,
+        price: totalSupply > DNUM_0 ? dn.div(totalAssets, totalSupply) : dnum18(1),
       };
     },
   });

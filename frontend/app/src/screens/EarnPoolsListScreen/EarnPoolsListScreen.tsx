@@ -17,6 +17,7 @@ import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
 import * as dn from "dnum";
 import { fmtnum } from "@/src/formatting";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
+import { useChainId } from "wagmi";
 
 export function EarnPoolsListScreen() {
   const account = useAccount();
@@ -119,10 +120,11 @@ function EarnPool({
 }
 
 function Vault() {
+  const chain = useChainId();
   const account = useAccount();
 
   const vaultPosition = useVaultPosition(account.address ?? null);
-  const vault = useVault();
+  const vault = useVault({chainId: chain});
   const loadingState = vault.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
   
   return loadingState === "success" && (

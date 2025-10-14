@@ -24,10 +24,8 @@ export function VaultPanel() {
   const account = useAccount();
 
   const vaultPosition = useVaultPosition(account.address ?? null);
-  const vault = useVault();
   const { chainConfig } = useChainConfig();
 
-  // console.log(vault.)
   const requestBalance = useReadContract({
     address: getProtocolContract(chainConfig, "Vault").address,
     abi: getProtocolContract(chainConfig, "Vault").abi,
@@ -42,7 +40,7 @@ export function VaultPanel() {
       }),
     },
   });
-  const loadingState = vault.isLoading || requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
+  const loadingState = requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
 
   const tabsTransition = useTransition(loadingState, {
     from: { opacity: 0 },

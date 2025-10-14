@@ -23,6 +23,7 @@ const RequestSchema = createRequestSchema(
     outputToken: v.union([v.literal("bvUSD"), v.literal("sbvUSD")]),
     mode: v.union([v.literal("remove"), v.literal("add"), v.literal("claim")]),
     slippage: v.number(),
+    chainId: v.number(),
   },
 );
 

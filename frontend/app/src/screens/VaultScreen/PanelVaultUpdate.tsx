@@ -19,6 +19,9 @@ import EnsoPreview from "@/src/comps/EnsoPreview";
 import { useIsWhitelistedUser } from "@/src/bitvault-utils";
 import { WhitelistModal } from "../HomeScreen/WhitelistModal";
 import { useModal } from "@/src/services/ModalService";
+import { useChainId } from "wagmi";
+import { CHAINS } from "@/src/config/chains";
+import { zeroAddress } from "viem";
 
 
 export async function getNextWithdrawalDate(date?: number): Promise<{ days: number, hours: number, minutes: number, seconds: number, timeDiff: number }> {
@@ -49,6 +52,7 @@ export async function getNextWithdrawalDate(date?: number): Promise<{ days: numb
 type ValueUpdateMode = "add" | "remove";
 
 export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBalance }) {
+  const chain = useChainId();
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
@@ -58,9 +62,10 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
   const [withdrawalDate, setWithdrawalDate] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
+  const [availableAssets, setAvailableAssets] = useState<Token["symbol"][]>(["bvUSD"]);
 
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
-  const isWhitelisted = useIsWhitelistedUser("0x2e9fD409760D17b1ed277e000374698d531d19CE", "0xf45346dc", account.address)
+  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
 
   useEffect(() => {
     // Initial call
@@ -75,13 +80,22 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     return () => clearInterval(interval);
   }, []);
 
+
+  useEffect(() => {
+    if (chain === 747474) {
+      setAvailableAssets(["bvUSD", ...STABLE_SYMBOLS]);
+    } else {
+      setAvailableAssets(["bvUSD"]);
+    }
+  }, [chain]);
+
   const parsedValue = parseInputFloatWithDecimals(
     value,
     // @ts-ignore
     STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
   );
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
-  const outputAmount = parseInputFloatWithDecimals(
+  const outputAmount = chain === 1 ? parsedValue : parseInputFloatWithDecimals(
     valOut,
     // @ts-ignore
     STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
@@ -89,6 +103,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
+  // reading all balances on both chains to not lead to errors on switching available assets
   const balances = Object.fromEntries(["bvUSD", "sbvUSD", ...STABLE_SYMBOLS].map((symbol) => ([
     symbol,
     // known collaterals are static so we can safely call this hook in a .map()
@@ -101,7 +116,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     && parsedValue
     && dn.gt(parsedValue, 0)
     && !insufficientBalance
-    && valOutStatus === "success"
+    && (chain === 1 || valOutStatus === "success")
 
   return (
     <div
@@ -127,7 +142,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               contextual={mode === "add" ?
                 <Dropdown
                   items={
-                    ["bvUSD", ...STABLE_SYMBOLS].map(symbol => ({
+                    availableAssets.map(symbol => ({
                       icon: <TokenIcon symbol={symbol as Token["symbol"]} />,
                       label: symbol,
                       value: account.isConnected
@@ -137,9 +152,9 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
                   }
                   menuPlacement="end"
                   menuWidth={300}
-                  onSelect={(index) => setInputSymbol(["bvUSD", ...STABLE_SYMBOLS][index] as Token["symbol"])}
+                  onSelect={(index) => setInputSymbol(availableAssets[index] as Token["symbol"])}
                   // @ts-ignore
-                  selected={["bvUSD", ...STABLE_SYMBOLS].indexOf(inputSymbol)}
+                  selected={availableAssets.indexOf(inputSymbol)}
                 />
                 : <InputTokenBadge
                   background={false}
@@ -187,7 +202,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               placeholder="0.00"
               secondary={{
                 start: mode === "add"
-                  ? <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />
+                  ? <EnsoPreview value={chain === 1 ? value_ : valOut} status={chain === 1 ? "success" : valOutStatus} outputSymbol={outputSymbol} />
                   : <EnsoPreview value={value_ || "0"} status={"success"} outputSymbol={outputSymbol} />,
                 end: balances[inputSymbol].data && (
                   <TextButton
@@ -253,10 +268,12 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
                 successLink: ["/", "Go to the home page"],
                 successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
                 mode: mode,
+                outputAmount: outputAmount,
                 amount: parsedValue,
                 inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
                 outputToken: outputSymbol as "bvUSD" | "sbvUSD",
                 slippage: 50,
+                chainId: chain,
               });
             }}
           />
