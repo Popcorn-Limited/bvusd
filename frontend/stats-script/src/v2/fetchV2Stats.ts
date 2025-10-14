@@ -220,7 +220,8 @@ export const fetchV2Stats = async ({
       mapObj(
         {
           ...r,
-          apy: apyMap.get(r.address.trim().toLowerCase())?.apy ?? "0",
+          apy7: apyMap.get(r.address.trim().toLowerCase())?.apy7 ?? "0",
+          apy30: apyMap.get(r.address.trim().toLowerCase())?.apy30 ?? "0",
         },
         (x) => `${x}`
       )
