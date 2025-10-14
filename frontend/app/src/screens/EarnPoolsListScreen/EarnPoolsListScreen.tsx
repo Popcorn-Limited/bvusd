@@ -5,7 +5,9 @@ import type { BranchId } from "@/src/types";
 import { EarnPositionSummary, OpenLink } from "@/src/comps/EarnPositionSummary/EarnPositionSummary";
 import { Screen } from "@/src/comps/Screen/Screen";
 import content from "@/src/content";
-import { getBranches, useEarnPosition, useVault, useVaultPosition } from "@/src/liquity-utils";
+import { getBranches, useEarnPosition} from "@/src/liquity-utils";
+import { useVault, useVaultPosition } from "@/src/bitvault-utils";
+
 import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
 import { AnchorTextButton, InfoTooltip, TokenIcon } from "@liquity2/uikit";
@@ -14,10 +16,13 @@ import { Amount } from "@/src/comps/Amount/Amount";
 import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
 import * as dn from "dnum";
 import { fmtnum } from "@/src/formatting";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
+import { useChainId } from "wagmi";
 
 export function EarnPoolsListScreen() {
   const account = useAccount();
-  const branches = getBranches();
+  const { chainConfig } = useChainConfig()
+  const branches = getBranches(chainConfig);
   const collSymbols = branches.map((b) => b.symbol);
 
   const poolsTransition = useTransition(branches.map((c) => c.branchId), {
@@ -115,10 +120,11 @@ function EarnPool({
 }
 
 function Vault() {
+  const chain = useChainId();
   const account = useAccount();
 
   const vaultPosition = useVaultPosition(account.address ?? null);
-  const vault = useVault();
+  const vault = useVault({chainId: chain});
   const loadingState = vault.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
   
   return loadingState === "success" && (

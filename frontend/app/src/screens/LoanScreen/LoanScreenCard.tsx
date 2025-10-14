@@ -8,7 +8,6 @@ import { INFINITY } from "@/src/characters";
 import { ScreenCard } from "@/src/comps/Screen/ScreenCard";
 import { LoanStatusTag } from "@/src/comps/Tag/LoanStatusTag";
 import { Value } from "@/src/comps/Value/Value";
-import { CHAIN_BLOCK_EXPLORER } from "@/src/env";
 import { formatRisk } from "@/src/formatting";
 import { fmtnum } from "@/src/formatting";
 import { getLoanDetails } from "@/src/liquity-math";
@@ -36,6 +35,7 @@ import { blo } from "blo";
 import * as dn from "dnum";
 import Image from "next/image";
 import { match, P } from "ts-pattern";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 type LoanMode = "borrow" | "multiply";
 
@@ -336,6 +336,7 @@ function LoanCard({
   onLeverageModeChange: (mode: LoanMode) => void;
 }) {
   const copyTransition = useFlashTransition();
+  const { chainConfig } = useChainConfig();
 
   const cardTransition = useTransition(props, {
     keys: (props) => props.mode,
@@ -565,7 +566,7 @@ function LoanCard({
                           copyTransition.flash();
                         }
                         if (index === 1) {
-                          window.open(`${CHAIN_BLOCK_EXPLORER?.url}address/${loan.borrower}`);
+                          window.open(`${chainConfig.CHAIN_BLOCK_EXPLORER}address/${loan.borrower}`);
                         }
                         if (index === 2 && nftUrl) {
                           window.open(nftUrl);

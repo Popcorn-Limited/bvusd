@@ -1,3 +1,5 @@
+"use client";
+
 import type { BranchId, CollateralSymbol } from "@/src/types";
 import type { Address } from "@liquity2/uikit";
 
@@ -26,9 +28,7 @@ import { StableToVaultZapper } from "./abi/StableToVaultZapper";
 import { Vault } from "./abi/Vault";
 import { TokenLocker } from "./abi/TokenLocker";
 import {
-  CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
-  CONTRACT_CONVERTER,
   CONTRACT_EXCHANGE_HELPERS,
   CONTRACT_GOVERNANCE,
   CONTRACT_HINT_HELPERS,
@@ -37,13 +37,12 @@ import {
   CONTRACT_LUSD_TOKEN,
   CONTRACT_MULTI_TROVE_GETTER,
   CONTRACT_STABLE_VAULT_ZAPPER,
-  CONTRACT_USDC,
-  CONTRACT_USDT,
-  CONTRACT_VAULT,
-  CONTRACT_WETH,
   CONTRACT_TOKEN_LOCKER,
   ENV_BRANCHES,
 } from "@/src/env";
+
+import { ChainEnv, useChainConfig } from "@/src/services/ChainConfigProvider";
+
 import { erc20Abi, zeroAddress } from "viem";
 
 const protocolAbis = {
@@ -61,13 +60,15 @@ const protocolAbis = {
   Converter,
   USDC: erc20Abi,
   USDT: erc20Abi,
-  Vault:Vault,
-  sbvUSD:Vault,
-  StableToVaultZapper:StableToVaultZapper,
-  TokenLocker:TokenLocker
+  Vault: Vault,
+  sbvUSD: Vault,
+  StableToVaultZapper: StableToVaultZapper,
+  TokenLocker: TokenLocker,
 } as const;
 
-const BorrowerOperationsErrorsAbi = BorrowerOperations.filter((f) => f.type === "error");
+const BorrowerOperationsErrorsAbi = BorrowerOperations.filter(
+  (f) => f.type === "error"
+);
 
 const collateralAbis = {
   AddressesRegistry,
@@ -77,20 +78,14 @@ const collateralAbis = {
   CollToken: erc20Abi,
   UnderlyingToken: erc20Abi,
   DefaultPool,
-  LeverageLSTZapper: [
-    ...LeverageLSTZapper,
-    ...BorrowerOperationsErrorsAbi,
-  ],
-  LeverageWETHZapper: [
-    ...LeverageWETHZapper,
-    ...BorrowerOperationsErrorsAbi,
-  ],
+  LeverageLSTZapper: [...LeverageLSTZapper, ...BorrowerOperationsErrorsAbi],
+  LeverageWETHZapper: [...LeverageWETHZapper, ...BorrowerOperationsErrorsAbi],
   PriceFeed,
   SortedTroves,
   StabilityPool,
   TroveManager,
   TroveNFT,
-  Whitelist: WhitelistAbi
+  Whitelist: WhitelistAbi,
 } as const;
 
 const abis = {
@@ -108,8 +103,10 @@ type ContractName = ProtocolContractName | CollateralContractName;
 
 // A contract represented by its ABI and address
 type Contract<T extends ContractName> = {
-  abi: T extends ProtocolContractName ? typeof protocolAbis[T]
-    : T extends CollateralContractName ? typeof collateralAbis[T]
+  abi: T extends ProtocolContractName
+    ? (typeof protocolAbis)[T]
+    : T extends CollateralContractName
+    ? (typeof collateralAbis)[T]
     : never;
   address: Address;
 };
@@ -127,115 +124,221 @@ export type Contracts = ProtocolContractMap & {
   }>;
 };
 
-export const CONTRACTS: Contracts = {
-  BoldToken: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
-  bvUSD: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
-  CollateralRegistry: {
-    abi: abis.CollateralRegistry,
-    address: CONTRACT_COLLATERAL_REGISTRY,
-  },
-  Governance: { abi: abis.Governance, address: CONTRACT_GOVERNANCE },
-  ExchangeHelpers: {
-    abi: abis.ExchangeHelpers,
-    address: CONTRACT_EXCHANGE_HELPERS,
-  },
-  HintHelpers: { abi: abis.HintHelpers, address: CONTRACT_HINT_HELPERS },
-  LqtyStaking: { abi: abis.LqtyStaking, address: CONTRACT_LQTY_STAKING },
-  LqtyToken: { abi: abis.LqtyToken, address: CONTRACT_LQTY_TOKEN },
-  LusdToken: { abi: abis.LusdToken, address: CONTRACT_LUSD_TOKEN },
-  MultiTroveGetter: {
-    abi: abis.MultiTroveGetter,
-    address: CONTRACT_MULTI_TROVE_GETTER,
-  },
-  WETH: { abi: abis.WETH, address: CONTRACT_WETH },
-  USDC: { abi: abis.USDC, address: CONTRACT_USDC },
-  USDT: { abi: abis.USDT, address: CONTRACT_USDT },
-  Converter: { abi: abis.Converter, address: CONTRACT_CONVERTER },
-  Vault: { abi: abis.Vault, address: CONTRACT_VAULT },
-  sbvUSD: { abi: abis.Vault, address: CONTRACT_VAULT },
-  StableToVaultZapper: { abi: abis.StableToVaultZapper, address: CONTRACT_STABLE_VAULT_ZAPPER },
-  TokenLocker: { abi: abis.TokenLocker, address: CONTRACT_TOKEN_LOCKER },
-  branches: ENV_BRANCHES.map(({ branchId, symbol, contracts }) => ({
-    id: branchId,
-    branchId,
-    symbol,
-    contracts: {
-      AddressesRegistry: {
-        address: contracts.ADDRESSES_REGISTRY,
-        abi: abis.AddressesRegistry,
-      },
-      ActivePool: { address: contracts.ACTIVE_POOL, abi: abis.ActivePool },
-      BorrowerOperations: {
-        address: contracts.BORROWER_OPERATIONS,
-        abi: abis.BorrowerOperations,
-      },
-      CollSurplusPool: {
-        address: contracts.COLL_SURPLUS_POOL,
-        abi: abis.CollSurplusPool,
-      },
-      CollToken: { address: contracts.COLL_TOKEN, abi: abis.CollToken },
-      // @dev underlying token for wrapped collateral token
-      UnderlyingToken: { address: contracts.UNDERLYING_TOKEN, abi: abis.CollToken },
-      DefaultPool: { address: contracts.DEFAULT_POOL, abi: abis.DefaultPool },
-      LeverageLSTZapper: {
-        address: contracts.LEVERAGE_ZAPPER,
-        abi: abis.LeverageLSTZapper,
-      },
-      // @dev only for native token
-      LeverageWETHZapper: {
-        address: zeroAddress,
-        abi: abis.LeverageWETHZapper,
-      },
-      PriceFeed: { address: contracts.PRICE_FEED, abi: abis.PriceFeed },
-      SortedTroves: { address: contracts.SORTED_TROVES, abi: abis.SortedTroves },
-      StabilityPool: {
-        address: contracts.STABILITY_POOL,
-        abi: abis.StabilityPool,
-      },
-      TroveManager: { address: contracts.TROVE_MANAGER, abi: abis.TroveManager },
-      TroveNFT: { address: contracts.TROVE_NFT, abi: abis.TroveNFT },
-      Whitelist: {address: contracts.WHITELIST, abi: abis.Whitelist}
+export const CONTRACTS = (config: ChainEnv): Contracts => {
+  return {
+    BoldToken: { abi: abis.BoldToken, address: config.CONTRACT_BOLD_TOKEN },
+    bvUSD: { abi: abis.BoldToken, address: config.CONTRACT_BOLD_TOKEN },
+    CollateralRegistry: {
+      abi: abis.CollateralRegistry,
+      address: CONTRACT_COLLATERAL_REGISTRY,
     },
-  })),
+    Governance: { abi: abis.Governance, address: CONTRACT_GOVERNANCE },
+    ExchangeHelpers: {
+      abi: abis.ExchangeHelpers,
+      address: CONTRACT_EXCHANGE_HELPERS,
+    },
+    HintHelpers: { abi: abis.HintHelpers, address: CONTRACT_HINT_HELPERS },
+    LqtyStaking: { abi: abis.LqtyStaking, address: CONTRACT_LQTY_STAKING },
+    LqtyToken: { abi: abis.LqtyToken, address: CONTRACT_LQTY_TOKEN },
+    LusdToken: { abi: abis.LusdToken, address: CONTRACT_LUSD_TOKEN },
+    MultiTroveGetter: {
+      abi: abis.MultiTroveGetter,
+      address: CONTRACT_MULTI_TROVE_GETTER,
+    },
+    WETH: { abi: abis.WETH, address: config.CONTRACT_WETH },
+    USDC: { abi: abis.USDC, address: config.CONTRACT_USDC },
+    USDT: { abi: abis.USDT, address: config.CONTRACT_USDT },
+    Converter: { abi: abis.Converter, address: config.CONTRACT_CONVERTER },
+    Vault: { abi: abis.Vault, address: config.CONTRACT_VAULT },
+    sbvUSD: { abi: abis.Vault, address: config.CONTRACT_VAULT },
+    StableToVaultZapper: {
+      abi: abis.StableToVaultZapper,
+      address: CONTRACT_STABLE_VAULT_ZAPPER,
+    },
+    TokenLocker: { abi: abis.TokenLocker, address: CONTRACT_TOKEN_LOCKER },
+    branches: ENV_BRANCHES.map(({ branchId, symbol, contracts }) => ({
+      id: branchId,
+      branchId,
+      symbol,
+      contracts: {
+        AddressesRegistry: {
+          address: contracts.ADDRESSES_REGISTRY,
+          abi: abis.AddressesRegistry,
+        },
+        ActivePool: { address: contracts.ACTIVE_POOL, abi: abis.ActivePool },
+        BorrowerOperations: {
+          address: contracts.BORROWER_OPERATIONS,
+          abi: abis.BorrowerOperations,
+        },
+        CollSurplusPool: {
+          address: contracts.COLL_SURPLUS_POOL,
+          abi: abis.CollSurplusPool,
+        },
+        CollToken: { address: contracts.COLL_TOKEN, abi: abis.CollToken },
+        // @dev underlying token for wrapped collateral token
+        UnderlyingToken: {
+          address: contracts.UNDERLYING_TOKEN,
+          abi: abis.CollToken,
+        },
+        DefaultPool: { address: contracts.DEFAULT_POOL, abi: abis.DefaultPool },
+        LeverageLSTZapper: {
+          address: contracts.LEVERAGE_ZAPPER,
+          abi: abis.LeverageLSTZapper,
+        },
+        // @dev only for native token
+        LeverageWETHZapper: {
+          address: zeroAddress,
+          abi: abis.LeverageWETHZapper,
+        },
+        PriceFeed: { address: contracts.PRICE_FEED, abi: abis.PriceFeed },
+        SortedTroves: {
+          address: contracts.SORTED_TROVES,
+          abi: abis.SortedTroves,
+        },
+        StabilityPool: {
+          address: contracts.STABILITY_POOL,
+          abi: abis.StabilityPool,
+        },
+        TroveManager: {
+          address: contracts.TROVE_MANAGER,
+          abi: abis.TroveManager,
+        },
+        TroveNFT: { address: contracts.TROVE_NFT, abi: abis.TroveNFT },
+        Whitelist: { address: config.CONTRACT_WHITELIST, abi: abis.Whitelist },
+      },
+    })),
+  };
 };
 
-export function getProtocolContract<
-  CN extends ProtocolContractName,
->(name: CN): ProtocolContractMap[CN] {
-  return CONTRACTS[name];
+// export const CONTRACTS: Contracts = {
+//   BoldToken: { abi: abis.BoldToken, address: config.CONTRACT_BOLD_TOKEN },
+//   bvUSD: { abi: abis.BoldToken, address: config.CONTRACT_BOLD_TOKEN },
+//   CollateralRegistry: {
+//     abi: abis.CollateralRegistry,
+//     address: CONTRACT_COLLATERAL_REGISTRY,
+//   },
+//   Governance: { abi: abis.Governance, address: CONTRACT_GOVERNANCE },
+//   ExchangeHelpers: {
+//     abi: abis.ExchangeHelpers,
+//     address: CONTRACT_EXCHANGE_HELPERS,
+//   },
+//   HintHelpers: { abi: abis.HintHelpers, address: CONTRACT_HINT_HELPERS },
+//   LqtyStaking: { abi: abis.LqtyStaking, address: CONTRACT_LQTY_STAKING },
+//   LqtyToken: { abi: abis.LqtyToken, address: CONTRACT_LQTY_TOKEN },
+//   LusdToken: { abi: abis.LusdToken, address: CONTRACT_LUSD_TOKEN },
+//   MultiTroveGetter: {
+//     abi: abis.MultiTroveGetter,
+//     address: CONTRACT_MULTI_TROVE_GETTER,
+//   },
+//   WETH: { abi: abis.WETH, address: config.CONTRACT_WETH },
+//   USDC: { abi: abis.USDC, address: config.CONTRACT_USDC },
+//   USDT: { abi: abis.USDT, address: config.CONTRACT_USDT },
+//   Converter: { abi: abis.Converter, address: config.CONTRACT_CONVERTER },
+//   Vault: { abi: abis.Vault, address: config.CONTRACT_VAULT },
+//   sbvUSD: { abi: abis.Vault, address: config.CONTRACT_VAULT },
+//   StableToVaultZapper: {
+//     abi: abis.StableToVaultZapper,
+//     address: CONTRACT_STABLE_VAULT_ZAPPER,
+//   },
+//   TokenLocker: { abi: abis.TokenLocker, address: CONTRACT_TOKEN_LOCKER },
+//   branches: ENV_BRANCHES.map(({ branchId, symbol, contracts }) => ({
+//     id: branchId,
+//     branchId,
+//     symbol,
+//     contracts: {
+//       AddressesRegistry: {
+//         address: contracts.ADDRESSES_REGISTRY,
+//         abi: abis.AddressesRegistry,
+//       },
+//       ActivePool: { address: contracts.ACTIVE_POOL, abi: abis.ActivePool },
+//       BorrowerOperations: {
+//         address: contracts.BORROWER_OPERATIONS,
+//         abi: abis.BorrowerOperations,
+//       },
+//       CollSurplusPool: {
+//         address: contracts.COLL_SURPLUS_POOL,
+//         abi: abis.CollSurplusPool,
+//       },
+//       CollToken: { address: contracts.COLL_TOKEN, abi: abis.CollToken },
+//       // @dev underlying token for wrapped collateral token
+//       UnderlyingToken: {
+//         address: contracts.UNDERLYING_TOKEN,
+//         abi: abis.CollToken,
+//       },
+//       DefaultPool: { address: contracts.DEFAULT_POOL, abi: abis.DefaultPool },
+//       LeverageLSTZapper: {
+//         address: contracts.LEVERAGE_ZAPPER,
+//         abi: abis.LeverageLSTZapper,
+//       },
+//       // @dev only for native token
+//       LeverageWETHZapper: {
+//         address: zeroAddress,
+//         abi: abis.LeverageWETHZapper,
+//       },
+//       PriceFeed: { address: contracts.PRICE_FEED, abi: abis.PriceFeed },
+//       SortedTroves: {
+//         address: contracts.SORTED_TROVES,
+//         abi: abis.SortedTroves,
+//       },
+//       StabilityPool: {
+//         address: contracts.STABILITY_POOL,
+//         abi: abis.StabilityPool,
+//       },
+//       TroveManager: {
+//         address: contracts.TROVE_MANAGER,
+//         abi: abis.TroveManager,
+//       },
+//       TroveNFT: { address: contracts.TROVE_NFT, abi: abis.TroveNFT },
+//       Whitelist: { address: contracts.WHITELIST, abi: abis.Whitelist },
+//     },
+//   })),
+// };
+
+export function getProtocolContract<CN extends ProtocolContractName>(
+  config: ChainEnv,
+  name: CN
+): ProtocolContractMap[CN] {
+  return CONTRACTS(config)[name];
 }
 
 export function getBranchContract(
+  config: ChainEnv,
   branchIdOrSymbol: null,
-  contractName: CollateralContractName,
+  contractName: CollateralContractName
 ): null;
 export function getBranchContract<CN extends CollateralContractName>(
+  config: ChainEnv,
   branchIdOrSymbol: CollateralSymbol | BranchId,
-  contractName: CN,
+  contractName: CN
 ): Contract<CN>;
 export function getBranchContract<CN extends CollateralContractName>(
+  config: ChainEnv,
   branchIdOrSymbol: CollateralSymbol | BranchId | null,
-  contractName: CN,
+  contractName: CN
 ): Contract<CN> | null;
 export function getBranchContract<CN extends CollateralContractName>(
+  config: ChainEnv,
   branchIdOrSymbol: CollateralSymbol | BranchId | null,
-  contractName: CN,
+  contractName: CN
 ): Contract<CN> | null {
   if (branchIdOrSymbol === null) {
     return null;
   }
-  const { branches } = CONTRACTS;
+  const { branches } = CONTRACTS(config);
 
-  const branch = typeof branchIdOrSymbol === "number"
-    ? branches[branchIdOrSymbol]
-    : branches.find((c) => c.symbol === branchIdOrSymbol);
+  const branch =
+    typeof branchIdOrSymbol === "number"
+      ? branches[branchIdOrSymbol]
+      : branches.find((c) => c.symbol === branchIdOrSymbol);
   if (!branch) {
     throw new Error(`No branch for index or symbol ${branchIdOrSymbol}`);
   }
 
   const contract = branch.contracts[contractName];
   if (!contract) {
-    throw new Error(`No contract ${contractName} for branch ${branchIdOrSymbol}`);
+    throw new Error(
+      `No contract ${contractName} for branch ${branchIdOrSymbol}`
+    );
   }
 
   return contract;

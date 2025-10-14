@@ -38,11 +38,8 @@ import {
   jsonStringifyWithDnum,
 } from "@/src/dnum-utils";
 import {
-  CHAIN_BLOCK_EXPLORER,
-  CONTRACT_VAULT,
   DIFFS_STATS_URL,
   ENV_BRANCHES,
-  LIQUITY_STATS_URL,
 } from "@/src/env";
 import { useContinuousBoldGains } from "@/src/liquity-stability-pool";
 import {
@@ -76,6 +73,7 @@ import {
   useReadContract,
   useReadContracts,
 } from "wagmi";
+import { ChainEnv, useChainConfig } from "@/src/services/ChainConfigProvider";
 import { readContract, readContracts } from "wagmi/actions";
 import { graphQuery, InterestBatchesQuery } from "./subgraph-queries";
 
@@ -136,9 +134,9 @@ export function getCollToken(
   return token;
 }
 
-export function getBranches(): Branch[] {
+export function getBranches(chainConfig: ChainEnv): Branch[] {
   return ENV_BRANCHES.map((branch) => {
-    const contracts = CONTRACTS.branches.find((b) => b.id === branch.id);
+    const contracts = CONTRACTS(chainConfig).branches.find((b) => b.id === branch.id);
     if (!contracts) {
       throw new Error(`Contracts not found for branch: ${branch.id}`);
     }
@@ -161,7 +159,9 @@ export function getBranch(
     return null;
   }
 
-  const branch = getBranches().find((b) =>
+  const { chainConfig } = useChainConfig(); 
+
+  const branch = getBranches(chainConfig).find((b) =>
     typeof idOrSymbol === "string"
       ? b.symbol === idOrSymbol
       : b.id === idOrSymbol
@@ -193,7 +193,6 @@ export function useEarnPool(branchId: null | BranchId) {
 }
 
 
-
 export function isEarnPositionActive(position: PositionEarn | null) {
   return Boolean(
     position &&
@@ -208,6 +207,7 @@ export function useEarnPosition(
   account: null | Address
 ): UseQueryResult<PositionEarn | null> {
   const getBoldGains = useContinuousBoldGains(account, branchId);
+  const { chainConfig } = useChainConfig();
 
   const yieldGainsInBold = useQuery({
     queryFn: () => getBoldGains.data?.(Date.now()) ?? null,
@@ -216,7 +216,7 @@ export function useEarnPosition(
     enabled: getBoldGains.status === "success",
   });
 
-  const StabilityPool = getBranchContract(branchId, "StabilityPool");
+  const StabilityPool = getBranchContract(chainConfig, branchId, "StabilityPool");
   if (!StabilityPool) {
     throw new Error(`Invalid branch: ${branchId}`);
   }
@@ -281,11 +281,13 @@ export function useTroveNftUrl(
   branchId: null | BranchId,
   troveId: null | TroveId
 ) {
-  const TroveNft = getBranchContract(branchId, "TroveNFT");
+  const { chainConfig } = useChainConfig();
+
+  const TroveNft = getBranchContract(chainConfig, branchId, "TroveNFT");
   return (
     TroveNft &&
     troveId &&
-    `${CHAIN_BLOCK_EXPLORER?.url}nft/${TroveNft.address}/${BigInt(troveId)}`
+    `${chainConfig.CHAIN_BLOCK_EXPLORER}nft/${TroveNft.address}/${BigInt(troveId)}`
   );
 }
 
@@ -428,9 +430,10 @@ export function usePredictOpenTroveUpfrontFee(
   interestRateOrBatch: Address | Dnum
 ) {
   const batch = isAddress(interestRateOrBatch);
+  const { chainConfig } = useChainConfig();
 
   return useReadContract({
-    ...getProtocolContract("HintHelpers"),
+    ...getProtocolContract(chainConfig, "HintHelpers"),
     functionName: batch
       ? "predictOpenTroveAndJoinBatchUpfrontFee"
       : "predictOpenTroveUpfrontFee",
@@ -449,8 +452,10 @@ export function usePredictAdjustTroveUpfrontFee(
   troveId: TroveId,
   debtIncrease: Dnum
 ) {
+  const { chainConfig } = useChainConfig();
+
   return useReadContract({
-    ...getProtocolContract("HintHelpers"),
+    ...getProtocolContract(chainConfig, "HintHelpers"),
     functionName: "predictAdjustTroveUpfrontFee",
     args: [BigInt(branchId), BigInt(troveId), debtIncrease[0]],
     query: {
@@ -475,9 +480,10 @@ export function usePredictAdjustInterestRateUpfrontFee(
     : fromBatch
     ? "predictRemoveFromBatchUpfrontFee"
     : "predictAdjustInterestRateUpfrontFee";
+    const { chainConfig } = useChainConfig();
 
   return useReadContract({
-    ...getProtocolContract("HintHelpers"),
+    ...getProtocolContract(chainConfig, "HintHelpers"),
     functionName,
     args: [
       BigInt(branchId),
@@ -508,6 +514,8 @@ export async function getTroveOperationHints({
   upperHint: bigint;
   lowerHint: bigint;
 }> {
+  const { chainConfig } = useChainConfig();
+
   const branch = getBranch(branchId);
 
   const numTroves = await readContract(wagmiConfig, {
@@ -830,7 +838,9 @@ export const StatsSchema = v.pipe(
 );
 
 export function useBranchDebt(branchId: BranchId) {
-  const BorrowerOperations = getBranchContract(branchId, "BorrowerOperations");
+  const { chainConfig } = useChainConfig();
+
+  const BorrowerOperations = getBranchContract(chainConfig, branchId, "BorrowerOperations");
   return useReadContract({
     ...BorrowerOperations,
     functionName: "getEntireBranchDebt",
@@ -856,23 +866,28 @@ export function useDiffs() {
   });
 }
 
+
 export function useLiquityStats() {
+  const { chainConfig } = useChainConfig();
+
   return useQuery({
     queryKey: ["liquity-stats"],
     queryFn: async () => {
-      if (!LIQUITY_STATS_URL) {
-        throw new Error("LIQUITY_STATS_URL is not defined");
+      if (!chainConfig.STATS_URL) {
+        throw new Error("config.STATS_URL is not defined");
       }
-      const response = await fetch(LIQUITY_STATS_URL);
+      const response = await fetch(chainConfig.STATS_URL);
       const json = await response.json();
       return v.parse(StatsSchema, json);
     },
-    enabled: Boolean(LIQUITY_STATS_URL),
+    enabled: Boolean(chainConfig.STATS_URL),
   });
 }
 
 export function useLatestTroveData(branchId: BranchId, troveId: TroveId) {
-  const TroveManager = getBranchContract(branchId, "TroveManager");
+  const { chainConfig } = useChainConfig();
+
+  const TroveManager = getBranchContract(chainConfig, branchId, "TroveManager");
   if (!TroveManager) {
     throw new Error(`Invalid branch: ${branchId}`);
   }
@@ -948,6 +963,7 @@ export function useInterestBatchDelegates(
   batchAddresses: Address[]
 ): UseQueryResult<Delegate[]> {
   const wagmiConfig = useWagmiConfig();
+  const { chainConfig } = useChainConfig();
 
   return useQuery<Delegate[]>({
     queryKey: ["InterestBatches", branchId, batchAddresses],
@@ -966,7 +982,7 @@ export function useInterestBatchDelegates(
           readContracts(wagmiConfig, {
             allowFailure: false,
             contracts: batchAddresses.map((address) => ({
-              ...getBranchContract(branchId, "BorrowerOperations"),
+              ...getBranchContract(chainConfig, branchId, "BorrowerOperations"),
               functionName: "getInterestBatchManager" as const,
               args: [address],
             })),
@@ -1022,12 +1038,13 @@ export function useTroveRateUpdateCooldown(
   branchId: BranchId,
   troveId: TroveId
 ) {
+  const { chainConfig } = useChainConfig();
   const wagmiConfig = useWagmiConfig();
   return useQuery({
     queryKey: ["troveRateUpdateCooldown", branchId, troveId],
     queryFn: async () => {
       const { lastInterestRateAdjTime } = await readContract(wagmiConfig, {
-        ...getBranchContract(branchId, "TroveManager"),
+        ...getBranchContract(chainConfig, branchId, "TroveManager"),
         functionName: "getLatestTroveData",
         args: [BigInt(troveId)],
       });

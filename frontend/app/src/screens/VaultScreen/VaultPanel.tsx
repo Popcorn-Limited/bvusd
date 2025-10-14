@@ -10,6 +10,7 @@ import { useReadContract } from "wagmi";
 import { RequestBalance } from "@/src/types";
 import { dnum18, DNUM_0 } from "@/src/dnum-utils";
 import { zeroAddress } from "viem";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 import { useVault, useVaultPosition } from "@/src/bitvault-utils";
 
 const EMPTY_REQUEST_BALANCE: RequestBalance = {
@@ -23,10 +24,11 @@ export function VaultPanel() {
   const account = useAccount();
 
   const vaultPosition = useVaultPosition(account.address ?? null);
-  const vault = useVault();
+  const { chainConfig } = useChainConfig();
+
   const requestBalance = useReadContract({
-    address: getProtocolContract("Vault").address,
-    abi: getProtocolContract("Vault").abi,
+    address: getProtocolContract(chainConfig, "Vault").address,
+    abi: getProtocolContract(chainConfig, "Vault").abi,
     functionName: "getRequestBalance",
     args: [account.address ?? zeroAddress],
     query: {
@@ -38,7 +40,7 @@ export function VaultPanel() {
       }),
     },
   });
-  const loadingState = vault.isLoading || requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
+  const loadingState = requestBalance.isLoading || vaultPosition.status === "pending" ? "loading" : "success";
 
   const tabsTransition = useTransition(loadingState, {
     from: { opacity: 0 },

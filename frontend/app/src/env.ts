@@ -25,7 +25,6 @@ const contractsEnvNames = [
   "STABILITY_POOL",
   "TROVE_MANAGER",
   "TROVE_NFT",
-  "WHITELIST",
 ] as const;
 
 type ContractEnvName = typeof contractsEnvNames[number];
@@ -49,7 +48,6 @@ function vBranchEnvVars(branchId: BranchId) {
     [`${prefix}_CONTRACT_STABILITY_POOL`]: v.optional(vAddress()),
     [`${prefix}_CONTRACT_TROVE_MANAGER`]: v.optional(vAddress()),
     [`${prefix}_CONTRACT_TROVE_NFT`]: v.optional(vAddress()),
-    [`${prefix}_CONTRACT_WHITELIST`]: v.optional(vAddress()),
     [`${prefix}_IC_STRATEGIES`]: v.optional(
       v.pipe(
         v.string(),
@@ -123,30 +121,6 @@ export const EnvSchema = v.pipe(
         };
       }),
     ),
-    CHAIN_ID: v.pipe(
-      v.string(),
-      v.transform((value) => {
-        const parsed = parseInt(value, 10);
-        if (isNaN(parsed)) {
-          throw new Error(`Invalid chain ID: ${value}`);
-        }
-        return parsed;
-      }),
-    ),
-    CHAIN_NAME: v.string(),
-    CHAIN_CURRENCY: vEnvCurrency(),
-    CHAIN_RPC_URL: v.pipe(v.string(), v.url()),
-    CHAIN_BLOCK_EXPLORER: v.optional(vEnvLink(true)),
-    CHAIN_CONTRACT_ENS_REGISTRY: v.optional(
-      v.union([v.null(), vEnvAddressAndBlock()]),
-      null,
-    ),
-    CHAIN_CONTRACT_ENS_RESOLVER: v.optional(
-      v.union([v.null(), vEnvAddressAndBlock()]),
-      null,
-    ),
-    CHAIN_CONTRACT_MULTICALL: vAddress(),
-    ENSO_ROUTER: vAddress(),
     CONTRACTS_COMMIT_HASH: v.string(),
     CONTRACTS_COMMIT_URL: v.pipe(
       vEnvUrlOrDefault(DEFAULT_COMMIT_URL),
@@ -161,7 +135,6 @@ export const EnvSchema = v.pipe(
       v.transform((value) => value.trim() || null),
     ),
     KNOWN_INITIATIVES_URL: v.optional(v.pipe(v.string(), v.url())),
-    LIQUITY_STATS_URL: v.optional(v.pipe(v.string(), v.url())),
     DIFFS_STATS_URL: v.optional(v.pipe(v.string(), v.url())),
     ALLOWLIST_URL: v.optional(v.pipe(v.string(), v.url())),
     SAFE_API_URL: v.optional(v.pipe(v.string(), v.url())),
@@ -175,7 +148,6 @@ export const EnvSchema = v.pipe(
       ),
     ),
 
-    CONTRACT_BOLD_TOKEN: vAddress(),
     CONTRACT_COLLATERAL_REGISTRY: vAddress(),
     CONTRACT_EXCHANGE_HELPERS: vAddress(),
     CONTRACT_GOVERNANCE: vAddress(),
@@ -184,16 +156,8 @@ export const EnvSchema = v.pipe(
     CONTRACT_LQTY_TOKEN: vAddress(),
     CONTRACT_LUSD_TOKEN: vAddress(),
     CONTRACT_MULTI_TROVE_GETTER: vAddress(),
-    CONTRACT_WETH: vAddress(),
 
-    CONTRACT_VAULT: vAddress(),
-    CONTRACT_ROUTER: vAddress(),
-
-    CONTRACT_CONVERTER: vAddress(),
     CONTRACT_STABLE_VAULT_ZAPPER: vAddress(),
-
-    CONTRACT_USDC: vAddress(),
-    CONTRACT_USDT: vAddress(),
 
     CONTRACT_TOKEN_LOCKER: vAddress(),
 
@@ -268,15 +232,6 @@ const parsedEnv = v.safeParse(EnvSchema, {
   ),
   BLOCKING_LIST: process.env.NEXT_PUBLIC_BLOCKING_LIST,
   BLOCKING_VPNAPI: process.env.NEXT_PUBLIC_BLOCKING_VPNAPI,
-  CHAIN_BLOCK_EXPLORER: process.env.NEXT_PUBLIC_CHAIN_BLOCK_EXPLORER,
-  CHAIN_CONTRACT_ENS_REGISTRY: process.env.NEXT_PUBLIC_CHAIN_CONTRACT_ENS_REGISTRY,
-  CHAIN_CONTRACT_ENS_RESOLVER: process.env.NEXT_PUBLIC_CHAIN_CONTRACT_ENS_RESOLVER,
-  CHAIN_CONTRACT_MULTICALL: process.env.NEXT_PUBLIC_CHAIN_CONTRACT_MULTICALL,
-  CHAIN_CURRENCY: process.env.NEXT_PUBLIC_CHAIN_CURRENCY,
-  CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
-  CHAIN_NAME: process.env.NEXT_PUBLIC_CHAIN_NAME,
-  CHAIN_RPC_URL: process.env.NEXT_PUBLIC_CHAIN_RPC_URL,
-  ENSO_ROUTER: process.env.NEXT_PUBLIC_ENSO_ROUTER,
   CONTRACTS_COMMIT_HASH: (
     // CONTRACTS_COMMIT_HASH_FROM_BUILD is set at build time (see next.config.js)
     // and gets overridden by NEXT_PUBLIC_CONTRACTS_COMMIT_HASH if set.
@@ -287,14 +242,12 @@ const parsedEnv = v.safeParse(EnvSchema, {
   DEMO_MODE: process.env.NEXT_PUBLIC_DEMO_MODE,
   DEPLOYMENT_FLAVOR: process.env.NEXT_PUBLIC_DEPLOYMENT_FLAVOR,
   KNOWN_INITIATIVES_URL: process.env.NEXT_PUBLIC_KNOWN_INITIATIVES_URL,
-  LIQUITY_STATS_URL: process.env.NEXT_PUBLIC_LIQUITY_STATS_URL,
   DIFFS_STATS_URL: process.env.NEXT_PUBLIC_DIFFS_STATS_URL,
   ALLOWLIST_URL: process.env.NEXT_PUBLIC_ALLOWLIST_URL,
   SAFE_API_URL: process.env.NEXT_PUBLIC_SAFE_API_URL,
   VERCEL_ANALYTICS: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS,
   WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 
-  CONTRACT_BOLD_TOKEN: process.env.NEXT_PUBLIC_CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY: process.env.NEXT_PUBLIC_CONTRACT_COLLATERAL_REGISTRY,
   CONTRACT_EXCHANGE_HELPERS: process.env.NEXT_PUBLIC_CONTRACT_EXCHANGE_HELPERS,
   CONTRACT_GOVERNANCE: process.env.NEXT_PUBLIC_CONTRACT_GOVERNANCE,
@@ -303,18 +256,9 @@ const parsedEnv = v.safeParse(EnvSchema, {
   CONTRACT_LQTY_TOKEN: process.env.NEXT_PUBLIC_CONTRACT_LQTY_TOKEN,
   CONTRACT_LUSD_TOKEN: process.env.NEXT_PUBLIC_CONTRACT_LUSD_TOKEN,
   CONTRACT_MULTI_TROVE_GETTER: process.env.NEXT_PUBLIC_CONTRACT_MULTI_TROVE_GETTER,
-  CONTRACT_WETH: process.env.NEXT_PUBLIC_CONTRACT_WETH,
 
-  CONTRACT_VAULT: process.env.NEXT_PUBLIC_CONTRACT_VAULT,
-  CONTRACT_ROUTER: process.env.NEXT_PUBLIC_CONTRACT_ROUTER,
-
-  CONTRACT_CONVERTER: process.env.NEXT_PUBLIC_CONTRACT_CONVERTER,
   CONTRACT_STABLE_VAULT_ZAPPER: process.env.NEXT_PUBLIC_CONTRACT_STABLE_VAULT_ZAPPER,
   CONTRACT_TOKEN_LOCKER: process.env.NEXT_PUBLIC_CONTRACT_TOKEN_LOCKER,
-
-  CONTRACT_USDC: process.env.NEXT_PUBLIC_CONTRACT_USDC,
-  CONTRACT_USDT: process.env.NEXT_PUBLIC_CONTRACT_USDT,
-
   COLL_0_TOKEN_ID: process.env.NEXT_PUBLIC_COLL_0_TOKEN_ID,
   COLL_0_IC_STRATEGIES: process.env.NEXT_PUBLIC_COLL_0_IC_STRATEGIES,
 
@@ -331,7 +275,6 @@ const parsedEnv = v.safeParse(EnvSchema, {
   COLL_0_CONTRACT_STABILITY_POOL: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_STABILITY_POOL,
   COLL_0_CONTRACT_TROVE_MANAGER: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_TROVE_MANAGER,
   COLL_0_CONTRACT_TROVE_NFT: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_TROVE_NFT,
-  COLL_0_CONTRACT_WHITELIST: process.env.NEXT_PUBLIC_COLL_0_CONTRACT_WHITELIST,
 });
 
 if (!parsedEnv.success) {
@@ -355,19 +298,9 @@ export const {
   APP_VERSION_URL,
   BLOCKING_LIST,
   BLOCKING_VPNAPI,
-  CHAIN_BLOCK_EXPLORER,
-  CHAIN_CONTRACT_ENS_REGISTRY,
-  CHAIN_CONTRACT_ENS_RESOLVER,
-  CHAIN_CONTRACT_MULTICALL,
-  CHAIN_CURRENCY,
-  CHAIN_ID,
-  CHAIN_NAME,
-  CHAIN_RPC_URL,
-  ENSO_ROUTER,
   ENV_BRANCHES,
   CONTRACTS_COMMIT_HASH,
   CONTRACTS_COMMIT_URL,
-  CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
   CONTRACT_EXCHANGE_HELPERS,
   CONTRACT_GOVERNANCE,
@@ -376,18 +309,11 @@ export const {
   CONTRACT_LQTY_TOKEN,
   CONTRACT_LUSD_TOKEN,
   CONTRACT_MULTI_TROVE_GETTER,
-  CONTRACT_WETH,
-  CONTRACT_VAULT,
-  CONTRACT_ROUTER,
-  CONTRACT_CONVERTER,
   CONTRACT_STABLE_VAULT_ZAPPER,
   CONTRACT_TOKEN_LOCKER,
-  CONTRACT_USDC,
-  CONTRACT_USDT,
   DEMO_MODE,
   DEPLOYMENT_FLAVOR,
   KNOWN_INITIATIVES_URL,
-  LIQUITY_STATS_URL,
   DIFFS_STATS_URL,
   ALLOWLIST_URL,
   SAFE_API_URL,

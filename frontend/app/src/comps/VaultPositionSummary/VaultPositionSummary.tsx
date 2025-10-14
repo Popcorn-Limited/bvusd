@@ -10,6 +10,7 @@ import { bvUSD, IconArrowRight, IconPlus, InfoTooltip, TokenIcon, USDT } from "@
 import * as dn from "dnum";
 import Link from "next/link";
 import { useVault } from "@/src/bitvault-utils";
+import { useChainId } from "wagmi";
 
 export function VaultPositionSummary({
   prevEarnPosition,
@@ -24,24 +25,17 @@ export function VaultPositionSummary({
   linkToScreen?: boolean;
   txPreviewMode?: boolean;
 }) {
+  const chain = useChainId()
   const collToken = bvUSD
-  const vault = useVault()
-  const { totalDeposited } = vault.data;
+  const { data} = useVault({chainId: chain})
 
+  // leftover from old liquity component structure
   let share = dn.from(0, 18);
   let prevShare = dn.from(0, 18);
-  if (totalDeposited && dn.gt(totalDeposited, 0)) {
-    if (earnPosition) {
-      share = dn.div(earnPosition.deposit, totalDeposited);
-    }
-    if (prevEarnPosition) {
-      prevShare = dn.div(prevEarnPosition.deposit, totalDeposited);
-    }
-  }
 
   const active = txPreviewMode || isEarnPositionActive(earnPosition);
 
-  return collToken && earnPosition && vault.data && (
+  return data && (
     <div
       className={css({
         position: "relative",
@@ -127,7 +121,7 @@ export function VaultPositionSummary({
                   fallback="-"
                   format="compact"
                   prefix="$"
-                  value={dnumOrNull(vault.data?.totalDeposited, 4)}
+                  value={dnumOrNull(data?.totalDeposited, 4)}
                 />
               </div>
               <InfoTooltip heading="Total Value Locked (TVL)">
@@ -162,7 +156,7 @@ export function VaultPositionSummary({
                       fallback="-%"
                       format="1z"
                       percentage
-                      value={vault.data?.apr}
+                      value={data?.apr}
                     />
                   </div>
                   <InfoTooltip
@@ -195,7 +189,7 @@ export function VaultPositionSummary({
                     fallback="-%"
                     format="1z"
                     percentage
-                    value={vault.data?.apr}
+                    value={data?.apr}
                   />
                   <InfoTooltip
                     content={{
@@ -249,7 +243,7 @@ export function VaultPositionSummary({
             >
               <div
                 title={active
-                  ? `${fmtnum(dn.mul(earnPosition.deposit, vault.data.price), "full")} bvUSD`
+                  ? `${fmtnum(dn.mul(earnPosition.deposit, data?.price), "full")} bvUSD`
                   : undefined}
                 className={css({
                   display: "flex",
@@ -259,12 +253,12 @@ export function VaultPositionSummary({
                   height: 24,
                 })}
               >
-                {active && fmtnum(dn.mul(earnPosition.deposit, vault.data.price))}
+                {active && fmtnum(dn.mul(earnPosition.deposit, data?.price))}
                 <TokenIcon symbol="bvUSD" size="mini" title={null} />
               </div>
               {prevEarnPosition && (
                 <div
-                  title={`${fmtnum(dn.mul(prevEarnPosition.deposit, vault.data.price), "full")} bvUSD`}
+                  title={`${fmtnum(dn.mul(prevEarnPosition.deposit, data?.price), "full")} bvUSD`}
                   className={css({
                     display: "flex",
                     justifyContent: "flex-start",
@@ -275,7 +269,7 @@ export function VaultPositionSummary({
                     textDecoration: "line-through",
                   })}
                 >
-                  {fmtnum(dn.mul(prevEarnPosition.deposit, vault.data.price))}
+                  {fmtnum(dn.mul(prevEarnPosition.deposit, data?.price))}
                   <TokenIcon symbol="bvUSD" size="mini" title={null} />
                 </div>
               )}

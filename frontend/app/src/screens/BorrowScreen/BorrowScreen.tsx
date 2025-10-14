@@ -40,11 +40,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { maxUint256 } from "viem";
 import { AccountButton } from "@/src/comps/AppLayout/AccountButton";
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 const KNOWN_COLLATERAL_SYMBOLS = KNOWN_COLLATERALS.map(({ symbol }) => symbol);
 
 export function BorrowScreen() {
-  const branches = getBranches();
+  const { chainConfig } = useChainConfig();
+
+  const branches = getBranches(chainConfig);
 
   // useParams() can return an array but not with the current
   // routing setup, so we can safely cast it to a string

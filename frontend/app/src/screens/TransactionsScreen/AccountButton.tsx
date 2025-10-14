@@ -1,6 +1,6 @@
+import { useChainConfig } from "@/src/services/ChainConfigProvider";
 import type { Address } from "@/src/types";
 
-import { CHAIN_BLOCK_EXPLORER } from "@/src/env";
 import { css } from "@/styled-system/css";
 import { AnchorTextButton, shortenAddress } from "@liquity2/uikit";
 import { blo } from "blo";
@@ -11,6 +11,8 @@ export function AccountButton({
 }: {
   address: Address;
 }) {
+  const { chainConfig } = useChainConfig();
+
   return (
     <AnchorTextButton
       key="start"
@@ -36,7 +38,7 @@ export function AccountButton({
           {shortenAddress(address, 4).toLowerCase()}
         </div>
       }
-      href={`${CHAIN_BLOCK_EXPLORER?.url}address/${address}`}
+      href={`${chainConfig.CHAIN_BLOCK_EXPLORER}address/${address}`}
       external
     />
   );

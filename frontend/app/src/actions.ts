@@ -7,6 +7,7 @@ import * as v from "valibot";
 import { Address } from "viem";
 import { getProtocolContract } from "./contracts";
 import { fmtnum } from "./formatting";
+import { ChainEnv } from "./services/ChainConfigProvider";
 
 type EnsoForecast = {
   value: string;
@@ -14,34 +15,26 @@ type EnsoForecast = {
 };
 
 interface EnsoRouteProps {
+  chainConfig: ChainEnv;
   inputValue: string;
-  inputSymbol: Token["symbol"];
+  inputAddress: string;
+  outputAddress: string;
   outputSymbol: Token["symbol"];
   account: Address;
   slippage?: number;
 }
 
-export async function getOutputValue({
-  inputValue,
-  inputSymbol,
-  outputSymbol,
-  account,
-  slippage = 50,
-}: EnsoRouteProps): Promise<EnsoForecast> {
+export async function getOutputValue(
+  { chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage = 50 }: EnsoRouteProps,
+): Promise<EnsoForecast> {
   if (!inputValue || inputValue === "0") {
     return { value: "0", status: "success" };
   }
-
   const url =
-    `https://api.enso.finance/api/v1/shortcuts/route?chainId=747474&slippage=${slippage}&destinationChainId=747474&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${
-      getProtocolContract(inputSymbol).address
-    }&tokenOut=${getProtocolContract(outputSymbol).address}&routingStrategy=router`;
+    `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${inputAddress}&tokenOut=${outputAddress}&routingStrategy=router`;
   const options = {
     method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.ENSO_API_KEY}`,
-    },
+    headers: { Accept: "application/json", Authorization: `Bearer ${process.env.ENSO_API_KEY}` },
     body: undefined,
   };
 
@@ -52,9 +45,7 @@ export async function getOutputValue({
       return { value: "0", status: "error" };
     }
     return {
-      value: fmtnum(
-        Number(data.amountOut) / 10 ** (outputSymbol.includes("bvUSD") ? 18 : 6),
-      ),
+      value: fmtnum(Number(data.amountOut) / 10 ** (outputSymbol.includes("bvUSD") ? 18 : 6)),
       status: "success",
     };
   } catch (error) {
@@ -62,23 +53,14 @@ export async function getOutputValue({
   }
 }
 
-export async function getEnsoRoute({
-  inputValue,
-  inputSymbol,
-  outputSymbol,
-  account,
-  slippage = 50,
-}: EnsoRouteProps): Promise<any> {
+export async function getEnsoRoute(
+  { chainConfig, inputValue, inputAddress, outputAddress, account, slippage = 50 }: EnsoRouteProps,
+): Promise<any> {
   const url =
-    `https://api.enso.finance/api/v1/shortcuts/route?chainId=747474&slippage=${slippage}&destinationChainId=747474&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${
-      getProtocolContract(inputSymbol).address
-    }&tokenOut=${getProtocolContract(outputSymbol).address}&routingStrategy=router`;
+    `https://api.enso.finance/api/v1/shortcuts/route?chainId=${chainConfig.CHAIN_ID}&slippage=${slippage}&destinationChainId=${chainConfig.CHAIN_ID}&receiver=${account}&spender=${account}&refundReceiver=${account}&fromAddress=${account}&amountIn=${inputValue}&tokenIn=${inputAddress}&tokenOut=${outputAddress}&routingStrategy=router`;
   const options = {
     method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.ENSO_API_KEY}`,
-    },
+    headers: { Accept: "application/json", Authorization: `Bearer ${process.env.ENSO_API_KEY}` },
     body: undefined,
   };
 
@@ -236,13 +218,13 @@ export async function postWhitelistRequest(req: WhitelistRequest): Promise<any> 
       .select();
 
     if (error) {
-      console.log("2")
+      console.log("2");
       return { error: "Supabase error" };
     }
 
     return { data };
   } catch {
-    console.log("3")
+    console.log("3");
     return { error: "Invalid body" };
   }
 }

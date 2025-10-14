@@ -4,9 +4,9 @@ import type { Address } from "@/src/types";
 import type { Config as WagmiConfig } from "wagmi";
 
 import Erc2612 from "@/src/abi/Erc2612";
-import { CHAIN_ID } from "@/src/env";
 import { slice } from "viem";
 import { getBlock, readContract, signTypedData } from "wagmi/actions";
+import { useChainConfig } from "./services/ChainConfigProvider";
 
 export async function signPermit({
   account,
@@ -23,6 +23,8 @@ export async function signPermit({
   value: bigint;
   wagmiConfig: WagmiConfig;
 }) {
+  const { chainConfig } = useChainConfig();
+
   const [block, nonce, name] = await Promise.all([
     getBlock(wagmiConfig),
     readContract(wagmiConfig, {
@@ -44,7 +46,7 @@ export async function signPermit({
     domain: {
       name,
       version: "1",
-      chainId: CHAIN_ID,
+      chainId: chainConfig.CHAIN_ID,
       verifyingContract: token,
     },
     types: {

@@ -1,21 +1,27 @@
-import type { Token } from "@/src/types";
-import type { Address } from "@liquity2/uikit";
-
+import content from "@/src/content";
 import { dnum18, dnum6, dnum8 } from "@/src/dnum-utils";
+import { WALLET_CONNECT_PROJECT_ID } from "@/src/env";
 import { getBranch } from "@/src/liquity-utils";
 import { getSafeStatus } from "@/src/safe-utils";
+import type { Token } from "@/src/types";
+import type { Address } from "@liquity2/uikit";
 import { useQuery } from "@tanstack/react-query";
-import { useModal as useConnectKitModal } from "connectkit";
+import { getDefaultConfig as getDefaultConfigFromConnectKit, useModal as useConnectKitModal } from "connectkit";
+import { useEffect, useRef } from "react";
 import { match } from "ts-pattern";
 import { erc20Abi } from "viem";
-import { useAccount as useWagmiAccount, useEnsName, useReadContract, useSwitchChain } from "wagmi";
-import { CONTRACT_BOLD_TOKEN, CONTRACT_TOKEN_LOCKER, CONTRACT_USDC, CONTRACT_USDT, CONTRACT_VAULT } from "./env";
-import { useEffect, useRef } from "react";
+import type { Chain } from "viem/chains";
+import { createConfig, http, useAccount as useWagmiAccount, useEnsName, useReadContract, useSwitchChain, createStorage, cookieStorage } from "wagmi";
+import { CHAINS } from "./config/chains";
+import { CONTRACT_TOKEN_LOCKER } from "./env";
+import { useChainConfig } from "./services/ChainConfigProvider";
 
 export function useBalance(
   address: Address | undefined,
   token: Token["symbol"] | undefined,
 ) {
+  const { chainConfig } = useChainConfig();
+
   const tokenAddress = match(token)
     .when(
       (symbol) => Boolean(symbol),
@@ -23,35 +29,34 @@ export function useBalance(
         if (!symbol) {
           return null;
         }
-        if(symbol === "bvUSD") {
-          return CONTRACT_BOLD_TOKEN;
+        if (symbol === "bvUSD") {
+          return chainConfig.CONTRACT_BOLD_TOKEN;
         }
-        if(symbol === "sbvUSD") {
-          return CONTRACT_VAULT;
+        if (symbol === "sbvUSD") {
+          return chainConfig.CONTRACT_VAULT;
         }
-        if(symbol === "VCRAFT") {
+        if (symbol === "VCRAFT") {
           return "0xc6675024FD3A9D37EDF3fE421bbE8ec994D9c262";
         }
-        if(symbol === "WBTC") {
+        if (symbol === "WBTC") {
           return "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c";
         }
-        if(symbol === "USDT") {
-          return CONTRACT_USDT;
+        if (symbol === "USDT") {
+          return chainConfig.CONTRACT_USDT;
         }
-        if(symbol === "USDC") {
-          return CONTRACT_USDC;
+        if (symbol === "USDC") {
+          return chainConfig.CONTRACT_USDC;
         }
-        if(symbol === "LbvUSD") {
+        if (symbol === "LbvUSD") {
           return CONTRACT_TOKEN_LOCKER;
-        }
-        else {
+        } else {
           // @ts-ignore
           return getBranch(symbol)?.contracts.CollToken.address ?? null;
         }
       },
     )
     .otherwise(() => null);
-  
+
   // TODO -- find a better solution to parse the balance based on the token decimals
   const tokenBalance = useReadContract({
     address: tokenAddress ?? undefined,
@@ -85,11 +90,11 @@ export function useEnforceChain(targetChainId: number) {
   useEffect(() => {
     if (status !== "connected") return;
     if (!chainId) return;
-    if (chainId === targetChainId) return;
+    if (chainId === targetChainId || chainId === 1) return; // TODO all supported chainids
 
     if (lastTried.current === chainId) return;
     if (isPending) return;
-    
+
     (async () => {
       try {
         await switchChainAsync({ chainId: targetChainId });
@@ -106,7 +111,8 @@ export function useAccount():
     connect: () => void;
     ensName: string | undefined;
     safeStatus: Awaited<ReturnType<typeof getSafeStatus>> | null;
-  } {
+  }
+{
   const account = useWagmiAccount();
   const connectKitModal = useConnectKitModal();
   const ensName = useEnsName({ address: account?.address });
@@ -134,3 +140,60 @@ export function useAccount():
     safeStatus: safeStatus.data ?? null,
   };
 }
+
+// --- MULTICHAIN
+
+// Map ChainEnv to wagmi/viem Chain
+function toWagmiChain(c: {
+  CHAIN_ID: number;
+  CHAIN_NAME: string;
+  CHAIN_CURRENCY: { name: string; symbol: string; decimals: number };
+  CHAIN_BLOCK_EXPLORER?: string | null;
+  CHAIN_CONTRACT_ENS_REGISTRY?: `0x${string}` | null;
+  CHAIN_CONTRACT_ENS_RESOLVER?: `0x${string}` | null;
+  CHAIN_CONTRACT_MULTICALL?: `0x${string}` | null;
+}): Chain {
+  return {
+    id: c.CHAIN_ID,
+    name: c.CHAIN_NAME,
+    nativeCurrency: c.CHAIN_CURRENCY,
+    rpcUrls: { default: { http: [`/api/rpc/${c.CHAIN_ID}`] } },
+    blockExplorers: c.CHAIN_BLOCK_EXPLORER
+      && { default: { name: "Explorer", url: c.CHAIN_BLOCK_EXPLORER } },
+    contracts: {
+      ensRegistry: c.CHAIN_CONTRACT_ENS_REGISTRY
+        ? { address: c.CHAIN_CONTRACT_ENS_REGISTRY }
+        : undefined,
+      ensUniversalResolver: c.CHAIN_CONTRACT_ENS_RESOLVER
+        ? { address: c.CHAIN_CONTRACT_ENS_RESOLVER }
+        : undefined,
+      multicall3: c.CHAIN_CONTRACT_MULTICALL
+        ? { address: c.CHAIN_CONTRACT_MULTICALL }
+        : undefined,
+    },
+  };
+}
+
+const wagmiChainsArr = Object.values(CHAINS).map(toWagmiChain);
+if (wagmiChainsArr.length === 0) throw new Error('Empty Chains.');
+const chains = wagmiChainsArr as [typeof wagmiChainsArr[0], ...typeof wagmiChainsArr];
+
+const transports = Object.fromEntries(
+  Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(`/api/rpc/${c.CHAIN_ID}`)])
+);
+
+const base = getDefaultConfigFromConnectKit({
+  appName: content.appName,
+  appDescription: content.appDescription,
+  appUrl: content.appUrl,
+  appIcon: content.appIcon,
+  chains,
+  transports,
+  walletConnectProjectId: WALLET_CONNECT_PROJECT_ID!,
+  ssr: true,
+});
+
+export const wagmiChains = createConfig({
+  ...base,
+  storage: createStorage({ storage: cookieStorage, key: 'wagmi' }),
+});

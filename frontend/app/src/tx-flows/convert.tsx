@@ -10,16 +10,18 @@ import { erc20Abi, maxUint256 } from "viem";
 import { fmtnum } from "@/src/formatting";
 import { getProtocolContract } from "../contracts";
 import { getEnsoRoute } from "@/src/actions";
-import { ENSO_ROUTER } from "../env";
+import { Converter } from "../abi/Converter";
 
 const RequestSchema = createRequestSchema(
   "convert",
   {
     amount: vDnum(),
+    outputAmount: vDnum(),
     inputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD")]),
     outputToken: v.union([v.literal("USDC"), v.literal("USDT"), v.literal("bvUSD")]),
     mode: v.union([v.literal("buy"), v.literal("sell")]),
     slippage: v.number(),
+    chainId: v.number(),
   },
 );
 
@@ -33,7 +35,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
   },
 
   Details({ request }) {
-    const { amount, inputToken, outputToken } = request;
+    const { amount, outputAmount, inputToken, outputToken } = request;
 
     return (
       <>
@@ -46,7 +48,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         <TransactionDetailsRow
           label="Output Amount"
           value={[
-            `${fmtnum(amount)} ${outputToken}`,
+            `${fmtnum(outputAmount)} ${outputToken}`,
           ]}
         />
       </>
@@ -66,12 +68,13 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         />
       ),
       async commit(ctx) {
+        const target = ctx.request.chainId === 747474 ? ctx.contractConfig.ENSO_ROUTER : ctx.contractConfig.CONTRACT_CONVERTER;
         return ctx.writeContract({
-          address: getProtocolContract(ctx.request.inputToken).address,
+          address: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
           abi: erc20Abi,
           functionName: "approve",
           args: [
-            ENSO_ROUTER,
+            target,
             ctx.preferredApproveMethod === "approve-infinite"
               ? maxUint256 // infinite approval
               : ctx.request.amount[0], // exact amount
@@ -89,30 +92,30 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        const ensoData = await getEnsoRoute({
-          inputValue: ctx.request.amount[0].toString(),
-          inputSymbol: ctx.request.inputToken,
-          outputSymbol: ctx.request.outputToken,
-          account: ctx.account,
-          slippage: ctx.request.slippage
-        });
+        if (ctx.request.chainId === 747474) {
+          const ensoData = await getEnsoRoute({
+            chainConfig: ctx.contractConfig,
+            inputValue: ctx.request.amount[0].toString(),
+            inputSymbol: ctx.request.inputToken,
+            outputSymbol: ctx.request.outputToken,
+            account: ctx.account,
+            slippage: ctx.request.slippage
+          });
 
-        return sendTransaction(ctx.wagmiConfig, {
-          account: ctx.account,
-          to: ensoData.tx.to,
-          data: ensoData.tx.data,
-          value: ensoData.tx.value,
-        });
-
-        // Only using Enso for now
-        // const Converter = getProtocolContract("Converter");
-
-        // return ctx.writeContract({
-        //   address: Converter.address,
-        //   abi: Converter.abi,
-        //   functionName: "deposit",
-        //   args: [getProtocolContract(ctx.request.inputToken).address, ctx.request.amount[0]],
-        // });
+          return sendTransaction(ctx.wagmiConfig, {
+            account: ctx.account,
+            to: ensoData.tx.to,
+            data: ensoData.tx.data,
+            value: ensoData.tx.value,
+          });
+        } else {
+          return ctx.writeContract({
+            address: ctx.contractConfig.CONTRACT_CONVERTER,
+            abi: Converter,
+            functionName: "deposit",
+            args: [getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address, ctx.request.amount[0]],
+          });
+        }
       },
 
       async verify(ctx, hash) {
@@ -127,6 +130,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
 
       async commit(ctx) {
         const ensoData = await getEnsoRoute({
+          chainConfig: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
           inputSymbol: ctx.request.inputToken,
           outputSymbol: ctx.request.outputToken,
@@ -150,12 +154,13 @@ export const convert: FlowDeclaration<ConvertRequest> = {
 
   async getSteps(ctx) {
     // Check if approval is needed
+    const target = ctx.request.chainId === 747474 ? ctx.contractConfig.ENSO_ROUTER : ctx.contractConfig.CONTRACT_CONVERTER;
     // @ts-ignore
     const allowance = await readContract(ctx.wagmiConfig, {
-      address: getProtocolContract(ctx.request.inputToken).address,
+      address: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
       abi: erc20Abi,
       functionName: "allowance",
-      args: [ctx.account, ENSO_ROUTER],
+      args: [ctx.account, target],
     });
 
     const steps: string[] = [];
