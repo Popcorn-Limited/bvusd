@@ -12,7 +12,11 @@ export const getAllocations = async (debank: string) => {
 
   for (const allocation of allocations.allocations) {
     const usd_value = await getAllocation(debank, allocation.wallet);
-    res.push({ label: allocation.label, usdValue: usd_value.toString(), wallet: allocation.wallet });
+    res.push({
+      label: allocation.label,
+      usdValue: usd_value.toString(),
+      wallet: allocation.wallet,
+    });
   }
   return res;
 };
@@ -32,4 +36,54 @@ const getAllocation = async (debank: string, wallet: string) => {
   );
 
   return holdingsData.total_usd_value;
+};
+
+type Allo = {
+  balance: string;
+  logo: string;
+};
+
+export const getTokenAllocations = async (debank: string) => {
+  const global = new Map<string, Allo>();
+
+  for (const allocation of allocations.allocations) {
+    const { data: holdingsData } = await axios.get(
+      "https://pro-openapi.debank.com//v1/user/all_token_list",
+      {
+        params: {
+          id: allocation.wallet,
+        },
+        headers: {
+          accept: "application/json",
+          AccessKey: debank,
+        },
+      }
+    );
+
+    // console.log(holdingsData);
+
+    const balances = holdingsData
+      .filter((d) => d.price > 0 && d.amount >= 0.001)
+      .map((h) => {
+        return { asset: h.name, balance: h.amount * h.price, logo: h.logo_url };
+      });
+
+    for (const { asset, balance, logo } of balances) {
+      const prev = global.get(asset);
+
+      if (!prev) {
+        global.set(asset, { balance: balance.toString(), logo: logo ?? "" });
+        continue;
+      }
+
+      // sum amount
+      global.set(asset, { balance: (Number(prev.balance) + balance).toString(), logo });
+    }
+  }
+
+  const globalArr = [...global].map(([asset, amount]) => ({
+    asset,
+    ...amount,
+  }));
+  return globalArr;
 };

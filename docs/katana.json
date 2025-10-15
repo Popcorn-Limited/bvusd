@@ -1,5 +1,5 @@
 {
-  "time": "October 14, 2025 at 3:03 PM UTC",
+  "time": "October 15, 2025 at 2:29 PM UTC",
   "total_bold_supply": "50588.745445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4658,7 +4658,7 @@
     },
     {
       "tick": "-92",
-      "liquidity": "53982219332",
+      "liquidity": "8545085175",
       "price": "0.9908426462737453"
     },
     {
@@ -4678,7 +4678,7 @@
     },
     {
       "tick": "-64",
-      "liquidity": "202459337591879",
+      "liquidity": "202459864140499",
       "price": "0.9936207543165446"
     },
     {
@@ -4753,7 +4753,7 @@
     },
     {
       "tick": "-14",
-      "liquidity": "589379997369878",
+      "liquidity": "589380719609735",
       "price": "0.9986010494402381"
     },
     {
@@ -4778,12 +4778,12 @@
     },
     {
       "tick": "-9",
-      "liquidity": "28925823972582",
+      "liquidity": "28746212552469",
       "price": "0.9991004498350495"
     },
     {
       "tick": "-8",
-      "liquidity": "3318542604476995",
+      "liquidity": "3318546456422232",
       "price": "0.9992003598800331"
     },
     {
@@ -4813,7 +4813,7 @@
     },
     {
       "tick": "-2",
-      "liquidity": "8156994465916405",
+      "liquidity": "8157002169810209",
       "price": "0.9998000299960005"
     },
     {
@@ -4828,27 +4828,27 @@
     },
     {
       "tick": "1",
-      "liquidity": "127709990510124",
+      "liquidity": "127709990390130",
       "price": "1.0001"
     },
     {
       "tick": "2",
-      "liquidity": "6714501908305477",
+      "liquidity": "6714505427058627",
       "price": "1.00020001"
     },
     {
       "tick": "3",
-      "liquidity": "43978600847843118",
+      "liquidity": "47917723641146345",
       "price": "1.0003000300009999"
     },
     {
       "tick": "4",
-      "liquidity": "53398574778994299",
+      "liquidity": "57337714051960189",
       "price": "1.000400060004"
     },
     {
       "tick": "5",
-      "liquidity": "3609855293732797",
+      "liquidity": "3609858812485947",
       "price": "1.0005001000100004"
     },
     {
@@ -4873,12 +4873,12 @@
     },
     {
       "tick": "10",
-      "liquidity": "3155399756062676",
+      "liquidity": "3155414408805982",
       "price": "1.001000450120021"
     },
     {
       "tick": "11",
-      "liquidity": "37928078203868",
+      "liquidity": "37748466783755",
       "price": "1.001100550165033"
     },
     {
@@ -4903,7 +4903,7 @@
     },
     {
       "tick": "16",
-      "liquidity": "622595013945394",
+      "liquidity": "622597761334455",
       "price": "1.0016012005601818"
     },
     {
@@ -5133,25 +5133,39 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "51006.16066958023",
+  "totalAllocations": "50991.303699240336",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "51001.27443077752",
+      "usdValue": "50986.32777279816",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "4.886238802709386",
+      "usdValue": "4.975926442176363",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     }
   ],
-  "loans": [
+  "tokenAllocations": [
     {
-      "protocol": "morpho",
-      "wallet": "0xD0D4b681F3600c3CB5d819762f8f291e45F9C69C",
-      "collateralValue": "568714.4125350281",
-      "loanValue": "276422.5169160103"
+      "asset": "Midas Hyperithm",
+      "balance": "50970.34597896429",
+      "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png"
+    },
+    {
+      "asset": "USD Coin",
+      "balance": "1.0001998201618545",
+      "logo": "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png"
+    },
+    {
+      "asset": "ETH",
+      "balance": "14.981876493636204",
+      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png"
+    },
+    {
+      "asset": "AUSD",
+      "balance": "0.9988173302448521",
+      "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png"
     }
   ]
 }

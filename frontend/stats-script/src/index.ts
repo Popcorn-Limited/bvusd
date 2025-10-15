@@ -4,15 +4,15 @@ import v2MainnetDeployment from "./deployment.json";
 import vaults from "./vaults.json";
 import { getProvider } from "./connection";
 import { fetchV2Stats } from "./v2/fetchV2Stats";
-import { env } from './env';
+import { env } from "./env";
 import { getDiffs, formatDateUTC } from "./v2/diffs";
-import { getAllocations } from "./v2/queries/allocation";
+import { getAllocations, getTokenAllocations } from "./v2/queries/allocation";
 import { getLoansTVL } from "./v2/queries/morphoPosition";
 
 interface Tree extends Record<string, string | Tree> {}
-  
+
 const writeTree = (parentDir: string, tree: Tree) => {
-  if (!fs.existsSync(parentDir)) fs.mkdirSync(parentDir, {recursive:true});
+  if (!fs.existsSync(parentDir)) fs.mkdirSync(parentDir, { recursive: true });
 
   for (const [k, v] of Object.entries(tree)) {
     const prefix = path.join(parentDir, k);
@@ -29,27 +29,31 @@ export async function fetchAndUpdateStats() {
   const alchemyApiKey = env.ALCHEMY_KEY;
   const katanaApiKey = env.KATANA_KEY;
   const katanaProvider = getProvider(747474, { alchemyApiKey: katanaApiKey });
-  const ethereumProvider = getProvider(1, {alchemyApiKey});
-  
+  const ethereumProvider = getProvider(1, { alchemyApiKey });
+
   const [stats] = await Promise.all([
     fetchV2Stats({
       deployment: v2MainnetDeployment,
       vaults,
       provider: katanaProvider,
-      duneKey: env.DUNE_KEY
-    })
+      duneKey: env.DUNE_KEY,
+    }),
   ]);
-  
-  const allocations = await getAllocations(env.DEBANK_KEY);
 
-  const loans = await getLoansTVL(env.DEBANK_KEY, ethereumProvider);
+  const allocations = await getAllocations(env.DEBANK_KEY);
+  const tokenAllocations = await getTokenAllocations(env.DEBANK_KEY);
+
+  // const loans = await getLoansTVL(env.DEBANK_KEY, ethereumProvider);
 
   const v2Stats = {
     time: formatDateUTC(new Date()),
     ...stats,
-    totalAllocations: `${allocations.map((r) => Number(r.usdValue)).reduce((a, b) => a + b)}`,
+    totalAllocations: `${allocations
+      .map((r) => Number(r.usdValue))
+      .reduce((a, b) => a + b)}`,
     allocations,
-    loans
+    tokenAllocations,
+    // loans
   };
 
   // local storage
@@ -57,17 +61,21 @@ export async function fetchAndUpdateStats() {
 
   // writeTree(OUTPUT_DIR_V2, v2Stats); -> prints all txt files as well
 
-  if (!fs.existsSync(OUTPUT_DIR_V2)) fs.mkdirSync(OUTPUT_DIR_V2, {recursive:true});
-  
+  if (!fs.existsSync(OUTPUT_DIR_V2))
+    fs.mkdirSync(OUTPUT_DIR_V2, { recursive: true });
+
   // copy previous stats
   const previous = JSON.parse(
-      fs.readFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), "utf-8")
-    );
-  
-  // write new stats
-  fs.writeFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), JSON.stringify(v2Stats, null, 2));
+    fs.readFileSync(path.join(OUTPUT_DIR_V2, "katana.json"), "utf-8")
+  );
 
-  // write diffs 
+  // write new stats
+  fs.writeFileSync(
+    path.join(OUTPUT_DIR_V2, "katana.json"),
+    JSON.stringify(v2Stats, null, 2)
+  );
+
+  // write diffs
   getDiffs(previous, v2Stats);
 }
 
