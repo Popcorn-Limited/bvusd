@@ -21,6 +21,7 @@ import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 // import { TrovesPanel } from "./TrovesPanel";
 // import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
+import { AllocationPanel } from "./Allocations";
 // import { HoldersPanel } from "./HoldersPanel";
 // import { VaultsApy } from "./VaultsApy";
 // import { AllocationPanel } from "./Allocations";
@@ -144,7 +145,7 @@ export function StatsScreen() {
                       tvl={liquityStats.data.totalValueLocked}
                       sbvUSD={liquityStats.data.sbvUSD}
                     />
-                    {/* <AllocationPanel data={liquityStats.data.allocations}/> */}
+                    <AllocationPanel data={liquityStats.data.allocations}/>
                     <ChartsPanel
                       // data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
