@@ -680,15 +680,22 @@ export const StatsSchema = v.pipe(
         wallet: v.string()
       })
     ),
-    totalAllocations: v.string(),
-    loans: v.array(
+    tokenAllocations: v.array(
       v.object({
-        protocol: v.string(),
-        wallet: v.string(),
-        collateralValue: v.string(),
-        loanValue: v.string()
+        asset: v.string(),
+        balance: v.string(),
+        logo: v.string()
       })
     ),
+    totalAllocations: v.string(),
+    // loans: v.array(
+    //   v.object({
+    //     protocol: v.string(),
+    //     wallet: v.string(),
+    //     collateralValue: v.string(),
+    //     loanValue: v.string()
+    //   })
+    // ),
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
@@ -830,14 +837,21 @@ export const StatsSchema = v.pipe(
       }
     }),
     totalAllocations: value.totalAllocations,
-    loans: value.loans.map((l) => {
+    tokenAllocations: value.tokenAllocations.map((al) => {
       return {
-        protocol: l.protocol,
-        wallet: l.wallet,
-        collateralValue: l.collateralValue,
-        loanValue: l.loanValue
+        asset: al.asset,
+        balance: al.balance,
+        logo: al.logo
       }
-    })
+    }),
+    // loans: value.loans.map((l) => {
+    //   return {
+    //     protocol: l.protocol,
+    //     wallet: l.wallet,
+    //     collateralValue: l.collateralValue,
+    //     loanValue: l.loanValue
+    //   }
+    // })
   }))
 );
 

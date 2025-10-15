@@ -22,6 +22,7 @@ import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 // import { SPDepositsPanel } from "./SPDepositsPanel";
 import { VaultsPanel } from "./VaultsPanel";
 import { AllocationPanel } from "./Allocations";
+import { ReservesPanel } from "./ReservesPanel";
 // import { HoldersPanel } from "./HoldersPanel";
 // import { VaultsApy } from "./VaultsApy";
 // import { AllocationPanel } from "./Allocations";
@@ -151,9 +152,9 @@ export function StatsScreen() {
                       supply={liquityStats.data.historicalSupply}
                     />
                     {/* TODO add branch collaterals when present*/}
-                    {/* <ReservesPanel
-                      collateralReserves={liquityStats.data.reserveAssets}
-                    /> */}
+                    <ReservesPanel
+                      reserves={liquityStats.data.tokenAllocations}
+                    />
                     <VaultsPanel />
                     {/* <VaultsApy data={liquityStats.data.vaultsApy}/> */}
                   </div>

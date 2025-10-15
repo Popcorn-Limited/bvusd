@@ -17,15 +17,14 @@ import {
 } from "recharts";
 
 type ReserveProps = {
-  collateralReserves: {
+  reserves: {
     asset: string;
     balance: string;
-    wallet: string;
-    chain: string;
+    logo: string;
   }[];
 };
 
-const colors = ["#F6B73C", "#4BA4F0"];
+const colors = ["#F6B73C", "#4BA4F0", "green", "red"];
 
 const icons = {
   USDC: tokenUsdc,
@@ -35,10 +34,8 @@ const icons = {
   Katana: katana,
 };
 
-export function ReservesPanel({ collateralReserves }: ReserveProps) {
-  // console.log(collateralReserves);
-
-  let pie = collateralReserves.map((c, i) => ({
+export function ReservesPanel({ reserves }: ReserveProps) {
+  let pie = reserves.map((c, i) => ({
     name: c.asset,
     value: Number(c.balance),
     color: colors[i],
@@ -133,6 +130,7 @@ export function ReservesPanel({ collateralReserves }: ReserveProps) {
           background: "transparent",
           borderRadius: "16px",
           border: "1px solid var(--Neutral-100, #353945)",
+          minHeight: 0,
         }}
       >
         {/* Header */}
@@ -161,7 +159,7 @@ export function ReservesPanel({ collateralReserves }: ReserveProps) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "1fr 1fr 1fr",
             padding: "10px",
             gap: 10,
             borderBottom: "1px solid #333",
@@ -174,70 +172,74 @@ export function ReservesPanel({ collateralReserves }: ReserveProps) {
         >
           <div>Asset</div>
           <div>Amount</div>
-          <div>Wallet</div>
           <div>Chain</div>
         </div>
 
         {/* Table Rows */}
-        {collateralReserves.map((row, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              padding: "12px",
-              gap: 16,
-              borderBottom: "1px solid #23262F",
-              color: "#fff",
-              fontSize: 18,
-              fontFamily: "KHTeka",
-              fontWeight: "400",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Image
-                src={icons[row.asset]}
-                alt={row.asset}
-                width={24}
-                height={24}
-                style={{ borderRadius: "50%" }}
-              />
-              <span>{row.asset}</span>
-            </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            display: "grid",
+            gridTemplateRows: `repeat(${reserves.length}, 1fr)`,
+            overflow: "auto",
+          }}
+        >
+          {reserves.map((row, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                padding: "12px",
+                gap: 16,
+                borderBottom: "1px solid #23262F",
+                color: "#fff",
+                fontSize: 18,
+                fontFamily: "KHTeka",
+                fontWeight: "400",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <Image
+                  src={row.logo}
+                  alt={row.asset}
+                  width={24}
+                  height={24}
+                  style={{ borderRadius: "50%" }}
+                />
+                <span>{row.asset}</span>
+              </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <span
-                style={{
-                  backgroundColor: "#2b1b0a",
-                  color: "#f9a825",
-                  padding: "4px 10px",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  fontFamily: "Inter, sans-serif",
-                  display: "inline-block",
-                }}
-              >
-                {row.balance}
-              </span>
-            </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span
+                  style={{
+                    backgroundColor: "#2b1b0a",
+                    color: "#f9a825",
+                    padding: "4px 10px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    fontFamily: "Inter, sans-serif",
+                    display: "inline-block",
+                  }}
+                >
+                  ${Number(row.balance).toFixed(2)}
+                </span>
+              </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              {`${row.wallet.slice(0, 6)}...${row.wallet.slice(-3)}`}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <Image
+                  src={icons["ETH"]}
+                  alt={"ETH"}
+                  width={24}
+                  height={24}
+                  style={{ borderRadius: "50%" }}
+                />
+              </div>
             </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Image
-                src={icons[row.chain]}
-                alt={row.chain}
-                width={24}
-                height={24}
-                style={{ borderRadius: "50%" }}
-              />
-              {row.chain}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
