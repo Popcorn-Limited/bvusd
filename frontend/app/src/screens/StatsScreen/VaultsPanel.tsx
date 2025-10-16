@@ -31,10 +31,18 @@ export const vaultsData: VaultRow[] = [
   {
     icon: tokenBvusd,
     label: "bvUSD",
-    strategy: "bvUSD Vault",
+    strategy: "sbvUSD Vault Katana",
     address: "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
     chain: "Katana",
     chainIcon: katana,
+  },
+  {
+    icon: tokenBvusd,
+    label: "bvUSD",
+    strategy: "sbvUSD Vault Ethereum",
+    address: "0xe66f1abc862f2730d5cdc3c780da2052c7aa4cbd",
+    chain: "Ethereum",
+    chainIcon: eth,
   },
 ];
 

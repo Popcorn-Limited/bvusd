@@ -21,6 +21,7 @@ type ReserveProps = {
     asset: string;
     balance: string;
     logo: string;
+    chains: string[];
   }[];
 };
 
@@ -28,10 +29,10 @@ const colors = ["#F6B73C", "#4BA4F0", "green", "red"];
 
 const icons = {
   USDC: tokenUsdc,
-  ETH: eth,
+  eth,
   bvUSD: tokenBvusd,
   BTC: tokenBtcb,
-  Katana: katana,
+  katana,
 };
 
 export function ReservesPanel({ reserves }: ReserveProps) {
@@ -229,13 +230,15 @@ export function ReservesPanel({ reserves }: ReserveProps) {
               </div>
 
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {row.chains.map((c, idx) => (
                 <Image
-                  src={icons["ETH"]}
-                  alt={"ETH"}
+                  src={icons[c]}
+                  alt={c}
                   width={24}
                   height={24}
                   style={{ borderRadius: "50%" }}
                 />
+              ))}
               </div>
             </div>
           ))}

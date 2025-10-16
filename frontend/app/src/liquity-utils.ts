@@ -684,7 +684,8 @@ export const StatsSchema = v.pipe(
       v.object({
         asset: v.string(),
         balance: v.string(),
-        logo: v.string()
+        logo: v.string(),
+        chains: v.array(v.string())
       })
     ),
     totalAllocations: v.string(),
@@ -841,7 +842,8 @@ export const StatsSchema = v.pipe(
       return {
         asset: al.asset,
         balance: al.balance,
-        logo: al.logo
+        logo: al.logo,
+        chains: al.chains
       }
     }),
     // loans: value.loans.map((l) => {
