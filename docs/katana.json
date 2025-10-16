@@ -1,5 +1,5 @@
 {
-  "time": "October 16, 2025 at 9:43 AM UTC",
+  "time": "October 16, 2025 at 12:18 PM UTC",
   "total_bold_supply": "50588.745445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4678,7 +4678,7 @@
     },
     {
       "tick": "-64",
-      "liquidity": "202459436158717",
+      "liquidity": "202460453335078",
       "price": "0.9936207543165446"
     },
     {
@@ -4695,6 +4695,11 @@
       "tick": "-49",
       "liquidity": "4279755239",
       "price": "0.9951122292020443"
+    },
+    {
+      "tick": "-47",
+      "liquidity": "6104505452016",
+      "price": "0.9953112615990071"
     },
     {
       "tick": "-26",
@@ -4748,7 +4753,7 @@
     },
     {
       "tick": "-14",
-      "liquidity": "589381048893902",
+      "liquidity": "589381361648154",
       "price": "0.9986010494402381"
     },
     {
@@ -4778,7 +4783,7 @@
     },
     {
       "tick": "-8",
-      "liquidity": "3318553156025023",
+      "liquidity": "3318554824049103",
       "price": "0.9992003598800331"
     },
     {
@@ -4808,7 +4813,7 @@
     },
     {
       "tick": "-2",
-      "liquidity": "8157005682164377",
+      "liquidity": "8157009018211827",
       "price": "0.9998000299960005"
     },
     {
@@ -4823,7 +4828,7 @@
     },
     {
       "tick": "1",
-      "liquidity": "127709990290135",
+      "liquidity": "127709990280135",
       "price": "1.0001"
     },
     {
@@ -4833,17 +4838,17 @@
     },
     {
       "tick": "3",
-      "liquidity": "47610656541987394",
+      "liquidity": "48443305183289299",
       "price": "1.0003000300009999"
     },
     {
       "tick": "4",
-      "liquidity": "55786259334177712",
+      "liquidity": "56572371634120101",
       "price": "1.000400060004"
     },
     {
       "tick": "5",
-      "liquidity": "3609858812485947",
+      "liquidity": "3656408201418656",
       "price": "1.0005001000100004"
     },
     {
@@ -4868,7 +4873,7 @@
     },
     {
       "tick": "10",
-      "liquidity": "3147271619410327",
+      "liquidity": "3147285240069553",
       "price": "1.001000450120021"
     },
     {
@@ -4898,7 +4903,7 @@
     },
     {
       "tick": "16",
-      "liquidity": "622597232334757",
+      "liquidity": "622599786208412",
       "price": "1.0016012005601818"
     },
     {
@@ -4980,6 +4985,11 @@
       "tick": "52",
       "liquidity": "1183640288",
       "price": "1.005213282127098"
+    },
+    {
+      "tick": "54",
+      "liquidity": "6104505452016",
+      "price": "1.0054143348356561"
     },
     {
       "tick": "66",
@@ -5123,41 +5133,41 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "51006.08862715987",
+  "totalAllocations": "51001.39824210162",
   "allocations": [
     {
-      "label": "Fordefi",
-      "usdValue": "51001.216480989315",
-      "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
-    },
-    {
-      "label": "LM5",
-      "usdValue": "4.872146170553811",
+      "label": "Delta Neutral",
+      "usdValue": "4.955364920131779",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
-      "label": "M1",
+      "label": "Private Credit",
       "usdValue": "0",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
+    },
+    {
+      "label": "Generic",
+      "usdValue": "50996.442877181486",
+      "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
-      "asset": "Midas Hyperithm",
-      "balance": "50985.632496802624",
-      "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
+      "asset": "ETH",
+      "balance": "18.86355618043547",
+      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
       "chains": [
         "eth"
       ]
     },
     {
-      "asset": "ETH",
-      "balance": "18.461570373906852",
-      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+      "asset": "Midas Hyperithm",
+      "balance": "50980.5359721628",
+      "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
       "chains": [
         "eth"
       ]
     }
   ],
-  "btcTVL": "11001866"
+  "btcTVL": "11165837"
 }
