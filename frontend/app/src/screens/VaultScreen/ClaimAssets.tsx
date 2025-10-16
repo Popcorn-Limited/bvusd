@@ -58,7 +58,7 @@ export default function ClaimAssets({ requestBalance }: { requestBalance: Reques
             txFlow.start({
               flowId: "vaultUpdate",
               backLink: [
-                `/vault`,
+                `/earn`,
                 "Back to editing",
               ],
               successLink: ["/", "Go to the home page"],

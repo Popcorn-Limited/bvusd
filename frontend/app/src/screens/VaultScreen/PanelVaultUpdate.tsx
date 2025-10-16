@@ -262,7 +262,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
               txFlow.start({
                 flowId: "vaultUpdate",
                 backLink: [
-                  `/vault`,
+                  `/earn`,
                   "Back to editing",
                 ],
                 successLink: ["/", "Go to the home page"],

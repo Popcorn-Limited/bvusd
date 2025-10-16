@@ -66,7 +66,7 @@ export function BalancesPanel() {
         />
         <TokenCard
           token="sbvUSD"
-          link={{ label: "Earn", href: "/vault" }}
+          link={{ label: "Earn", href: "/earn" }}
           subValues={[
             {
               label: "Value",
