@@ -1,26 +1,26 @@
 import { fmtnum } from "@/src/formatting";
 import { Button } from "@liquity2/uikit";
 
-type LoanEntry = {
-  protocol: string;
-  wallet: string;
-  collateralValue: string;
-  loanValue: string;
-};
+// type LoanEntry = {
+//   protocol: string;
+//   wallet: string;
+//   collateralValue: string;
+//   loanValue: string;
+// };
 
-type LoansData = {
-  data: LoanEntry[];
-};
+// type LoansData = {
+//   data: LoanEntry[];
+// };
 
-type TotalsByProtocol = {
-  [protocol: string]: {
-    totalCollateral: number;
-    totalLoan: number;
-  };
-};
+// type TotalsByProtocol = {
+//   [protocol: string]: {
+//     totalCollateral: number;
+//     totalLoan: number;
+//   };
+// };
 
-export function LoansPanel(data: LoansData) {
-  const totals = aggregateByProtocol(data);
+export function LoansPanel({ btcTVL }) {
+  // const totals = aggregateByProtocol(data);
 
   return (
     <>
@@ -39,18 +39,11 @@ export function LoansPanel(data: LoansData) {
             "0px 3px 8px 0px rgba(53, 57, 69, 0.40), 0px 0px 2px 0px #353945",
         }}
       >
-        {Object.entries(totals).map(
-          ([protocol, { totalCollateral, totalLoan }]) => (
-            <MetricBox
-              label="Total Value Locked"
-              key={protocol}
-              value={`$ ${fmtnum(
-                Number(totalCollateral) - Number(totalLoan),
-                "2z"
-              )}`}
-            />
-          )
-        )}
+        <MetricBox
+          label="Total Value Locked"
+          key={btcTVL}
+          value={`$ ${fmtnum(Number(btcTVL), "2z")}`}
+        />
       </div>
 
       <div
@@ -145,18 +138,18 @@ function MetricBox({ label, value }: { label: string; value: string }) {
   );
 }
 
-function aggregateByProtocol(loansData: LoansData): TotalsByProtocol {
-  return loansData.data.reduce(
-    (acc, { protocol, collateralValue, loanValue }) => {
-      if (!acc[protocol]) {
-        acc[protocol] = { totalCollateral: 0, totalLoan: 0 };
-      }
+// function aggregateByProtocol(loansData: LoansData): TotalsByProtocol {
+//   return loansData.data.reduce(
+//     (acc, { protocol, collateralValue, loanValue }) => {
+//       if (!acc[protocol]) {
+//         acc[protocol] = { totalCollateral: 0, totalLoan: 0 };
+//       }
 
-      acc[protocol].totalCollateral += Number(collateralValue);
-      acc[protocol].totalLoan += Number(loanValue);
+//       acc[protocol].totalCollateral += Number(collateralValue);
+//       acc[protocol].totalLoan += Number(loanValue);
 
-      return acc;
-    },
-    {} as TotalsByProtocol
-  );
-}
+//       return acc;
+//     },
+//     {} as TotalsByProtocol
+//   );
+// }

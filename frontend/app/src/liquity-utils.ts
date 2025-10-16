@@ -689,6 +689,7 @@ export const StatsSchema = v.pipe(
       })
     ),
     totalAllocations: v.string(),
+    btcTVL: v.string(),
     // loans: v.array(
     //   v.object({
     //     protocol: v.string(),
@@ -846,6 +847,7 @@ export const StatsSchema = v.pipe(
         chains: al.chains
       }
     }),
+    btcTVL: value.btcTVL,
     // loans: value.loans.map((l) => {
     //   return {
     //     protocol: l.protocol,

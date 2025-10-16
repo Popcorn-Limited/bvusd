@@ -23,6 +23,7 @@ import { StatsScreenCard } from "@/src/comps/Screen/StatsScreenCard";
 import { VaultsPanel } from "./VaultsPanel";
 import { AllocationPanel } from "./Allocations";
 import { ReservesPanel } from "./ReservesPanel";
+import { LoansPanel } from "./LoansPanel";
 // import { HoldersPanel } from "./HoldersPanel";
 // import { VaultsApy } from "./VaultsApy";
 // import { AllocationPanel } from "./Allocations";
@@ -87,7 +88,7 @@ export function StatsScreen() {
               <HFlex gap={8}>Invalid Data</HFlex>;
             }
             return (
-              <div style={{ width: "100%", minHeight: "calc(100vh - 80px)"}}>
+              <div style={{ width: "100%", minHeight: "calc(100vh - 80px)" }}>
                 <div
                   style={{
                     display: "flex",
@@ -114,7 +115,8 @@ export function StatsScreen() {
                     onClick={() => setActiveTab("BTC Institutional")}
                     style={{
                       fontSize: 16,
-                      color: activeTab === "BTC Institutional" ? "#fff" : "#aaa",
+                      color:
+                        activeTab === "BTC Institutional" ? "#fff" : "#aaa",
                       fontWeight: activeTab === "BTC Institutional" ? 600 : 400,
                       paddingBottom: 4,
                       background: "transparent",
@@ -140,13 +142,13 @@ export function StatsScreen() {
                       totalBacking={{
                         totalCollaterals: liquityStats.data.totalCollValue,
                         totalReserves: liquityStats.data.totalReserves,
-                        totalAllocations: liquityStats.data.totalAllocations
+                        totalAllocations: liquityStats.data.totalAllocations,
                       }}
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
                       sbvUSD={liquityStats.data.sbvUSD}
                     />
-                    <AllocationPanel data={liquityStats.data.allocations}/>
+                    <AllocationPanel data={liquityStats.data.allocations} />
                     <ChartsPanel
                       // data={liquityStats.data.historicalGlobalCR}
                       supply={liquityStats.data.historicalSupply}
@@ -161,18 +163,17 @@ export function StatsScreen() {
                 )}
 
                 {activeTab === "BTC Institutional" && (
-                  "Coming Soon..."
-                  // <div
-                  //   style={{
-                  //     maxWidth: 1400,
-                  //     margin: "0 auto",
-                  //     display: "flex",
-                  //     flexDirection: "column",
-                  //     gap: "32px",
-                  //   }}
-                  // >
-                  // <LoansPanel data={liquityStats.data.loans}/>
-                  // </div>
+                  <div
+                    style={{
+                      maxWidth: 1400,
+                      margin: "0 auto",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "32px",
+                    }}
+                  >
+                    <LoansPanel btcTVL={liquityStats.data.btcTVL} />
+                  </div>
                 )}
               </div>
             );
