@@ -44,7 +44,11 @@ export async function fetchAndUpdateStats() {
   const tokenAllocations = await getTokenAllocations(env.DEBANK_KEY);
 
   // const loans = await getLoansTVL(env.DEBANK_KEY, ethereumProvider);
-  const btcTVL = await getTokenPrice(env.DEBANK_KEY, "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599") * 100;
+  const btcTVL =
+    (await getTokenPrice(
+      env.DEBANK_KEY,
+      "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+    )) * 100;
 
   const v2Stats = {
     time: formatDateUTC(new Date()),

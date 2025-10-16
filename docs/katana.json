@@ -1,5 +1,5 @@
 {
-  "time": "October 16, 2025 at 9:34 AM UTC",
+  "time": "October 16, 2025 at 9:43 AM UTC",
   "total_bold_supply": "50588.745445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4823,7 +4823,7 @@
     },
     {
       "tick": "1",
-      "liquidity": "127726478345638",
+      "liquidity": "127709990290135",
       "price": "1.0001"
     },
     {
@@ -4833,12 +4833,12 @@
     },
     {
       "tick": "3",
-      "liquidity": "47762159715264247",
+      "liquidity": "47610656541987394",
       "price": "1.0003000300009999"
     },
     {
       "tick": "4",
-      "liquidity": "55937762507454565",
+      "liquidity": "55786259334177712",
       "price": "1.000400060004"
     },
     {
@@ -4848,7 +4848,7 @@
     },
     {
       "tick": "6",
-      "liquidity": "96341616434989",
+      "liquidity": "96325128379486",
       "price": "1.0006001500200015"
     },
     {
@@ -5123,16 +5123,16 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "51006.09724166669",
+  "totalAllocations": "51006.08862715987",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "51001.22431240526",
+      "usdValue": "51001.216480989315",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "4.87292926142936",
+      "usdValue": "4.872146170553811",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
@@ -5149,7 +5149,15 @@
       "chains": [
         "eth"
       ]
+    },
+    {
+      "asset": "ETH",
+      "balance": "18.461570373906852",
+      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+      "chains": [
+        "eth"
+      ]
     }
   ],
-  "btcTVL": "11045880"
+  "btcTVL": "11001866"
 }

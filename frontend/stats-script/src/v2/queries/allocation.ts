@@ -62,23 +62,38 @@ export const getTokenAllocations = async (debank: string) => {
     );
 
     const balances = holdingsData
-      .filter((d) => d.price > 0 && d.amount * d.price >= 100)
+      .filter((d) => d.price > 0 && d.amount * d.price >= 1)
       .map((h) => {
-        return { asset: h.name, balance: h.amount * h.price, logo: h.logo_url, chain: h.chain };
+        return {
+          asset: h.name,
+          balance: h.amount * h.price,
+          logo: h.logo_url,
+          chain: h.chain,
+        };
       });
 
     for (const { asset, balance, logo, chain } of balances) {
       const prev = global.get(asset);
 
       if (!prev) {
-        global.set(asset, { balance: balance.toString(), logo: logo ?? "", chains: [chain] });
+        global.set(asset, {
+          balance: balance.toString(),
+          logo: logo ?? "",
+          chains: [chain],
+        });
         continue;
       }
 
       // sum amount
-      const allChains = prev.chains.includes(chain) ? prev.chains : [...prev.chains, chain];
+      const allChains = prev.chains.includes(chain)
+        ? prev.chains
+        : [...prev.chains, chain];
 
-      global.set(asset, { balance: (Number(prev.balance) + balance).toString(), logo, chains: allChains });
+      global.set(asset, {
+        balance: (Number(prev.balance) + balance).toString(),
+        logo,
+        chains: allChains,
+      });
     }
   }
 
