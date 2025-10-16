@@ -54,7 +54,7 @@ export async function fetchAndUpdateStats() {
       .reduce((a, b) => a + b)}`,
     allocations,
     tokenAllocations,
-    btcTVL,
+    btcTVL: btcTVL.toString(),
   };
 
   // local storage

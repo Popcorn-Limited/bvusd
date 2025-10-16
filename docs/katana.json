@@ -1,5 +1,5 @@
 {
-  "time": "October 16, 2025 at 9:28 AM UTC",
+  "time": "October 16, 2025 at 9:34 AM UTC",
   "total_bold_supply": "50588.745445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4833,12 +4833,12 @@
     },
     {
       "tick": "3",
-      "liquidity": "47762130054793936",
+      "liquidity": "47762159715264247",
       "price": "1.0003000300009999"
     },
     {
       "tick": "4",
-      "liquidity": "55937732846984254",
+      "liquidity": "55937762507454565",
       "price": "1.000400060004"
     },
     {
@@ -5123,17 +5123,22 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "51006.19713327857",
+  "totalAllocations": "51006.09724166669",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "51001.30325049828",
+      "usdValue": "51001.22431240526",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "4.893882780292254",
+      "usdValue": "4.87292926142936",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+    },
+    {
+      "label": "M1",
+      "usdValue": "0",
+      "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     }
   ],
   "tokenAllocations": [
@@ -5146,5 +5151,5 @@
       ]
     }
   ],
-  "btcTVL": 11073233
+  "btcTVL": "11045880"
 }
