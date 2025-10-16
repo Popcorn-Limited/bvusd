@@ -19,7 +19,7 @@ const POINTS_CAMPAIGNS: { title: string, reward: number, actionLink: string, cla
   {
     title: "Hold sbvUSD on Katana",
     reward: 20,
-    actionLink: "https://app.bitvault.finance/vault",
+    actionLink: "https://app.bitvault.finance/earn",
     claimLink: "https://app.merkl.xyz/opportunities/katana/ERC20_FIX_APR/0x24E2aE2f4c59b8b7a03772142d439fDF13AAF15b",
     id: "0x2ebd974c00cd63a39f4a4a2fdb240c18d2ff99214afa530ed03bc502af47469d"
   }

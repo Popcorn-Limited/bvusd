@@ -1,5 +1,7 @@
-import { EarnPoolsListScreen } from "@/src/screens/EarnPoolsListScreen/EarnPoolsListScreen";
+"use client";
 
-export default function Page() {
-  return <EarnPoolsListScreen />;
+import { VaultPoolScreen } from "@/src/screens/VaultScreen/VaultScreen";
+
+export default function Layout() {
+  return <VaultPoolScreen />;
 }

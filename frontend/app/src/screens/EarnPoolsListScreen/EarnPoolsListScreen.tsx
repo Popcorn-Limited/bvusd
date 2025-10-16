@@ -327,7 +327,7 @@ function Vault() {
         </div>
         <OpenLink
           active={true}
-          path={`/vault`}
+          path={`/earn`}
           title={`Deposit into the bvUSD vault`}
         />
       </div>
