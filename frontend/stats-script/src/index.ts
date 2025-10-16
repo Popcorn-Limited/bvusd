@@ -7,7 +7,7 @@ import { fetchV2Stats } from "./v2/fetchV2Stats";
 import { env } from "./env";
 import { getDiffs, formatDateUTC } from "./v2/diffs";
 import { getAllocations, getTokenAllocations } from "./v2/queries/allocation";
-import { getLoansTVL } from "./v2/queries/morphoPosition";
+import { getLoansTVL, getTokenPrice } from "./v2/queries/morphoPosition";
 
 interface Tree extends Record<string, string | Tree> {}
 
@@ -44,6 +44,7 @@ export async function fetchAndUpdateStats() {
   const tokenAllocations = await getTokenAllocations(env.DEBANK_KEY);
 
   // const loans = await getLoansTVL(env.DEBANK_KEY, ethereumProvider);
+  const btcTVL = await getTokenPrice(env.DEBANK_KEY, "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599") * 100;
 
   const v2Stats = {
     time: formatDateUTC(new Date()),
@@ -53,7 +54,7 @@ export async function fetchAndUpdateStats() {
       .reduce((a, b) => a + b)}`,
     allocations,
     tokenAllocations,
-    // loans
+    btcTVL,
   };
 
   // local storage

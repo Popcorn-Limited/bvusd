@@ -1,5 +1,5 @@
 {
-  "time": "October 16, 2025 at 8:36 AM UTC",
+  "time": "October 16, 2025 at 9:28 AM UTC",
   "total_bold_supply": "50588.745445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4678,7 +4678,7 @@
     },
     {
       "tick": "-64",
-      "liquidity": "202459467564198",
+      "liquidity": "202459436158717",
       "price": "0.9936207543165446"
     },
     {
@@ -4788,7 +4788,7 @@
     },
     {
       "tick": "-6",
-      "liquidity": "5845303476684",
+      "liquidity": "5969801867524",
       "price": "0.9994002099440127"
     },
     {
@@ -4823,7 +4823,7 @@
     },
     {
       "tick": "1",
-      "liquidity": "127726478355637",
+      "liquidity": "127726478345638",
       "price": "1.0001"
     },
     {
@@ -4833,7 +4833,7 @@
     },
     {
       "tick": "3",
-      "liquidity": "47762130054803935",
+      "liquidity": "47762130054793936",
       "price": "1.0003000300009999"
     },
     {
@@ -4883,7 +4883,7 @@
     },
     {
       "tick": "13",
-      "liquidity": "148518273174",
+      "liquidity": "273016664014",
       "price": "1.0013007802860714"
     },
     {
@@ -5123,51 +5123,28 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "51001.14421041291",
+  "totalAllocations": "51006.19713327857",
   "allocations": [
     {
       "label": "Fordefi",
-      "usdValue": "50996.2412025557",
+      "usdValue": "51001.30325049828",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     },
     {
       "label": "LM5",
-      "usdValue": "4.9030078572073945",
+      "usdValue": "4.893882780292254",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     }
   ],
   "tokenAllocations": [
     {
-      "asset": "AUSD",
-      "balance": "0.9992167388580067",
-      "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png",
-      "chains": [
-        "katana"
-      ]
-    },
-    {
       "asset": "Midas Hyperithm",
-      "balance": "50980.5359721628",
+      "balance": "50985.632496802624",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
       "chains": [
         "eth"
       ]
-    },
-    {
-      "asset": "USD Coin",
-      "balance": "1.0007997600719785",
-      "logo": "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png",
-      "chains": [
-        "eth"
-      ]
-    },
-    {
-      "asset": "ETH",
-      "balance": "14.704912984239387",
-      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
-      "chains": [
-        "eth"
-      ]
     }
-  ]
+  ],
+  "btcTVL": 11073233
 }

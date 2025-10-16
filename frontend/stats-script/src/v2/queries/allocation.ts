@@ -62,7 +62,7 @@ export const getTokenAllocations = async (debank: string) => {
     );
 
     const balances = holdingsData
-      .filter((d) => d.price > 0 && d.amount >= 0.001)
+      .filter((d) => d.price > 0 && d.amount * d.price >= 100)
       .map((h) => {
         return { asset: h.name, balance: h.amount * h.price, logo: h.logo_url, chain: h.chain };
       });
