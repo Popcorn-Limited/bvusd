@@ -41,6 +41,7 @@ const getAllocation = async (debank: string, wallet: string) => {
 type Allo = {
   balance: string;
   logo: string;
+  chains: string[];
 };
 
 export const getTokenAllocations = async (debank: string) => {
@@ -60,24 +61,24 @@ export const getTokenAllocations = async (debank: string) => {
       }
     );
 
-    // console.log(holdingsData);
-
     const balances = holdingsData
       .filter((d) => d.price > 0 && d.amount >= 0.001)
       .map((h) => {
-        return { asset: h.name, balance: h.amount * h.price, logo: h.logo_url };
+        return { asset: h.name, balance: h.amount * h.price, logo: h.logo_url, chain: h.chain };
       });
 
-    for (const { asset, balance, logo } of balances) {
+    for (const { asset, balance, logo, chain } of balances) {
       const prev = global.get(asset);
 
       if (!prev) {
-        global.set(asset, { balance: balance.toString(), logo: logo ?? "" });
+        global.set(asset, { balance: balance.toString(), logo: logo ?? "", chains: [chain] });
         continue;
       }
 
       // sum amount
-      global.set(asset, { balance: (Number(prev.balance) + balance).toString(), logo });
+      const allChains = prev.chains.includes(chain) ? prev.chains : [...prev.chains, chain];
+
+      global.set(asset, { balance: (Number(prev.balance) + balance).toString(), logo, chains: allChains });
     }
   }
 
