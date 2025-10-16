@@ -9,7 +9,13 @@ import { ACCOUNT_SCREEN } from "@/src/env";
 import { usePrice } from "@/src/services/Prices";
 import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
-import { AnchorTextButton, HFlex, shortenAddress, TextButton, TokenIcon } from "@liquity2/uikit";
+import {
+  AnchorTextButton,
+  HFlex,
+  shortenAddress,
+  TextButton,
+  TokenIcon,
+} from "@liquity2/uikit";
 import { blo } from "blo";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,18 +24,13 @@ import { getProtocolContract } from "@/src/contracts";
 import { erc20Abi } from "viem";
 import { dnum18 } from "@/src/dnum-utils";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
+import { useLiquityStats } from "@/src/liquity-utils";
 
 const DISPLAYED_PRICES = ["bvUSD"] as const;
 
 export function BottomBar() {
   const account = useAccount();
-  const { chainConfig } = useChainConfig();
-
-  const totalSupply = useReadContract({
-    address: getProtocolContract(chainConfig, "bvUSD").address,
-    abi: erc20Abi,
-    functionName: "totalSupply",
-  });
+  const liquityStats = useLiquityStats();
 
   return (
     <div
@@ -60,22 +61,24 @@ export function BottomBar() {
             <Logo size={16} />
             <span>TVL</span>{" "}
             <span>
-              {totalSupply.data && (
+              {liquityStats.data && (
                 <Amount
                   fallback="…"
                   format="compact"
                   prefix="$"
-                  value={dnum18(totalSupply.data ?? 0n)}
+                  value={
+                    liquityStats.data.btcTVL
+                      ? Number(liquityStats.data.btcTVL) +
+                        Number(liquityStats.data.totalVaultTVL)
+                      : 0
+                  }
                 />
               )}
             </span>
           </HFlex>
           <HFlex gap={16}>
             {DISPLAYED_PRICES.map((symbol) => (
-              <Price
-                key={symbol}
-                symbol={symbol}
-              />
+              <Price key={symbol} symbol={symbol} />
             ))}
             {account.address && ACCOUNT_SCREEN && (
               <Link
@@ -153,22 +156,11 @@ export function BottomBar() {
 function Price({ symbol }: { symbol: TokenSymbol }) {
   const price = usePrice(symbol);
   return (
-    <HFlex
-      key={symbol}
-      gap={4}
-    >
-      <TokenIcon
-        size={16}
-        symbol={symbol}
-      />
+    <HFlex key={symbol} gap={4}>
+      <TokenIcon size={16} symbol={symbol} />
       <HFlex gap={8}>
         <span>{symbol}</span>
-        <Amount
-          prefix="$"
-          fallback="…"
-          value={price.data}
-          format="2z"
-        />
+        <Amount prefix="$" fallback="…" value={price.data} format="2z" />
       </HFlex>
     </HFlex>
   );
