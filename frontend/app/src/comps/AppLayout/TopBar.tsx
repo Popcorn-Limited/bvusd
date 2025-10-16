@@ -14,7 +14,7 @@ import { Menu } from "./Menu";
 import { TopBarLogo } from "@/src/comps/Logo/TopBarLogo";
 
 const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
-  [content.menu.earn, "/vault", IconEarn],
+  [content.menu.earn, "/earn", IconEarn],
   [content.menu.buy, "/buy", IconEarn],
   [content.menu.points, "/points", IconEarn],
   [content.menu.portfolio, "/account", IconDashboard],

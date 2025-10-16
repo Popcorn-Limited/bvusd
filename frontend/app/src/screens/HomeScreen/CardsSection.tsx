@@ -117,7 +117,7 @@ export default function CardsSection() {
             bullets={sbvUSDBullets}
             cta={{
               label: "Earn Now",
-              onClick: () => router.push("https://app.bitvault.finance/vault"),
+              onClick: () => router.push("https://app.bitvault.finance/earn"),
               textColor: "#F6AE3F",
               textHoverColor: "white",
               buttonColor: "black",
