@@ -1,6 +1,6 @@
 {
-  "time": "October 17, 2025 at 1:34 PM UTC",
-  "total_bold_supply": "50588.745445",
+  "time": "October 17, 2025 at 1:46 PM UTC",
+  "total_bold_supply": "5400613.745445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
   "total_sp_deposits": "0",
@@ -18,7 +18,7 @@
   "sbvUSD": [
     {
       "address": "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
-      "supply": "49933.32079390205",
+      "supply": "5305670.861986657",
       "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
       "chain": "Katana",
       "apy7": "21.267687953049354",
@@ -5189,28 +5189,28 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "5398760.890264738",
+  "totalAllocations": "5398880.073390358",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "3000304.702414672",
+      "usdValue": "3000424.6593950577",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "2347454.176497877",
+      "usdValue": "2347453.517499384",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
-      "label": "Other",
-      "usdValue": "51002.01135218911",
+      "label": "Other Allocations",
+      "usdValue": "51001.89649591652",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
       "asset": "Tether USD",
-      "balance": "3000300",
+      "balance": "3000420",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0xdac17f958d2ee523a2206206994597c13d831ec7/1a1d8a5b89114dc183f42b3d33eb3522.png",
       "chains": [
         "eth"
@@ -5218,7 +5218,7 @@
     },
     {
       "asset": "ETH",
-      "balance": "72.97850225966096",
+      "balance": "72.16328698512291",
       "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
       "chains": [
         "eth"
@@ -5241,5 +5241,5 @@
       ]
     }
   ],
-  "btcTVL": "10587570"
+  "btcTVL": "10531800"
 }

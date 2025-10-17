@@ -42,12 +42,14 @@ type FetchConfig = {
 
 export const fetchV2Stats = async ({
   provider,
+  ethProvider,
   deployment,
   vaults,
   blockTag = "latest",
   duneKey,
 }: {
   provider: Provider;
+  ethProvider: Provider;
   deployment: LiquityV2Deployment;
   vaults: VaultsDeployment;
   blockTag?: BlockTag;
@@ -83,6 +85,15 @@ export const fetchV2Stats = async ({
     })
   );
 
+
+  const sbvUSDMainnet = new Contract(
+    "0xe66f1abc862f2730d5cdc3c780da2052c7aa4cbd",
+    erc20Abi,
+    ethProvider
+  ) as unknown as ERC20;
+
+  const sbvUSDMainnetSupply = Number(await sbvUSDMainnet.totalSupply({ blockTag })) / 10 ** 18;
+
   const sbvUSD = await Promise.all(
     vaults.sbvUSD.map(async (vault) => {
       const c = new Contract(
@@ -92,12 +103,20 @@ export const fetchV2Stats = async ({
       ) as unknown as ERC20;
       return {
         address: vault.address,
-        supply: Number(await c.totalSupply({ blockTag })) / 10 ** 18,
+        supply: Number(await c.totalSupply({ blockTag })) / 10 ** 18 + sbvUSDMainnetSupply,
         safe: vault.safe,
         chain: vault.chain,
       };
     })
   );
+
+  const mainnetBVUSD =  new Contract(
+    "0x9bc2f611fa2196e097496b722f1cbcdfe2303855",
+    erc20Abi,
+    ethProvider
+  ) as unknown as ERC20; 
+
+  const mainnetBVUSDSupply = await mainnetBVUSD.totalSupply({ blockTag }).then(decimalify);
 
   const deployed = true;
 
@@ -117,7 +136,7 @@ export const fetchV2Stats = async ({
   ] = deployed
     ? await Promise.all([
         // total bvUSD supply
-        contracts.boldToken.totalSupply({ blockTag }).then(decimalify),
+        (await contracts.boldToken.totalSupply({ blockTag }).then(decimalify)).add(mainnetBVUSDSupply),
 
         // branches
         fetchBranchData(contracts.branches)

@@ -36,6 +36,7 @@ export async function fetchAndUpdateStats() {
       deployment: v2MainnetDeployment,
       vaults,
       provider: katanaProvider,
+      ethProvider: ethereumProvider,
       duneKey: env.DUNE_KEY,
     }),
   ]);
