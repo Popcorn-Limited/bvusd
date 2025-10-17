@@ -44,7 +44,7 @@ export function TransparencyMetrics({
   sbvUSD,
 }: TransparencyMetricsProps) {
   const backing =
-    Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves) + Number(totalBacking.totalAllocations) + Number(totalBacking.totalBTC);
+    Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves) + Number(totalBacking.totalAllocations);
   const protocolBackingRatio = `${fmtnum(Number(backing) / Number(totalSupply) * 100, "2z")} %`;
 
   const sbvUSDApy = sbvUSD[0].apy7d === "0" ? "n/a" : `${Number(sbvUSD[0].apy7d).toFixed(2)}%`;
