@@ -1,5 +1,6 @@
 import { fmtnum } from "@/src/formatting";
 import { PanelHeader } from "./PanelTitle";
+import Link from "next/link";
 
 type AllocationData = {
   data: {
@@ -51,12 +52,23 @@ export function AllocationPanel({ data }: AllocationData) {
         }}
       >
         {data.map((d) => (
-          <MetricBox
-            key={d.label}
-            label={`${d.label} Allocation`}
-            wallet={d.wallet}
-            value={`$ ${fmtnum(Number(d.usdValue), "2z")}`}
-          />
+          <Link
+            href={`https://debank.com/profile/${d.wallet}`}
+            target="_blank"
+            style={{
+              textDecoration: "none",
+              display: "block",
+              flex: "1 0 0",
+              minWidth: 0,
+            }}
+          >
+            <MetricBox
+              key={d.label}
+              label={`${d.label} Allocation`}
+              wallet={d.wallet}
+              value={`$ ${fmtnum(Number(d.usdValue), "2z")}`}
+            />
+          </Link>
         ))}
         <MetricBox
           key={"total"}
@@ -86,7 +98,7 @@ function MetricBox({
         padding: "20px",
         display: "flex",
         flexDirection: "column",
-                justifyContent: "space-between",
+        justifyContent: "space-between",
         background: "rgba(20, 20, 22, 0.40)",
       }}
     >

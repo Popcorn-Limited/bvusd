@@ -83,7 +83,7 @@ const getMorphoTVL = async (
   };
 };
 
-const getTokenPrice = async (debank: string, token: string) => {
+export const getTokenPrice = async (debank: string, token: string) => {
   const { data } = await axios.get(
     "https://pro-openapi.debank.com/v1/token",
     {

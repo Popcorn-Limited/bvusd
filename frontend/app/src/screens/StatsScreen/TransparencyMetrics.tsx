@@ -7,6 +7,7 @@ interface BackingData {
   totalCollaterals: string;
   totalReserves: string;
   totalAllocations: string;
+  totalBTC: string;
 }
 
 interface sbvUSD {
