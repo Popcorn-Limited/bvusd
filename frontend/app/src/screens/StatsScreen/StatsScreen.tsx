@@ -143,6 +143,7 @@ export function StatsScreen() {
                         totalCollaterals: liquityStats.data.totalCollValue,
                         totalReserves: liquityStats.data.totalReserves,
                         totalAllocations: liquityStats.data.totalAllocations,
+                        totalBTC: liquityStats.data.btcTVL,
                       }}
                       totalSupply={liquityStats.data.totalBoldSupply}
                       tvl={liquityStats.data.totalValueLocked}
