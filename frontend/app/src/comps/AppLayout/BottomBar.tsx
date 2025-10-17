@@ -69,7 +69,7 @@ export function BottomBar() {
                   value={
                     liquityStats.data.btcTVL
                       ? Number(liquityStats.data.btcTVL) +
-                        Number(liquityStats.data.totalVaultTVL)
+                        Number(liquityStats.data.totalBoldSupply)
                       : 0
                   }
                 />
