@@ -59,7 +59,7 @@ export function BottomBar() {
         >
           <HFlex gap={4} alignItems="center">
             <Logo size={16} />
-            <span>TVL</span>{" "}
+            <span>bvUSD TVL</span>{" "}
             <span>
               {liquityStats.data && (
                 <Amount
@@ -68,8 +68,25 @@ export function BottomBar() {
                   prefix="$"
                   value={
                     liquityStats.data.btcTVL
-                      ? Number(liquityStats.data.btcTVL) +
-                        Number(liquityStats.data.totalBoldSupply)
+                      ? Number(liquityStats.data.totalBoldSupply)
+                      : 0
+                  }
+                />
+              )}
+            </span>
+          </HFlex>
+          <HFlex gap={4} alignItems="center">
+            <Logo size={16} />
+            <span>Bitcoin TVL</span>{" "}
+            <span>
+              {liquityStats.data && (
+                <Amount
+                  fallback="…"
+                  format="compact"
+                  prefix="$"
+                  value={
+                    liquityStats.data.btcTVL
+                      ? Number(liquityStats.data.btcTVL)
                       : 0
                   }
                 />
