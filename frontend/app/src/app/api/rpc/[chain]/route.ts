@@ -3,12 +3,24 @@ import { NextResponse } from "next/server";
 
 type ChainId = "1" | "747474"; // supported chains
 
-const RPC_URL = {
+const RPC_URL: Record<ChainId, string> = {
   "1": `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
   "747474": "https://rpc.katana.network",
-} satisfies Record<ChainId, string>;
+};
 
-// TODO method evaluation?
+function cors() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
+
+export async function OPTIONS() {
+  // preflight
+  return new Response(null, { status: 204, headers: cors() });
+}
+
 export async function POST(
   req: Request,
   { params }: { params: { chain: string } },
@@ -29,8 +41,13 @@ export async function POST(
     body: bodyText,
   });
 
-  return new NextResponse(upstreamRes.body, {
+  const text = await upstreamRes.text();
+
+  return new NextResponse(text, {
     status: upstreamRes.status,
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      ...cors(),
+    },
   });
 }
