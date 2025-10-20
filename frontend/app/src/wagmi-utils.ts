@@ -1,6 +1,6 @@
 import content from "@/src/content";
 import { dnum18, dnum6, dnum8 } from "@/src/dnum-utils";
-import { WALLET_CONNECT_PROJECT_ID } from "@/src/env";
+import { HOST, WALLET_CONNECT_PROJECT_ID } from "@/src/env";
 import { getBranch } from "@/src/liquity-utils";
 import { getSafeStatus } from "@/src/safe-utils";
 import type { Token } from "@/src/types";
@@ -178,8 +178,11 @@ const wagmiChainsArr = Object.values(CHAINS).map(toWagmiChain);
 if (wagmiChainsArr.length === 0) throw new Error('Empty Chains.');
 const chains = wagmiChainsArr as [typeof wagmiChainsArr[0], ...typeof wagmiChainsArr];
 
+
+const host = HOST ? HOST : "https://app.bitvault.finance";
+
 const transports = Object.fromEntries(
-  Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(`/api/rpc/${c.CHAIN_ID}`)])
+  Object.values(CHAINS).map((c) => [c.CHAIN_ID, http(`${host}/api/rpc/${c.CHAIN_ID}`)])
 );
 
 const base = getDefaultConfigFromConnectKit({
