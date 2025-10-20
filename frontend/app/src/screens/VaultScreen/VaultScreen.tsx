@@ -19,15 +19,15 @@ export function VaultPoolScreen() {
             {content.vaultScreen.subheading(
               <HFlex gap={16}>
                 <img
-                  src="/investors/fasanara.png"
+                  src="/investors/fasanara.svg"
                   alt="Fasanara"
                   className={css({
                     width: 85,
-                    height: 24
+                    height: 24  
                   })}
                 />
                 <img
-                  src="/investors/LM5.png"
+                  src="/investors/LM5.svg"
                   alt="LM5"
                   className={css({
                     width: 125,
@@ -35,7 +35,7 @@ export function VaultPoolScreen() {
                   })}
                 />
                  <img
-                  src="/investors/M1.png"
+                  src="/investors/M1.svg"
                   alt="M1"
                   className={css({
                     width: 56,
