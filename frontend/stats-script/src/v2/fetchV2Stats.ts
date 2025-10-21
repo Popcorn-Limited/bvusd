@@ -85,25 +85,16 @@ export const fetchV2Stats = async ({
     })
   );
 
-
-  const sbvUSDMainnet = new Contract(
-    "0xe66f1abc862f2730d5cdc3c780da2052c7aa4cbd",
-    erc20Abi,
-    ethProvider
-  ) as unknown as ERC20;
-
-  const sbvUSDMainnetSupply = Number(await sbvUSDMainnet.totalSupply({ blockTag })) / 10 ** 18;
-
   const sbvUSD = await Promise.all(
     vaults.sbvUSD.map(async (vault) => {
       const c = new Contract(
         vault.address,
         erc20Abi,
-        provider
+        vault.chain === "Katana" ? provider : ethProvider
       ) as unknown as ERC20;
       return {
         address: vault.address,
-        supply: Number(await c.totalSupply({ blockTag })) / 10 ** 18 + sbvUSDMainnetSupply,
+        supply: Number(await c.totalSupply({ blockTag })) / 10 ** 18,
         safe: vault.safe,
         chain: vault.chain,
       };
