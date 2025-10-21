@@ -95,11 +95,11 @@ export function TransparencyMetrics({
     >
       <MetricBox
         label="bvUSD Total Supply"
-        value={`${fmtnum(Number(totalSupply), "2z")}`}
+        value={`${fmtnum(Number(totalSupply), "compact")}`}
       />
       <MetricBox
         label="Total Reserves"
-        value={`$ ${fmtnum(Number(backing), "2z")}`}
+        value={`$ ${fmtnum(Number(backing), "compact")}`}
         tooltip={reservesTooltip}
         above={true}
       />
@@ -111,7 +111,7 @@ export function TransparencyMetrics({
       />
       <SBVUSDCard
         symbol="sbvUSD"
-        supply={`$ ${fmtnum(Number(sbvUSDTotalSupply), "2z")}`}
+        supply={`$ ${fmtnum(Number(sbvUSDTotalSupply), "compact")}`}
         apy={sbvUSDApy}
         tooltip={tooltipText}
       />

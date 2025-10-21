@@ -66,14 +66,14 @@ export function AllocationPanel({ data }: AllocationData) {
               key={d.label}
               label={`${d.label} Allocation`}
               wallet={d.wallet}
-              value={`$ ${fmtnum(Number(d.usdValue), "2z")}`}
+              value={`$ ${fmtnum(Number(d.usdValue), "compact")}`}
             />
           </Link>
         ))}
         <MetricBox
           key={"total"}
           label={"Total Core TVL"}
-          value={`$ ${fmtnum(Number(total), "2z")}`}
+          value={`$ ${fmtnum(Number(total), "compact")}`}
         />
       </div>
     </div>

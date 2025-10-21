@@ -42,7 +42,7 @@ export function LoansPanel({ btcTVL }) {
         <MetricBox
           label="Total Value Locked"
           key={btcTVL}
-          value={`$ ${fmtnum(Number(btcTVL), "2z")}`}
+          value={`$ ${fmtnum(Number(btcTVL), "compact")}`}
         />
       </div>
 

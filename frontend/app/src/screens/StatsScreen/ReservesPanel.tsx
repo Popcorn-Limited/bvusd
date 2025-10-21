@@ -6,6 +6,8 @@ import tokenBtcb from "../../../../uikit/src/token-icons/btcb.svg";
 import tokenUsdc from "../../../../uikit/src/token-icons/usdc.svg";
 import eth from "../../../../uikit/src/token-icons/eth.svg";
 import katana from "../../../../uikit/src/token-icons/katana.svg";
+import avax from "../../../../uikit/src/token-icons/avax.png";
+import arbitrum from "../../../../uikit/src/token-icons/arbitrum.svg";
 
 import { PanelHeader } from "./PanelTitle";
 import {
@@ -15,6 +17,7 @@ import {
   Tooltip as PieTooltip,
   Cell,
 } from "recharts";
+import { fmtnum } from "@/src/formatting";
 
 type ReserveProps = {
   reserves: {
@@ -25,7 +28,7 @@ type ReserveProps = {
   }[];
 };
 
-const colors = ["#F6B73C", "#4BA4F0", "green", "red"];
+const colors = ["#F6B73C", "#4BA4F0", "green", "red", "yellow", "violet"];
 
 const icons = {
   USDC: tokenUsdc,
@@ -33,9 +36,15 @@ const icons = {
   bvUSD: tokenBvusd,
   BTC: tokenBtcb,
   katana,
+  avax,
+  arb: arbitrum,
 };
 
 export function ReservesPanel({ reserves }: ReserveProps) {
+  const sorted = [...reserves].sort(
+    (a, b) => Number(b.balance) - Number(a.balance)
+  );
+
   let pie = reserves.map((c, i) => ({
     name: c.asset,
     value: Number(c.balance),
@@ -47,7 +56,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
       style={{
         userSelect: "text",
         display: "flex",
-        alignItems: "stretch",
+        height: "100%",
         flexDirection: "row",
         gap: "24px",
         fontFamily: "KHTeka",
@@ -98,6 +107,9 @@ export function ReservesPanel({ reserves }: ReserveProps) {
             gap: 24,
             marginTop: 16,
             marginBottom: 16,
+            flexWrap: "wrap",
+            columnGap: 24,
+            rowGap: 8, 
           }}
         >
           {pie.map((entry, idx) => (
@@ -160,7 +172,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
+            gridTemplateColumns: "2fr 1fr 1fr",
             padding: "10px",
             gap: 10,
             borderBottom: "1px solid #333",
@@ -182,16 +194,16 @@ export function ReservesPanel({ reserves }: ReserveProps) {
             flex: 1,
             minHeight: 0,
             display: "grid",
-            gridTemplateRows: `repeat(${reserves.length}, 1fr)`,
             overflow: "auto",
           }}
         >
-          {reserves.map((row, idx) => (
+          {sorted.map((row, idx) => (
             <div
               key={idx}
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
+                gridTemplateColumns: "2fr 1fr 1fr",
+                overflow: "hidden",
                 padding: "12px",
                 gap: 16,
                 borderBottom: "1px solid #23262F",
@@ -203,7 +215,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
             >
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Image
-                  src={row.logo}
+                  src={row.logo ? row.logo : icons[row.chains[0]]}
                   alt={row.asset}
                   width={24}
                   height={24}
@@ -225,7 +237,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
                     display: "inline-block",
                   }}
                 >
-                  ${Number(row.balance).toFixed(2)}
+                  ${fmtnum(Number(row.balance), "compact")}
                 </span>
               </div>
 
