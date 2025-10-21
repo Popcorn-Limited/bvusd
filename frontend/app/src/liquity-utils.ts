@@ -888,7 +888,7 @@ export function useDiffs() {
   });
 }
 
-// import stats from "../../../docs/katana.json";
+import stats from "../../../docs/katana.json";
 
 export function useLiquityStats() {
   const { chainConfig } = useChainConfig();
@@ -899,9 +899,9 @@ export function useLiquityStats() {
       if (!chainConfig.STATS_URL) {
         throw new Error("config.STATS_URL is not defined");
       }
-      const response = await fetch(chainConfig.STATS_URL);
-      const json = await response.json();
-      return v.parse(StatsSchema, json);
+      // const response = await fetch(chainConfig.STATS_URL);
+      // const json = await response.json();
+      return v.parse(StatsSchema, stats);
     },
     enabled: Boolean(chainConfig.STATS_URL),
   });

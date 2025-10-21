@@ -28,7 +28,9 @@ type ReserveProps = {
   }[];
 };
 
-const colors = ["#F6B73C", "#4BA4F0", "green", "red", "yellow", "violet"];
+function randomHexColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
+}
 
 const icons = {
   USDC: tokenUsdc,
@@ -48,7 +50,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
   let pie = reserves.map((c, i) => ({
     name: c.asset,
     value: Number(c.balance),
-    color: colors[i],
+    color: randomHexColor(),
   }));
 
   return (

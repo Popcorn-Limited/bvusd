@@ -61,18 +61,42 @@ export const getTokenAllocations = async (debank: string) => {
       }
     );
 
-    const balances = holdingsData
-      .filter((d) => d.price > 0 && d.amount * d.price >= 1000)
-      .map((h) => {
-        return {
-          asset: h.name,
-          balance: h.amount * h.price,
-          logo: h.logo_url,
-          chain: h.chain,
-        };
-      });
+    const protocolRes = await fetch(
+      `https://pro-openapi.debank.com/v1/user/all_simple_protocol_list?id=${allocation.wallet}&chain_ids=eth,arb`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          AccessKey: debank,
+        },
+      }
+    );
+    const protocolData = await protocolRes.json();
+    let data = [
+      ...protocolData
+        .filter((d) => d.net_usd_value >= 1000)
+        .map((item) => {
+          return {
+            asset: item.id,
+            chain: item.chain,
+            balance: item.net_usd_value,
+            logo: item.logo_url,
+          };
+        }),
 
-    for (const { asset, balance, logo, chain } of balances) {
+      ...holdingsData
+        .filter((d) => d.price > 0 && d.amount * d.price >= 1000)
+        .map((h) => {
+          return {
+            asset: h.name,
+            balance: h.amount * h.price,
+            logo: h.logo_url,
+            chain: h.chain,
+          };
+        }),
+    ];
+
+    for (const { asset, balance, logo, chain } of data) {
       const prev = global.get(asset);
 
       if (!prev) {
