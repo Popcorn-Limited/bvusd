@@ -25,6 +25,19 @@ type ReserveProps = {
     balance: string;
     logo: string;
     chains: string[];
+  }[],
+  allocations: {
+    label: string;
+    usdValue: string;
+    wallet: string;
+  }[];
+};
+
+type AllocationData = {
+  allocations: {
+    label: string;
+    usdValue: string;
+    wallet: string;
   }[];
 };
 
@@ -42,14 +55,14 @@ const icons = {
   arb: arbitrum,
 };
 
-export function ReservesPanel({ reserves }: ReserveProps) {
+export function ReservesPanel({ reserves, allocations }: ReserveProps) {
   const sorted = [...reserves].sort(
     (a, b) => Number(b.balance) - Number(a.balance)
   );
 
-  let pie = reserves.map((c, i) => ({
-    name: c.asset,
-    value: Number(c.balance),
+  let pie = allocations.map((c, i) => ({
+    name: c.label,
+    value: Number(c.usdValue),
     color: randomHexColor(),
   }));
 
@@ -79,7 +92,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
           fontFamily: "KHTeka",
         }}
       >
-        <PanelHeader title="Asset reserves" line={false} />
+        <PanelHeader title="Allocations" line={false} />
 
         <ResponsiveContainer width="100%" height={360}>
           <PieChart>
@@ -167,7 +180,7 @@ export function ReservesPanel({ reserves }: ReserveProps) {
               lineHeight: "120%",
             }}
           >
-            Reserves
+            Positions
           </h3>
         </div>
         {/* Table Header */}

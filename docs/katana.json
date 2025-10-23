@@ -1,5 +1,5 @@
 {
-  "time": "October 21, 2025 at 9:29 AM UTC",
+  "time": "October 23, 2025 at 2:36 PM UTC",
   "total_bold_supply": "5400897.305445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4665,11 +4665,6 @@
   "spDeposits": [],
   "poolDepth": [
     {
-      "tick": "-93",
-      "liquidity": "10163229208",
-      "price": "0.9907435719165536"
-    },
-    {
       "tick": "-92",
       "liquidity": "8545085175",
       "price": "0.9908426462737453"
@@ -4751,7 +4746,7 @@
     },
     {
       "tick": "-24",
-      "liquidity": "183565824432",
+      "liquidity": "182731257944",
       "price": "0.9976029974017543"
     },
     {
@@ -4766,7 +4761,7 @@
     },
     {
       "tick": "-20",
-      "liquidity": "159141262909",
+      "liquidity": "160414505458",
       "price": "0.9980020984608853"
     },
     {
@@ -4791,12 +4786,12 @@
     },
     {
       "tick": "-15",
-      "liquidity": "1017332131930",
+      "liquidity": "6091424129",
       "price": "0.998501199320306"
     },
     {
       "tick": "-14",
-      "liquidity": "589404056535592",
+      "liquidity": "589406351025129",
       "price": "0.9986010494402381"
     },
     {
@@ -4811,7 +4806,7 @@
     },
     {
       "tick": "-11",
-      "liquidity": "40713401405883",
+      "liquidity": "26287865699251",
       "price": "0.9989006597141001"
     },
     {
@@ -4821,12 +4816,12 @@
     },
     {
       "tick": "-9",
-      "liquidity": "45041446935606",
+      "liquidity": "41339822000964",
       "price": "0.9991004498350495"
     },
     {
       "tick": "-8",
-      "liquidity": "3500237442213976",
+      "liquidity": "3500214432039846",
       "price": "0.9992003598800331"
     },
     {
@@ -4836,7 +4831,7 @@
     },
     {
       "tick": "-6",
-      "liquidity": "4038320872418",
+      "liquidity": "1881821336219",
       "price": "0.9994002099440127"
     },
     {
@@ -4856,12 +4851,12 @@
     },
     {
       "tick": "-2",
-      "liquidity": "8171660098510507",
+      "liquidity": "8170569094605859",
       "price": "0.9998000299960005"
     },
     {
       "tick": "-1",
-      "liquidity": "282210507576",
+      "liquidity": "267352827728",
       "price": "0.9999000099990001"
     },
     {
@@ -4871,62 +4866,62 @@
     },
     {
       "tick": "1",
-      "liquidity": "56165547617849",
+      "liquidity": "36822670754841",
       "price": "1.0001"
     },
     {
       "tick": "2",
-      "liquidity": "114573834747",
+      "liquidity": "272448778776",
       "price": "1.00020001"
     },
     {
       "tick": "3",
-      "liquidity": "8750159654208",
+      "liquidity": "7402151185927",
       "price": "1.0003000300009999"
     },
     {
       "tick": "4",
-      "liquidity": "9319918485847101",
+      "liquidity": "9365731147500606",
       "price": "1.000400060004"
     },
     {
       "tick": "5",
-      "liquidity": "10264710794856",
+      "liquidity": "156027799245495",
       "price": "1.0005001000100004"
     },
     {
       "tick": "6",
-      "liquidity": "47614382095704383",
+      "liquidity": "95351818982679",
       "price": "1.0006001500200015"
     },
     {
       "tick": "7",
-      "liquidity": "100909903635312173",
+      "liquidity": "8394307007305071",
       "price": "1.0007002100350033"
     },
     {
       "tick": "8",
-      "liquidity": "62883767041685463",
+      "liquidity": "101967036371194460",
       "price": "1.000800280056007"
     },
     {
       "tick": "9",
-      "liquidity": "196289945720276",
+      "liquidity": "107081207408816287",
       "price": "1.0009003600840125"
     },
     {
       "tick": "10",
-      "liquidity": "3167433641436335",
+      "liquidity": "3207256495013560",
       "price": "1.001000450120021"
     },
     {
       "tick": "11",
-      "liquidity": "3086202131427909",
+      "liquidity": "3085810621627923",
       "price": "1.001100550165033"
     },
     {
       "tick": "12",
-      "liquidity": "166946780908098",
+      "liquidity": "315384294282904",
       "price": "1.0012006602200494"
     },
     {
@@ -4936,17 +4931,17 @@
     },
     {
       "tick": "14",
-      "liquidity": "40700923813522",
+      "liquidity": "4937562229664",
       "price": "1.0014009103641"
     },
     {
       "tick": "15",
-      "liquidity": "1618125920519",
+      "liquidity": "21198615582479",
       "price": "1.0015010504551363"
     },
     {
       "tick": "16",
-      "liquidity": "622738681122176",
+      "liquidity": "622870787025557",
       "price": "1.0016012005601818"
     },
     {
@@ -4956,13 +4951,18 @@
     },
     {
       "tick": "18",
-      "liquidity": "1869044719090906",
+      "liquidity": "1867929240624098",
       "price": "1.001801530816306"
     },
     {
       "tick": "19",
-      "liquidity": "2265230825962",
+      "liquidity": "1253990118161",
       "price": "1.0019017109693875"
+    },
+    {
+      "tick": "20",
+      "liquidity": "1273242549",
+      "price": "1.0020019011404844"
     },
     {
       "tick": "21",
@@ -4971,12 +4971,12 @@
     },
     {
       "tick": "22",
-      "liquidity": "209762221222077",
+      "liquidity": "209694766088276",
       "price": "1.0022023115407315"
     },
     {
       "tick": "23",
-      "liquidity": "2501668393211",
+      "liquidity": "2489199603426",
       "price": "1.0023025317718857"
     },
     {
@@ -5003,11 +5003,6 @@
       "tick": "30",
       "liquidity": "159141262910",
       "price": "1.0030043540627416"
-    },
-    {
-      "tick": "31",
-      "liquidity": "834566488",
-      "price": "1.003104654498148"
     },
     {
       "tick": "33",
@@ -5081,7 +5076,7 @@
     },
     {
       "tick": "91",
-      "liquidity": "202450910982256",
+      "liquidity": "202433329284207",
       "price": "1.0091410717527316"
     },
     {
@@ -5091,7 +5086,7 @@
     },
     {
       "tick": "99",
-      "liquidity": "157650724628",
+      "liquidity": "135675342836",
       "price": "1.0099486672261528"
     },
     {
@@ -5106,7 +5101,7 @@
     },
     {
       "tick": "102",
-      "liquidity": "116727011184",
+      "liquidity": "16272558490",
       "price": "1.0102516821257905"
     },
     {
@@ -5242,44 +5237,77 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "4856967.76294734",
+  "totalAllocations": "5402947.81810647",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "2455539.4370390465",
+      "usdValue": "2999488.0918730074",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "2350422.0490191365",
+      "usdValue": "2352391.2171203173",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
       "label": "Other",
-      "usdValue": "51006.276889156805",
+      "usdValue": "51068.50911314539",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
+      "asset": "Morpho",
+      "balance": "981731.220007577",
+      "logo": "https://static.debank.com/image/project/logo_url/morphoblue/cfe5f811a4fb96355e0fb367b5201f87.png",
+      "chains": [
+        "arb",
+        "eth"
+      ]
+    },
+    {
+      "asset": "Fluid",
+      "balance": "372296.7167395591",
+      "logo": "https://static.debank.com/image/project/logo_url/fluid/faeb92cc788df0676eb21db724f80704.png",
+      "chains": [
+        "eth"
+      ]
+    },
+    {
+      "asset": "Pendle V2",
+      "balance": "501118.79116851947",
+      "logo": "https://static.debank.com/image/project/logo_url/pendle2/d5cfacd3b8f7e0ec161c0de9977cabbd.png",
+      "chains": [
+        "eth"
+      ]
+    },
+    {
       "asset": "avUSD MAX",
-      "balance": "301662.2886317646",
+      "balance": "301235.08729790477",
       "logo": "",
       "chains": [
         "avax"
       ]
+    },  
+    {
+      "asset": "PT-mHYPER-20NOV2025",
+      "balance": "293447.34",
+      "logo": "https://static.debank.com/image/project/logo_url/pendle2/d5cfacd3b8f7e0ec161c0de9977cabbd.png",
+      "chains": [
+        "arb"
+      ]
     },
     {
-      "asset": "PT Midas Hyperithm 20NOV2025",
-      "balance": "299919.5738457862",
-      "logo": "",
+      "asset": "Paradex Vault",
+      "balance": "549450.46",
+      "logo": "https://cdn.brandfetch.io/idcBApNlFG/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1758896510455",
       "chains": [
         "eth"
       ]
     },
     {
       "asset": "Midas Fasanara ONE",
-      "balance": "2350361.861060276",
+      "balance": "2352331.4076424227",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x238a700ed6165261cf8b2e544ba797bc11e466ba/9e4cbfaede1d32b5fa36966dfd723aa0.png",
       "chains": [
         "eth"
@@ -5287,12 +5315,12 @@
     },
     {
       "asset": "Midas Hyperithm",
-      "balance": "50994.78696459896",
+      "balance": "51057.08525176102",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
       "chains": [
         "eth"
       ]
     }
   ],
-  "btcTVL": "10779777"
+  "btcTVL": "10971422"
 }

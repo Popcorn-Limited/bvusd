@@ -157,6 +157,7 @@ export function StatsScreen() {
                     {/* TODO add branch collaterals when present*/}
                     <ReservesPanel
                       reserves={liquityStats.data.tokenAllocations}
+                      allocations={liquityStats.data.allocations}
                     />
                     <VaultsPanel />
                     {/* <VaultsApy data={liquityStats.data.vaultsApy}/> */}

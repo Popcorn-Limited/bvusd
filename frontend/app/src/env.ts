@@ -147,7 +147,7 @@ export const EnvSchema = v.pipe(
         "WALLET_CONNECT_PROJECT_ID must be set",
       ),
     ),
-
+    HOST: v.optional(v.string()),
     CONTRACT_COLLATERAL_REGISTRY: vAddress(),
     CONTRACT_EXCHANGE_HELPERS: vAddress(),
     CONTRACT_GOVERNANCE: vAddress(),
