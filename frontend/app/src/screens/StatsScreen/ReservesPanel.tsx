@@ -53,6 +53,7 @@ const icons = {
   katana,
   avax,
   arb: arbitrum,
+  paradex: "https://cdn.brandfetch.io/idcBApNlFG/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1758896510455"
 };
 
 export function ReservesPanel({ reserves, allocations }: ReserveProps) {

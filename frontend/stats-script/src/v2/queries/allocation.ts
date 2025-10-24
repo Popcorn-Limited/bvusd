@@ -1,11 +1,17 @@
 import axios from "axios";
 import allocations from "../../allocations.json";
+import { getParadexTVL, getParadexWalletData } from "./paradex";
 
 type Res = {
   label: string;
   usdValue: string;
   wallet: string;
 };
+
+const FILTERED_ASSETS = [
+  "PT Autonomous Liquidity USD 11DEC2025",
+  "AI Chain Coin"
+]
 
 export const getAllocations = async (debank: string) => {
   let res: Res[] = [];
@@ -34,7 +40,10 @@ const getAllocation = async (debank: string, wallet: string) => {
       },
     }
   );
-  return wallet === "0x353F009029f35D743d4d14D390d66813d28FE4E6" ? holdingsData.total_usd_value + 293447.34 + 549450.46: holdingsData.total_usd_value;
+  
+  return wallet === "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+    ? holdingsData.total_usd_value + 293447.34 + await getParadexTVL()
+    : holdingsData.total_usd_value;
 };
 
 type Allo = {
@@ -71,26 +80,24 @@ export const getTokenAllocations = async (debank: string) => {
       }
     );
     const protocolData = await protocolRes.json();
-    console.log(protocolData);
+
+    const paradex = allocation.paradex
+      ? await getParadexWalletData()
+      : { positions: [] };
 
     const hardcodedDeltaNeutral = [
       {
-        "asset": "PT-mHYPER-20NOV2025",
-        "balance": "293447.34",
-        "logo": "https://static.debank.com/image/project/logo_url/pendle2/d5cfacd3b8f7e0ec161c0de9977cabbd.png",
-        "chain": "arb"
+        asset: "PT-mHYPER-20NOV2025",
+        balance: "293447.34",
+        logo: "https://static.debank.com/image/project/logo_url/pendle2/d5cfacd3b8f7e0ec161c0de9977cabbd.png",
+        chain: "arb",
       },
-      {
-        "asset": "Paradex Vault",
-        "balance": "549450.46",
-        "logo": "https://brandfetch.com/paradex.trade?library=default&collection=logos&asset=idi5ySUfhk",
-        "chains": "eth"
-      }
+      ...paradex.positions,
     ];
 
     let data = [
       ...protocolData
-        .filter((d) => d.net_usd_value >= 1000)
+        .filter((d) => d.net_usd_value >= 1000 && !FILTERED_ASSETS.includes(d.name))
         .map((item) => {
           return {
             asset: item.name,
@@ -101,7 +108,7 @@ export const getTokenAllocations = async (debank: string) => {
         }),
 
       ...holdingsData
-        .filter((d) => d.price > 0 && d.amount * d.price >= 1000)
+        .filter((d) => d.amount * d.price >= 1000 && !FILTERED_ASSETS.includes(d.name))
         .map((h) => {
           return {
             asset: h.name,
@@ -112,7 +119,9 @@ export const getTokenAllocations = async (debank: string) => {
         }),
     ];
 
-    allocation.wallet === "0x353F009029f35D743d4d14D390d66813d28FE4E6" ? data.push(...hardcodedDeltaNeutral) : null;
+    allocation.wallet === "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+      ? data.push(...hardcodedDeltaNeutral)
+      : null;
 
     for (const { asset, balance, logo, chain } of data) {
       const prev = global.get(asset);

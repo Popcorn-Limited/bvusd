@@ -1,5 +1,5 @@
 {
-  "time": "October 23, 2025 at 2:36 PM UTC",
+  "time": "October 24, 2025 at 9:40 AM UTC",
   "total_bold_supply": "5400897.305445",
   "total_debt_pending": "0",
   "total_coll_value": "0",
@@ -4735,6 +4735,11 @@
       "price": "0.9958090167708863"
     },
     {
+      "tick": "-41",
+      "liquidity": "19527434685",
+      "price": "0.9959085976725633"
+    },
+    {
       "tick": "-26",
       "liquidity": "667234106962",
       "price": "0.997403506726374"
@@ -4791,7 +4796,7 @@
     },
     {
       "tick": "-14",
-      "liquidity": "589406351025129",
+      "liquidity": "589406451105156",
       "price": "0.9986010494402381"
     },
     {
@@ -4806,7 +4811,7 @@
     },
     {
       "tick": "-11",
-      "liquidity": "26287865699251",
+      "liquidity": "25121998250677",
       "price": "0.9989006597141001"
     },
     {
@@ -4821,7 +4826,7 @@
     },
     {
       "tick": "-8",
-      "liquidity": "3500214432039846",
+      "liquidity": "3500214965793281",
       "price": "0.9992003598800331"
     },
     {
@@ -4851,7 +4856,7 @@
     },
     {
       "tick": "-2",
-      "liquidity": "8170569094605859",
+      "liquidity": "8170570162109265",
       "price": "0.9998000299960005"
     },
     {
@@ -4881,7 +4886,7 @@
     },
     {
       "tick": "4",
-      "liquidity": "9365731147500606",
+      "liquidity": "9365732215005514",
       "price": "1.000400060004"
     },
     {
@@ -4891,7 +4896,7 @@
     },
     {
       "tick": "6",
-      "liquidity": "95351818982679",
+      "liquidity": "95351818882709",
       "price": "1.0006001500200015"
     },
     {
@@ -4901,17 +4906,17 @@
     },
     {
       "tick": "8",
-      "liquidity": "101967036371194460",
+      "liquidity": "99115435915425360",
       "price": "1.000800280056007"
     },
     {
       "tick": "9",
-      "liquidity": "107081207408816287",
+      "liquidity": "104228441085698583",
       "price": "1.0009003600840125"
     },
     {
       "tick": "10",
-      "liquidity": "3207256495013560",
+      "liquidity": "3207257485217883",
       "price": "1.001000450120021"
     },
     {
@@ -4941,7 +4946,7 @@
     },
     {
       "tick": "16",
-      "liquidity": "622870787025557",
+      "liquidity": "622871343554970",
       "price": "1.0016012005601818"
     },
     {
@@ -5065,6 +5070,11 @@
       "price": "1.005917142554562"
     },
     {
+      "tick": "60",
+      "liquidity": "19527434685",
+      "price": "1.0060177342688175"
+    },
+    {
       "tick": "66",
       "liquidity": "118142176",
       "price": "1.0066214958321607"
@@ -5076,7 +5086,7 @@
     },
     {
       "tick": "91",
-      "liquidity": "202433329284207",
+      "liquidity": "202433405927537",
       "price": "1.0091410717527316"
     },
     {
@@ -5237,28 +5247,28 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "5402947.81810647",
+  "totalAllocations": "5406582.955648448",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "2999488.0918730074",
+      "usdValue": "3002195.663735006",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "2352391.2171203173",
+      "usdValue": "2353318.4720665803",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
       "label": "Other",
-      "usdValue": "51068.50911314539",
+      "usdValue": "51068.8198468616",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
       "asset": "Morpho",
-      "balance": "981731.220007577",
+      "balance": "982634.7559090573",
       "logo": "https://static.debank.com/image/project/logo_url/morphoblue/cfe5f811a4fb96355e0fb367b5201f87.png",
       "chains": [
         "arb",
@@ -5267,7 +5277,7 @@
     },
     {
       "asset": "Fluid",
-      "balance": "372296.7167395591",
+      "balance": "372364.37626618706",
       "logo": "https://static.debank.com/image/project/logo_url/fluid/faeb92cc788df0676eb21db724f80704.png",
       "chains": [
         "eth"
@@ -5275,7 +5285,7 @@
     },
     {
       "asset": "Pendle V2",
-      "balance": "501118.79116851947",
+      "balance": "501436.21856614616",
       "logo": "https://static.debank.com/image/project/logo_url/pendle2/d5cfacd3b8f7e0ec161c0de9977cabbd.png",
       "chains": [
         "eth"
@@ -5283,12 +5293,12 @@
     },
     {
       "asset": "avUSD MAX",
-      "balance": "301235.08729790477",
+      "balance": "302331.4704508955",
       "logo": "",
       "chains": [
         "avax"
       ]
-    },  
+    },
     {
       "asset": "PT-mHYPER-20NOV2025",
       "balance": "293447.34",
@@ -5299,15 +5309,15 @@
     },
     {
       "asset": "Paradex Vault",
-      "balance": "549450.46",
+      "balance": "549753.47",
       "logo": "https://cdn.brandfetch.io/idcBApNlFG/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1758896510455",
       "chains": [
-        "eth"
+        "paradex"
       ]
     },
     {
       "asset": "Midas Fasanara ONE",
-      "balance": "2352331.4076424227",
+      "balance": "2353256.8804316004",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x238a700ed6165261cf8b2e544ba797bc11e466ba/9e4cbfaede1d32b5fa36966dfd723aa0.png",
       "chains": [
         "eth"
@@ -5322,5 +5332,5 @@
       ]
     }
   ],
-  "btcTVL": "10971422"
+  "btcTVL": "11132294"
 }

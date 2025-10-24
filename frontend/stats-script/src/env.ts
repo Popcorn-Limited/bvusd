@@ -6,7 +6,8 @@ if (
   !process.env.ALCHEMY_API_KEY ||
   !process.env.KATANA_API_KEY ||
   !process.env.DUNE_API_KEY ||
-  !process.env.DEBANK_KEY
+  !process.env.DEBANK_KEY || 
+  !process.env.PARADEX_API_KEY
 ) {
   throw new Error("Missing env");
 }
@@ -16,4 +17,5 @@ export const env = {
   KATANA_KEY: process.env.KATANA_API_KEY!,
   DUNE_KEY: process.env.DUNE_API_KEY!,
   DEBANK_KEY: process.env.DEBANK_KEY!,
+  PARADEX_KEY: process.env.PARADEX_API_KEY!,
 };

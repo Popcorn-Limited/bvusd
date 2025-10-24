@@ -2,6 +2,7 @@
   "allocations": [
     {
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6",
+      "paradex": "0x72dea618239053d8895559f0e923d61c43335795e01483a553fe808c83d9da4",
       "label": "Delta Neutral"
     },
     {
