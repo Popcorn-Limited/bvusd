@@ -31,7 +31,6 @@ export function VaultPanel({
   symbol: string;
   chainId?: number;
 }) {
-  console.log(vault, symbol);
   const { switchChainAsync } = useSwitchChain();
 
   useEffect(() => {

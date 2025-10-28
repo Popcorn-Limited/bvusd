@@ -16,8 +16,8 @@ export function EarnPoolsListScreen() {
 
   const vaults = Object.values(CHAINS).reduce((acc, chain) => {
     for (const [key, v] of Object.entries(chain.VAULTS)) {
-      const vaultKey = `${key}-${chain.CHAIN_NAME}`
-      acc[vaultKey] = { chainId: chain.CHAIN_ID, chainName: chain.CHAIN_NAME, ...v };
+      const vaultKey = `${key}`
+      acc[key] = { chainId: chain.CHAIN_ID, chainName: chain.CHAIN_NAME, ...v };
     }
     return acc;
   }, {} as Record<string, { chainId: number; chainName: string } & Vault>);
@@ -77,6 +77,7 @@ export function EarnPoolsListScreen() {
       gap={16}
     >
       {vaultsObj.map(([symbol, vault]) => {
+        console.log("MAP", vault);
         return (
           <VaultPositionSummary
             earnPosition={null}

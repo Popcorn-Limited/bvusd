@@ -102,7 +102,7 @@ export function useEnforceChain(targetChainId: number) {
   useEffect(() => {
     if (status !== "connected") return;
     if (!chainId) return;
-    if (chainId === targetChainId || chainId === 1 || chainId === 747474) return; // TODO all supported chainids
+    if (chainId === targetChainId || chainId === 1 || chainId === 747474 || chainId === 43111) return; // TODO all supported chainids
 
     if (lastTried.current === chainId) return;
     if (isPending) return;

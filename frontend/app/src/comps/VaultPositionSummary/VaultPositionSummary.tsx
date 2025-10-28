@@ -2,7 +2,7 @@ import type { Address, PositionEarn, RequestBalance, Token, TokenSymbol } from "
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
-import { dnumOrNull } from "@/src/dnum-utils";
+import { dnum8, DNUM_0, dnumOrNull } from "@/src/dnum-utils";
 import { fmtnum } from "@/src/formatting";
 import { isEarnPositionActive, useLiquityStats } from "@/src/liquity-utils";
 import { css } from "@/styled-system/css";
@@ -24,19 +24,16 @@ export function VaultPositionSummary({
   chainId,
   txPreviewMode,
 }: {
-  prevEarnPosition?: PositionEarn | null;
+  prevEarnPosition?: PositionEarn | null; 
   earnPosition: PositionEarn | null;
   requestBalance: RequestBalance | null;
   linkToScreen?: boolean;
   vaultAsset?: string;
-  vault?: Vault;
+  vault?: { chainId: number; chainName: string } & Vault;
   chainId?: number;
   txPreviewMode?: boolean;
 }) {
-  // const chain = useChainId()
-  console.log("FIRST");
-
-  const { data } = useVault({chainId, vaultAddress: vault?.address})
+  const { data } = useVault({chainId, vaultAddress: vault?.address, decimals: vault?.inputDecimals})
 
   // leftover from old liquity component structure
   let share = dn.from(0, 18);
@@ -130,7 +127,7 @@ export function VaultPositionSummary({
                   fallback="-"
                   format="compact"
                   suffix={` ${vaultAsset}`}
-                  value={dnumOrNull(data?.totalDeposited, vault.inputDecimals)}
+                  value={data?.totalDeposited}
                 />
               </div>
               <InfoTooltip heading="Total Value Locked (TVL)">
