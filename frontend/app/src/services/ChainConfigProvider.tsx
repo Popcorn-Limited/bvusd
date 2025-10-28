@@ -33,7 +33,14 @@ export const ChainSchema = v.object({
   CONTRACT_USDC: vAddress(),
   CONTRACT_USDT: vAddress(),
   CONTRACT_WETH: vAddress(),
-  CONTRACT_WHITELIST: vAddress()
+  CONTRACT_WHITELIST: vAddress(),
+  VAULTS: v.optional(v.record(v.string(), v.object({
+    outputSymbol: v.string(),
+    name: v.string(),
+    asset: vAddress(),
+    address: vAddress(),
+    inputDecimals: v.number()
+  })))
 });
 
 export type ChainEnv = v.InferOutput<typeof ChainSchema>;
@@ -51,7 +58,7 @@ function parseChain(id: number): ChainEnv {
 
 type Ctx = { chainConfig: ChainEnv; setChainId: (id: number) => void };
 const ChainConfigContext = createContext<Ctx | null>(null);
-const DEFAULT_CHAIN_ID = 747474;
+const DEFAULT_CHAIN_ID = 1;
 
 // Chain Configuration Context Component
 export function ChainConfigProvider({

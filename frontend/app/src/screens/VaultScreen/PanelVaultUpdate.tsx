@@ -1,4 +1,4 @@
-import type { RequestBalance, Token } from "@/src/types";
+import type { RequestBalance, Token, TokenSymbol } from "@/src/types";
 
 import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
 import { Field } from "@/src/comps/Field/Field";
@@ -20,7 +20,7 @@ import { useIsWhitelistedUser } from "@/src/bitvault-utils";
 import { WhitelistModal } from "../HomeScreen/WhitelistModal";
 import { useModal } from "@/src/services/ModalService";
 import { useChainId } from "wagmi";
-import { CHAINS } from "@/src/config/chains";
+import { CHAINS, Vault } from "@/src/config/chains";
 import { zeroAddress } from "viem";
 
 
@@ -51,18 +51,22 @@ export async function getNextWithdrawalDate(date?: number): Promise<{ days: numb
 
 type ValueUpdateMode = "add" | "remove";
 
-export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBalance }) {
+
+export function PanelVaultUpdate({ requestBalance, vaultAsset, vault }: { requestBalance: RequestBalance, vaultAsset?: string, vault?: Vault }) {
   const chain = useChainId();
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
+  const tokenSymbol = vaultAsset as TokenSymbol ?? "bvUSD" as TokenSymbol;
+  const vaultTokenSymbol = vault?.outputSymbol as TokenSymbol ?? "sbvUSD" as TokenSymbol;
+
   const [mode, setMode] = useState<ValueUpdateMode>("add");
-  const [inputSymbol, setInputSymbol] = useState<Token["symbol"]>("bvUSD");
-  const [outputSymbol, setOutputSymbol] = useState<Token["symbol"]>("sbvUSD");
+  const [inputSymbol, setInputSymbol] = useState<Token["symbol"]>(tokenSymbol);
+  const [outputSymbol, setOutputSymbol] = useState<Token["symbol"]>(vaultTokenSymbol);
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
   const [withdrawalDate, setWithdrawalDate] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
-  const [availableAssets, setAvailableAssets] = useState<Token["symbol"][]>(["bvUSD"]);
+  const [availableAssets, setAvailableAssets] = useState<Token["symbol"][]>([tokenSymbol]);
 
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
   const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
@@ -83,9 +87,9 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
 
   useEffect(() => {
     if (chain === 747474) {
-      setAvailableAssets(["bvUSD", ...STABLE_SYMBOLS]);
+      setAvailableAssets([tokenSymbol, ...STABLE_SYMBOLS]);
     } else {
-      setAvailableAssets(["bvUSD"]);
+      setAvailableAssets([tokenSymbol]);
     }
   }, [chain]);
 
@@ -95,6 +99,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
     STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
   );
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
+  
   const outputAmount = chain === 1 ? parsedValue : parseInputFloatWithDecimals(
     valOut,
     // @ts-ignore
@@ -104,7 +109,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
   // reading all balances on both chains to not lead to errors on switching available assets
-  const balances = Object.fromEntries(["bvUSD", "sbvUSD", ...STABLE_SYMBOLS].map((symbol) => ([
+  const balances = Object.fromEntries([inputSymbol, outputSymbol, ...STABLE_SYMBOLS].map((symbol) => ([
     symbol,
     // known collaterals are static so we can safely call this hook in a .map()
     useBalance(account.address, symbol as Token["symbol"]),
@@ -143,7 +148,7 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
                 <Dropdown
                   items={
                     availableAssets.map(symbol => ({
-                      icon: <TokenIcon symbol={symbol as Token["symbol"]} />,
+                      icon: <TokenIcon symbol={symbol} />,
                       label: symbol,
                       value: account.isConnected
                         ? fmtnum(balances[symbol]?.data ?? 0)
@@ -158,8 +163,8 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
                 />
                 : <InputTokenBadge
                   background={false}
-                  icon={<TokenIcon symbol="bvUSD" />}
-                  label="bvUSD"
+                  icon={<TokenIcon symbol={inputSymbol as TokenSymbol} />}
+                  label={inputSymbol}
                 />
               }
               id="input-deposit-change"
@@ -178,12 +183,12 @@ export function PanelVaultUpdate({ requestBalance }: { requestBalance: RequestBa
                       setMode(index === 1 ? "remove" : "add");
                       setValue("");
                       if (index === 1) {
-                        setInputSymbol("sbvUSD");
-                        setOutputSymbol("bvUSD");
+                        setInputSymbol(vaultTokenSymbol as TokenSymbol);
+                        setOutputSymbol(tokenSymbol as TokenSymbol);
                       }
                       else {
-                        setInputSymbol("bvUSD");
-                        setOutputSymbol("sbvUSD");
+                        setInputSymbol(tokenSymbol as TokenSymbol);
+                        setOutputSymbol(vaultTokenSymbol as TokenSymbol);
                       }
                       if (origin !== "keyboard") {
                         event.preventDefault();

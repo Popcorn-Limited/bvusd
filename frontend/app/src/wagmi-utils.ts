@@ -47,6 +47,18 @@ export function useBalance(
         if (symbol === "USDC") {
           return chainConfig.CONTRACT_USDC;
         }
+        if (symbol === "bgBTC") {
+          return "0x8236a87084f8B84306f72007F36F2618A56344942";
+        }
+        if (symbol === "sbgBTC") {
+          return "0xCe3Ac66020555EdcE9b54dAD5EC1c35E0478B887";
+        }
+        if (symbol === "nBTC") {
+          return "0x876aac7648D79f87245E73316eB2D100e75F3Df1";
+        }
+        if (symbol === "snBTC") {
+          return "0x9d3575469d9df8b5d2f4d7703f682221c044397d";
+        }
         if (symbol === "LbvUSD") {
           return CONTRACT_TOKEN_LOCKER;
         } else {
@@ -90,7 +102,7 @@ export function useEnforceChain(targetChainId: number) {
   useEffect(() => {
     if (status !== "connected") return;
     if (!chainId) return;
-    if (chainId === targetChainId || chainId === 1) return; // TODO all supported chainids
+    if (chainId === targetChainId || chainId === 1 || chainId === 747474) return; // TODO all supported chainids
 
     if (lastTried.current === chainId) return;
     if (isPending) return;

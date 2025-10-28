@@ -4,7 +4,7 @@ import { AddressesRegistry } from "./abi/AddressesRegistry";
 import { WhitelistAbi } from "./abi/Whitelist";
 import { bvUSD } from "@liquity2/uikit";
 import * as dn from "dnum";
-import { dnum18, DNUM_0, dnumOrNull } from "./dnum-utils";
+import { dnum18, dnum8, DNUM_0, dnumOrNull } from "./dnum-utils";
 import { StatsSchema, useLiquityStats } from "./liquity-utils";
 import { getBranchContract } from "./contracts";
 import { PositionEarn } from "./types";
@@ -15,7 +15,7 @@ import { useConfig as useWagmiConfig } from "wagmi";
 import { readContracts } from "wagmi/actions";
 import { CHAINS } from "./config/chains";
 
-export function useVault({ chainId }: { chainId: number }) {
+export function useVault({ chainId, vaultAddress }: { chainId: number, vaultAddress?: Address }) {
   const config = useWagmiConfig()
 
   return useQuery({
@@ -29,38 +29,38 @@ export function useVault({ chainId }: { chainId: number }) {
       const vaultReads = await readContracts(config, {
         contracts: [
           {
-            address: CHAINS[chainId].CONTRACT_VAULT,
+            address: vaultAddress?? CHAINS[chainId].CONTRACT_VAULT,
             abi: erc4626Abi,
             functionName: "totalAssets",
           },
           {
-            address: CHAINS[chainId].CONTRACT_VAULT,
+            address: vaultAddress?? CHAINS[chainId].CONTRACT_VAULT,
             abi: erc4626Abi,
             functionName: "totalSupply",
           },
         ]
       });
       const totalAssets = vaultReads[0].status === "success" ? dnum18(vaultReads[0].result) : DNUM_0
-      const totalSupply = vaultReads[1].status === "success" ? dnum18(vaultReads[1].result) : DNUM_0
-     
+      const totalSupply = vaultReads[1].status === "success" ? dnum18(vaultReads[1].result) : DNUM_0     
       return {
-        apr7d: dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
-        apr30d: dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
+        apr7d: vaultAddress ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
+        apr30d: vaultAddress ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
         collateral,
         totalDeposited: totalAssets,
-        price: totalSupply > DNUM_0 ? dn.div(totalAssets, totalSupply) : dnum18(1),
+        price: totalSupply > DNUM_0 ? dn.div(totalAssets, totalSupply) : dnum8(1),
       };
     },
   });
 }
 
 export function useVaultPosition(
-  account: null | Address
+  account: null | Address,
+  vaultAddress?: Address
 ): UseQueryResult<PositionEarn | null> {
   const { chainConfig } = useChainConfig();
 
   const balance = useReadContract({
-    address: chainConfig.CONTRACT_VAULT,
+    address: vaultAddress?? chainConfig.CONTRACT_VAULT,
     abi: erc4626Abi,
     functionName: "balanceOf",
     args: [account ?? zeroAddress],

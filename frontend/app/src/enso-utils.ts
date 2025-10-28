@@ -10,6 +10,7 @@ interface EnsoForecastProps {
   inputSymbol: Token["symbol"];
   outputSymbol: Token["symbol"];
   account: Address;
+  decimals?: number;
   slippage?: number
 }
 
@@ -18,12 +19,13 @@ export type EnsoForecast = {
   status: "idle" | "loading" | "success" | "error";
 }
 
-export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoForecastProps): EnsoForecast {
+export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol, account, slippage = 50, decimals = 18}: EnsoForecastProps): EnsoForecast {
   const [value, setValue] = useState("0");
   const [status, setStatus] = useState<EnsoForecast["status"]>("idle");
   const { chainConfig } = useChainConfig();
-  const inputAddress = getProtocolContract(chainConfig, inputSymbol).address
-  const outputAddress = getProtocolContract(chainConfig, outputSymbol).address
+
+  const inputAddress = inputSymbol === "bvUSD" ? getProtocolContract(chainConfig, inputSymbol).address : chainConfig.VAULTS[inputSymbol]?.asset ?? chainConfig.VAULTS[outputSymbol]?.asset
+  const outputAddress = outputSymbol === "sbvUSD" ? getProtocolContract(chainConfig, outputSymbol).address : chainConfig.VAULTS[inputSymbol]?.address ?? chainConfig.VAULTS[outputSymbol]?.asset
 
   useEffect(() => {
     if (!inputValue || inputValue === "0" || !account) {
@@ -34,7 +36,7 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
 
     const timeoutId = setTimeout(() => {
       setStatus("loading");
-      getOutputValue({ chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage })
+      getOutputValue({ chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage, decimals })
         .then(res => {
           setValue(res.value)
           setStatus(res.status)

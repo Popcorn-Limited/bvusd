@@ -1,7 +1,7 @@
 "use client";
 
 import type { BranchId, CollateralSymbol } from "@/src/types";
-import type { Address } from "@liquity2/uikit";
+import { bgBTC, type Address } from "@liquity2/uikit";
 
 import { ActivePool } from "@/src/abi/ActivePool";
 import { BorrowerOperations } from "@/src/abi/BorrowerOperations";

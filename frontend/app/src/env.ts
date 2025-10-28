@@ -147,6 +147,7 @@ export const EnvSchema = v.pipe(
         "WALLET_CONNECT_PROJECT_ID must be set",
       ),
     ),
+    PIXEL_ID: v.string(),
     HOST: v.optional(v.string()),
     CONTRACT_COLLATERAL_REGISTRY: vAddress(),
     CONTRACT_EXCHANGE_HELPERS: vAddress(),
@@ -248,6 +249,7 @@ const parsedEnv = v.safeParse(EnvSchema, {
   SAFE_API_URL: process.env.NEXT_PUBLIC_SAFE_API_URL,
   VERCEL_ANALYTICS: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS,
   WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+  PIXEL_ID: process.env.NEXT_PUBLIC_PIXEL_ID,
 
   CONTRACT_COLLATERAL_REGISTRY: process.env.NEXT_PUBLIC_CONTRACT_COLLATERAL_REGISTRY,
   CONTRACT_EXCHANGE_HELPERS: process.env.NEXT_PUBLIC_CONTRACT_EXCHANGE_HELPERS,
@@ -321,4 +323,5 @@ export const {
   SAFE_API_URL,
   VERCEL_ANALYTICS,
   WALLET_CONNECT_PROJECT_ID,
+  PIXEL_ID
 } = parsedEnv.output;

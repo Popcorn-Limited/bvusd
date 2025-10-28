@@ -1,4 +1,4 @@
-import type { PositionEarn, RequestBalance } from "@/src/types";
+import type { Address, PositionEarn, RequestBalance, Token, TokenSymbol } from "@/src/types";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
@@ -11,23 +11,32 @@ import * as dn from "dnum";
 import Link from "next/link";
 import { useVault } from "@/src/bitvault-utils";
 import { useChainId } from "wagmi";
+import { Vault } from "@/src/config/chains";
+import { useEnforceChain } from "@/src/wagmi-utils";
 
 export function VaultPositionSummary({
   prevEarnPosition,
   earnPosition,
   requestBalance,
   linkToScreen,
+  vaultAsset,
+  vault,
+  chainId,
   txPreviewMode,
 }: {
   prevEarnPosition?: PositionEarn | null;
   earnPosition: PositionEarn | null;
   requestBalance: RequestBalance | null;
   linkToScreen?: boolean;
+  vaultAsset?: string;
+  vault?: Vault;
+  chainId?: number;
   txPreviewMode?: boolean;
 }) {
-  const chain = useChainId()
-  const collToken = bvUSD
-  const { data } = useVault({chainId: chain})
+  // const chain = useChainId()
+  console.log("FIRST");
+
+  const { data } = useVault({chainId, vaultAddress: vault?.address})
 
   // leftover from old liquity component structure
   let share = dn.from(0, 18);
@@ -85,7 +94,7 @@ export function VaultPositionSummary({
           })}
         >
           <TokenIcon
-            symbol="sbvUSD"
+            symbol={vault.outputSymbol as TokenSymbol}
             size={34}
           />
         </div>
@@ -103,7 +112,7 @@ export function VaultPositionSummary({
             })}
           >
             <div>
-              sbvUSD
+              {vault.name ?? "sbvUSD"}
             </div>
             <div
               className={css({
@@ -120,12 +129,12 @@ export function VaultPositionSummary({
                 <Amount
                   fallback="-"
                   format="compact"
-                  prefix="$"
-                  value={dnumOrNull(data?.totalDeposited, 4)}
+                  suffix={` ${vaultAsset}`}
+                  value={dnumOrNull(data?.totalDeposited, vault.inputDecimals)}
                 />
               </div>
               <InfoTooltip heading="Total Value Locked (TVL)">
-                Total amount of bvUSD deposited in this vault.
+                Total amount of {vaultAsset} deposited in this vault.
               </InfoTooltip>
             </div>
           </div>
@@ -243,7 +252,7 @@ export function VaultPositionSummary({
             >
               <div
                 title={active
-                  ? `${fmtnum(dn.mul(earnPosition.deposit, data?.price), "full")} bvUSD`
+                  ? `${fmtnum(dn.mul(earnPosition.deposit, data?.price), "full")} ${vaultAsset}`
                   : undefined}
                 className={css({
                   display: "flex",
@@ -254,11 +263,11 @@ export function VaultPositionSummary({
                 })}
               >
                 {active && fmtnum(dn.mul(earnPosition.deposit, data?.price))}
-                <TokenIcon symbol="bvUSD" size="mini" title={null} />
+                <TokenIcon symbol={vaultAsset as TokenSymbol} size="mini" title={null} />
               </div>
               {prevEarnPosition && (
                 <div
-                  title={`${fmtnum(dn.mul(prevEarnPosition.deposit, data?.price), "full")} bvUSD`}
+                  title={`${fmtnum(dn.mul(prevEarnPosition.deposit, data?.price), "full")} ${vaultAsset}`}
                   className={css({
                     display: "flex",
                     justifyContent: "flex-start",
@@ -270,7 +279,7 @@ export function VaultPositionSummary({
                   })}
                 >
                   {fmtnum(dn.mul(prevEarnPosition.deposit, data?.price))}
-                  <TokenIcon symbol="bvUSD" size="mini" title={null} />
+                  <TokenIcon symbol={vaultAsset as TokenSymbol} size="mini" title={null} />
                 </div>
               )}
             </div>
@@ -292,7 +301,7 @@ export function VaultPositionSummary({
               })}
             >
               {fmtnum(requestBalance.pendingShares)}
-              <TokenIcon symbol="sbvUSD" size="mini" title={null} />
+              <TokenIcon symbol={vault.outputSymbol as TokenSymbol} size="mini" title={null} />
             </div>
           </div>
           {active && (
@@ -332,8 +341,8 @@ export function VaultPositionSummary({
         {linkToScreen && (
           <OpenLink
             active={active}
-            path={`/earn/${collToken.symbol.toLowerCase()}`}
-            title={`${active ? "Manage" : "Deposit to"} ${collToken.name} pool`}
+            path={`/vaults/${vaultAsset}`}
+            title={`${active ? "Manage" : "Deposit to"} ${vaultAsset} vault`}
           />
         )}
       </div>
