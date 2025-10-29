@@ -62,7 +62,6 @@ export function useVault({ chainId, vaultAddress, decimals = 18}: { chainId: num
       : DNUM_0
       : DNUM_0
 
-      console.log(totalAssets,vaultAddress);
       return {
         apr7d: vaultAddress ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
         apr30d: vaultAddress ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),

@@ -23,6 +23,7 @@ import { useChainId } from "wagmi";
 import { CHAINS, Vault } from "@/src/config/chains";
 import { zeroAddress } from "viem";
 
+export const BTC_SYMBOLS = ["nBTC", "bgBTC"] as const;
 
 export async function getNextWithdrawalDate(date?: number): Promise<{ days: number, hours: number, minutes: number, seconds: number, timeDiff: number }> {
   // Get current date in CET timezone
@@ -91,19 +92,23 @@ export function PanelVaultUpdate({ requestBalance, vaultAsset, vault }: { reques
     } else {
       setAvailableAssets([tokenSymbol]);
     }
+    // @ts-ignore
+    if(BTC_SYMBOLS.includes(inputSymbol))
+      setAvailableAssets([tokenSymbol])
   }, [chain]);
 
   const parsedValue = parseInputFloatWithDecimals(
     value,
     // @ts-ignore
-    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : BTC_SYMBOLS.includes(inputSymbol) ? 8 : 18,
   );
+
   const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
   
   const outputAmount = chain === 1 ? parsedValue : parseInputFloatWithDecimals(
     valOut,
     // @ts-ignore
-    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : BTC_SYMBOLS.includes(inputSymbol) ? 8 : 18,
   );
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;

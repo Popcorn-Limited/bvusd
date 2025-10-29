@@ -11,21 +11,36 @@ interface EnsoForecastProps {
   outputSymbol: Token["symbol"];
   account: Address;
   decimals?: number;
-  slippage?: number
+  slippage?: number;
 }
 
 export type EnsoForecast = {
   value: string;
   status: "idle" | "loading" | "success" | "error";
-}
+};
 
-export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol, account, slippage = 50, decimals = 18}: EnsoForecastProps): EnsoForecast {
+export default function useEnsoForecast({
+  inputValue,
+  inputSymbol,
+  outputSymbol,
+  account,
+  slippage = 50,
+  decimals = 18,
+}: EnsoForecastProps): EnsoForecast {
   const [value, setValue] = useState("0");
   const [status, setStatus] = useState<EnsoForecast["status"]>("idle");
   const { chainConfig } = useChainConfig();
 
-  const inputAddress = inputSymbol === "bvUSD" ? getProtocolContract(chainConfig, inputSymbol).address : chainConfig.VAULTS[inputSymbol]?.asset ?? chainConfig.VAULTS[outputSymbol]?.asset
-  const outputAddress = outputSymbol === "sbvUSD" ? getProtocolContract(chainConfig, outputSymbol).address : chainConfig.VAULTS[inputSymbol]?.address ?? chainConfig.VAULTS[outputSymbol]?.asset
+  const inputAddress =
+    inputSymbol === "bvUSD" || inputSymbol === "USDC" || inputSymbol === "USDT"
+      ? getProtocolContract(chainConfig, inputSymbol).address
+      : chainConfig.VAULTS[inputSymbol]?.asset ??
+        chainConfig.VAULTS[outputSymbol]?.asset;
+  const outputAddress =
+    outputSymbol === "sbvUSD"
+      ? getProtocolContract(chainConfig, outputSymbol).address
+      : chainConfig.VAULTS[inputSymbol]?.address ??
+        chainConfig.VAULTS[outputSymbol]?.asset;
 
   useEffect(() => {
     if (!inputValue || inputValue === "0" || !account) {
@@ -49,5 +64,5 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
   return {
     value,
     status,
-  }
+  };
 }

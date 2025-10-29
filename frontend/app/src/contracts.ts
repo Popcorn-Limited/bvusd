@@ -121,7 +121,7 @@ export type Contracts = ProtocolContractMap & {
     branchId: BranchId;
     contracts: BranchContracts;
     symbol: CollateralSymbol;
-  }>;
+  }> 
 };
 
 export const CONTRACTS = (config: ChainEnv): Contracts => {

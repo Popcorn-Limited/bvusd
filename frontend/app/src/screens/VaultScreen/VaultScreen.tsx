@@ -21,7 +21,6 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
   
   const vault = vaults[vaultAsset];
 
-  
   return (
     <Screen
       ready={true}

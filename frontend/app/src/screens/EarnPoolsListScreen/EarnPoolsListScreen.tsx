@@ -2,32 +2,29 @@
 
 import { Screen } from "@/src/comps/Screen/Screen";
 import content from "@/src/content";
-import { AnchorTextButton, InfoTooltip, TokenIcon, TokenSymbol } from "@liquity2/uikit";
-import { a, useTransition } from "@react-spring/web";
-import { useChainConfig } from "@/src/services/ChainConfigProvider";
+import {
+  TokenIcon,
+  TokenSymbol,
+} from "@liquity2/uikit";
+import { useTransition } from "@react-spring/web";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
 import { DNUM_0 } from "@/src/dnum-utils";
 import { css } from "@/styled-system/css";
 import { CHAINS, Vault } from "@/src/config/chains";
 
-
 export function EarnPoolsListScreen() {
-  // const vaults = chainConfig.VAULTS ?? {};
+  let vaultAssets = [];
 
   const vaults = Object.values(CHAINS).reduce((acc, chain) => {
     for (const [key, v] of Object.entries(chain.VAULTS)) {
-      const vaultKey = `${key}`
+      vaultAssets.push(key);
       acc[key] = { chainId: chain.CHAIN_ID, chainName: chain.CHAIN_NAME, ...v };
     }
     return acc;
   }, {} as Record<string, { chainId: number; chainName: string } & Vault>);
 
-  console.log(vaults);
-
-  const vaultsAssets = ["bgBTC", "nBTC"]
-
   const vaultsObj = Object.entries(vaults);
-
+    
   const poolsTransition = useTransition(
     Object.entries(vaults).map(([symbol, vault]) => symbol),
     {
@@ -57,27 +54,20 @@ export function EarnPoolsListScreen() {
           >
             {content.vaultsHome.headline(
               <TokenIcon.Group>
-                {[...vaultsAssets].map((symbol) => (
-                  <TokenIcon
-                    key={symbol}
-                    symbol={symbol as TokenSymbol}
-                  />
+                {[...vaultAssets].map((symbol) => (
+                  <TokenIcon key={symbol} symbol={symbol as TokenSymbol} />
+                  
                 ))}
-              </TokenIcon.Group>,
+              </TokenIcon.Group>
             )}
           </div>
         ),
-        subtitle: (
-          <>
-            {content.vaultsHome.subheading}{" "}
-          </>
-        ),
+        subtitle: <>{content.vaultsHome.subheading} </>,
       }}
       width={67 * 8}
       gap={16}
     >
       {vaultsObj.map(([symbol, vault]) => {
-        console.log("MAP", vault);
         return (
           <VaultPositionSummary
             earnPosition={null}
@@ -89,7 +79,7 @@ export function EarnPoolsListScreen() {
             }}
             linkToScreen={true}
             chainId={vault.chainId}
-            vaultAsset={symbol.split("-")[0]}
+            vaultAsset={symbol}
             vault={vault}
           />
         );
