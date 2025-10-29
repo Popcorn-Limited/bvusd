@@ -140,13 +140,11 @@ export function StatsScreen() {
                   >
                     <TransparencyMetrics
                       totalBacking={{
-                        totalCollaterals: liquityStats.data.totalCollValue,
                         totalReserves: liquityStats.data.totalReserves,
                         totalAllocations: liquityStats.data.totalAllocations,
                         totalBTC: liquityStats.data.btcTVL,
                       }}
                       totalSupply={liquityStats.data.totalBoldSupply}
-                      tvl={liquityStats.data.totalValueLocked}
                       sbvUSD={liquityStats.data.sbvUSD}
                     />
                     <AllocationPanel data={liquityStats.data.allocations} />

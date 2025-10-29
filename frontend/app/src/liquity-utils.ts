@@ -546,12 +546,7 @@ export async function getTroveOperationHints({
 
 export const StatsSchema = v.pipe(
   v.object({
-    total_bold_supply: v.string(),
-    total_debt_pending: v.string(),
-    total_coll_value: v.string(),
-    total_sp_deposits: v.string(),
-    total_value_locked: v.string(),
-    total_vault_tvl: v.string(),
+    total_bold_supply: v.optional(v.string()),
     total_reserve: v.string(),
     reserves_assets: v.array(
       v.object({
@@ -571,98 +566,11 @@ export const StatsSchema = v.pipe(
         chain: v.string(),
       })
     ),
-    max_sp_apy: v.string(),
     day_supply: v.array(
       v.object({
         day: v.string(),
         holders: v.string(),
         supply: v.string(),
-      })
-    ),
-    collateral_ratio: v.array(
-      v.object({
-        avg_cr: v.string(),
-        time: v.string(),
-      })
-    ),
-    branch: v.record(
-      v.string(),
-      v.object({
-        coll_active: v.string(),
-        coll_default: v.string(),
-        coll_price: v.string(),
-        sp_deposits: v.string(),
-        interest_accrual_1y: v.string(),
-        interest_pending: v.string(),
-        total_debt: v.string(),
-        batch_management_fees_pending: v.string(),
-        debt_pending: v.string(),
-        coll_value: v.string(),
-        value_locked: v.string(),
-        sp_apy: v.string(),
-        apy_avg: v.string(),
-        historical_cr: v.array(
-          v.object({
-            time: v.string(),
-            collateral_ratio: v.string(),
-          })
-        ),
-      })
-    ),
-    troves: v.array(
-      v.object({
-        owner: v.string(),
-        troveId: v.string(),
-        collateralAsset: v.string(),
-        collateral: v.string(),
-        debt: v.string(),
-        cr: v.string(),
-      })
-    ),
-    spDeposits: v.array(
-      v.object({
-        depositor: v.string(),
-        collateral: v.string(),
-        time: v.string(),
-        amount: v.string(),
-      })
-    ),
-    poolDepth: v.array(
-      v.object({
-        tick: v.string(),
-        liquidity: v.string(),
-        price: v.string(),
-      })
-    ),
-    holders: v.array(
-      v.object({
-        holder: v.string(),
-        balance: v.string(),
-        day: v.string(),
-      })
-    ),
-    poolVolume: v.array(
-      v.object({
-        pool: v.string(),
-        swap_count_1d: v.string(),
-        swap_count_7d: v.string(),
-        token0: v.string(),
-        token1: v.string(),
-        total_volume_1d: v.string(),
-        total_volume_7d: v.string(),
-      })
-    ),
-    poolSwaps: v.array(
-      v.object({
-        pool: v.string(),
-        amount0: v.string(),
-        amount1: v.string(),
-        sender: v.string(),
-        token0: v.string(),
-        token1: v.string(),
-        time: v.string(),
-        txHash: v.string(),
-        type: v.string()
       })
     ),
     vaultsApy: v.array(
@@ -701,11 +609,6 @@ export const StatsSchema = v.pipe(
   }),
   v.transform((value) => ({
     totalBoldSupply: value.total_bold_supply,
-    totalDebtPending: value.total_debt_pending,
-    totalCollValue: value.total_coll_value,
-    totalSpDeposits: value.total_sp_deposits,
-    totalValueLocked: value.total_value_locked,
-    totalVaultTVL: value.total_vault_tvl,
     totalReserves: value.total_reserve,
     reserveAssets: value.reserves_assets.map((r) => {
       return {
@@ -724,104 +627,12 @@ export const StatsSchema = v.pipe(
         chain: s.chain,
       };
     }),
-    maxSpApy: value.max_sp_apy,
     historicalSupply: value.day_supply.map((dailyObj) => {
       return {
         day: dailyObj.day,
         holders: dailyObj.holders,
         supply: dailyObj.supply,
       };
-    }),
-    historicalGlobalCR: value.collateral_ratio.map((dailyObj) => {
-      return {
-        day: dailyObj.time,
-        collateral_ratio: dailyObj.avg_cr,
-      };
-    }),
-    branch: Object.fromEntries(
-      Object.entries(value.branch).map(([symbol, branch]) => {
-        symbol = symbol.toUpperCase();
-        return [
-          symbol,
-          {
-            collActive: branch.coll_active,
-            collDefault: branch.coll_default,
-            collPrice: branch.coll_price,
-            spDeposits: branch.sp_deposits,
-            interestAccrual1y: branch.interest_accrual_1y,
-            interestPending: branch.interest_pending,
-            totalDebt: branch.total_debt,
-            batchManagementFeesPending: branch.batch_management_fees_pending,
-            debtPending: branch.debt_pending,
-            collValue: branch.coll_value,
-            valueLocked: branch.value_locked,
-            spApy: branch.sp_apy,
-            apyAvg: branch.apy_avg,
-            historicalCR: branch.historical_cr.map((dailyObj) => {
-              return {
-                day: dailyObj.time,
-                collateral_ratio: dailyObj.collateral_ratio,
-              };
-            }),
-          },
-        ];
-      })
-    ),
-    troves: value.troves.map((trove) => {
-      return {
-        owner: trove.owner,
-        troveId: trove.troveId,
-        collateralAsset: trove.collateralAsset,
-        collateral: trove.collateral,
-        debt: trove.debt,
-        cr: trove.cr,
-      };
-    }),
-    spDeposits: value.spDeposits.map((deposit) => {
-      return {
-        depositor: deposit.depositor,
-        time: deposit.time,
-        collateralAsset: deposit.collateral,
-        amount: deposit.amount
-      };
-    }),
-    poolDepth: value.poolDepth.map((tick) => {
-      return {
-        tick: tick.tick,
-        liquidity: tick.liquidity,
-        price: tick.price,
-      };
-    }),
-    holders: value.holders.map((h) => {
-      return {
-        holder: h.holder,
-        balance: h.balance,
-        lastUpdate: h.day,
-      };
-    }),
-    poolVolume: value.poolVolume.map((v) => {
-      return {
-        pool: v.pool,
-        count1d: v.swap_count_1d,
-        count7d: v.swap_count_7d,
-        token0: v.token0,
-        token1: v.token1,
-        volume1d: v.total_volume_1d,
-        volume7d: v.total_volume_7d
-      }
-    }),
-    poolSwaps: value.poolSwaps.map((s) => {
-      return {
-        pool: s.pool,
-        amount0: s.amount0,
-        amount1: s.amount1,
-        sender: s.sender,
-        token0: s.token0,
-        token1: s.token1,
-        time: s.time,
-        txHash: s.txHash,
-        type: s.type
-      }
     }),
     vaultsApy: value.vaultsApy.map((apy) => {
       return {
@@ -888,8 +699,6 @@ export function useDiffs() {
   });
 }
 
-import stats from "../../../docs/katana.json";
-
 export function useLiquityStats() {
   const { chainConfig } = useChainConfig();
 
@@ -899,9 +708,9 @@ export function useLiquityStats() {
       if (!chainConfig.STATS_URL) {
         throw new Error("config.STATS_URL is not defined");
       }
-      // const response = await fetch(chainConfig.STATS_URL);
-      // const json = await response.json();
-      return v.parse(StatsSchema, stats);
+      const response = await fetch(chainConfig.STATS_URL);
+      const json = await response.json();
+      return v.parse(StatsSchema, json);
     },
     enabled: Boolean(chainConfig.STATS_URL),
   });
