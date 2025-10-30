@@ -63,12 +63,12 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_WHITELIST: "0x788DbB1888a50e97837b9D06Fd70db107b082A12",
     CONTRACT_CONVERTER: "0x0dd50a98654ADdEB48287C7e8301C6640d050649",
     VAULTS: {
-      WETH: {
+      USDC: {
         name: "Grizzly",
-        outputSymbol: "sWETH",
-        asset: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        address: "0xcF9273BA04b875F94E4A9D8914bbD6b3C1f08EDb",
-        inputDecimals: 18,
+        outputSymbol: "sUSDC",
+        asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        address: "0x52Aef3ea0D3F93766D255A1bb0aA7F1C4885E622",
+        inputDecimals: 6,
       },
     },
     TOKENS: {

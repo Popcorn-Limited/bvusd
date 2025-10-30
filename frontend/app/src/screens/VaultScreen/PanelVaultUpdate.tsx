@@ -21,7 +21,7 @@ import { WhitelistModal } from "../HomeScreen/WhitelistModal";
 import { useModal } from "@/src/services/ModalService";
 import { useChainId } from "wagmi";
 import { CHAINS, Vault } from "@/src/config/chains";
-import { zeroAddress } from "viem";
+import { Address, zeroAddress } from "viem";
 
 export const BTC_SYMBOLS = ["nBTC", "bgBTC"] as const;
 
@@ -53,7 +53,7 @@ export async function getNextWithdrawalDate(date?: number): Promise<{ days: numb
 type ValueUpdateMode = "add" | "remove";
 
 
-export function PanelVaultUpdate({ requestBalance, vaultInput, vaultOutput }: { requestBalance: RequestBalance, vaultInput: string, vaultOutput: string }) {
+export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vaultOutput, decimals }: { decimals: number, requestBalance: RequestBalance, vaultAddress: Address, vaultInput: string, vaultOutput: string }) {
   const chain = useChainId();
   const account = useAccount();
   const txFlow = useTransactionFlow();
@@ -70,8 +70,8 @@ export function PanelVaultUpdate({ requestBalance, vaultInput, vaultOutput }: { 
   const [availableAssets, setAvailableAssets] = useState<Token["symbol"][]>([tokenSymbol]);
 
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
-  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
-
+  // const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
+  const isWhitelisted = true
   useEffect(() => {
     // Initial call
     getNextWithdrawalDate().then(setWithdrawalDate);
@@ -100,16 +100,19 @@ export function PanelVaultUpdate({ requestBalance, vaultInput, vaultOutput }: { 
   const parsedValue = parseInputFloatWithDecimals(
     value,
     // @ts-ignore
-    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : BTC_SYMBOLS.includes(inputSymbol) ? 8 : 18,
+    decimals,
   );
 
-  const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
-  
+  console.log("H", vaultAddress, vaultInput, vaultOutput, parsedValue[0].toString());
+
+  const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, decimals, slippage: 50 });
+
   const outputAmount = chain === 1 ? parsedValue : parseInputFloatWithDecimals(
     valOut,
     // @ts-ignore
-    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : BTC_SYMBOLS.includes(inputSymbol) ? 8 : 18,
+    decimals,
   );
+  console.log(valOut);
 
   const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
 
@@ -280,8 +283,9 @@ export function PanelVaultUpdate({ requestBalance, vaultInput, vaultOutput }: { 
                 mode: mode,
                 outputAmount: outputAmount,
                 amount: parsedValue,
-                inputToken: inputSymbol as "bvUSD" | "sbvUSD" | "USDC" | "USDT",
-                outputToken: outputSymbol as "bvUSD" | "sbvUSD",
+                inputToken: inputSymbol as TokenSymbol, 
+                outputToken: outputSymbol as TokenSymbol,
+                vault: vaultAddress,
                 slippage: 50,
                 chainId: chain,
               });

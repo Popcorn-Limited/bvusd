@@ -31,16 +31,13 @@ export default function useEnsoForecast({
   const [status, setStatus] = useState<EnsoForecast["status"]>("idle");
   const { chainConfig } = useChainConfig();
 
-  const inputAddress =
-    inputSymbol === "bvUSD" || inputSymbol === "USDC" || inputSymbol === "USDT"
-      ? getProtocolContract(chainConfig, inputSymbol).address
-      : chainConfig.VAULTS[inputSymbol]?.asset ??
-        chainConfig.VAULTS[outputSymbol]?.asset;
-  const outputAddress =
-    outputSymbol === "sbvUSD"
-      ? getProtocolContract(chainConfig, outputSymbol).address
-      : chainConfig.VAULTS[inputSymbol]?.address ??
-        chainConfig.VAULTS[outputSymbol]?.asset;
+  const getTokenAddress = (symbol: string) : Address => {
+    return symbol === "bvUSD"
+      ? getProtocolContract(chainConfig, "BoldToken").address
+      : symbol === "sbvUSD"
+      ? getProtocolContract(chainConfig, "Vault").address
+      : chainConfig.TOKENS[symbol]?.address?? null
+  }
 
   useEffect(() => {
     if (!inputValue || inputValue === "0" || !account) {
@@ -51,16 +48,24 @@ export default function useEnsoForecast({
 
     const timeoutId = setTimeout(() => {
       setStatus("loading");
-      getOutputValue({ chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage, decimals })
-        .then(res => {
-          setValue(res.value)
-          setStatus(res.status)
-        });
+      getOutputValue({
+        chainConfig,
+        inputValue,
+        inputAddress: getTokenAddress(inputSymbol),
+        outputAddress: getTokenAddress(outputSymbol),
+        account,
+        slippage,
+        decimals,
+      }).then((res) => {
+        setValue(res.value);
+        setStatus(res.status);
+      });
     }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [inputValue, inputSymbol, outputSymbol, account, slippage]);
 
+  console.log("V", value);
   return {
     value,
     status,

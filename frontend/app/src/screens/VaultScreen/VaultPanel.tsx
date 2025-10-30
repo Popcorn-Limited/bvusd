@@ -130,6 +130,8 @@ export function VaultPanel({
               }}
             >
               <PanelVaultUpdate
+                decimals={vault.inputDecimals}
+                vaultAddress={vaultAddress}
                 vaultInput={symbol}
                 vaultOutput={vault?.outputSymbol ?? "sbvUSD"}
                 requestBalance={(requestBalance.data as RequestBalance)

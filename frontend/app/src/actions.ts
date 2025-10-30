@@ -19,7 +19,6 @@ interface EnsoRouteProps {
   inputValue: string;
   inputAddress: string;
   outputAddress: string;
-  outputSymbol: Token["symbol"];
   decimals: number;
   account: Address;
   slippage?: number;
@@ -30,7 +29,6 @@ export async function getOutputValue({
   inputValue,
   inputAddress,
   outputAddress,
-  outputSymbol,
   account,
   slippage = 50,
   decimals,
