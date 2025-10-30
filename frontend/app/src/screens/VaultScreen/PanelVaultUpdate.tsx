@@ -8,7 +8,14 @@ import { parseInputFloatWithDecimals } from "@/src/form-utils";
 import { fmtnum } from "@/src/formatting";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
-import { Button, Dropdown, InputField, Tabs, TextButton, TokenIcon } from "@liquity2/uikit";
+import {
+  Button,
+  Dropdown,
+  InputField,
+  Tabs,
+  TextButton,
+  TokenIcon,
+} from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useEffect, useState } from "react";
 import { STABLE_SYMBOLS } from "../BuyScreen/PanelConvert";
@@ -25,19 +32,31 @@ import { Address, zeroAddress } from "viem";
 
 export const BTC_SYMBOLS = ["nBTC", "bgBTC"] as const;
 
-export async function getNextWithdrawalDate(date?: number): Promise<{ days: number, hours: number, minutes: number, seconds: number, timeDiff: number }> {
+export async function getNextWithdrawalDate(
+  date?: number
+): Promise<{
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  timeDiff: number;
+}> {
   // Get current date in CET timezone
   const now = new Date();
 
   // Create a date for the first day of next month at 12:00 CET
-  const targetDate = date ? new Date(date) : new Date(now.getFullYear(), now.getMonth() + 1, 1, 12, 0, 0);
+  const targetDate = date
+    ? new Date(date)
+    : new Date(now.getFullYear(), now.getMonth() + 1, 1, 12, 0, 0);
 
   // Calculate time difference in milliseconds
   const timeDiff = targetDate.getTime() - now.getTime();
 
   // Convert to days, hours, minutes, seconds
   const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const hours = Math.floor(
+    (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
   const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
@@ -46,14 +65,25 @@ export async function getNextWithdrawalDate(date?: number): Promise<{ days: numb
     hours,
     minutes,
     seconds,
-    timeDiff
+    timeDiff,
   };
 }
 
 type ValueUpdateMode = "add" | "remove";
 
-
-export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vaultOutput, decimals }: { decimals: number, requestBalance: RequestBalance, vaultAddress: Address, vaultInput: string, vaultOutput: string }) {
+export function PanelVaultUpdate({
+  requestBalance,
+  vaultAddress,
+  vaultInput,
+  vaultOutput,
+  decimals,
+}: {
+  decimals: number;
+  requestBalance: RequestBalance;
+  vaultAddress: Address;
+  vaultInput: string;
+  vaultOutput: string;
+}) {
   const chain = useChainId();
   const account = useAccount();
   const txFlow = useTransactionFlow();
@@ -63,15 +93,24 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
 
   const [mode, setMode] = useState<ValueUpdateMode>("add");
   const [inputSymbol, setInputSymbol] = useState<Token["symbol"]>(tokenSymbol);
-  const [outputSymbol, setOutputSymbol] = useState<Token["symbol"]>(vaultTokenSymbol);
+  const [outputSymbol, setOutputSymbol] =
+    useState<Token["symbol"]>(vaultTokenSymbol);
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
-  const [withdrawalDate, setWithdrawalDate] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
-  const [availableAssets, setAvailableAssets] = useState<Token["symbol"][]>([tokenSymbol]);
+  const [withdrawalDate, setWithdrawalDate] = useState<{
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
+  const [availableAssets, setAvailableAssets] = useState<Token["symbol"][]>([
+    tokenSymbol,
+  ]);
 
-  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
-  // const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
-  const isWhitelisted = true
+  const { setVisible: setModalVisibility, setContent: setModalContent } =
+    useModal();
+  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
+  
   useEffect(() => {
     // Initial call
     getNextWithdrawalDate().then(setWithdrawalDate);
@@ -85,7 +124,6 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
     return () => clearInterval(interval);
   }, []);
 
-
   useEffect(() => {
     if (chain === 747474) {
       setAvailableAssets([tokenSymbol, ...STABLE_SYMBOLS]);
@@ -93,43 +131,62 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
       setAvailableAssets([tokenSymbol]);
     }
     // @ts-ignore
-    if(BTC_SYMBOLS.includes(inputSymbol))
-      setAvailableAssets([tokenSymbol])
+    if (BTC_SYMBOLS.includes(inputSymbol)) setAvailableAssets([tokenSymbol]);
   }, [chain]);
 
   const parsedValue = parseInputFloatWithDecimals(
     value,
     // @ts-ignore
-    decimals,
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : decimals
   );
 
-  console.log("H", vaultAddress, vaultInput, vaultOutput, parsedValue[0].toString());
-
-  const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, decimals, slippage: 50 });
-
-  const outputAmount = chain === 1 ? parsedValue : parseInputFloatWithDecimals(
-    valOut,
-    // @ts-ignore
+  const { value: valOut, status: valOutStatus } = useEnsoForecast({
+    inputValue: parsedValue[0].toString(),
+    inputSymbol,
+    outputSymbol,
+    account: account.address,
     decimals,
-  );
-  console.log(valOut);
+    slippage: 50,
+  });
 
-  const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
+
+  const outputAmount =
+    chain === 1
+      ? parsedValue
+      : parseInputFloatWithDecimals(
+          valOut,
+          // @ts-ignore
+          decimals
+        );
+
+  const value_ =
+    focused || !parsedValue || dn.lte(parsedValue, 0)
+      ? value
+      : `${fmtnum(parsedValue, "full")}`;
 
   // reading all balances on both chains to not lead to errors on switching available assets
-  const balances = Object.fromEntries([inputSymbol, outputSymbol, ...STABLE_SYMBOLS].map((symbol) => ([
-    symbol,
-    // known collaterals are static so we can safely call this hook in a .map()
-    useBalance(account.address, symbol as Token["symbol"]),
-  ] as const)));
+  const balances = Object.fromEntries(
+    [inputSymbol, outputSymbol, ...STABLE_SYMBOLS].map(
+      (symbol) =>
+        [
+          symbol,
+          // known collaterals are static so we can safely call this hook in a .map()
+          useBalance(account.address, symbol as Token["symbol"]),
+        ] as const
+    )
+  );
 
-  const insufficientBalance = parsedValue && balances[inputSymbol].data && dn.lt(balances[inputSymbol].data, parsedValue);
+  const insufficientBalance =
+    parsedValue &&
+    balances[inputSymbol].data &&
+    dn.lt(balances[inputSymbol].data, parsedValue);
 
-  const allowSubmit = account.isConnected
-    && parsedValue
-    && dn.gt(parsedValue, 0)
-    && !insufficientBalance
-    && (chain === 1 || valOutStatus === "success")
+  const allowSubmit =
+    account.isConnected &&
+    parsedValue &&
+    dn.gt(parsedValue, 0) &&
+    !insufficientBalance &&
+    (chain === 1 || valOutStatus === "success");
 
   return (
     <div
@@ -145,47 +202,62 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
         field={
           <>
             <InputField
-              drawer={insufficientBalance
-                ? {
-                  mode: "error",
-                  message: `Insufficient balance. You have ${fmtnum(balances[inputSymbol].data ?? 0)} ${inputSymbol}.`,
-                }
-                : null
+              drawer={
+                insufficientBalance
+                  ? {
+                      mode: "error",
+                      message: `Insufficient balance. You have ${fmtnum(
+                        balances[inputSymbol].data ?? 0
+                      )} ${inputSymbol}.`,
+                    }
+                  : null
               }
-              contextual={mode === "add" ?
-                <Dropdown
-                  items={
-                    availableAssets.map(symbol => ({
+              contextual={
+                mode === "add" ? (
+                  <Dropdown
+                    items={availableAssets.map((symbol) => ({
                       icon: <TokenIcon symbol={symbol} />,
                       label: symbol,
                       value: account.isConnected
                         ? fmtnum(balances[symbol]?.data ?? 0)
                         : "−",
-                    }))
-                  }
-                  menuPlacement="end"
-                  menuWidth={300}
-                  onSelect={(index) => setInputSymbol(availableAssets[index] as Token["symbol"])}
-                  // @ts-ignore
-                  selected={availableAssets.indexOf(inputSymbol)}
-                />
-                : <InputTokenBadge
-                  background={false}
-                  icon={<TokenIcon symbol={inputSymbol as TokenSymbol} />}
-                  label={inputSymbol}
-                />
+                    }))}
+                    menuPlacement="end"
+                    menuWidth={300}
+                    onSelect={(index) =>
+                      setInputSymbol(availableAssets[index] as Token["symbol"])
+                    }
+                    // @ts-ignore
+                    selected={availableAssets.indexOf(inputSymbol)}
+                  />
+                ) : (
+                  <InputTokenBadge
+                    background={false}
+                    icon={<TokenIcon symbol={inputSymbol as TokenSymbol} />}
+                    label={inputSymbol}
+                  />
+                )
               }
               id="input-deposit-change"
               label={{
-                start: mode === "add"
-                  ? content.earnScreen.depositPanel.label
-                  : content.earnScreen.withdrawPanel.label,
+                start:
+                  mode === "add"
+                    ? content.earnScreen.depositPanel.label
+                    : content.earnScreen.withdrawPanel.label,
                 end: (
                   <Tabs
                     compact
                     items={[
-                      { label: "Deposit", panelId: "panel-deposit", tabId: "tab-deposit" },
-                      { label: "Withdraw", panelId: "panel-withdraw", tabId: "tab-withdraw" },
+                      {
+                        label: "Deposit",
+                        panelId: "panel-deposit",
+                        tabId: "tab-deposit",
+                      },
+                      {
+                        label: "Withdraw",
+                        panelId: "panel-withdraw",
+                        tabId: "tab-withdraw",
+                      },
                     ]}
                     onSelect={(index, { origin, event }) => {
                       setMode(index === 1 ? "remove" : "add");
@@ -193,8 +265,7 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
                       if (index === 1) {
                         setInputSymbol(vaultTokenSymbol as TokenSymbol);
                         setOutputSymbol(tokenSymbol as TokenSymbol);
-                      }
-                      else {
+                      } else {
                         setInputSymbol(tokenSymbol as TokenSymbol);
                         setOutputSymbol(vaultTokenSymbol as TokenSymbol);
                       }
@@ -205,7 +276,7 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
                     }}
                     selected={mode === "remove" ? 1 : 0}
                   />
-                )
+                ),
               }}
               labelHeight={32}
               onFocus={() => setFocused(true)}
@@ -214,30 +285,64 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
               value={value_}
               placeholder="0.00"
               secondary={{
-                start: mode === "add"
-                  ? <EnsoPreview value={chain === 1 ? value_ : valOut} status={chain === 1 ? "success" : valOutStatus} outputSymbol={outputSymbol} />
-                  : <EnsoPreview value={value_ || "0"} status={"success"} outputSymbol={outputSymbol} />,
+                start:
+                  mode === "add" ? (
+                    <EnsoPreview
+                      value={chain === 1 ? value_ : valOut}
+                      status={chain === 1 ? "success" : valOutStatus}
+                      outputSymbol={outputSymbol}
+                    />
+                  ) : (
+                    <EnsoPreview
+                      value={value_ || "0"}
+                      status={"success"}
+                      outputSymbol={outputSymbol}
+                    />
+                  ),
                 end: balances[inputSymbol].data && (
                   <TextButton
-                    label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
-                    onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
+                    label={
+                      dn.gt(balances[inputSymbol].data, 0)
+                        ? `Max ${fmtnum(
+                            balances[inputSymbol].data
+                          )} ${inputSymbol}`
+                        : `Max 0.00 ${inputSymbol}`
+                    }
+                    onClick={() =>
+                      setValue(dn.toString(balances[inputSymbol].data))
+                    }
                   />
-                )
+                ),
               }}
             />
-            <span className={css({ display: "flex", alignItems: "center", gap: 4, color: "contentAlt2", fontSize: "14px" })}>
+            <span
+              className={css({
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                color: "contentAlt2",
+                fontSize: "14px",
+              })}
+            >
               <p>Built with </p>
-              <img src="/icons/enso-gray.svg" alt="Enso" width={14} height={14} className={css({ color: "contentAlt2" })} />
+              <img
+                src="/icons/enso-gray.svg"
+                alt="Enso"
+                width={14}
+                height={14}
+                className={css({ color: "contentAlt2" })}
+              />
               <p>Enso</p>
             </span>
           </>
         }
       />
 
-
-      {mode === "remove" && requestBalance && dn.gt(requestBalance.claimableAssets, 0) &&
-        <ClaimAssets requestBalance={requestBalance} />
-      }
+      {mode === "remove" &&
+        requestBalance &&
+        dn.gt(requestBalance.claimableAssets, 0) && (
+          <ClaimAssets requestBalance={requestBalance} />
+        )}
 
       <div
         style={{
@@ -248,18 +353,22 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
           width: "100%",
         }}
       >
-        {mode === "remove" &&
-          <p className={css({
-            color: "content",
-            fontSize: "16px",
-            textAlign: "center",
-          })}>
-            Withdrawals requests will be processed every 30 days.
-            Next withdrawals will be processed in {withdrawalDate.days} days, {withdrawalDate.hours} hours, {withdrawalDate.minutes} minutes, {withdrawalDate.seconds} seconds.
+        {mode === "remove" && (
+          <p
+            className={css({
+              color: "content",
+              fontSize: "16px",
+              textAlign: "center",
+            })}
+          >
+            Withdrawals requests will be processed every 30 days. Next
+            withdrawals will be processed in {withdrawalDate.days} days,{" "}
+            {withdrawalDate.hours} hours, {withdrawalDate.minutes} minutes,{" "}
+            {withdrawalDate.seconds} seconds.
           </p>
-        }
+        )}
         <ConnectWarningBox />
-        {isWhitelisted ?
+        {isWhitelisted ? (
           <Button
             disabled={!allowSubmit}
             label={content.earnScreen.depositPanel.action}
@@ -274,16 +383,15 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
 
               txFlow.start({
                 flowId: "vaultUpdate",
-                backLink: [
-                  `/earn`,
-                  "Back to editing",
-                ],
+                backLink: [`/earn`, "Back to editing"],
                 successLink: ["/", "Go to the home page"],
-                successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"} has been processed successfully.`,
+                successMessage: `Your ${
+                  mode === "add" ? "deposit" : "withdrawal request"
+                } has been processed successfully.`,
                 mode: mode,
                 outputAmount: outputAmount,
                 amount: parsedValue,
-                inputToken: inputSymbol as TokenSymbol, 
+                inputToken: inputSymbol as TokenSymbol,
                 outputToken: outputSymbol as TokenSymbol,
                 vault: vaultAddress,
                 slippage: 50,
@@ -291,7 +399,8 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
               });
             }}
           />
-          : <Button
+        ) : (
+          <Button
             label="Join the whitelist"
             mode="primary"
             size="medium"
@@ -302,7 +411,7 @@ export function PanelVaultUpdate({ requestBalance, vaultAddress, vaultInput, vau
               setModalVisibility(true);
             }}
           />
-        }
+        )}
       </div>
     </div>
   );

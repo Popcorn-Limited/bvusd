@@ -47,6 +47,7 @@ export function VaultPanel({
 
   const vaultAddress = vault?.address?? getProtocolContract(chainConfig, "Vault").address;
   const vaultName = vault?.name?? "sbvUSD";
+  const vaultDecimals = vault?.inputDecimals?? 18;
 
   const account = useAccount();
   const vaultPosition = useVaultPosition(
@@ -61,10 +62,10 @@ export function VaultPanel({
     args: [account.address ?? zeroAddress],
     query: {
       select: (data) => ({
-        pendingShares: dnumOrNull(data.pendingShares, vault.inputDecimals),
+        pendingShares: dnumOrNull(data.pendingShares, vaultDecimals),
         requestTime: Number(data.requestTime),
-        claimableShares: dnumOrNull(data.claimableShares, vault.inputDecimals),
-        claimableAssets: dnumOrNull(data.claimableAssets, vault.inputDecimals),
+        claimableShares: dnumOrNull(data.claimableShares, vaultDecimals),
+        claimableAssets: dnumOrNull(data.claimableAssets, vaultDecimals),
       }),
     },
   });
@@ -130,7 +131,7 @@ export function VaultPanel({
               }}
             >
               <PanelVaultUpdate
-                decimals={vault.inputDecimals}
+                decimals={vaultDecimals}
                 vaultAddress={vaultAddress}
                 vaultInput={symbol}
                 vaultOutput={vault?.outputSymbol ?? "sbvUSD"}

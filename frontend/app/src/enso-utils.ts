@@ -65,7 +65,6 @@ export default function useEnsoForecast({
     return () => clearTimeout(timeoutId);
   }, [inputValue, inputSymbol, outputSymbol, account, slippage]);
 
-  console.log("V", value);
   return {
     value,
     status,

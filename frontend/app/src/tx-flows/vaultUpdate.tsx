@@ -56,7 +56,6 @@ export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
 
     Details({ request }) {
       const { amount, outputAmount, inputToken, outputToken } = request;
-
       return (
         <>
           <TransactionDetailsRow
