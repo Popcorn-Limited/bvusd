@@ -12,7 +12,7 @@ import { css } from "@/styled-system/css";
 import { a, useTransition } from "@react-spring/web";
 import { useEffect } from "react";
 import { Address, zeroAddress } from "viem";
-import { useReadContract, useSwitchChain } from "wagmi";
+import { useChainId, useReadContract, useSwitchChain } from "wagmi";
 import { PanelVaultUpdate } from "./PanelVaultUpdate";
 
 const EMPTY_REQUEST_BALANCE: RequestBalance = {
@@ -29,7 +29,7 @@ export function VaultPanel({
 }: {
   vault: Vault;
   symbol: string;
-  chainId?: number;
+  chainId: number;
 }) {
   const { switchChainAsync } = useSwitchChain();
 
@@ -43,17 +43,19 @@ export function VaultPanel({
     })();
   }, [chainId]);
 
+  const { chainConfig } = useChainConfig();
+
+  const vaultAddress = vault?.address?? getProtocolContract(chainConfig, "Vault").address;
+  const vaultName = vault?.name?? "sbvUSD";
+
   const account = useAccount();
   const vaultPosition = useVaultPosition(
     account.address ?? null,
-    vault?.address?? null,
+    vaultAddress
   );
-  const { chainConfig } = useChainConfig();
 
   const requestBalance = useReadContract({
-    address: vault?.address
-      ? vault?.address
-      : getProtocolContract(chainConfig, "Vault").address,
+    address: vaultAddress,
     abi: getProtocolContract(chainConfig, "Vault").abi,
     functionName: "getRequestBalance",
     args: [account.address ?? zeroAddress],
@@ -105,9 +107,10 @@ export function VaultPanel({
                 earnPosition={vaultPosition.data}
                 requestBalance={(requestBalance.data as RequestBalance)
                   ?? EMPTY_REQUEST_BALANCE}
-                chainId={chainId}
+                chainId={chainId ?? chainConfig.CHAIN_ID}
                 vaultAsset={symbol}
-                vault={vault}
+                vaultAddress={vaultAddress}
+                vaultName={vaultName}
               />
             </a.div>
           ),
@@ -127,8 +130,8 @@ export function VaultPanel({
               }}
             >
               <PanelVaultUpdate
-                vault={vault}
-                vaultAsset={symbol}
+                vaultInput={symbol}
+                vaultOutput={vault?.outputSymbol ?? "sbvUSD"}
                 requestBalance={(requestBalance.data as RequestBalance)
                   ?? EMPTY_REQUEST_BALANCE}
               />

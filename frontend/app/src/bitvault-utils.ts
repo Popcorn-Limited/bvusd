@@ -13,9 +13,9 @@ import * as v from "valibot";
 import { useChainConfig } from "./services/ChainConfigProvider";
 import { useConfig as useWagmiConfig } from "wagmi";
 import { readContracts } from "wagmi/actions";
-import { CHAINS } from "./config/chains";
+import { CHAINS, Vault } from "./config/chains";
 
-export function useVault({ chainId, vaultAddress, decimals = 18}: { chainId: number, vaultAddress?: Address, decimals?: number }) {
+export function useVault({ chainId, vaultAddress, vaultSymbol}: { chainId: number, vaultSymbol:string, vaultAddress: Address}) {
   const config = useWagmiConfig()
 
   return useQuery({
@@ -29,45 +29,39 @@ export function useVault({ chainId, vaultAddress, decimals = 18}: { chainId: num
       const vaultReads = await readContracts(config, {
         contracts: [
           {
-            address: vaultAddress?? CHAINS[chainId].CONTRACT_VAULT,
+            address:vaultAddress,
             abi: erc4626Abi,
             functionName: "totalAssets",
             chainId
           },
           {
-            address: vaultAddress?? CHAINS[chainId].CONTRACT_VAULT,
+            address:vaultAddress,
             abi: erc4626Abi,
             functionName: "totalSupply",
             chainId
           },
         ]
       });
+
+      const decimals = CHAINS[chainId].TOKENS[vaultSymbol]?.decimals ?? 18
+      
+      const dnZero = [BigInt(0), decimals] as dn.Dnum;
+      const dnOne = [BigInt(1), decimals] as dn.Dnum;
+
       const totalAssets = vaultReads[0].status === "success"
-      ? decimals === 8 
-      ? dnum8(vaultReads[0].result)
-      : decimals === 6
-      ? dnum6(vaultReads[0].result) 
-      : decimals === 18
-      ? dnum18(vaultReads[0].result)
-      : DNUM_0
-      : DNUM_0
+        ? [BigInt(vaultReads[0].result), decimals] as dn.Dnum
+        : dnZero
 
       const totalSupply = vaultReads[1].status === "success"
-      ? decimals === 8 
-      ? dnum8(vaultReads[1].result) 
-      : decimals === 6
-      ? dnum6(vaultReads[1].result) 
-      : decimals === 18
-      ? dnum18(vaultReads[1].result)
-      : DNUM_0
-      : DNUM_0
+        ? [BigInt(vaultReads[1].result), decimals] as dn.Dnum
+        : dnZero
 
       return {
         apr7d: vaultAddress ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
         apr30d: vaultAddress ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
         collateral,
         totalDeposited: totalAssets,
-        price: totalSupply > dn.from(0, 8) && totalAssets > dn.from(0,8) ? dn.div(totalAssets, totalSupply, 8) : dnum8(1),
+        price: totalSupply > dnZero && totalAssets > dnZero ? dn.div(totalAssets, totalSupply, decimals) : dnOne,
       };
     },
   });

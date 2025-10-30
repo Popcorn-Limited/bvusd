@@ -79,8 +79,9 @@ export function EarnPoolsListScreen() {
             }}
             linkToScreen={true}
             chainId={vault.chainId}
+            vaultAddress={vault.address}
+            vaultName={vault.name}
             vaultAsset={symbol}
-            vault={vault}
           />
         );
       })}

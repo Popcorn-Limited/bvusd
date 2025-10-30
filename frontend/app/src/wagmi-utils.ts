@@ -1,5 +1,5 @@
 import content from "@/src/content";
-import { dnum18, dnum6, dnum8 } from "@/src/dnum-utils";
+import { dnum18, dnum6, dnum8, dnumOrNull } from "@/src/dnum-utils";
 import { HOST, WALLET_CONNECT_PROJECT_ID } from "@/src/env";
 import { getBranch } from "@/src/liquity-utils";
 import { getSafeStatus } from "@/src/safe-utils";
@@ -15,6 +15,7 @@ import { createConfig, http, useAccount as useWagmiAccount, useEnsName, useReadC
 import { CHAINS } from "./config/chains";
 import { CONTRACT_TOKEN_LOCKER } from "./env";
 import { useChainConfig } from "./services/ChainConfigProvider";
+import * as dn from "dnum";
 
 export function useBalance(
   address: Address | undefined,
@@ -38,45 +39,25 @@ export function useBalance(
         if (symbol === "VCRAFT") {
           return "0xc6675024FD3A9D37EDF3fE421bbE8ec994D9c262";
         }
-        if (symbol === "WBTC") {
-          return "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c";
-        }
-        if (symbol === "USDT") {
-          return chainConfig.CONTRACT_USDT;
-        }
-        if (symbol === "USDC") {
-          return chainConfig.CONTRACT_USDC;
-        }
-        if (symbol === "bgBTC") {
-          return "0x8236a87084f8B84306f72007F36F2618A56344942";
-        }
-        if (symbol === "sbgBTC") {
-          return "0xCe3Ac66020555EdcE9b54dAD5EC1c35E0478B887";
-        }
-        if (symbol === "nBTC") {
-          return "0x876aac7648D79f87245E73316eB2D100e75F3Df1";
-        }
-        if (symbol === "snBTC") {
-          return "0x9d3575469d9df8b5d2f4d7703f682221c044397d";
-        }
         if (symbol === "LbvUSD") {
           return CONTRACT_TOKEN_LOCKER;
         } else {
           // @ts-ignore
-          return getBranch(symbol)?.contracts.CollToken.address ?? null;
+          return chainConfig.TOKENS[symbol]?.address ?? null
         }
       },
     )
     .otherwise(() => null);
 
-  // TODO -- find a better solution to parse the balance based on the token decimals
+  const decimals = chainConfig.TOKENS[token]?.decimals ?? 18;
+
   const tokenBalance = useReadContract({
     address: tokenAddress ?? undefined,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: address && [address],
     query: {
-      select: (value) => ["USDC", "USDT"].includes(token) ? dnum6(value ?? 0n) : dnum18(value ?? 0n),
+      select: (value) => ["USDC", "USDT"].includes(token) ? dnum6(value ?? 0n) : decimals ? [BigInt(value), decimals] as dn.Dnum : dnum18(value ?? 0n),
       enabled: Boolean(address),
     },
   });

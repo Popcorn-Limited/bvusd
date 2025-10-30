@@ -53,13 +53,13 @@ export async function getNextWithdrawalDate(date?: number): Promise<{ days: numb
 type ValueUpdateMode = "add" | "remove";
 
 
-export function PanelVaultUpdate({ requestBalance, vaultAsset, vault }: { requestBalance: RequestBalance, vaultAsset?: string, vault?: Vault }) {
+export function PanelVaultUpdate({ requestBalance, vaultInput, vaultOutput }: { requestBalance: RequestBalance, vaultInput: string, vaultOutput: string }) {
   const chain = useChainId();
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
-  const tokenSymbol = vaultAsset as TokenSymbol ?? "bvUSD" as TokenSymbol;
-  const vaultTokenSymbol = vault?.outputSymbol as TokenSymbol ?? "sbvUSD" as TokenSymbol;
+  const tokenSymbol = vaultInput as TokenSymbol;
+  const vaultTokenSymbol = vaultOutput as TokenSymbol;
 
   const [mode, setMode] = useState<ValueUpdateMode>("add");
   const [inputSymbol, setInputSymbol] = useState<Token["symbol"]>(tokenSymbol);

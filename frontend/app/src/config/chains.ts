@@ -1,5 +1,7 @@
+import { Address } from "viem";
 import eth from "../../../uikit/src/token-icons/eth.svg";
 import katana from "../../../uikit/src/token-icons/katana.svg";
+import hemi from "../../../uikit/src/token-icons/hemi.svg";
 
 type ChainIcons = {
   [name: string]: any;
@@ -8,6 +10,7 @@ type ChainIcons = {
 export const supportedChainIcons: ChainIcons = {
   katana: katana,
   ethereum: eth,
+  hemi,
 };
 
 export type Vault = {
@@ -18,7 +21,14 @@ export type Vault = {
   inputDecimals: number;
 };
 
+type Token = {
+  address: Address;
+  decimals: number;
+};
+
 type VaultMap = { [symbol: string]: Vault };
+
+type TokenMap = { [symbol: string]: Token };
 
 export type AppChainConfig = {
   CHAIN_ID: number;
@@ -33,11 +43,9 @@ export type AppChainConfig = {
   CONTRACT_BOLD_TOKEN: `0x${string}`;
   STATS_URL?: string;
   CONTRACT_CONVERTER?: `0x${string}`;
-  CONTRACT_USDC: `0x${string}`;
-  CONTRACT_USDT: `0x${string}`;
-  CONTRACT_WETH: `0x${string}`;
   CONTRACT_WHITELIST: `0x${string}`;
   VAULTS: VaultMap;
+  TOKENS: TokenMap;
   // ...all env contracts
 };
 
@@ -52,12 +60,38 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_BOLD_TOKEN: "0x9bc2f611fa2196e097496b722f1cbcdfe2303855",
     STATS_URL:
       "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
-    CONTRACT_USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    CONTRACT_USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-    CONTRACT_WETH: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
     CONTRACT_WHITELIST: "0x788DbB1888a50e97837b9D06Fd70db107b082A12",
     CONTRACT_CONVERTER: "0x0dd50a98654ADdEB48287C7e8301C6640d050649",
     VAULTS: {
+      WETH: {
+        name: "Grizzly",
+        outputSymbol: "sWETH",
+        asset: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        address: "0xcF9273BA04b875F94E4A9D8914bbD6b3C1f08EDb",
+        inputDecimals: 18,
+      },
+    },
+    TOKENS: {
+      WETH: {
+        address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        decimals: 18,
+      },
+      sWETH: {
+        address: "0xcF9273BA04b875F94E4A9D8914bbD6b3C1f08EDb",
+        decimals: 18,
+      },
+      WBTC: {
+        address: "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+        decimals: 8
+      },
+      USDC: {
+        address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+        decimals: 6,
+      }
     },
   },
   747474: {
@@ -72,11 +106,22 @@ export const CHAINS: Record<number, AppChainConfig> = {
     STATS_URL:
       "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
     CONTRACT_CONVERTER: "0x2e9fD409760D17b1ed277e000374698d531d19CE",
-    CONTRACT_USDC: "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
-    CONTRACT_USDT: "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
-    CONTRACT_WETH: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
     CONTRACT_WHITELIST: "0x83BBAA022Cca1295a975EC101a073C44Ea336f79",
     VAULTS: {},
+    TOKENS: {
+      USDC: {
+        address: "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
+        decimals: 6,
+      },
+      WETH: {
+        address: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
+        decimals: 18,
+      },
+    },
   },
   43111: {
     CHAIN_ID: 43111,
@@ -90,25 +135,52 @@ export const CHAINS: Record<number, AppChainConfig> = {
     STATS_URL:
       "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
     CONTRACT_CONVERTER: "0x2e9fD409760D17b1ed277e000374698d531d19CE",
-    CONTRACT_USDC: "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
-    CONTRACT_USDT: "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
-    CONTRACT_WETH: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
     CONTRACT_WHITELIST: "0x83BBAA022Cca1295a975EC101a073C44Ea336f79",
     VAULTS: {
-      "nBTC": {
+      nBTC: {
         name: "Nexus BTC Vault",
         outputSymbol: "snBTC",
         asset: "0xC93B7aae2802f57eb9D98E2B6a68217d75a0658c",
         address: "0x748973D83d499019840880f61B32F1f83B46f1A5",
         inputDecimals: 8,
       },
-      "bgBTC": {
+      bgBTC: {
         name: "Bitget BTC Vault",
         outputSymbol: "sbgBTC",
         asset: "0x5B6d6D09F425da2a816D1cDBabd049449Ae8d8e6",
         address: "0x0b8E088a35879f30a4d63F686B10adAD9cB3DBE1",
         inputDecimals: 8,
+      }
+    },
+    TOKENS: {
+      nBTC: {
+        address: "0xC93B7aae2802f57eb9D98E2B6a68217d75a0658c",
+        decimals: 8,
+      },
+      snBTC: {
+        address: "0x748973D83d499019840880f61B32F1f83B46f1A5",
+        decimals: 8,
+      },
+      bgBTC: {
+        address: "0x5B6d6D09F425da2a816D1cDBabd049449Ae8d8e6",
+        decimals: 8,
+      },
+      sbgBTC: {
+        address: "0x0b8E088a35879f30a4d63F686B10adAD9cB3DBE1",
+        decimals: 8,
+      },
+      USDC: {
+        address: "0xad11a8BEb98bbf61dbb1aa0F6d6F2ECD87b35afA",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0xbB0D083fb1be0A9f6157ec484b6C79E0A4e31C2e",
+        decimals: 6,
+      },
+      WETH: {
+        address: "0xEE7D8BCFb72bC1880D0Cf19822eB0A2e6577aB62",
+        decimals: 18,
       },
     },
-  }
+  },
 };

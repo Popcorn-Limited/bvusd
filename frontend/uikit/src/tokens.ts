@@ -99,6 +99,12 @@ export const snBTC: Token = {
   symbol: "snBTC" as const,
 } as const;
 
+export const sWETH: Token = {
+  icon: eth,
+  name: "sWETH",
+  symbol: "sWETH" as const,
+} as const;
+
 
 export const COLLATERALS: CollateralToken[] = [
   BVBTC
@@ -117,5 +123,6 @@ export const TOKENS_BY_SYMBOL = {
   bgBTC,
   sbgBTC,
   nBTC,
-  snBTC
+  snBTC,
+  sWETH
 } as const;

@@ -1,13 +1,13 @@
 "use client";
 
 import {
-    createContext,
-    useCallback,
-    useContext,
-    useMemo,
-    useState,
-    type ReactNode,
-  } from "react";
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { CHAINS } from "../config/chains";
 import * as v from "valibot";
 import { vAddress } from "@/src/valibot-utils";
@@ -18,29 +18,40 @@ export const ChainSchema = v.object({
   CHAIN_CURRENCY: v.object({
     name: v.string(),
     symbol: v.string(),
-    decimals: v.number()
+    decimals: v.number(),
   }),
   CHAIN_NAME: v.string(),
   CHAIN_BLOCK_EXPLORER: v.string(),
   CHAIN_CONTRACT_ENS_REGISTRY: v.optional(v.string()),
   CHAIN_CONTRACT_ENS_RESOLVER: v.optional(v.string()),
   CHAIN_CONTRACT_MULTICALL: v.optional(vAddress()),
-  CONTRACT_VAULT: vAddress(),
+  CONTRACT_VAULT: v.optional(vAddress()),
   ENSO_ROUTER: v.optional(vAddress()),
   CONTRACT_BOLD_TOKEN: vAddress(),
   STATS_URL: v.optional(v.string()),
   CONTRACT_CONVERTER: v.optional(vAddress()),
-  CONTRACT_USDC: vAddress(),
-  CONTRACT_USDT: vAddress(),
-  CONTRACT_WETH: vAddress(),
   CONTRACT_WHITELIST: vAddress(),
-  VAULTS: v.optional(v.record(v.string(), v.object({
-    outputSymbol: v.string(),
-    name: v.string(),
-    asset: vAddress(),
-    address: vAddress(),
-    inputDecimals: v.number()
-  })))
+  VAULTS: v.optional(
+    v.record(
+      v.string(),
+      v.object({
+        outputSymbol: v.string(),
+        name: v.string(),
+        asset: vAddress(),
+        address: vAddress(),
+        inputDecimals: v.number(),
+      })
+    )
+  ),
+  TOKENS: v.optional(
+    v.record(
+      v.string(),
+      v.object({
+        address: vAddress(),
+        decimals: v.number(),
+      })
+    )
+  ),
 });
 
 export type ChainEnv = v.InferOutput<typeof ChainSchema>;
@@ -51,7 +62,9 @@ function parseChain(id: number): ChainEnv {
   const parsed = v.safeParse(ChainSchema, raw);
   if (!parsed.success) {
     const detail = v.flatten(parsed.issues).nested;
-    throw new Error(`Invalid config for chain ${id}: ${JSON.stringify(detail)}`);
+    throw new Error(
+      `Invalid config for chain ${id}: ${JSON.stringify(detail)}`
+    );
   }
   return parsed.output;
 }
@@ -79,21 +92,32 @@ export function ChainConfigProvider({
 
   const setChainId = useCallback((id: number) => {
     const raw = CHAINS[id];
-    if (!raw) { 
+    if (!raw) {
       console.warn("Unknown chainId", id);
       // TODO unsupported chain
       return;
     }
     const parsed = v.safeParse(ChainSchema, raw);
     if (!parsed.success) {
-      console.error("Invalid CHAINS entry", id, v.flatten(parsed.issues).nested);
+      console.error(
+        "Invalid CHAINS entry",
+        id,
+        v.flatten(parsed.issues).nested
+      );
       return;
     }
     setConfig(parsed.output);
   }, []);
 
-  const value = useMemo(() => ({ chainConfig, setChainId }), [chainConfig, setChainId]);
-  return <ChainConfigContext.Provider value={value}>{children}</ChainConfigContext.Provider>;
+  const value = useMemo(
+    () => ({ chainConfig, setChainId }),
+    [chainConfig, setChainId]
+  );
+  return (
+    <ChainConfigContext.Provider value={value}>
+      {children}
+    </ChainConfigContext.Provider>
+  );
 }
 
 export function useChainConfig() {

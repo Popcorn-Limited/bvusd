@@ -10,23 +10,40 @@ import { CHAINS, Vault } from "@/src/config/chains";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 export function VaultPoolScreen({ asset }: { asset: string }) {
-  const vaultAsset = asset?? "bvUSD";
+  const vaultAsset = asset ?? "bvUSD";
 
-  const vaults = Object.values(CHAINS).reduce((acc, chain) => {
-    for (const [key, v] of Object.entries(chain.VAULTS)) {
-      acc[key] = { chainId: chain.CHAIN_ID, chainName: chain.CHAIN_NAME, ...v };
-    }
-    return acc;
-  }, {} as Record<string, { chainId: number; chainName: string } & Vault>);
-  
+  const vaults = Object.values(CHAINS).reduce(
+    (acc, chain) => {
+      for (const [key, v] of Object.entries(chain.VAULTS)) {
+        acc[key] = {
+          chainId: chain.CHAIN_ID,
+          chainName: chain.CHAIN_NAME,
+          ...v,
+        };
+      }
+      return acc;
+    },
+    {} as Record<string, { chainId: number; chainName: string } & Vault>
+  );
+
   const vault = vaults[vaultAsset];
+
+  const { chainConfig } = useChainConfig();
+
+  // switch to mainnet if it's a bvUSD vault
+  const chainId =
+    vault !== undefined
+      ? vault.chainId
+      : chainConfig.CHAIN_ID !== 1 && chainConfig.CHAIN_ID !== 747474
+      ? 1
+      : chainConfig.CHAIN_ID;
 
   return (
     <Screen
       ready={true}
       heading={{
         title:
-        vaultAsset === "bvUSD"
+          vaultAsset === "bvUSD"
             ? content.vaultScreen.headline
             : "Put your BTC to Work",
         subtitle: (
@@ -65,7 +82,7 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
         ),
       }}
     >
-      <VaultPanel vault={vault} symbol={vaultAsset} chainId={vault?.chainId}/>
+      <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} />
       <VaultFAQPanel />
     </Screen>
   );
