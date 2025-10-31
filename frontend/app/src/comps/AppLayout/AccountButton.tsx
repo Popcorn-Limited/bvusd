@@ -133,8 +133,8 @@ function ButtonConnected({
         }}>{<Image
           src={supportedChainIcons[chain.toLowerCase()]}
           alt={supportedChainIcons[chain.toLowerCase()]}
-          width={24}
-          height={24}
+          width={15}
+          height={15}
           style={{ borderRadius: "50%" }}
         />}</div>
       )}

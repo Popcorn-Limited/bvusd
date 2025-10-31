@@ -127,13 +127,14 @@ export function VaultPositionSummary({
                   flexDirection: "row",
                 })}
               >
-                {vaultName}
-                <Image
+                                <Image
                   src={supportedChainIcons[chainName.toLowerCase()]}
                   alt={chainName.toLowerCase()}
-                  width={25}
-                  style={{ borderRadius: "50%", marginLeft: "25px" }}
+                  width={11}
+                  style={{ borderRadius: "50%", marginRight: "10px" }}
                 />
+                {vaultName}
+
               </div>
 
               <div
