@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import eth from "../../../uikit/src/token-icons/eth.svg";
+import eth from "../../../uikit-gallery/src/InputField/icon-eth.svg";
 import katana from "../../../uikit/src/token-icons/katana.svg";
 import hemi from "../../../uikit/src/token-icons/hemi.svg";
 
@@ -63,26 +63,41 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_WHITELIST: "0x788DbB1888a50e97837b9D06Fd70db107b082A12",
     CONTRACT_CONVERTER: "0x0dd50a98654ADdEB48287C7e8301C6640d050649",
     VAULTS: {
-      WETH: {
-        name: "Grizzly",
-        outputSymbol: "sWETH",
-        asset: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        address: "0xcF9273BA04b875F94E4A9D8914bbD6b3C1f08EDb",
-        inputDecimals: 6,
+      bgBTC: {
+        name: "Bitget BTC Vault",
+        outputSymbol: "sbgBTC",
+        asset: "0x0520930F21b14Cafac7a27b102487beE7138a017",
+        address: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc",
+        inputDecimals: 8,
+      },
+      enzoBTC: {
+        name: "Enzo BTC Vault",
+        outputSymbol: "sEnzoBTC",
+        asset: "0x6A9A65B84843F5fD4aC9a0471C4fc11AFfFBce4a",
+        address: "0xdB06a9D79f5Ff660f611234c963c255E03Cb5554",
+        inputDecimals: 8,
       },
     },
     TOKENS: {
-      WETH: {
-        address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        decimals: 18,
+      bgBTC: {
+        address: "0x0520930F21b14Cafac7a27b102487beE7138a017",
+        decimals: 8,
       },
-      sWETH: {
-        address: "0xcF9273BA04b875F94E4A9D8914bbD6b3C1f08EDb",
-        decimals: 18,
+      sbgBTC: {
+        address: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc",
+        decimals: 8,
+      },
+      enzoBTC: {
+        address: "0x6A9A65B84843F5fD4aC9a0471C4fc11AFfFBce4a",
+        decimals: 8,
+      },
+      sEnzoBTC: {
+        address: "0xdB06a9D79f5Ff660f611234c963c255E03Cb5554",
+        decimals: 8,
       },
       WBTC: {
         address: "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
-        decimals: 8
+        decimals: 8,
       },
       USDC: {
         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -91,7 +106,7 @@ export const CHAINS: Record<number, AppChainConfig> = {
       USDT: {
         address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
         decimals: 6,
-      }
+      },
     },
   },
   747474: {
@@ -150,7 +165,7 @@ export const CHAINS: Record<number, AppChainConfig> = {
         asset: "0x5B6d6D09F425da2a816D1cDBabd049449Ae8d8e6",
         address: "0x0b8E088a35879f30a4d63F686B10adAD9cB3DBE1",
         inputDecimals: 8,
-      }
+      },
     },
     TOKENS: {
       nBTC: {
@@ -184,3 +199,27 @@ export const CHAINS: Record<number, AppChainConfig> = {
     },
   },
 };
+
+export function getAllVaults(symbol? : string) {
+  let vaultAssets = [];
+
+  const vaults = Object.values(CHAINS).reduce(
+    (acc, chain) => {
+      for (const [key, v] of Object.entries(chain.VAULTS)) {
+        if (!vaultAssets.includes(key)) vaultAssets.push(key);
+
+        acc[`${key}-${chain.CHAIN_ID}`] = {
+          chainId: chain.CHAIN_ID,
+          chainName: chain.CHAIN_NAME,
+          ...v,
+        };
+      }
+      return acc;
+    },
+    {} as Record<string, { chainId: number; chainName: string } & Vault>
+  );
+
+  const vaultsArray = Object.entries(vaults);
+
+  return { vaults, vaultAssets, vaultsArray };
+}

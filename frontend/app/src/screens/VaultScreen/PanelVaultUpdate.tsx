@@ -30,7 +30,7 @@ import { useChainId } from "wagmi";
 import { CHAINS, Vault } from "@/src/config/chains";
 import { Address, zeroAddress } from "viem";
 
-export const BTC_SYMBOLS = ["nBTC", "bgBTC"] as const;
+export const BTC_SYMBOLS = ["nBTC", "bgBTC", "enzoBTC"] as const;
 
 export async function getNextWithdrawalDate(
   date?: number

@@ -5,6 +5,7 @@ import type {
   Token,
   TokenSymbol,
 } from "@/src/types";
+import Image from "next/image";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
@@ -21,6 +22,7 @@ import {
 import * as dn from "dnum";
 import Link from "next/link";
 import { useVault } from "@/src/bitvault-utils";
+import { supportedChainIcons } from "@/src/config/chains";
 
 export function VaultPositionSummary({
   prevEarnPosition,
@@ -31,6 +33,7 @@ export function VaultPositionSummary({
   vaultAddress,
   vaultName,
   chainId,
+  chainName,
   txPreviewMode,
 }: {
   prevEarnPosition?: PositionEarn | null;
@@ -41,10 +44,10 @@ export function VaultPositionSummary({
   vaultAddress: Address;
   vaultName: string;
   chainId: number;
+  chainName: string;
   txPreviewMode?: boolean;
 }) {
   const { data } = useVault({ chainId, vaultAddress, vaultSymbol: vaultAsset });
-
   // leftover from old liquity component structure
   let share = dn.from(0, 18);
   let prevShare = dn.from(0, 18);
@@ -92,9 +95,8 @@ export function VaultPositionSummary({
             paddingBottom: 12,
           })}
           style={{
-            borderBottom: `1px solid var(--border-${
-              active ? "active" : "inactive"
-            })`,
+            borderBottom: `1px solid var(--border-${active ? "active" : "inactive"
+              })`,
           }}
         >
           <div
@@ -119,7 +121,21 @@ export function VaultPositionSummary({
                 flexDirection: "column",
               })}
             >
-              <div>{vaultName}</div>
+              <div
+                className={css({
+                  display: "flex",
+                  flexDirection: "row",
+                })}
+              >
+                {vaultName}
+                <Image
+                  src={supportedChainIcons[chainName.toLowerCase()]}
+                  alt={chainName.toLowerCase()}
+                  width={25}
+                  style={{ borderRadius: "50%", marginLeft: "25px" }}
+                />
+              </div>
+
               <div
                 className={css({
                   display: "flex",
@@ -127,9 +143,8 @@ export function VaultPositionSummary({
                   fontSize: 14,
                 })}
                 style={{
-                  color: `var(--fg-secondary-${
-                    active ? "active" : "inactive"
-                  })`,
+                  color: `var(--fg-secondary-${active ? "active" : "inactive"
+                    })`,
                 }}
               >
                 <div>TVL</div>
@@ -250,9 +265,8 @@ export function VaultPositionSummary({
             <div>
               <div
                 style={{
-                  color: `var(--fg-secondary-${
-                    active ? "active" : "inactive"
-                  })`,
+                  color: `var(--fg-secondary-${active ? "active" : "inactive"
+                    })`,
                 }}
               >
                 Deposit
@@ -268,9 +282,9 @@ export function VaultPositionSummary({
                   title={
                     active
                       ? `${fmtnum(
-                          dn.mul(earnPosition.deposit, data?.price),
-                          "full"
-                        )} ${vaultAsset}`
+                        dn.mul(earnPosition.deposit, data?.price),
+                        "full"
+                      )} ${vaultAsset}`
                       : undefined
                   }
                   className={css({
@@ -317,9 +331,8 @@ export function VaultPositionSummary({
             <div>
               <div
                 style={{
-                  color: `var(--fg-secondary-${
-                    active ? "active" : "inactive"
-                  })`,
+                  color: `var(--fg-secondary-${active ? "active" : "inactive"
+                    })`,
                 }}
               >
                 Pending Withdrawal
@@ -344,9 +357,8 @@ export function VaultPositionSummary({
               <div>
                 <div
                   style={{
-                    color: `var(--fg-secondary-${
-                      active ? "active" : "inactive"
-                    })`,
+                    color: `var(--fg-secondary-${active ? "active" : "inactive"
+                      })`,
                   }}
                 >
                   Pool share
@@ -379,7 +391,7 @@ export function VaultPositionSummary({
           {linkToScreen && (
             <OpenLink
               active={active}
-              path={`/vaults/${vaultAsset}`}
+              path={`/vaults/${vaultAsset}-${chainId}`}
               title={`${active ? "Manage" : "Deposit to"} ${vaultAsset} vault`}
             />
           )}

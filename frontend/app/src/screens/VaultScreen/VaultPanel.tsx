@@ -26,21 +26,26 @@ export function VaultPanel({
   vault,
   symbol,
   chainId,
+  chainName,
 }: {
   vault: Vault;
   symbol: string;
   chainId: number;
+  chainName: string;
 }) {
   const { switchChainAsync } = useSwitchChain();
+  const walletChainId = useChainId();
 
   useEffect(() => {
-    (async () => {
-      try {
-        await switchChainAsync({ chainId });
-      } catch (err) {
-        console.warn("Failed to switch chain:", err);
-      }
-    })();
+    if(chainId !== walletChainId) {
+      (async () => {
+        try {
+          await switchChainAsync({ chainId });
+        } catch (err) {
+          console.warn("Failed to switch chain:", err);
+        }
+      })();
+    }
   }, [chainId]);
 
   const { chainConfig } = useChainConfig();
@@ -110,6 +115,7 @@ export function VaultPanel({
                   ?? EMPTY_REQUEST_BALANCE}
                 chainId={chainId ?? chainConfig.CHAIN_ID}
                 vaultAsset={symbol}
+                chainName={chainName}
                 vaultAddress={vaultAddress}
                 vaultName={vaultName}
               />

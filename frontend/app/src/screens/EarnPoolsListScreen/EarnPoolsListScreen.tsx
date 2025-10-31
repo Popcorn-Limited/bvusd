@@ -10,21 +10,11 @@ import { useTransition } from "@react-spring/web";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
 import { DNUM_0 } from "@/src/dnum-utils";
 import { css } from "@/styled-system/css";
-import { CHAINS, Vault } from "@/src/config/chains";
+import { getAllVaults } from "@/src/config/chains";
 
 export function EarnPoolsListScreen() {
-  let vaultAssets = [];
+  const {vaults, vaultAssets, vaultsArray} = getAllVaults();
 
-  const vaults = Object.values(CHAINS).reduce((acc, chain) => {
-    for (const [key, v] of Object.entries(chain.VAULTS)) {
-      vaultAssets.push(key);
-      acc[key] = { chainId: chain.CHAIN_ID, chainName: chain.CHAIN_NAME, ...v };
-    }
-    return acc;
-  }, {} as Record<string, { chainId: number; chainName: string } & Vault>);
-
-  const vaultsObj = Object.entries(vaults);
-    
   const poolsTransition = useTransition(
     Object.entries(vaults).map(([symbol, vault]) => symbol),
     {
@@ -54,10 +44,10 @@ export function EarnPoolsListScreen() {
           >
             {content.vaultsHome.headline(
               <TokenIcon.Group>
-                {[...vaultAssets].map((symbol) => (
-                  <TokenIcon key={symbol} symbol={symbol as TokenSymbol} />
+                {[...vaultAssets].map((symbol) => {
+                  return (<TokenIcon key={"symbol"} symbol={symbol as TokenSymbol} />)
                   
-                ))}
+                })}
               </TokenIcon.Group>
             )}
           </div>
@@ -67,7 +57,7 @@ export function EarnPoolsListScreen() {
       width={67 * 8}
       gap={16}
     >
-      {vaultsObj.map(([symbol, vault]) => {
+      {vaultsArray.map(([symbol, vault]) => {
         return (
           <VaultPositionSummary
             earnPosition={null}
@@ -79,9 +69,10 @@ export function EarnPoolsListScreen() {
             }}
             linkToScreen={true}
             chainId={vault.chainId}
+            chainName={vault.chainName}
             vaultAddress={vault.address}
             vaultName={vault.name}
-            vaultAsset={symbol}
+            vaultAsset={symbol.split("-")[0]}
           />
         );
       })}

@@ -17,6 +17,8 @@ export type TokenSymbol =
   | "nBTC"
   | "snBTC"
   | "sWETH"
+  | "enzoBTC"
+  | "sEnzoBTC"
   
 export type Token = {
   icon: string;
