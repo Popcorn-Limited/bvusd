@@ -7,7 +7,7 @@ import eth from "./token-icons/eth.svg";
 import btcb from "./token-icons/btcb.svg";
 import usdt from "./token-icons/usdt.svg";
 import usdc from "./token-icons/usdc.svg";
-import bgbtc from "./token-icons/bitgetbtc.jpeg";
+import bgbtc from "./token-icons/bitgetbtc.svg";
 import enzobtc from "./token-icons/enzoBTC.svg";
 
 export type CollateralSymbol = "BVBTC";
