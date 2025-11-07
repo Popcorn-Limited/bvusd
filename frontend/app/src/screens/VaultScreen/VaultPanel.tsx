@@ -52,6 +52,7 @@ export function VaultPanel({
 
   const vaultAddress = vault?.address?? getProtocolContract(chainConfig, "Vault").address;
   const vaultName = vault?.name?? "sbvUSD";
+  const vaultSymbol = vault?.outputSymbol?? "sbvUSD";
   const vaultDecimals = vault?.inputDecimals?? 18;
 
   const account = useAccount();
@@ -59,7 +60,7 @@ export function VaultPanel({
     account.address ?? null,
     vaultAddress
   );
-  const vaultPrice = useVault({ chainId, vaultAddress, vaultSymbol: vaultName }).data?.price ?? dnumOrNull(1, vaultDecimals);
+  const vaultPrice = useVault({ chainId, vaultAddress, vaultSymbol }).data?.price ?? dnumOrNull(1, vaultDecimals);
 
   const requestBalance = useReadContract({
     address: vaultAddress,
@@ -119,6 +120,7 @@ export function VaultPanel({
                 chainName={chainName}
                 vaultAddress={vaultAddress}
                 vaultName={vaultName}
+                vaultSymbol={vaultSymbol}
               />
             </a.div>
           ),
@@ -142,7 +144,7 @@ export function VaultPanel({
                 vaultPrice={vaultPrice}
                 vaultAddress={vaultAddress}
                 vaultInput={symbol}
-                vaultOutput={vault?.outputSymbol ?? "sbvUSD"}
+                vaultOutput={vaultSymbol}
                 requestBalance={(requestBalance.data as RequestBalance)
                   ?? EMPTY_REQUEST_BALANCE}
               />

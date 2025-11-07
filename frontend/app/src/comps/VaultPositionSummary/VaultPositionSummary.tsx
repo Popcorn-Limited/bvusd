@@ -32,6 +32,7 @@ export function VaultPositionSummary({
   vaultAsset,
   vaultAddress,
   vaultName,
+  vaultSymbol,
   chainId,
   chainName,
   txPreviewMode,
@@ -43,11 +44,13 @@ export function VaultPositionSummary({
   vaultAsset: string;
   vaultAddress: Address;
   vaultName: string;
+  vaultSymbol: string;
   chainId: number;
   chainName: string;
   txPreviewMode?: boolean;
 }) {
-  const { data } = useVault({ chainId, vaultAddress, vaultSymbol: vaultName });
+  const { data } = useVault({ chainId, vaultAddress, vaultSymbol });
+
   // leftover from old liquity component structure
   let share = dn.from(0, 18);
   let prevShare = dn.from(0, 18);

@@ -72,6 +72,7 @@ export function EarnPoolsListScreen() {
             chainName={vault.chainName}
             vaultAddress={vault.address}
             vaultName={vault.name}
+            vaultSymbol={vault.outputSymbol}
             vaultAsset={symbol.split("-")[0]}
           />
         );

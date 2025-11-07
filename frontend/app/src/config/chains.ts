@@ -152,13 +152,6 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_CONVERTER: "0x2e9fD409760D17b1ed277e000374698d531d19CE",
     CONTRACT_WHITELIST: "0x83BBAA022Cca1295a975EC101a073C44Ea336f79",
     VAULTS: {
-      nBTC: {
-        name: "Nexus BTC Vault",
-        outputSymbol: "snBTC",
-        asset: "0xC93B7aae2802f57eb9D98E2B6a68217d75a0658c",
-        address: "0x748973D83d499019840880f61B32F1f83B46f1A5",
-        inputDecimals: 8,
-      },
       bgBTC: {
         name: "Bitget BTC Vault",
         outputSymbol: "sbgBTC",
