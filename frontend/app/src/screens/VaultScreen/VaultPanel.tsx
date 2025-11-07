@@ -59,7 +59,7 @@ export function VaultPanel({
     account.address ?? null,
     vaultAddress
   );
-  const vaultPrice = useVault({ chainId, vaultAddress, vaultSymbol: symbol }).data?.price ?? dnumOrNull(1, vaultDecimals);
+  const vaultPrice = useVault({ chainId, vaultAddress, vaultSymbol: vaultName }).data?.price ?? dnumOrNull(1, vaultDecimals);
 
   const requestBalance = useReadContract({
     address: vaultAddress,

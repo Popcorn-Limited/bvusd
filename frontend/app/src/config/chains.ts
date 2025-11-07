@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import eth from "../../../uikit/src/token-icons/eth3.svg";
+import eth from "../../../uikit/src/token-icons/eth2.svg";
 import katana from "../../../uikit/src/token-icons/katana.svg";
 import hemi from "../../../uikit/src/token-icons/hemi.svg";
 
