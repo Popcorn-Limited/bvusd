@@ -74,12 +74,14 @@ type ValueUpdateMode = "add" | "remove";
 export function PanelVaultUpdate({
   requestBalance,
   vaultAddress,
+  vaultPrice,
   vaultInput,
   vaultOutput,
   decimals,
 }: {
   decimals: number;
   requestBalance: RequestBalance;
+  vaultPrice: dn.Dnum;
   vaultAddress: Address;
   vaultInput: string;
   vaultOutput: string;
@@ -109,7 +111,7 @@ export function PanelVaultUpdate({
 
   const { setVisible: setModalVisibility, setContent: setModalContent } =
     useModal();
-  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
+  const isWhitelisted = true
   
   useEffect(() => {
     // Initial call
@@ -151,8 +153,8 @@ export function PanelVaultUpdate({
 
 
   const outputAmount =
-    chain === 1
-      ? parsedValue
+    chain === 43111
+      ? dn.mul(parsedValue, vaultPrice)
       : parseInputFloatWithDecimals(
           valOut,
           // @ts-ignore
@@ -186,7 +188,7 @@ export function PanelVaultUpdate({
     parsedValue &&
     dn.gt(parsedValue, 0) &&
     !insufficientBalance &&
-    (chain === 1 || valOutStatus === "success");
+    (chain === 43111 || valOutStatus === "success");
 
   return (
     <div
@@ -288,8 +290,8 @@ export function PanelVaultUpdate({
                 start:
                   mode === "add" ? (
                     <EnsoPreview
-                      value={chain === 1 ? value_ : valOut}
-                      status={chain === 1 ? "success" : valOutStatus}
+                      value={chain === 43111 ? fmtnum(outputAmount, decimals) : valOut}
+                      status={chain === 43111 ? "success" : valOutStatus}
                       outputSymbol={outputSymbol}
                     />
                   ) : (
