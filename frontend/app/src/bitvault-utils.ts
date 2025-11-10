@@ -6,7 +6,7 @@ import { bvUSD } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { dnum18, dnum6, dnum8, DNUM_0, dnumOrNull } from "./dnum-utils";
 import { StatsSchema, useLiquityStats } from "./liquity-utils";
-import { getBranchContract } from "./contracts";
+import { getBranchContract, getProtocolContract } from "./contracts";
 import { PositionEarn } from "./types";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import * as v from "valibot";
@@ -69,6 +69,8 @@ export function useVault({ chainId, vaultAddress, vaultSymbol}: { chainId: numbe
 
 export function useVaultPosition(
   account: null | Address,
+  decimals: number,
+  chainId: number,
   vaultAddress?: Address
 ): UseQueryResult<PositionEarn | null> {
   const { chainConfig } = useChainConfig();
@@ -79,12 +81,13 @@ export function useVaultPosition(
     functionName: "balanceOf",
     args: [account ?? zeroAddress],
     query: {
-      select: dnum18,
+      select: decimals === 18 ? dnum18 : decimals === 6 ? dnum6 : dnum8
     },
+    chainId
   });
 
   return useQuery({
-    queryKey: ["useVaultPosition", account],
+    queryKey: ["useVaultPosition", account, vaultAddress],
     queryFn: () => {
       return {
         type: "earn" as const,
@@ -136,4 +139,44 @@ export function useProtocolOwner(addressesRegistry: Address) {
   });
 
   return admin.data !== undefined ? admin.data[0] : undefined;
+}
+
+export function useVaultRequestPosition(
+  account: null | Address,
+  decimals: number,
+  chainId: number,
+  vaultAddress?: Address
+): UseQueryResult<PositionEarn | null> {
+  const { chainConfig } = useChainConfig();
+
+  const requestBalance = useReadContract({
+    address: vaultAddress,
+    abi: getProtocolContract(chainConfig, "Vault").abi,
+    functionName: "getRequestBalance",
+    args: [account ?? zeroAddress],
+    query: {
+      select: (data) => ({
+        pendingShares: dnumOrNull(Number(data.pendingShares) / 10 ** decimals, decimals),
+        requestTime: Number(data.requestTime),
+        claimableShares: dnumOrNull(Number(data.claimableShares) / 10 ** decimals, decimals),
+        claimableAssets: dnumOrNull(Number(data.claimableAssets) / 10 ** decimals, decimals),
+      }),
+    },
+    chainId
+  });
+
+  return useQuery({
+    queryKey: ["useVaultRequestPosition", account, vaultAddress],
+    queryFn: () => {
+      return {
+        type: "earn" as const,
+        owner: account,
+        pendingShares: requestBalance.data.pendingShares,
+        requestTime: requestBalance.data.requestTime,
+        claimableShares: requestBalance.data.claimableShares,
+        claimableAssets: requestBalance.data.claimableAssets,
+      };
+    },
+    enabled: requestBalance.status === "success",
+  });
 }

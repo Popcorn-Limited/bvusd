@@ -11,9 +11,32 @@ import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPosi
 import { DNUM_0 } from "@/src/dnum-utils";
 import { css } from "@/styled-system/css";
 import { getAllVaults } from "@/src/config/chains";
+import { useAccount } from "@/src/wagmi-utils";
+import { useVaultPosition, useVaultRequestPosition } from "@/src/bitvault-utils";
 
 export function EarnPoolsListScreen() {
-  const {vaults, vaultAssets, vaultsArray} = getAllVaults();
+  const account = useAccount();
+  const {vaults, vaultAssets, vaultsArray} = getAllVaults(account.address);
+
+  let vaultPositions = [];
+  let queries = vaultsArray.map(([, vault]) =>
+    useVaultPosition(account.address, vault.inputDecimals, vault.chainId, vault.address)
+  );
+
+  let allSuccess = queries.every(q => q.status === "success");
+
+  if(allSuccess)
+    vaultPositions = queries.map(q => q.data)
+
+  let vaultReqPositions = [];
+  queries = vaultsArray.map(([, vault]) =>
+    useVaultRequestPosition(account.address, vault.inputDecimals, vault.chainId, vault.address)
+  );
+
+  allSuccess = queries.every(q => q.status === "success");
+
+  if(allSuccess)
+    vaultReqPositions = queries.map(q => q.data)
 
   const poolsTransition = useTransition(
     Object.entries(vaults).map(([symbol, vault]) => symbol),
@@ -57,11 +80,11 @@ export function EarnPoolsListScreen() {
       width={67 * 8}
       gap={16}
     >
-      {vaultsArray.map(([symbol, vault]) => {
+      {vaultsArray.map(([symbol, vault], index) => {
         return (
           <VaultPositionSummary
-            earnPosition={null}
-            requestBalance={{
+            earnPosition={vaultPositions[index]?? null}
+            requestBalance={vaultReqPositions[index]?? {
               pendingShares: DNUM_0,
               requestTime: 0,
               claimableAssets: DNUM_0,

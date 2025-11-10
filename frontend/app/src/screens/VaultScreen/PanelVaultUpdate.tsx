@@ -23,7 +23,7 @@ import { css } from "@/styled-system/css";
 import ClaimAssets from "./ClaimAssets";
 import useEnsoForecast from "@/src/enso-utils";
 import EnsoPreview from "@/src/comps/EnsoPreview";
-import { useIsWhitelistedUser } from "@/src/bitvault-utils";
+import { useIsWhitelistedUser, useVault } from "@/src/bitvault-utils";
 import { WhitelistModal } from "../HomeScreen/WhitelistModal";
 import { useModal } from "@/src/services/ModalService";
 import { useChainId } from "wagmi";
@@ -111,7 +111,7 @@ export function PanelVaultUpdate({
 
   const { setVisible: setModalVisibility, setContent: setModalContent } =
     useModal();
-  const isWhitelisted = true
+  const isWhitelisted = vaultOutput === "sbvUSD" ? useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address) : true;
   
   useEffect(() => {
     // Initial call
@@ -151,8 +151,10 @@ export function PanelVaultUpdate({
     slippage: 50,
   });
 
-
   const outputAmount =
+    mode === "remove" 
+      ? dn.mul(parsedValue, vaultPrice)
+      :
     chain === 43111
       ? dn.mul(parsedValue, vaultPrice)
       : parseInputFloatWithDecimals(
@@ -188,7 +190,7 @@ export function PanelVaultUpdate({
     parsedValue &&
     dn.gt(parsedValue, 0) &&
     !insufficientBalance &&
-    (chain === 43111 || valOutStatus === "success");
+    (chain === 43111 || mode === "remove" ||valOutStatus === "success");
 
   return (
     <div
@@ -343,7 +345,7 @@ export function PanelVaultUpdate({
       {mode === "remove" &&
         requestBalance &&
         dn.gt(requestBalance.claimableAssets, 0) && (
-          <ClaimAssets requestBalance={requestBalance} />
+          <ClaimAssets chainId={chain} vaultAddress={vaultAddress} requestBalance={requestBalance} inputSymbol={vaultOutput} outputSymbol={vaultInput}/>
         )}
 
       <div

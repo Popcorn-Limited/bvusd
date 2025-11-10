@@ -88,15 +88,14 @@ export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
         ),
         async commit(ctx) {
           const { inputToken } = ctx.request;
-
           const inputTokenAddress = inputToken === "bvUSD" ? ctx.contractConfig.CONTRACT_BOLD_TOKEN : ctx.contractConfig.TOKENS[inputToken]?.address ?? null;
           return ctx.writeContract({
             address: inputTokenAddress,
             abi: erc20Abi,
             functionName: "approve",
             args: [
-              // @ts-ignore
-              STABLE_SYMBOLS.includes(inputToken) ? ctx.contractConfig.ENSO_ROUTER : ctx.request.vault,
+              // @ts-ignore - always use enso router except on hemi
+              ctx.request.mode === "add" ? ctx.contractConfig.ENSO_ROUTER?? ctx.request.vault: ctx.request.vault,
               ctx.preferredApproveMethod === "approve-infinite"
                 ? maxUint256 // infinite approval
                 : ctx.request.amount[0], // exact amount

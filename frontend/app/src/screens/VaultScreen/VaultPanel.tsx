@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { Address, zeroAddress } from "viem";
 import { useChainId, useReadContract, useSwitchChain } from "wagmi";
 import { PanelVaultUpdate } from "./PanelVaultUpdate";
+import { fmtnum } from "@/src/formatting";
 
 const EMPTY_REQUEST_BALANCE: RequestBalance = {
   pendingShares: DNUM_0,
@@ -58,7 +59,9 @@ export function VaultPanel({
   const account = useAccount();
   const vaultPosition = useVaultPosition(
     account.address ?? null,
-    vaultAddress
+    vaultDecimals,
+    chainId,
+    vaultAddress,
   );
   const vaultPrice = useVault({ chainId, vaultAddress, vaultSymbol }).data?.price ?? dnumOrNull(1, vaultDecimals);
 
@@ -69,13 +72,14 @@ export function VaultPanel({
     args: [account.address ?? zeroAddress],
     query: {
       select: (data) => ({
-        pendingShares: dnumOrNull(data.pendingShares, vaultDecimals),
+        pendingShares: dnumOrNull(Number(data.pendingShares) / 10 ** vaultDecimals, vaultDecimals),
         requestTime: Number(data.requestTime),
-        claimableShares: dnumOrNull(data.claimableShares, vaultDecimals),
-        claimableAssets: dnumOrNull(data.claimableAssets, vaultDecimals),
+        claimableShares: dnumOrNull(Number(data.claimableShares) / 10 ** vaultDecimals, vaultDecimals),
+        claimableAssets: dnumOrNull(Number(data.claimableAssets) / 10 ** vaultDecimals, vaultDecimals),
       }),
     },
   });
+
   const loadingState = requestBalance.isLoading || vaultPosition.status === "pending"
     ? "loading"
     : "success";

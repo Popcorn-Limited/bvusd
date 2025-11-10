@@ -24,8 +24,6 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
         ? 1
         : chainConfig.CHAIN_ID;
 
-  console.log(chainId);
-
   const chainName = vault !== undefined ? vault.chainName : chainConfig.CHAIN_NAME;
   return (
     <Screen

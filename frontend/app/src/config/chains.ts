@@ -62,6 +62,7 @@ export const CHAINS: Record<number, AppChainConfig> = {
       "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
     CONTRACT_WHITELIST: "0x788DbB1888a50e97837b9D06Fd70db107b082A12",
     CONTRACT_CONVERTER: "0x0dd50a98654ADdEB48287C7e8301C6640d050649",
+    ENSO_ROUTER: "0xF75584eF6673aD213a685a1B58Cc0330B8eA22Cf",
     VAULTS: {
       bgBTC: {
         name: "Bitget BTC Vault",
@@ -145,7 +146,6 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CHAIN_BLOCK_EXPLORER: "https://explorer.katanarpc.com/",
     CHAIN_CONTRACT_MULTICALL: "0xcA11bde05977b3631167028862bE2a173976CA11",
     CONTRACT_VAULT: "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
-    ENSO_ROUTER: "0x3067BDBa0e6628497d527bEF511c22DA8b32cA3F",
     CONTRACT_BOLD_TOKEN: "0x876aac7648D79f87245E73316eB2D100e75F3Df1",
     STATS_URL:
       "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
