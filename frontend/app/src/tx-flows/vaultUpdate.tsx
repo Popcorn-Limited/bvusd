@@ -95,7 +95,7 @@ export const vaultUpdate : FlowDeclaration<VaultUpdateRequest> = {
             functionName: "approve",
             args: [
               // @ts-ignore - always use enso router except on hemi
-              ctx.request.mode === "add" ? ctx.contractConfig.ENSO_ROUTER?? ctx.request.vault: ctx.request.vault,
+              ctx.request.mode === "add" && inputToken !== "bvUSD" ? ctx.contractConfig.ENSO_ROUTER?? ctx.request.vault: ctx.request.vault,
               ctx.preferredApproveMethod === "approve-infinite"
                 ? maxUint256 // infinite approval
                 : ctx.request.amount[0], // exact amount
