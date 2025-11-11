@@ -84,8 +84,9 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
             ? ctx.contractConfig.CONTRACT_BOLD_TOKEN
             : ctx.contractConfig.TOKENS[inputToken]?.address ?? null;
         const isVaultAsset =
+          inputToken === "bvUSD" ||
           inputTokenAddress.toLowerCase() ===
-          ctx.contractConfig.VAULTS[inputToken]?.asset.toLowerCase();
+            ctx.contractConfig.VAULTS[inputToken]?.asset.toLowerCase();
 
         return ctx.writeContract({
           address: inputTokenAddress,
