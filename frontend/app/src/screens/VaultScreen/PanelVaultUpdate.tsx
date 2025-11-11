@@ -385,9 +385,11 @@ export function PanelVaultUpdate({
                 return;
               }
 
+              const backLink = vaultInput === "bvUSD" ? "earn" : `/vaults/${vaultInput}-${chain}`
+
               txFlow.start({
                 flowId: "vaultUpdate",
-                backLink: [`/earn`, "Back to editing"],
+                backLink: [backLink, "Back to editing"],
                 successLink: ["/", "Go to the home page"],
                 successMessage: `Your ${
                   mode === "add" ? "deposit" : "withdrawal request"

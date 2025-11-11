@@ -7,14 +7,13 @@ import { getProtocolContract } from "@/src/contracts";
 import { dnum18, DNUM_0, dnumOrNull } from "@/src/dnum-utils";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
 import { RequestBalance } from "@/src/types";
-import { useAccount, useEnforceChain } from "@/src/wagmi-utils";
+import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
 import { a, useTransition } from "@react-spring/web";
 import { useEffect } from "react";
 import { Address, zeroAddress } from "viem";
 import { useChainId, useReadContract, useSwitchChain } from "wagmi";
 import { PanelVaultUpdate } from "./PanelVaultUpdate";
-import { fmtnum } from "@/src/formatting";
 
 const EMPTY_REQUEST_BALANCE: RequestBalance = {
   pendingShares: DNUM_0,
