@@ -385,8 +385,8 @@ export function PanelVaultUpdate({
                 return;
               }
 
-              const backLink = vaultInput === "bvUSD" ? "earn" : `/vaults/${vaultInput}-${chain}`
-
+              const backLink = vaultInput === "bvUSD" || vaultInput === "sbvUSD" ? "earn" : `/vaults/${vaultInput}-${chain}`
+              
               txFlow.start({
                 flowId: "vaultUpdate",
                 backLink: [backLink, "Back to editing"],

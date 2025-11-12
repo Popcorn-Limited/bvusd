@@ -130,7 +130,6 @@ export const convert: FlowDeclaration<ConvertRequest> = {
       Status: TransactionStatus,
 
       async commit(ctx) {
-        console.log("HERE");
         const ensoData = await getEnsoRoute({
           chainConfig: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
@@ -141,7 +140,6 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           decimals: 6,
         });
 
-        console.log({ensoData});
         return sendTransaction(ctx.wagmiConfig, {
           account: ctx.account,
           to: ensoData.tx.to,

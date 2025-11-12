@@ -80,13 +80,16 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       async commit(ctx) {
         const { inputToken, vault, mode } = ctx.request;
         const inputTokenAddress =
-          inputToken === "bvUSD"
-            ? ctx.contractConfig.CONTRACT_BOLD_TOKEN
-            : ctx.contractConfig.TOKENS[inputToken]?.address ?? null;
-        const isVaultAsset =
-          inputToken === "bvUSD" ||
-          inputTokenAddress.toLowerCase() ===
-            ctx.contractConfig.VAULTS[inputToken]?.asset.toLowerCase();
+        inputToken === "bvUSD"
+          ? ctx.contractConfig.CONTRACT_BOLD_TOKEN
+        : inputToken === "sbvUSD"
+          ? ctx.contractConfig.CONTRACT_VAULT
+          : ctx.contractConfig.TOKENS[inputToken]?.address ?? null;
+      const isVaultAsset =
+        inputToken === "bvUSD" ||
+        inputToken === "sbvUSD" ||
+        inputTokenAddress.toLowerCase() ===
+          ctx.contractConfig.VAULTS[inputToken]?.asset?.toLowerCase();
 
         return ctx.writeContract({
           address: inputTokenAddress,
@@ -201,11 +204,15 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
     const inputTokenAddress =
       inputToken === "bvUSD"
         ? ctx.contractConfig.CONTRACT_BOLD_TOKEN
+      : inputToken === "sbvUSD"
+        ? ctx.contractConfig.CONTRACT_VAULT
         : ctx.contractConfig.TOKENS[inputToken]?.address ?? null;
     const isVaultAsset =
       inputToken === "bvUSD" ||
+      inputToken === "sbvUSD" ||
       inputTokenAddress.toLowerCase() ===
         ctx.contractConfig.VAULTS[inputToken]?.asset?.toLowerCase();
+
     switch (mode) {
       case "add":
         // @ts-ignore

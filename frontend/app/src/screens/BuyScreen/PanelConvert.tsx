@@ -44,7 +44,7 @@ export function PanelConvert() {
 
   const { setVisible: setModalVisibility, setContent: setModalContent } =
     useModal();
-  const isWhitelisted = true;
+  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address);
 
   const parsedValue = parseInputFloatWithDecimals(
     value,
