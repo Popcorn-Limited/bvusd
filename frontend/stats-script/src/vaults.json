@@ -13,6 +13,11 @@
             "address":"0x9d3575469d9df8b5d2f4d7703f682221c044397d",
             "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
             "chain": "Katana"
+        },
+        {
+            "address":"0xe66f1abc862f2730d5cdc3c780da2052c7aa4cbd",
+            "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
+            "chain": "Ethereum"
         }
     ]
 }

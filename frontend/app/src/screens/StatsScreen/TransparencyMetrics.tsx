@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface BackingData {
-  totalCollaterals: string;
   totalReserves: string;
   totalAllocations: string;
   totalBTC: string;
@@ -20,7 +19,6 @@ interface sbvUSD {
 interface TransparencyMetricsProps {
   totalBacking: BackingData;
   totalSupply: string;
-  tvl: string;
   sbvUSD: sbvUSD[];
 }
 
@@ -40,11 +38,10 @@ const backingTooltip =
 export function TransparencyMetrics({
   totalBacking,
   totalSupply,
-  tvl,
   sbvUSD,
 }: TransparencyMetricsProps) {
   const backing =
-    Number(totalBacking.totalCollaterals) + Number(totalBacking.totalReserves) + Number(totalBacking.totalAllocations);
+    Number(totalBacking.totalReserves) + Number(totalBacking.totalAllocations);
   const protocolBackingRatio = `${fmtnum(Number(backing) / Number(totalSupply) * 100, "2z")} %`;
 
   const sbvUSDApy = sbvUSD[0].apy7d === "0" ? "n/a" : `${Number(sbvUSD[0].apy7d).toFixed(2)}%`;
@@ -95,11 +92,11 @@ export function TransparencyMetrics({
     >
       <MetricBox
         label="bvUSD Total Supply"
-        value={`${fmtnum(Number(totalSupply), "2z")}`}
+        value={`${fmtnum(Number(totalSupply), "compact")}`}
       />
       <MetricBox
         label="Total Reserves"
-        value={`$ ${fmtnum(Number(backing), "2z")}`}
+        value={`$ ${fmtnum(Number(backing), "compact")}`}
         tooltip={reservesTooltip}
         above={true}
       />
@@ -111,7 +108,7 @@ export function TransparencyMetrics({
       />
       <SBVUSDCard
         symbol="sbvUSD"
-        supply={`$ ${fmtnum(Number(sbvUSDTotalSupply), "2z")}`}
+        supply={`$ ${fmtnum(Number(sbvUSDTotalSupply), "compact")}`}
         apy={sbvUSDApy}
         tooltip={tooltipText}
       />
