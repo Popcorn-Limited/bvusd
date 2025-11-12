@@ -17,6 +17,7 @@ import { UiKit } from "@liquity2/uikit";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 import { ModalProvider, ModalRoot } from "@/src/services/ModalService";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: content.appName,
@@ -37,6 +38,39 @@ export default function Layout({
 }) {
   return (
     <html lang="en">
+      {/* gtag loader */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=G-5EVBD6WBY7`}
+        strategy="afterInteractive"
+      />
+      {/* gtag init */}
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer && dataLayer.push(arguments);}
+            gtag('js', new Date());
+            // Disable the automatic page_view so we can control SPA route views:
+            gtag('config', 'G-5EVBD6WBY7', { send_page_view: false });
+          `}
+      </Script>
+      {/* <!-- Addressable Pixel base code --> */}
+      <Script>
+        {`
+          !function(w, d){
+              w.__adrsbl = {
+                  queue: [],
+                  run: function(){
+                      this.queue.push(arguments);
+                  }
+              };
+              var s = d.createElement('script');
+              s.async = true;
+              s.src = 'https://tag.adrsbl.io/p.js?tid=d36fe9c31b254acea36b5005094a0891';
+              var b = d.getElementsByTagName('script')[0];
+              b.parentNode.insertBefore(s, b);
+          }(window, document);
+        `}
+      </Script>
       <body className={GeistSans.className}>
         <UiKit>
           <ReactQuery>

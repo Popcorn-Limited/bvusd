@@ -106,7 +106,7 @@ export default function CardsSection() {
           }}
         >
           <Card
-            tokenImage={tokenbvUSD}
+            tokenImage={tokensbvUSD}
             backgroundColor="#F6AE3F"
             textColor="black"
             imageUrl={"/sbvUSDBackground.jpg"}
@@ -141,7 +141,7 @@ export default function CardsSection() {
           />
 
           <Card
-            tokenImage={tokensbvUSD}
+            tokenImage={tokenbvUSD}
             backgroundColor="#23262F"
             textColor="white"
             imageUrl={"/bvUSDBackground.jpg"}
