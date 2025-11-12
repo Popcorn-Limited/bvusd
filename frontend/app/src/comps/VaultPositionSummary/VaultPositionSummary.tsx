@@ -246,6 +246,24 @@ export function VaultPositionSummary({
                       />
                     </div>
                   </>
+                ) || 
+                dn.equal(data?.apr7d, 0) && (
+                  <>
+                    <div
+                      className={css({
+                        display: "flex",
+                        gap: 6,
+                      })}
+                    >
+                      <div
+                        className={css({
+                          color: "contentAlt2",
+                        })}
+                      >
+                        30d APY <br></br> Coming Soon
+                      </div>
+                    </div>
+                  </>
                 )
               )}
             </div>
