@@ -7,7 +7,14 @@ import { parseInputFloatWithDecimals } from "@/src/form-utils";
 import { fmtnum } from "@/src/formatting";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { useAccount, useBalance } from "@/src/wagmi-utils";
-import { Button, Dropdown, InputField, Tabs, TextButton, TokenIcon } from "@liquity2/uikit";
+import {
+  Button,
+  Dropdown,
+  InputField,
+  Tabs,
+  TextButton,
+  TokenIcon,
+} from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useState } from "react";
 import useEnsoForecast from "@/src/enso-utils";
@@ -35,31 +42,55 @@ export function PanelConvert() {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
 
-  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
-  const isWhitelisted = useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address)
+  const { setVisible: setModalVisibility, setContent: setModalContent } =
+    useModal();
+  const isWhitelisted = true;
 
-  const parsedValue = parseInputFloatWithDecimals(value, inputSymbol === "bvUSD" ? 18 : 6);
-  const { value: valOut, status: valOutStatus } = useEnsoForecast({ inputValue: parsedValue[0].toString(), inputSymbol, outputSymbol, account: account.address, slippage: 50 });
+  const parsedValue = parseInputFloatWithDecimals(
+    value,
+    inputSymbol === "bvUSD" ? 18 : 6
+  );
+  const { value: valOut, status: valOutStatus } = useEnsoForecast({
+    inputValue: parsedValue[0].toString(),
+    inputSymbol,
+    outputSymbol,
+    account: account.address,
+    decimals: inputSymbol === "bvUSD" ? 6 : 18, // output asset deciamls
+    slippage: 50,
+  });
+
   const outputAmount = parseInputFloatWithDecimals(
     valOut,
     // @ts-ignore
-    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18,
+    STABLE_SYMBOLS.includes(inputSymbol) ? 6 : 18
   );
-  const value_ = (focused || !parsedValue || dn.lte(parsedValue, 0)) ? value : `${fmtnum(parsedValue, "full")}`;
+  const value_ =
+    focused || !parsedValue || dn.lte(parsedValue, 0)
+      ? value
+      : `${fmtnum(parsedValue, "full")}`;
 
-  const balances = Object.fromEntries([...STABLE_SYMBOLS, "bvUSD"].map((symbol) => ([
-    symbol,
-    // known collaterals are static so we can safely call this hook in a .map()
-    useBalance(account.address, symbol as Token["symbol"]),
-  ] as const)));
+  const balances = Object.fromEntries(
+    [...STABLE_SYMBOLS, "bvUSD"].map(
+      (symbol) =>
+        [
+          symbol,
+          // known collaterals are static so we can safely call this hook in a .map()
+          useBalance(account.address, symbol as Token["symbol"]),
+        ] as const
+    )
+  );
 
-  const insufficientBalance = parsedValue && balances[inputSymbol].data && dn.lt(balances[inputSymbol].data, parsedValue);
+  const insufficientBalance =
+    parsedValue &&
+    balances[inputSymbol].data &&
+    dn.lt(balances[inputSymbol].data, parsedValue);
 
-  const allowSubmit = account.isConnected
-    && parsedValue
-    && dn.gt(parsedValue, 0)
-    && !insufficientBalance
-    && valOutStatus === "success"
+  const allowSubmit =
+    account.isConnected &&
+    parsedValue &&
+    dn.gt(parsedValue, 0) &&
+    !insufficientBalance &&
+    valOutStatus === "success";
 
   return (
     <div
@@ -75,44 +106,56 @@ export function PanelConvert() {
         field={
           <>
             <InputField
-              drawer={insufficientBalance
-                ? {
-                  mode: "error",
-                  message: `Insufficient balance. You have ${fmtnum(balances[inputSymbol].data ?? 0)} ${inputSymbol}.`,
-                }
-                : null
+              drawer={
+                insufficientBalance
+                  ? {
+                      mode: "error",
+                      message: `Insufficient balance. You have ${fmtnum(
+                        balances[inputSymbol].data ?? 0
+                      )} ${inputSymbol}.`,
+                    }
+                  : null
               }
               contextual={
                 <Dropdown
-                  items={
-                    STABLE_SYMBOLS.map(symbol => ({
-                      icon: <TokenIcon symbol={symbol} />,
-                      label: symbol,
-                      value: account.isConnected
-                        ? fmtnum(balances[symbol]?.data ?? 0)
-                        : "−",
-                    }))
-                  }
+                  items={STABLE_SYMBOLS.map((symbol) => ({
+                    icon: <TokenIcon symbol={symbol} />,
+                    label: symbol,
+                    value: account.isConnected
+                      ? fmtnum(balances[symbol]?.data ?? 0)
+                      : "−",
+                  }))}
                   menuPlacement="end"
                   menuWidth={300}
                   onSelect={(index) => {
-                    mode === "buy" ? setInputSymbol(STABLE_SYMBOLS[index]) : setOutputSymbol(STABLE_SYMBOLS[index]);
+                    mode === "buy"
+                      ? setInputSymbol(STABLE_SYMBOLS[index])
+                      : setOutputSymbol(STABLE_SYMBOLS[index]);
                   }}
                   // @ts-ignore
-                  selected={mode === "buy" ? STABLE_SYMBOLS.indexOf(inputSymbol) : STABLE_SYMBOLS.indexOf(outputSymbol)}
+                  selected={
+                    mode === "buy"
+                      ? STABLE_SYMBOLS.indexOf(inputSymbol)
+                      : STABLE_SYMBOLS.indexOf(outputSymbol)
+                  }
                 />
               }
               id="input-deposit-change"
               label={{
-                start: mode === "sell"
-                  ? content.buyScreen.sellPanel.label
-                  : content.buyScreen.buyPanel.label,
+                start:
+                  mode === "sell"
+                    ? content.buyScreen.sellPanel.label
+                    : content.buyScreen.buyPanel.label,
                 end: (
                   <Tabs
                     compact
                     items={[
                       { label: "Buy", panelId: "panel-buy", tabId: "tab-buy" },
-                      { label: "Sell", panelId: "panel-sell", tabId: "tab-sell" },
+                      {
+                        label: "Sell",
+                        panelId: "panel-sell",
+                        tabId: "tab-sell",
+                      },
                     ]}
                     onSelect={(index, { origin, event }) => {
                       setMode(index === 1 ? "sell" : "buy");
@@ -120,8 +163,7 @@ export function PanelConvert() {
                       if (index === 1) {
                         setInputSymbol("bvUSD");
                         setOutputSymbol("USDC");
-                      }
-                      else {
+                      } else {
                         setInputSymbol("USDC");
                         setOutputSymbol("bvUSD");
                       }
@@ -132,7 +174,7 @@ export function PanelConvert() {
                     }}
                     selected={mode === "sell" ? 1 : 0}
                   />
-                )
+                ),
               }}
               labelHeight={32}
               onFocus={() => setFocused(true)}
@@ -141,18 +183,46 @@ export function PanelConvert() {
               value={value_}
               placeholder="0.00"
               secondary={{
-                start: <EnsoPreview value={valOut} status={valOutStatus} outputSymbol={outputSymbol} />,
+                start: (
+                  <EnsoPreview
+                    value={valOut}
+                    status={valOutStatus}
+                    outputSymbol={outputSymbol}
+                  />
+                ),
                 end: balances[inputSymbol].data && (
                   <TextButton
-                    label={dn.gt(balances[inputSymbol].data, 0) ? `Max ${fmtnum(balances[inputSymbol].data)} ${inputSymbol}` : `Max 0.00 ${inputSymbol}`}
-                    onClick={() => setValue(dn.toString(balances[inputSymbol].data))}
+                    label={
+                      dn.gt(balances[inputSymbol].data, 0)
+                        ? `Max ${fmtnum(
+                            balances[inputSymbol].data
+                          )} ${inputSymbol}`
+                        : `Max 0.00 ${inputSymbol}`
+                    }
+                    onClick={() =>
+                      setValue(dn.toString(balances[inputSymbol].data))
+                    }
                   />
-                )
+                ),
               }}
             />
-            <span className={css({ display: "flex", alignItems: "center", gap: 4, color: "contentAlt2", fontSize: "14px" })}>
+            <span
+              className={css({
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                color: "contentAlt2",
+                fontSize: "14px",
+              })}
+            >
               <p>Built with </p>
-              <img src="/icons/enso-gray.svg" alt="Enso" width={14} height={14} className={css({ color: "contentAlt2" })} />
+              <img
+                src="/icons/enso-gray.svg"
+                alt="Enso"
+                width={14}
+                height={14}
+                className={css({ color: "contentAlt2" })}
+              />
               <p>Enso</p>
             </span>
           </>
@@ -169,7 +239,7 @@ export function PanelConvert() {
         }}
       >
         <ConnectWarningBox />
-        {isWhitelisted ?
+        {isWhitelisted ? (
           <Button
             disabled={!allowSubmit}
             label={content.earnScreen.depositPanel.action}
@@ -184,10 +254,7 @@ export function PanelConvert() {
 
               txFlow.start({
                 flowId: "convert",
-                backLink: [
-                  `/buy`,
-                  "Back to editing",
-                ],
+                backLink: [`/buy`, "Back to editing"],
                 successLink: ["/", "Go to the home page"],
                 successMessage: "Your order has been processed successfully.",
                 mode: mode,
@@ -200,7 +267,7 @@ export function PanelConvert() {
               });
             }}
           />
-          :
+        ) : (
           <Button
             label="Join the whitelist"
             mode="primary"
@@ -212,7 +279,7 @@ export function PanelConvert() {
               setModalVisibility(true);
             }}
           />
-        }
+        )}
       </div>
     </div>
   );
