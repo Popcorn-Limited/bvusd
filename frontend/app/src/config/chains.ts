@@ -209,12 +209,27 @@ export const CHAINS: Record<number, AppChainConfig> = {
     CONTRACT_WHITELIST: "0xE6270367a25F1f56D3Df788fEB4Cda89372040e2",
     ENSO_ROUTER: "0xF75584eF6673aD213a685a1B58Cc0330B8eA22Cf",
     VAULTS: {
+      kBTC: {
+        name: "Kraken BTC Vault",
+        outputSymbol: "skBTC",
+        asset: "0x73E0C0d45E048D25Fc26Fa3159b0aA04BfA4Db98",
+        address: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc",
+        inputDecimals: 8,
+      },
     },
     TOKENS: {
       USDC: {
         address: "0x2D270e6886d130D724215A266106e6832161EAEd",
         decimals: 6,
       },
+      kBTC: {
+        address: "0x73E0C0d45E048D25Fc26Fa3159b0aA04BfA4Db98",
+        decimals: 8
+      },
+      skBTC: {
+        address: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc",
+        decimals: 8,
+      }
     }
   }
 }
