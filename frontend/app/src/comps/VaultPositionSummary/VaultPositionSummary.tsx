@@ -98,9 +98,8 @@ export function VaultPositionSummary({
             paddingBottom: 12,
           })}
           style={{
-            borderBottom: `1px solid var(--border-${
-              active ? "active" : "inactive"
-            })`,
+            borderBottom: `1px solid var(--border-${active ? "active" : "inactive"
+              })`,
           }}
         >
           <div
@@ -147,9 +146,8 @@ export function VaultPositionSummary({
                   fontSize: 14,
                 })}
                 style={{
-                  color: `var(--fg-secondary-${
-                    active ? "active" : "inactive"
-                  })`,
+                  color: `var(--fg-secondary-${active ? "active" : "inactive"
+                    })`,
                 }}
               >
                 <div>TVL</div>
@@ -176,95 +174,85 @@ export function VaultPositionSummary({
               {txPreviewMode ? (
                 <TagPreview />
               ) : (
-                dn.greaterThan(data?.apr7d, 0) && (
-                  <>
+                <>
+                  <div
+                    className={css({
+                      display: "flex",
+                      gap: 6,
+                    })}
+                  >
                     <div
                       className={css({
-                        display: "flex",
-                        gap: 6,
+                        color: "contentAlt2",
                       })}
                     >
-                      <div
-                        className={css({
-                          color: "contentAlt2",
-                        })}
-                      >
-                        30d APY
-                      </div>
-                      <div>
-                        <Amount
-                          fallback="-%"
-                          format="1z"
-                          percentage
-                          value={data?.apr30d}
-                        />
-                      </div>
-                      <InfoTooltip
-                        content={{
-                          heading: "APY (last 30 days)",
-                          body:
-                            "The annualized rate sbvUSD " +
-                            "deposits earned over the past 30 days.",
-                          footerLink: {
-                            label: "Check Dune for more details",
-                            href: "https://dune.com/dna/bvusd",
-                          },
-                        }}
-                      />
+                      30d APY
                     </div>
+                    {
+                      dn.greaterThan(data?.apr7d, 0) ?
+                        <>
+                          <Amount
+                            fallback="-%"
+                            format="1z"
+                            percentage
+                            value={data?.apr30d}
+                          />
+                          <InfoTooltip
+                            content={{
+                              heading: "APY (last 30 days)",
+                              body:
+                                "The annualized rate sbvUSD " +
+                                "deposits earned over the past 30 days.",
+                              footerLink: {
+                                label: "Check Dune for more details",
+                                href: "https://dune.com/dna/bvusd",
+                              },
+                            }}
+                          />
+                        </>
+                        : <p>Coming Soon</p>
+                    }
+                  </div>
+                  <div
+                    className={css({
+                      display: "flex",
+                      gap: 4,
+                      fontSize: 14,
+                    })}
+                  >
                     <div
                       className={css({
-                        display: "flex",
-                        gap: 4,
-                        fontSize: 14,
+                        color: "contentAlt2",
                       })}
                     >
-                      <div
-                        className={css({
-                          color: "contentAlt2",
-                        })}
-                      >
-                        7d APY
-                      </div>
-                      <Amount
-                        fallback="-%"
-                        format="1z"
-                        percentage
-                        value={data?.apr7d}
-                      />
-                      <InfoTooltip
-                        content={{
-                          heading: "APY (last 7 days)",
-                          body:
-                            "The annualized percentage rate sbvUSD " +
-                            "deposits earned over the past 7 days.",
-                          footerLink: {
-                            label: "Check Dune for more details",
-                            href: "https://dune.com/dna/bvusd",
-                          },
-                        }}
-                      />
+                      7d APY
                     </div>
-                  </>
-                ) || 
-                dn.equal(data?.apr7d, 0) && (
-                  <>
-                    <div
-                      className={css({
-                        display: "flex",
-                        gap: 6,
-                      })}
-                    >
-                      <div
-                        className={css({
-                          color: "contentAlt2",
-                        })}
-                      >
-                        30d APY <br></br> Coming Soon
-                      </div>
-                    </div>
-                  </>
-                )
+                    {
+                      dn.greaterThan(data?.apr7d, 0) ?
+                        <>
+                          <Amount
+                            fallback="-%"
+                            format="1z"
+                            percentage
+                            value={data?.apr7d}
+                          />
+                          <InfoTooltip
+                            content={{
+                              heading: "APY (last 7 days)",
+                              body:
+                                "The annualized percentage rate sbvUSD " +
+                                "deposits earned over the past 7 days.",
+                              footerLink: {
+                                label: "Check Dune for more details",
+                                href: "https://dune.com/dna/bvusd",
+                              },
+                            }}
+                          />
+                        </>
+                        : <p>Coming Soon</p>
+                    }
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -290,9 +278,8 @@ export function VaultPositionSummary({
             <div>
               <div
                 style={{
-                  color: `var(--fg-secondary-${
-                    active ? "active" : "inactive"
-                  })`,
+                  color: `var(--fg-secondary-${active ? "active" : "inactive"
+                    })`,
                 }}
               >
                 Deposit
@@ -308,9 +295,9 @@ export function VaultPositionSummary({
                   title={
                     active
                       ? `${fmtnum(
-                          dn.mul(earnPosition.deposit, data?.price),
-                          "full"
-                        )} ${vaultAsset}`
+                        dn.mul(earnPosition.deposit, data?.price),
+                        "full"
+                      )} ${vaultAsset}`
                       : undefined
                   }
                   className={css({
@@ -357,9 +344,8 @@ export function VaultPositionSummary({
             <div>
               <div
                 style={{
-                  color: `var(--fg-secondary-${
-                    active ? "active" : "inactive"
-                  })`,
+                  color: `var(--fg-secondary-${active ? "active" : "inactive"
+                    })`,
                 }}
               >
                 Pending Withdrawal
@@ -384,9 +370,8 @@ export function VaultPositionSummary({
               <div>
                 <div
                   style={{
-                    color: `var(--fg-secondary-${
-                      active ? "active" : "inactive"
-                    })`,
+                    color: `var(--fg-secondary-${active ? "active" : "inactive"
+                      })`,
                   }}
                 >
                   Pool share
