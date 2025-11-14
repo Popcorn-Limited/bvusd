@@ -5,7 +5,6 @@ import type { Token, TokenSymbol } from "@/src/types";
 import { createClient } from "@supabase/supabase-js";
 import * as v from "valibot";
 import { Address } from "viem";
-import { getProtocolContract } from "./contracts";
 import { fmtnum } from "./formatting";
 import { ChainEnv } from "./services/ChainConfigProvider";
 
@@ -19,13 +18,12 @@ interface EnsoRouteProps {
   inputValue: string;
   inputAddress: string;
   outputAddress: string;
-  outputSymbol: Token["symbol"];
   account: Address;
   slippage?: number;
 }
 
 export async function getOutputValue(
-  { chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage = 50 }: EnsoRouteProps,
+  { chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage = 50 }: EnsoRouteProps & { outputSymbol: Token["symbol"] },
 ): Promise<EnsoForecast> {
   if (!inputValue || inputValue === "0") {
     return { value: "0", status: "success" };
@@ -80,10 +78,9 @@ export async function getDefiLlamaPrices(defiLlamaTokenIds: {}): Promise<any> {
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch price for ${
-        Object.keys(defiLlamaTokenIds).join(
-          ",",
-        )
+      `Failed to fetch price for ${Object.keys(defiLlamaTokenIds).join(
+        ",",
+      )
       }`,
     );
   }
@@ -115,10 +112,9 @@ export async function getCoingeckoPrice(coinGeckoTokenIds: CoinGeckoIDs): Promis
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch price for ${
-        Object.keys(coinGeckoTokenIds).join(
-          ",",
-        )
+      `Failed to fetch price for ${Object.keys(coinGeckoTokenIds).join(
+        ",",
+      )
       }`,
     );
   }

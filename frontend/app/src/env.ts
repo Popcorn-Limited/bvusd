@@ -159,7 +159,7 @@ export const EnvSchema = v.pipe(
 
     CONTRACT_STABLE_VAULT_ZAPPER: vAddress(),
 
-    CONTRACT_TOKEN_LOCKER: vAddress(),
+    CONTRACT_TOKEN_LOCKER: v.optional(vAddress()),
 
     ...vBranchEnvVars(0).entries
   }),

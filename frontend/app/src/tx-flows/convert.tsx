@@ -96,8 +96,8 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           const ensoData = await getEnsoRoute({
             chainConfig: ctx.contractConfig,
             inputValue: ctx.request.amount[0].toString(),
-            inputSymbol: ctx.request.inputToken,
-            outputSymbol: ctx.request.outputToken,
+            inputAddress: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
+            outputAddress: getProtocolContract(ctx.contractConfig, ctx.request.outputToken).address,
             account: ctx.account,
             slippage: ctx.request.slippage
           });
@@ -132,8 +132,8 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         const ensoData = await getEnsoRoute({
           chainConfig: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
-          inputSymbol: ctx.request.inputToken,
-          outputSymbol: ctx.request.outputToken,
+          inputAddress: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
+          outputAddress: getProtocolContract(ctx.contractConfig, ctx.request.outputToken).address,
           account: ctx.account,
           slippage: ctx.request.slippage
         });
