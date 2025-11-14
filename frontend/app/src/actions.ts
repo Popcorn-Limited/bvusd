@@ -5,7 +5,6 @@ import type { Token, TokenSymbol } from "@/src/types";
 import { createClient } from "@supabase/supabase-js";
 import * as v from "valibot";
 import { Address } from "viem";
-import { getProtocolContract } from "./contracts";
 import { fmtnum } from "./formatting";
 import { ChainEnv } from "./services/ChainConfigProvider";
 
@@ -19,20 +18,13 @@ interface EnsoRouteProps {
   inputValue: string;
   inputAddress: string;
   outputAddress: string;
-  decimals: number;
   account: Address;
   slippage?: number;
 }
 
-export async function getOutputValue({
-  chainConfig,
-  inputValue,
-  inputAddress,
-  outputAddress,
-  account,
-  slippage = 50,
-  decimals,
-}: EnsoRouteProps): Promise<EnsoForecast> {
+export async function getOutputValue(
+  { chainConfig, inputValue, inputAddress, outputAddress, decimals, account, slippage = 50 }: EnsoRouteProps & { decimals:number },
+): Promise<EnsoForecast> {
   if (!inputValue || inputValue === "0") {
     return { value: "0", status: "success" };
   }

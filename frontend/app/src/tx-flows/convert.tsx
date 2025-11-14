@@ -96,11 +96,10 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           const ensoData = await getEnsoRoute({
             chainConfig: ctx.contractConfig,
             inputValue: ctx.request.amount[0].toString(),
-            inputAddress: ctx.contractConfig.TOKENS[ctx.request.inputToken]?.address,
-            outputAddress: ctx.contractConfig.CONTRACT_BOLD_TOKEN,
+            inputAddress: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
+            outputAddress: getProtocolContract(ctx.contractConfig, ctx.request.outputToken).address,
             account: ctx.account,
             slippage: ctx.request.slippage,
-            decimals: ctx.contractConfig.TOKENS[ctx.request.outputToken]?.decimals ?? 18,
           });
 
           return sendTransaction(ctx.wagmiConfig, {
@@ -133,11 +132,10 @@ export const convert: FlowDeclaration<ConvertRequest> = {
         const ensoData = await getEnsoRoute({
           chainConfig: ctx.contractConfig,
           inputValue: ctx.request.amount[0].toString(),
-          outputAddress: ctx.contractConfig.TOKENS[ctx.request.outputToken]?.address,
-          inputAddress: ctx.contractConfig.CONTRACT_BOLD_TOKEN,
+          inputAddress: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
+          outputAddress: getProtocolContract(ctx.contractConfig, ctx.request.outputToken).address,
           account: ctx.account,
           slippage: ctx.request.slippage,
-          decimals: 6,
         });
 
         return sendTransaction(ctx.wagmiConfig, {
