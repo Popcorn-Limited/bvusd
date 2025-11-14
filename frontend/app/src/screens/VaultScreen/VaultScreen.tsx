@@ -6,7 +6,7 @@ import { css } from "@/styled-system/css";
 import { HFlex } from "@liquity2/uikit";
 import { VaultPanel } from "./VaultPanel";
 import { VaultFAQPanel } from "./VaultFAQPanel";
-import { CHAINS, getAllVaults, Vault } from "@/src/config/chains";
+import { BVUSD_CHAINS, getAllVaults } from "@/src/config/chains";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 export function VaultPoolScreen({ asset }: { asset: string }) {
@@ -20,7 +20,7 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
   const chainId =
     vault !== undefined
       ? vault.chainId
-      : chainConfig.CHAIN_ID !== 1 && chainConfig.CHAIN_ID !== 747474
+      : !BVUSD_CHAINS.includes(chainConfig.CHAIN_ID)
         ? 1
         : chainConfig.CHAIN_ID;
 
