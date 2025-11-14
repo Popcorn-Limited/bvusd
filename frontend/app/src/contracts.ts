@@ -1,7 +1,7 @@
 "use client";
 
 import type { BranchId, CollateralSymbol } from "@/src/types";
-import type { Address } from "@liquity2/uikit";
+import { bgBTC, type Address } from "@liquity2/uikit";
 
 import { ActivePool } from "@/src/abi/ActivePool";
 import { BorrowerOperations } from "@/src/abi/BorrowerOperations";
@@ -121,7 +121,7 @@ export type Contracts = ProtocolContractMap & {
     branchId: BranchId;
     contracts: BranchContracts;
     symbol: CollateralSymbol;
-  }>;
+  }> 
 };
 
 export const CONTRACTS = (config: ChainEnv): Contracts => {
@@ -145,9 +145,9 @@ export const CONTRACTS = (config: ChainEnv): Contracts => {
       abi: abis.MultiTroveGetter,
       address: CONTRACT_MULTI_TROVE_GETTER,
     },
-    WETH: { abi: abis.WETH, address: config.CONTRACT_WETH },
-    USDC: { abi: abis.USDC, address: config.CONTRACT_USDC },
-    USDT: { abi: abis.USDT, address: config.CONTRACT_USDT },
+    WETH: { abi: abis.WETH, address: config.TOKENS["WETH"]?.address?? null },
+    USDC: { abi: abis.USDC, address: config.TOKENS["USDC"]?.address?? null },
+    USDT: { abi: abis.USDT, address: config.TOKENS["USDT"]?.address?? null },
     Converter: { abi: abis.Converter, address: config.CONTRACT_CONVERTER },
     Vault: { abi: abis.Vault, address: config.CONTRACT_VAULT },
     sbvUSD: { abi: abis.Vault, address: config.CONTRACT_VAULT },

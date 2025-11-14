@@ -4,22 +4,22 @@ import { AddressesRegistry } from "./abi/AddressesRegistry";
 import { WhitelistAbi } from "./abi/Whitelist";
 import { bvUSD } from "@liquity2/uikit";
 import * as dn from "dnum";
-import { dnum18, DNUM_0, dnumOrNull } from "./dnum-utils";
+import { dnum18, dnum6, dnum8, DNUM_0, dnumOrNull } from "./dnum-utils";
 import { StatsSchema, useLiquityStats } from "./liquity-utils";
-import { getBranchContract } from "./contracts";
+import { getBranchContract, getProtocolContract } from "./contracts";
 import { PositionEarn } from "./types";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import * as v from "valibot";
 import { useChainConfig } from "./services/ChainConfigProvider";
 import { useConfig as useWagmiConfig } from "wagmi";
 import { readContracts } from "wagmi/actions";
-import { CHAINS } from "./config/chains";
+import { CHAINS, Vault } from "./config/chains";
 
-export function useVault({ chainId }: { chainId: number }) {
+export function useVault({ chainId, vaultAddress, vaultSymbol}: { chainId: number, vaultSymbol:string, vaultAddress: Address}) {
   const config = useWagmiConfig()
 
   return useQuery({
-    queryKey: [`useVault:${chainId}`],
+    queryKey: [`useVault:${vaultAddress}`],
     queryFn: async () => {
       const collateral = bvUSD;
       const response = await fetch(CHAINS[chainId].STATS_URL);
@@ -29,48 +29,65 @@ export function useVault({ chainId }: { chainId: number }) {
       const vaultReads = await readContracts(config, {
         contracts: [
           {
-            address: CHAINS[chainId].CONTRACT_VAULT,
+            address:vaultAddress,
             abi: erc4626Abi,
             functionName: "totalAssets",
+            chainId
           },
           {
-            address: CHAINS[chainId].CONTRACT_VAULT,
+            address:vaultAddress,
             abi: erc4626Abi,
             functionName: "totalSupply",
+            chainId
           },
         ]
       });
-      const totalAssets = vaultReads[0].status === "success" ? dnum18(vaultReads[0].result) : DNUM_0
-      const totalSupply = vaultReads[1].status === "success" ? dnum18(vaultReads[1].result) : DNUM_0
-     
+
+      const decimals = CHAINS[chainId].TOKENS[vaultSymbol]?.decimals ?? 18
+      
+      const dnZero = [BigInt(0), decimals] as dn.Dnum;
+      const dnOne = [BigInt(1), decimals] as dn.Dnum;
+
+      const totalAssets = vaultReads[0].status === "success"
+        ? [BigInt(vaultReads[0].result), decimals] as dn.Dnum
+        : dnZero
+
+      const totalSupply = vaultReads[1].status === "success"
+        ? [BigInt(vaultReads[1].result), decimals] as dn.Dnum
+        : dnZero
+
       return {
-        apr7d: dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
-        apr30d: dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
+        apr7d: vaultSymbol !== "sbvUSD" ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
+        apr30d: vaultSymbol !== "sbvUSD" ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
         collateral,
         totalDeposited: totalAssets,
-        price: totalSupply > DNUM_0 ? dn.div(totalAssets, totalSupply) : dnum18(1),
+        price: totalSupply > dnZero && totalAssets > dnZero ? dn.div(totalAssets, totalSupply, decimals) : dnOne,
       };
     },
   });
 }
 
 export function useVaultPosition(
-  account: null | Address
+  account: null | Address,
+  decimals: number,
+  chainId: number,
+  vaultAddress?: Address
 ): UseQueryResult<PositionEarn | null> {
   const { chainConfig } = useChainConfig();
 
   const balance = useReadContract({
-    address: chainConfig.CONTRACT_VAULT,
+    address: vaultAddress?? chainConfig.CONTRACT_VAULT,
     abi: erc4626Abi,
     functionName: "balanceOf",
     args: [account ?? zeroAddress],
     query: {
-      select: dnum18,
+      select: decimals === 18 ? dnum18 : decimals === 6 ? dnum6 : dnum8
     },
+    chainId
   });
 
   return useQuery({
-    queryKey: ["useVaultPosition", account],
+    queryKey: ["useVaultPosition", account, vaultAddress],
     queryFn: () => {
       return {
         type: "earn" as const,
@@ -122,4 +139,44 @@ export function useProtocolOwner(addressesRegistry: Address) {
   });
 
   return admin.data !== undefined ? admin.data[0] : undefined;
+}
+
+export function useVaultRequestPosition(
+  account: null | Address,
+  decimals: number,
+  chainId: number,
+  vaultAddress?: Address
+): UseQueryResult<PositionEarn | null> {
+  const { chainConfig } = useChainConfig();
+
+  const requestBalance = useReadContract({
+    address: vaultAddress,
+    abi: getProtocolContract(chainConfig, "Vault").abi,
+    functionName: "getRequestBalance",
+    args: [account ?? zeroAddress],
+    query: {
+      select: (data) => ({
+        pendingShares: dnumOrNull(Number(data.pendingShares) / 10 ** decimals, decimals),
+        requestTime: Number(data.requestTime),
+        claimableShares: dnumOrNull(Number(data.claimableShares) / 10 ** decimals, decimals),
+        claimableAssets: dnumOrNull(Number(data.claimableAssets) / 10 ** decimals, decimals),
+      }),
+    },
+    chainId
+  });
+
+  return useQuery({
+    queryKey: ["useVaultRequestPosition", account, vaultAddress],
+    queryFn: () => {
+      return {
+        type: "earn" as const,
+        owner: account,
+        pendingShares: requestBalance.data.pendingShares,
+        requestTime: requestBalance.data.requestTime,
+        claimableShares: requestBalance.data.claimableShares,
+        claimableAssets: requestBalance.data.claimableAssets,
+      };
+    },
+    enabled: requestBalance.status === "success",
+  });
 }

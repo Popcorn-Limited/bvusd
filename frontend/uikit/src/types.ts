@@ -12,7 +12,14 @@ export type TokenSymbol =
   | "USDT"
   | "USDC"
   | "LbvUSD"
-
+  | "bgBTC"
+  | "sbgBTC"
+  | "nBTC"
+  | "snBTC"
+  | "sWETH"
+  | "enzoBTC"
+  | "sEnzoBTC"
+  
 export type Token = {
   icon: string;
   name: string;

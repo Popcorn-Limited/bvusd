@@ -39,3 +39,16 @@ export function jsonStringifyWithBigInt(data: unknown) {
 export function bigIntAbs(value: bigint) {
   return value < 0n ? -value : value;
 }
+
+// addressable util to track event
+export function track(
+  name: string,
+  isConversion = false,
+  props: Record<string, unknown> = {} 
+) {
+  window.__adrsbl?.run(
+    name,
+    isConversion,
+    Object.entries(props).map(([k, v]) => ({ name: k, value: v }))
+  );
+}

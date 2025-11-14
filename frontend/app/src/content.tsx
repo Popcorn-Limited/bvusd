@@ -19,6 +19,7 @@ export default {
   menu: {
     points: "Points",
     portfolio: "Portfolio",
+    vaults: "Vaults",
     borrow: "Borrow",
     earn: "Earn",
     wrap: "Wrap",
@@ -327,6 +328,19 @@ export default {
         <>Total bvUSD covering {collateral}-backed position liquidations</>,
       ],
     },
+  },
+
+  vaultsHome: {
+    headline: (tokensIcons: N) => (
+      <>
+        Earn with BTC {tokensIcons}
+      </>
+    ),
+    subheading: (
+      <>
+        Put your BTC derivatives to work for the most competitive yield in DeFi.
+      </>
+    ),
   },
 
   // Earn screen

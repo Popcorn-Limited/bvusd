@@ -28,8 +28,6 @@ export function AppLayout({
 }: {
   children: ReactNode;
 }) {
-  useEnforceChain(747474);
-
   return (
     <div
       className={css({

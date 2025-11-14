@@ -99,7 +99,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
             inputAddress: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
             outputAddress: getProtocolContract(ctx.contractConfig, ctx.request.outputToken).address,
             account: ctx.account,
-            slippage: ctx.request.slippage
+            slippage: ctx.request.slippage,
           });
 
           return sendTransaction(ctx.wagmiConfig, {
@@ -135,7 +135,7 @@ export const convert: FlowDeclaration<ConvertRequest> = {
           inputAddress: getProtocolContract(ctx.contractConfig, ctx.request.inputToken).address,
           outputAddress: getProtocolContract(ctx.contractConfig, ctx.request.outputToken).address,
           account: ctx.account,
-          slippage: ctx.request.slippage
+          slippage: ctx.request.slippage,
         });
 
         return sendTransaction(ctx.wagmiConfig, {

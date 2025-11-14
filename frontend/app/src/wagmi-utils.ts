@@ -1,5 +1,5 @@
 import content from "@/src/content";
-import { dnum18, dnum6, dnum8 } from "@/src/dnum-utils";
+import { dnum18, dnum6, dnum8, dnumOrNull } from "@/src/dnum-utils";
 import { HOST, WALLET_CONNECT_PROJECT_ID } from "@/src/env";
 import { getBranch } from "@/src/liquity-utils";
 import { getSafeStatus } from "@/src/safe-utils";
@@ -15,6 +15,7 @@ import { createConfig, http, useAccount as useWagmiAccount, useEnsName, useReadC
 import { CHAINS } from "./config/chains";
 import { CONTRACT_TOKEN_LOCKER } from "./env";
 import { useChainConfig } from "./services/ChainConfigProvider";
+import * as dn from "dnum";
 
 export function useBalance(
   address: Address | undefined,
@@ -38,33 +39,25 @@ export function useBalance(
         if (symbol === "VCRAFT") {
           return "0xc6675024FD3A9D37EDF3fE421bbE8ec994D9c262";
         }
-        if (symbol === "WBTC") {
-          return "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c";
-        }
-        if (symbol === "USDT") {
-          return chainConfig.CONTRACT_USDT;
-        }
-        if (symbol === "USDC") {
-          return chainConfig.CONTRACT_USDC;
-        }
         if (symbol === "LbvUSD") {
           return CONTRACT_TOKEN_LOCKER;
         } else {
           // @ts-ignore
-          return getBranch(symbol)?.contracts.CollToken.address ?? null;
+          return chainConfig.TOKENS[symbol]?.address ?? null
         }
       },
     )
     .otherwise(() => null);
 
-  // TODO -- find a better solution to parse the balance based on the token decimals
+  const decimals = chainConfig.TOKENS[token]?.decimals ?? 18;
+
   const tokenBalance = useReadContract({
     address: tokenAddress ?? undefined,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: address && [address],
     query: {
-      select: (value) => ["USDC", "USDT"].includes(token) ? dnum6(value ?? 0n) : dnum18(value ?? 0n),
+      select: (value) => ["USDC", "USDT"].includes(token) ? dnum6(value ?? 0n) : decimals ? [BigInt(value), decimals] as dn.Dnum : dnum18(value ?? 0n),
       enabled: Boolean(address),
     },
   });
@@ -90,7 +83,7 @@ export function useEnforceChain(targetChainId: number) {
   useEffect(() => {
     if (status !== "connected") return;
     if (!chainId) return;
-    if (chainId === targetChainId || chainId === 1) return; // TODO all supported chainids
+    if (chainId === targetChainId || chainId === 1 || chainId === 747474 || chainId === 43111) return; // TODO all supported chainids
 
     if (lastTried.current === chainId) return;
     if (isPending) return;

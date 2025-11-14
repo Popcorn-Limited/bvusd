@@ -2,11 +2,24 @@ import { fmtnum } from "@/src/formatting";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { RequestBalance } from "@/src/types";
 import { css } from "@/styled-system/css";
-import { TokenIcon } from "@liquity2/uikit";
+import { TokenIcon, TokenSymbol } from "@liquity2/uikit";
 import { Button } from "@liquity2/uikit";
+import { Address } from "viem";
 import { useAccount } from "wagmi";
 
-export default function ClaimAssets({ requestBalance }: { requestBalance: RequestBalance }) {
+export default function ClaimAssets({
+  requestBalance,
+  vaultAddress,
+  inputSymbol,
+  outputSymbol,
+  chainId,
+}: {
+  requestBalance: RequestBalance;
+  vaultAddress: Address;
+  inputSymbol: string;
+  outputSymbol: string;
+  chainId: number;
+}) {
   const account = useAccount();
   const txFlow = useTransactionFlow();
 
@@ -24,26 +37,36 @@ export default function ClaimAssets({ requestBalance }: { requestBalance: Reques
         padding: 16,
       })}
     >
-      <p className={css({
-        fontSize: "16px",
-        color: "contentAlt",
-        whiteSpace: "nowrap",
-      })}>
+      <p
+        className={css({
+          fontSize: "16px",
+          color: "contentAlt",
+          whiteSpace: "nowrap",
+        })}
+      >
         Claimable Asssets
       </p>
-      <div className={css({
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      })}>
-        <div className={css({
+      <div
+        className={css({
           display: "flex",
           alignItems: "center",
-          gap: 8,
-          marginTop: 5
-        })}>
+          justifyContent: "space-between",
+        })}
+      >
+        <div
+          className={css({
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginTop: 5,
+          })}
+        >
           <p>{fmtnum(requestBalance.claimableAssets)}</p>
-          <TokenIcon symbol="bvUSD" size="mini" title={null} />
+          <TokenIcon
+            symbol={outputSymbol as TokenSymbol}
+            size="mini"
+            title={null}
+          />
         </div>
         <Button
           label="Claim"
@@ -57,17 +80,17 @@ export default function ClaimAssets({ requestBalance }: { requestBalance: Reques
 
             txFlow.start({
               flowId: "vaultUpdate",
-              backLink: [
-                `/earn`,
-                "Back to editing",
-              ],
+              backLink: [`/earn`, "Back to editing"],
               successLink: ["/", "Go to the home page"],
               successMessage: `Your claim has been processed successfully.`,
               mode: "claim",
               amount: requestBalance.claimableAssets,
-              inputToken: "sbvUSD",
-              outputToken: "bvUSD",
+              inputToken: inputSymbol as TokenSymbol,
+              outputToken: outputSymbol as TokenSymbol,
+              outputAmount: requestBalance.claimableAssets,
+              vault: vaultAddress,
               slippage: 50,
+              chainId,
             });
           }}
         >

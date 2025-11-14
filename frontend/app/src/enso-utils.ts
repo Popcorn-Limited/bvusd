@@ -10,20 +10,34 @@ interface EnsoForecastProps {
   inputSymbol: Token["symbol"];
   outputSymbol: Token["symbol"];
   account: Address;
-  slippage?: number
+  decimals?: number;
+  slippage?: number;
 }
 
 export type EnsoForecast = {
   value: string;
   status: "idle" | "loading" | "success" | "error";
-}
+};
 
-export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol, account, slippage = 50 }: EnsoForecastProps): EnsoForecast {
+export default function useEnsoForecast({
+  inputValue,
+  inputSymbol,
+  outputSymbol,
+  account,
+  slippage = 50,
+  decimals = 18,
+}: EnsoForecastProps): EnsoForecast {
   const [value, setValue] = useState("0");
   const [status, setStatus] = useState<EnsoForecast["status"]>("idle");
   const { chainConfig } = useChainConfig();
-  const inputAddress = getProtocolContract(chainConfig, inputSymbol).address
-  const outputAddress = getProtocolContract(chainConfig, outputSymbol).address
+
+  const getTokenAddress = (symbol: string) : Address => {
+    return symbol === "bvUSD"
+      ? getProtocolContract(chainConfig, "BoldToken").address
+      : symbol === "sbvUSD"
+      ? getProtocolContract(chainConfig, "Vault").address
+      : chainConfig.TOKENS[symbol]?.address?? null
+  }
 
   useEffect(() => {
     if (!inputValue || inputValue === "0" || !account) {
@@ -34,11 +48,18 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
 
     const timeoutId = setTimeout(() => {
       setStatus("loading");
-      getOutputValue({ chainConfig, inputValue, inputAddress, outputAddress, outputSymbol, account, slippage })
-        .then(res => {
-          setValue(res.value)
-          setStatus(res.status)
-        });
+      getOutputValue({
+        chainConfig,
+        inputValue,
+        inputAddress: getTokenAddress(inputSymbol),
+        outputAddress: getTokenAddress(outputSymbol),
+        account,
+        slippage,
+        decimals,
+      }).then((res) => {
+        setValue(res.value);
+        setStatus(res.status);
+      });
     }, 500);
 
     return () => clearTimeout(timeoutId);
@@ -47,5 +68,5 @@ export default function useEnsoForecast({ inputValue, inputSymbol, outputSymbol,
   return {
     value,
     status,
-  }
+  };
 }

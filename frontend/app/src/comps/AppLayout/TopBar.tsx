@@ -18,6 +18,7 @@ const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
   [content.menu.buy, "/buy", IconEarn],
   [content.menu.points, "/points", IconEarn],
   [content.menu.portfolio, "/account", IconDashboard],
+  [content.menu.vaults, "/vaults", IconEarn],
   [content.menu.dashboard, "/dashboard", IconEarn],
 ];
 
