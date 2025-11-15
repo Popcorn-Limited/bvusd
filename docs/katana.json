@@ -1,10 +1,10 @@
 {
-  "time": "November 14, 2025 at 1:08 AM UTC",
+  "time": "November 15, 2025 at 1:06 AM UTC",
   "total_bold_supply": "8240086.622678",
   "sbvUSD": [
     {
       "address": "0x9d3575469d9df8b5d2f4d7703f682221c044397d",
-      "supply": "1028530.1799458181",
+      "supply": "1028531.1585397415",
       "safe": "0x452DC676b4E377a76B4b3048eB3b511A0F1ec057",
       "chain": "Katana",
       "apy7": "2.2498531354862905",
@@ -21,8 +21,18 @@
   ],
   "day_supply": [
     {
+      "day": "2025-11-14 00:00:00",
+      "holders": "27",
+      "supply": "8240086.622610949"
+    },
+    {
+      "day": "2025-11-13 00:00:00",
+      "holders": "27",
+      "supply": "8240086.622610949"
+    },
+    {
       "day": "2025-11-12 00:00:00",
-      "holders": "23",
+      "holders": "27",
       "supply": "8240086.622610949"
     },
     {
@@ -193,7 +203,7 @@
     {
       "day": "2025-10-09 00:00:00",
       "holders": "12",
-      "supply": "50588.74543481439"
+      "supply": "50588.74543481438"
     },
     {
       "day": "2025-10-08 00:00:00",
@@ -233,7 +243,7 @@
     {
       "day": "2025-10-01 00:00:00",
       "holders": "12",
-      "supply": "50315.78643481439"
+      "supply": "50315.786434814385"
     },
     {
       "day": "2025-09-30 00:00:00",
@@ -263,7 +273,7 @@
     {
       "day": "2025-09-25 00:00:00",
       "holders": "12",
-      "supply": "50315.78643481439"
+      "supply": "50315.786434814385"
     },
     {
       "day": "2025-09-24 00:00:00",
@@ -273,7 +283,7 @@
     {
       "day": "2025-09-23 00:00:00",
       "holders": "12",
-      "supply": "50093.02476381439"
+      "supply": "50093.024763814385"
     },
     {
       "day": "2025-09-22 00:00:00",
@@ -288,7 +298,7 @@
     {
       "day": "2025-09-20 00:00:00",
       "holders": "12",
-      "supply": "50093.02476381439"
+      "supply": "50093.024763814385"
     },
     {
       "day": "2025-09-19 00:00:00",
@@ -298,7 +308,7 @@
     {
       "day": "2025-09-18 00:00:00",
       "holders": "12",
-      "supply": "50093.02476381439"
+      "supply": "50093.024763814385"
     },
     {
       "day": "2025-09-17 00:00:00",
@@ -328,22 +338,22 @@
     {
       "day": "2025-09-12 00:00:00",
       "holders": "12",
-      "supply": "50073.71897843112"
+      "supply": "50073.71897843111"
     },
     {
       "day": "2025-09-11 00:00:00",
       "holders": "11",
-      "supply": "62.318978842263334"
+      "supply": "62.31897884226334"
     },
     {
       "day": "2025-09-10 00:00:00",
       "holders": "10",
-      "supply": "61.31897915062353"
+      "supply": "61.318979150623534"
     },
     {
       "day": "2025-09-09 00:00:00",
       "holders": "8",
-      "supply": "58.3089806234692"
+      "supply": "58.30898062346921"
     },
     {
       "day": "2025-09-08 00:00:00",
@@ -398,7 +408,7 @@
     {
       "day": "2025-08-29 00:00:00",
       "holders": "7",
-      "supply": "20.99999999999998"
+      "supply": "20.999999999999982"
     },
     {
       "day": "2025-08-28 00:00:00",
@@ -806,28 +816,44 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "7322546.764479587",
+  "totalAllocations": "7329845.63372924",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "1900724.9245368186",
+      "usdValue": "1905842.6439618578",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "2371810.481048652",
+      "usdValue": "2372676.8060860164",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
       "label": "Other",
-      "usdValue": "3050011.358894116",
+      "usdValue": "3051326.1836813656",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
+      "asset": "avUSD MAX",
+      "balance": "306316.86583422427",
+      "logo": "",
+      "chains": [
+        "avax"
+      ]
+    },
+    {
+      "asset": "AVAX",
+      "balance": "7.334738294512484",
+      "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
+      "chains": [
+        "avax"
+      ]
+    },
+    {
       "asset": "AI Chain Coin",
-      "balance": "7850.552707970352",
+      "balance": "7671.480744044189",
       "logo": "",
       "chains": [
         "eth"
@@ -835,7 +861,7 @@
     },
     {
       "asset": "Midas Hyperithm",
-      "balance": "80.09224168685776",
+      "balance": "80.1815090726335",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
       "chains": [
         "eth"
@@ -843,7 +869,7 @@
     },
     {
       "asset": "PT Autonomous Liquidity USD 11DEC2025",
-      "balance": "504457.87126335205",
+      "balance": "505435.0865290216",
       "logo": "",
       "chains": [
         "eth"
@@ -851,7 +877,7 @@
     },
     {
       "asset": "PT Midas Hyperithm 20NOV2025",
-      "balance": "719154.5944631586",
+      "balance": "719983.3026927977",
       "logo": "",
       "chains": [
         "eth"
@@ -859,7 +885,7 @@
     },
     {
       "asset": "ETH",
-      "balance": "588.0779779303291",
+      "balance": "575.6412684262699",
       "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
       "chains": [
         "eth",
@@ -868,7 +894,7 @@
     },
     {
       "asset": "Morpho Token",
-      "balance": "2.8005545506425418",
+      "balance": "2.738163167606727",
       "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
       "chains": [
         "arb"
@@ -876,31 +902,15 @@
     },
     {
       "asset": "USD Coin",
-      "balance": "132.518048446854",
+      "balance": "132.53103907381802",
       "logo": "https://static.debank.com/image/arb_token/logo_url/0xaf88d065e77c8cc2239327c5edb3a432268e5831/fffcd27b9efff5a86ab942084c05924d.png",
       "chains": [
         "arb"
       ]
     },
     {
-      "asset": "avUSD MAX",
-      "balance": "303073.46441042185",
-      "logo": "",
-      "chains": [
-        "avax"
-      ]
-    },
-    {
-      "asset": "AVAX",
-      "balance": "7.660939866799502",
-      "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
-      "chains": [
-        "avax"
-      ]
-    },
-    {
       "asset": "Midas Fasanara ONE",
-      "balance": "2371760.8073656517",
+      "balance": "2372628.181855784",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x238a700ed6165261cf8b2e544ba797bc11e466ba/9e4cbfaede1d32b5fa36966dfd723aa0.png",
       "chains": [
         "eth"
@@ -908,7 +918,7 @@
     },
     {
       "asset": "Auros USD Coin",
-      "balance": "2800039.953172806",
+      "balance": "2801088.4273158736",
       "logo": "",
       "chains": [
         "eth"
@@ -916,12 +926,12 @@
     },
     {
       "asset": "Auros Tether USD",
-      "balance": "250033.93040024518",
+      "balance": "250064.22972595206",
       "logo": "",
       "chains": [
         "eth"
       ]
     }
   ],
-  "btcTVL": "19767724.835233502"
+  "btcTVL": "18958736.541763812"
 }
