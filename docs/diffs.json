@@ -38217,5 +38217,236 @@
       "19017825.192645386"
     ],
     "prevTime": "November 16, 2025 at 1:13 AM UTC"
+  },
+  "November 18, 2025 at 1:08 AM UTC": {
+    "totalAllocations": [
+      "7332240.2123470055",
+      "4282733.9462883165"
+    ],
+    "allocations": [
+      [
+        {
+          "label": "Delta Neutral",
+          "usdValue": "1906579.8580317658",
+          "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+        },
+        {
+          "label": "Private Credit",
+          "usdValue": "2372524.935381899",
+          "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
+        },
+        {
+          "label": "Other",
+          "usdValue": "3053135.4189333403",
+          "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
+        }
+      ],
+      [
+        {
+          "label": "Delta Neutral",
+          "usdValue": "1907267.7040391928",
+          "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+        },
+        {
+          "label": "Private Credit",
+          "usdValue": "2375440.7513880883",
+          "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
+        },
+        {
+          "label": "Other",
+          "usdValue": "25.490861035187738",
+          "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
+        }
+      ]
+    ],
+    "tokenAllocations": [
+      [
+        {
+          "asset": "avUSD MAX",
+          "balance": "305303.6388151441",
+          "logo": "",
+          "chains": [
+            "avax"
+          ]
+        },
+        {
+          "asset": "AVAX",
+          "balance": "7.286767475058511",
+          "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
+          "chains": [
+            "avax"
+          ]
+        },
+        {
+          "asset": "Morpho Token",
+          "balance": "2.772862774159115",
+          "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
+          "chains": [
+            "arb"
+          ]
+        },
+        {
+          "asset": "USD Coin",
+          "balance": "132.518446119108",
+          "logo": "https://static.debank.com/image/arb_token/logo_url/0xaf88d065e77c8cc2239327c5edb3a432268e5831/fffcd27b9efff5a86ab942084c05924d.png",
+          "chains": [
+            "arb"
+          ]
+        },
+        {
+          "asset": "ETH",
+          "balance": "575.7972823887006",
+          "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+          "chains": [
+            "arb",
+            "eth"
+          ]
+        },
+        {
+          "asset": "AI Chain Coin",
+          "balance": "7700.0359859431765",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "Midas Hyperithm",
+          "balance": "80.17637628577744",
+          "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "PT Autonomous Liquidity USD 11DEC2025",
+          "balance": "506258.3561077997",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "PT Midas Hyperithm 20NOV2025",
+          "balance": "721122.9311948253",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "Midas Fasanara ONE",
+          "balance": "2372476.29902286",
+          "logo": "https://static.debank.com/image/eth_token/logo_url/0x238a700ed6165261cf8b2e544ba797bc11e466ba/9e4cbfaede1d32b5fa36966dfd723aa0.png",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "Auros USD Coin",
+          "balance": "2803057.2150014834",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "Auros Tether USD",
+          "balance": "250277.59229182784",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        }
+      ],
+      [
+        {
+          "asset": "AI Chain Coin",
+          "balance": "7494.682095317913",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "Midas Hyperithm",
+          "balance": "80.18383486667764",
+          "logo": "https://static.debank.com/image/eth_token/logo_url/0x9b5528528656dbc094765e2abb79f293c21191b9/f87f540e6ea5f9dc2c83cb9b5a7af5ef.png",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "PT Autonomous Liquidity USD 11DEC2025",
+          "balance": "505736.0618024773",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "PT Midas Hyperithm 20NOV2025",
+          "balance": "721656.1396978206",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "ETH",
+          "balance": "559.894576884807",
+          "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+          "chains": [
+            "eth",
+            "arb"
+          ]
+        },
+        {
+          "asset": "Morpho Token",
+          "balance": "2.4853144810442935",
+          "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
+          "chains": [
+            "arb"
+          ]
+        },
+        {
+          "asset": "USD Coin",
+          "balance": "132.53103907381802",
+          "logo": "https://static.debank.com/image/arb_token/logo_url/0xaf88d065e77c8cc2239327c5edb3a432268e5831/fffcd27b9efff5a86ab942084c05924d.png",
+          "chains": [
+            "arb"
+          ]
+        },
+        {
+          "asset": "avUSD MAX",
+          "balance": "306064.44874511356",
+          "logo": "",
+          "chains": [
+            "avax"
+          ]
+        },
+        {
+          "asset": "AVAX",
+          "balance": "6.922189247208316",
+          "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
+          "chains": [
+            "avax"
+          ]
+        },
+        {
+          "asset": "Midas Fasanara ONE",
+          "balance": "2375393.4179427754",
+          "logo": "https://static.debank.com/image/eth_token/logo_url/0x238a700ed6165261cf8b2e544ba797bc11e466ba/9e4cbfaede1d32b5fa36966dfd723aa0.png",
+          "chains": [
+            "eth"
+          ]
+        }
+      ]
+    ],
+    "btcTVL": [
+      "19017825.192645386",
+      "18426028.64300269"
+    ],
+    "prevTime": "November 17, 2025 at 1:09 AM UTC"
   }
 }
