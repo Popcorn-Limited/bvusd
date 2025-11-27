@@ -1,12 +1,13 @@
 import "server-only";
 import { NextResponse } from "next/server";
 
-type ChainId = "1" | "747474" | "43111"; // supported chains
+type ChainId = "1" | "747474" | "43111" | "57073"; // supported chains
 
 const RPC_URL: Record<ChainId, string> = {
   "1": `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
   "747474": "https://rpc.katana.network",
-  "43111": "https://rpc.hemi.network/rpc"
+  "43111": "https://rpc.hemi.network/rpc",
+  "57073": "https://rpc-gel.inkonchain.com",
 };
 
 function cors() {
