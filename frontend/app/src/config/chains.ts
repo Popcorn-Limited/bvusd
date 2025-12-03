@@ -2,6 +2,7 @@ import { Address } from "viem";
 import eth from "../../../uikit/src/token-icons/eth2.svg";
 import katana from "../../../uikit/src/token-icons/katana.svg";
 import hemi from "../../../uikit/src/token-icons/hemi.svg";
+import ink from "../../../uikit/src/token-icons/ink.svg";
 
 type ChainIcons = {
   [name: string]: any;
@@ -11,7 +12,10 @@ export const supportedChainIcons: ChainIcons = {
   katana: katana,
   ethereum: eth,
   hemi,
+  ink,
 };
+
+export const BVUSD_CHAINS = [1, 747474, 57073];
 
 export type Vault = {
   outputSymbol: string;
@@ -191,7 +195,44 @@ export const CHAINS: Record<number, AppChainConfig> = {
       },
     },
   },
-};
+  57073: {
+    CHAIN_ID: 57073,
+    CHAIN_CURRENCY: { name: "Ethereum", symbol: "ETH", decimals: 18 },
+    CHAIN_NAME: "Ink",
+    CHAIN_BLOCK_EXPLORER: "https://explorer.inkonchain.com",
+    CHAIN_CONTRACT_MULTICALL: "0xcA11bde05977b3631167028862bE2a173976CA11",
+    CONTRACT_VAULT: "0x761A5D84AEd750b4A112a5fdB0aEf27432CdF2bB",
+    CONTRACT_BOLD_TOKEN: "0xa8fa8a5cacc0dec1968d27ebec61cf92bb927ec2",
+    STATS_URL:
+      "https://raw.githubusercontent.com/Popcorn-Limited/bvusd/main/docs/katana.json",
+    CONTRACT_CONVERTER: "0x4B11A40B93207ef9bD9Cd8d5871CA30a0aA25268",
+    CONTRACT_WHITELIST: "0xE6270367a25F1f56D3Df788fEB4Cda89372040e2",
+    ENSO_ROUTER: "0xF75584eF6673aD213a685a1B58Cc0330B8eA22Cf",
+    VAULTS: {
+      kBTC: {
+        name: "Kraken BTC Vault",
+        outputSymbol: "skBTC",
+        asset: "0x73E0C0d45E048D25Fc26Fa3159b0aA04BfA4Db98",
+        address: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc",
+        inputDecimals: 8,
+      },
+    },
+    TOKENS: {
+      USDC: {
+        address: "0x2D270e6886d130D724215A266106e6832161EAEd",
+        decimals: 6,
+      },
+      kBTC: {
+        address: "0x73E0C0d45E048D25Fc26Fa3159b0aA04BfA4Db98",
+        decimals: 8
+      },
+      skBTC: {
+        address: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc",
+        decimals: 8,
+      }
+    }
+  }
+}
 
 export function getAllVaults(symbol? : string) {
   let vaultAssets = [];
