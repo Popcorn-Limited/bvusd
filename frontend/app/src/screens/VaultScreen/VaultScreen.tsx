@@ -6,7 +6,7 @@ import { css } from "@/styled-system/css";
 import { HFlex } from "@liquity2/uikit";
 import { VaultPanel } from "./VaultPanel";
 import { VaultFAQPanel } from "./VaultFAQPanel";
-import { CHAINS, getAllVaults, Vault } from "@/src/config/chains";
+import { getAllVaults } from "@/src/config/chains";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
 export function VaultPoolScreen({ asset }: { asset: string }) {

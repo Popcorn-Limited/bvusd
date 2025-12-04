@@ -159,6 +159,13 @@ export const CHAINS: Record<number, AppChainConfig> = {
         address: "0x0b8E088a35879f30a4d63F686B10adAD9cB3DBE1",
         inputDecimals: 8,
       },
+      nBTC: {
+        name: "Matrixport BTC Vault",
+        outputSymbol: "snBTC",
+        asset: "0xC93B7aae2802f57eb9D98E2B6a68217d75a0658c",
+        address: "0x748973D83d499019840880f61B32F1f83B46f1A5",
+        inputDecimals: 8,
+      },
     },
     TOKENS: {
       nBTC: {
@@ -193,7 +200,7 @@ export const CHAINS: Record<number, AppChainConfig> = {
   },
 };
 
-export function getAllVaults(symbol? : string) {
+export function getAllVaults() {
   let vaultAssets = [];
 
   const vaults = Object.values(CHAINS).reduce(

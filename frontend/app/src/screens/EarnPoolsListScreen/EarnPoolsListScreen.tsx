@@ -16,7 +16,7 @@ import { useVaultPosition, useVaultRequestPosition } from "@/src/bitvault-utils"
 
 export function EarnPoolsListScreen() {
   const account = useAccount();
-  const {vaults, vaultAssets, vaultsArray} = getAllVaults(account.address);
+  const {vaults, vaultAssets, vaultsArray} = getAllVaults();
 
   let vaultPositions = [];
   let queries = vaultsArray.map(([, vault]) =>
