@@ -1,5 +1,5 @@
 {
-  "time": "December 8, 2025 at 1:10 AM UTC",
+  "time": "December 9, 2025 at 1:10 AM UTC",
   "total_bold_supply": "5404105.137479000000000001",
   "sbvUSD": [
     {
@@ -851,42 +851,25 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "3596245.104117447",
+  "totalAllocations": "3598374.7237952827",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "2036108.7367440588",
+      "usdValue": "2036878.0514566193",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "1552803.5713029436",
+      "usdValue": "1554163.5935735225",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
       "label": "Other",
-      "usdValue": "7332.796070444733",
+      "usdValue": "7333.078765141061",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
-    {
-      "asset": "Morpho Token",
-      "balance": "1.6580200739449986",
-      "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
-      "chains": [
-        "arb"
-      ]
-    },
-    {
-      "asset": "ETH",
-      "balance": "547.7458714147438",
-      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
-      "chains": [
-        "arb",
-        "eth"
-      ]
-    },
     {
       "asset": "avUSD MAX",
       "balance": "510658.12018826255",
@@ -897,15 +880,32 @@
     },
     {
       "asset": "AVAX",
-      "balance": "6.45609875915745",
+      "balance": "6.51365684616331",
       "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
       "chains": [
         "avax"
       ]
     },
     {
+      "asset": "Morpho Token",
+      "balance": "1.6628227473363812",
+      "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
+      "chains": [
+        "arb"
+      ]
+    },
+    {
+      "asset": "ETH",
+      "balance": "554.2966693668677",
+      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+      "chains": [
+        "arb",
+        "eth"
+      ]
+    },
+    {
       "asset": "AI Chain Coin",
-      "balance": "7522.965036413861",
+      "balance": "7616.489879608634",
       "logo": "",
       "chains": [
         "eth"
@@ -913,7 +913,7 @@
     },
     {
       "asset": "Syrup USDC",
-      "balance": "511498.78999984177",
+      "balance": "511576.4414823847",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x80ac24aa929eaf5013f6436cda2a7ba190f5cc0b/a7faacaded044f7d84a2b8e21ae7babd.png",
       "chains": [
         "eth"
@@ -921,7 +921,7 @@
     },
     {
       "asset": "PT Midas Hyperithm 29JAN2026",
-      "balance": "264359.07211695856",
+      "balance": "264786.7755530139",
       "logo": "",
       "chains": [
         "eth"
@@ -937,7 +937,7 @@
     },
     {
       "asset": "PT Autonomous Liquidity USD 11DEC2025",
-      "balance": "510301.2754001726",
+      "balance": "510559.8538665752",
       "logo": "",
       "chains": [
         "eth"
@@ -945,7 +945,7 @@
     },
     {
       "asset": "Midas Fasanara ONE",
-      "balance": "1552756.624524545",
+      "balance": "1554116.0668182622",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0x238a700ed6165261cf8b2e544ba797bc11e466ba/9e4cbfaede1d32b5fa36966dfd723aa0.png",
       "chains": [
         "eth"
@@ -953,7 +953,7 @@
     },
     {
       "asset": "AUSD",
-      "balance": "1.0006821978812783",
+      "balance": "1.0006871497378669",
       "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png",
       "chains": [
         "katana"
@@ -968,5 +968,5 @@
       ]
     }
   ],
-  "btcTVL": "18133113.50201304"
+  "btcTVL": "18067274.548294067"
 }
