@@ -103,7 +103,7 @@ export function TopBar() {
             )}
           </div>
         </Link>
-        <Menu menuItems={menuItems} />
+        {/* <Menu menuItems={menuItems} /> */}
         <div
           className={css({
             display: "flex",
