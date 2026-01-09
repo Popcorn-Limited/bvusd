@@ -1,5 +1,5 @@
-import { HomeScreen } from "@/src/screens/HomeScreen/HomeScreen";
+import { EarnPoolsListScreen } from "@/src/screens/EarnPoolsListScreen/EarnPoolsListScreen";
 
 export default function Page() {
-  return <HomeScreen />;
+  return <EarnPoolsListScreen />;
 }

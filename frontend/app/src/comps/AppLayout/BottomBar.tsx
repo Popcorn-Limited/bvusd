@@ -58,7 +58,8 @@ export function BottomBar() {
           })}
         >
           <HFlex gap={4} alignItems="center">
-            <Logo size={16} />
+            <>
+              {/* <Logo size={16} />
             <span>bvUSD TVL</span>{" "}
             <span>
               {liquityStats.data && (
@@ -73,7 +74,8 @@ export function BottomBar() {
                   }
                 />
               )}
-            </span>
+            </span> */}
+            </>
           </HFlex>
           <HFlex gap={4} alignItems="center">
             <Logo size={16} />
@@ -94,47 +96,49 @@ export function BottomBar() {
             </span>
           </HFlex>
           <HFlex gap={16}>
-            {DISPLAYED_PRICES.map((symbol) => (
-              <Price key={symbol} symbol={symbol} />
-            ))}
-            {account.address && ACCOUNT_SCREEN && (
-              <Link
-                id="footer-account-button"
-                href={`/account?address=${account.address}`}
-                passHref
-                legacyBehavior
-                scroll={true}
-              >
-                <AnchorTextButton
-                  label={
-                    <HFlex gap={4} alignItems="center">
-                      <Image
-                        alt=""
-                        width={16}
-                        height={16}
-                        src={blo(account.address)}
-                        className={css({
-                          borderRadius: "50%",
-                        })}
-                      />
+            <>
+              {/* <>
+              {DISPLAYED_PRICES.map((symbol) => (
+                <Price key={symbol} symbol={symbol} />
+              ))}
+              {account.address && ACCOUNT_SCREEN && (
+                <Link
+                  id="footer-account-button"
+                  href={`/account?address=${account.address}`}
+                  passHref
+                  legacyBehavior
+                  scroll={true}
+                >
+                  <AnchorTextButton
+                    label={
+                      <HFlex gap={4} alignItems="center">
+                        <Image
+                          alt=""
+                          width={16}
+                          height={16}
+                          src={blo(account.address)}
+                          className={css({
+                            borderRadius: "50%",
+                          })}
+                        />
 
-                      {shortenAddress(account.address, 3)}
-                    </HFlex>
-                  }
-                  className={css({
-                    color: "content",
-                    borderRadius: 4,
-                    _focusVisible: {
-                      outline: "2px solid token(colors.focused)",
-                    },
-                    _active: {
-                      translate: "0 1px",
-                    },
-                  })}
-                />
-              </Link>
-            )}
-            {/* <Link
+                        {shortenAddress(account.address, 3)}
+                      </HFlex>
+                    }
+                    className={css({
+                      color: "content",
+                      borderRadius: 4,
+                      _focusVisible: {
+                        outline: "2px solid token(colors.focused)",
+                      },
+                      _active: {
+                        translate: "0 1px",
+                      },
+                    })}
+                  />
+                </Link>
+              )}
+              <Link
               id="footer-redeem-button"
               href="/redeem"
               passHref
@@ -162,7 +166,9 @@ export function BottomBar() {
                   },
                 })}
               />
-            </Link> */}
+            </Link>
+            </>*/}
+            </>
           </HFlex>
         </div>
       </div>
