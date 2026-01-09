@@ -1,5 +1,5 @@
 {
-  "time": "January 8, 2026 at 1:15 AM UTC",
+  "time": "January 9, 2026 at 1:15 AM UTC",
   "total_bold_supply": "5404105.137479000000000001",
   "sbvUSD": [
     {
@@ -851,61 +851,61 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "526956.7220179316",
+  "totalAllocations": "529092.7239388461",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "517918.4968565111",
+      "usdValue": "520056.71798898384",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "1697.3803605272954",
+      "usdValue": "1696.328225510173",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
       "label": "Other",
-      "usdValue": "7340.844800893181",
+      "usdValue": "7339.677724352143",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
-      "asset": "AI Chain Coin",
-      "balance": "7749.6782941217825",
-      "logo": "",
-      "chains": [
-        "eth"
-      ]
-    },
-    {
-      "asset": "ETH",
-      "balance": "561.4175234057486",
-      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
-      "chains": [
-        "eth",
-        "arb"
-      ]
-    },
-    {
-      "asset": "Morpho Token",
-      "balance": "1.7035768615432558",
-      "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
-      "chains": [
-        "arb"
-      ]
-    },
-    {
       "asset": "AVAX",
-      "balance": "6.786378299657075",
+      "balance": "6.695253785386061",
       "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
       "chains": [
         "avax"
       ]
     },
     {
+      "asset": "Morpho Token",
+      "balance": "1.6606272395003205",
+      "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
+      "chains": [
+        "arb"
+      ]
+    },
+    {
+      "asset": "ETH",
+      "balance": "551.1013543597277",
+      "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+      "chains": [
+        "arb",
+        "eth"
+      ]
+    },
+    {
+      "asset": "AI Chain Coin",
+      "balance": "7606.430689959224",
+      "logo": "",
+      "chains": [
+        "eth"
+      ]
+    },
+    {
       "asset": "USD Coin",
-      "balance": "8965.180343308977",
+      "balance": "8964.283107485988",
       "logo": "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png",
       "chains": [
         "eth"
@@ -913,12 +913,12 @@
     },
     {
       "asset": "AUSD",
-      "balance": "1.0016684230910757",
+      "balance": "1.0015800090051767",
       "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png",
       "chains": [
         "katana"
       ]
     }
   ],
-  "btcTVL": "18286638.389567405"
+  "btcTVL": "18256349.03070234"
 }
