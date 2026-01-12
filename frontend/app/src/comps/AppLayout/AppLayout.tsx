@@ -56,7 +56,6 @@ export function AppLayout({
           gap: 48,
           maxWidth: `calc(${LAYOUT_WIDTH}px + 48px)`,
           margin: "0 auto",
-          padding: "24px 0",
           width: "100%",
         })}
       >
@@ -106,13 +105,11 @@ function MobileScreen() {
           gap: 16,
           width: "90%",
           height: "48px",
-          margin: "16px auto",
+          margin: "0px auto",
           padding: "0 16px",
           fontSize: 16,
           fontWeight: 500,
-          background: "fieldSurface",
-          border: "1px solid token(colors.fieldBorder)",
-          borderRadius: 16,
+          borderBottom: "1px solid token(colors.fieldBorder)",
         })}
       >
         <Link
@@ -166,7 +163,7 @@ function MobileScreen() {
       <div
         className={css({
           width: "90%",
-          margin: "0 auto",
+          margin: "12px auto",
           display: "flex",
           flexDirection: "column",
           gap: 24,

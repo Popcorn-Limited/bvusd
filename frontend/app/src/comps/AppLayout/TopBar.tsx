@@ -2,12 +2,9 @@
 
 import type { ComponentProps } from "react";
 
-import { Logo } from "@/src/comps/Logo/Logo";
-import { Tag } from "@/src/comps/Tag/Tag";
 import content from "@/src/content";
-import { DEPLOYMENT_FLAVOR } from "@/src/env";
 import { css } from "@/styled-system/css";
-import { IconBorrow, IconDashboard, IconEarn } from "@liquity2/uikit";
+import { IconDashboard, IconEarn } from "@liquity2/uikit";
 import Link from "next/link";
 import { AccountButton } from "./AccountButton";
 import { Menu } from "./Menu";
@@ -24,11 +21,10 @@ const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
 
 export function TopBar() {
   return (
-    <div
+    <header
       className={css({
         position: "relative",
         zIndex: 1,
-        height: 72,
         padding: "0 32px",
       })}
     >
@@ -38,17 +34,13 @@ export function TopBar() {
           zIndex: 1,
           display: "flex",
           justifyContent: "space-between",
-          gap: 16,
           maxWidth: 1440,
           height: "100%",
           margin: "0 auto",
-          padding: "16px 24px",
+          padding: "12px 24px",
           fontSize: 16,
           fontWeight: 500,
-          background: "#141416",
-          boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-          border: "1px solid var(--Neutral-100, #353945)",
-          borderRadius: 16,
+          borderBottom: "1px solid var(--Neutral-100, #353945)",
         })}
       >
         <Link
@@ -82,25 +74,6 @@ export function TopBar() {
               whiteSpace: "nowrap",
             })}
           >
-            {DEPLOYMENT_FLAVOR && (
-              <div
-                className={css({
-                  display: "flex",
-                })}
-              >
-                <Tag
-                  size="mini"
-                  css={{
-                    color: "accentContent",
-                    background: "brandCoral",
-                    border: 0,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {DEPLOYMENT_FLAVOR}
-                </Tag>
-              </div>
-            )}
           </div>
         </Link>
         {/* <Menu menuItems={menuItems} /> */}
@@ -115,6 +88,6 @@ export function TopBar() {
           <AccountButton />
         </div>
       </div>
-    </div>
+    </header>
   );
 }
