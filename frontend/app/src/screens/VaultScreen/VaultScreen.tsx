@@ -1,13 +1,14 @@
 "use client";
 
 import { Screen } from "@/src/comps/Screen/Screen";
-import content from "@/src/content";
-import { css } from "@/styled-system/css";
-import { HFlex } from "@liquity2/uikit";
+import { TokenIcon, TokenSymbol } from "@liquity2/uikit";
 import { VaultPanel } from "./VaultPanel";
 import { VaultFAQPanel } from "./VaultFAQPanel";
 import { getAllVaults } from "@/src/config/chains";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
+import { ProductCard } from "@/src/comps/ProductCard/ProductCard";
+import { ProductCardGroup } from "@/src/comps/ProductCard/ProductCardGroup";
+import { Field } from "@/src/comps/Field/Field";
 
 export function VaultPoolScreen({ asset }: { asset: string }) {
   const { chainConfig } = useChainConfig();
@@ -28,49 +29,10 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
   return (
     <Screen
       ready={true}
-      heading={{
-        title:
-          vaultAsset === "bvUSD"
-            ? content.vaultScreen.headline
-            : "Put your BTC to Work",
-        subtitle: (
-          <HFlex gap={16}>
-            {vaultAsset === "bvUSD"
-              ? content.vaultScreen.subheading(
-                <HFlex gap={16}>
-                  <img
-                    src="/investors/fasanara.svg"
-                    alt="Fasanara"
-                    className={css({
-                      width: 85,
-                      height: 24,
-                    })}
-                  />
-                  <img
-                    src="/investors/LM5.svg"
-                    alt="LM5"
-                    className={css({
-                      width: 125,
-                      height: 24,
-                    })}
-                  />
-                  <img
-                    src="/investors/M1.svg"
-                    alt="M1"
-                    className={css({
-                      width: 56,
-                      height: 24,
-                    })}
-                  />
-                </HFlex>
-              )
-              : "Deposit your BTC Wrapped Token"}
-          </HFlex>
-        ),
-      }}
+      back={{ href: "/vaults", label: "Back to Vaults" }}
     >
       <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} chainName={chainName} />
-      <VaultFAQPanel />
+      <VaultFAQPanel />      
     </Screen>
   );
 }

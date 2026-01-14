@@ -6,7 +6,6 @@ import {
   TokenIcon,
   TokenSymbol,
 } from "@liquity2/uikit";
-import { useTransition } from "@react-spring/web";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
 import { DNUM_0 } from "@/src/dnum-utils";
 import { css } from "@/styled-system/css";
@@ -37,21 +36,6 @@ export function EarnPoolsListScreen() {
 
   if(allSuccess)
     vaultReqPositions = queries.map(q => q.data)
-
-  const poolsTransition = useTransition(
-    Object.entries(vaults).map(([symbol, vault]) => symbol),
-    {
-      from: { opacity: 0, transform: "scale(1.1) translateY(64px)" },
-      enter: { opacity: 1, transform: "scale(1) translateY(0px)" },
-      leave: { opacity: 0, transform: "scale(1) translateY(0px)" },
-      trail: 80,
-      config: {
-        mass: 1,
-        tension: 1800,
-        friction: 140,
-      },
-    }
-  );
 
   return (
     <Screen

@@ -10,11 +10,10 @@ export function Screen({
   back,
   children,
   className,
-  gap = 48,
+  gap = 4,
   heading = null,
   paddingTop = 0,
   ready = true,
-  width = 534,
 }: {
   back?: {
     href: string;
@@ -90,9 +89,9 @@ export function Screen({
   });
 
   const headingElt = typeof heading === "object"
-      && heading !== null
-      && "title" in heading
-      && !isValidElement(heading)
+    && heading !== null
+    && "title" in heading
+    && !isValidElement(heading)
     ? (
       <header
         className={css({
@@ -100,7 +99,7 @@ export function Screen({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 12,
+          gap: 4,
           paddingBottom: 8,
         })}
       >
@@ -128,7 +127,7 @@ export function Screen({
       </header>
     )
     : (
-      <div style={{ width }}>
+      <div style={{ width: "100%" }}>
         {/* @ts-ignore */}
         {heading}
       </div>
@@ -141,7 +140,7 @@ export function Screen({
           position: "relative",
           flexGrow: 1,
           display: "flex",
-          gap: 48,
+          gap: 4,
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
@@ -158,24 +157,17 @@ export function Screen({
         back && (
           <a.div
             className={css({
-              position: {
-                base: "static",
-                large: "absolute",
-              },
               width: {
                 base: "100%",
-                large: "auto",
+                large: "100%",
               },
               maxWidth: {
                 base: 540,
                 large: "100%",
               },
-              marginBottom: {
-                base: -16,
-                large: 0,
-              },
-              left: 0,
               zIndex: 1,
+              alignItems: "start",
+              padding: "12px 0"
             })}
             style={{
               transform: style.transform,
@@ -212,7 +204,7 @@ export function Screen({
         })}
         style={{
           gap,
-          width,
+          width:"100%",
           ...screenSpring,
         }}
       >
@@ -234,18 +226,10 @@ export function BackButton({
       <a
         className={css({
           display: "flex",
-          alignItems: "center",
-          padding: "0 16px",
           gap: 8,
           color: "positionContent",
-          background: "fieldSurface",
-          height: 40,
           width: "fit-content",
           whiteSpace: "nowrap",
-          borderRadius: 20,
-          _active: {
-            translate: "0 1px",
-          }
         })}
       >
         <IconArrowBack size={20} />

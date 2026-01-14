@@ -19,10 +19,10 @@ export function Tag({
       className={css({
         display: "inline-flex",
         alignItems: "center",
-        color: "infoSurfaceContent",
-        background: "infoSurface",
-        border: "1px solid token(colors.infoSurfaceBorder)",
-        borderRadius: 8,
+        color: "contentAlt",
+        background: "controlSurface",
+        border: "1px solid token(colors.controlSurface)",
+        borderRadius: 4,
         userSelect: "none",
       }, cssProp)}
       style={getStyles(size)}
@@ -50,7 +50,7 @@ function getStyles(size: Parameters<typeof Tag>[0]["size"]) {
   if (size === "medium") {
     return {
       height: 22,
-      padding: 6,
+      padding: 8,
       fontSize: 14,
     };
   }

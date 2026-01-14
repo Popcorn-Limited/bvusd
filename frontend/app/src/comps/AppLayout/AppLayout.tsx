@@ -53,8 +53,8 @@ export function AppLayout({
         className={css({
           display: { base: "none", medium: "grid" },
           gridTemplateRows: "auto 1fr auto",
-          gap: 48,
-          maxWidth: `calc(${LAYOUT_WIDTH}px + 48px)`,
+          gap: 4,
+          maxWidth: `calc(${LAYOUT_WIDTH}px + 4px)`,
           margin: "0 auto",
           width: "100%",
         })}

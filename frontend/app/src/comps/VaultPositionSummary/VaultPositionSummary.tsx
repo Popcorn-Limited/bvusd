@@ -2,27 +2,24 @@ import type {
   Address,
   PositionEarn,
   RequestBalance,
-  Token,
   TokenSymbol,
 } from "@/src/types";
 import Image from "next/image";
-
 import { Amount } from "@/src/comps/Amount/Amount";
-import { TagPreview } from "@/src/comps/TagPreview/TagPreview";
-import { dnum8, DNUM_0, dnumOrNull } from "@/src/dnum-utils";
 import { fmtnum } from "@/src/formatting";
-import { isEarnPositionActive, useLiquityStats } from "@/src/liquity-utils";
+import { isEarnPositionActive } from "@/src/liquity-utils";
 import { css } from "@/styled-system/css";
 import {
   IconArrowRight,
   IconPlus,
-  InfoTooltip,
   TokenIcon,
 } from "@liquity2/uikit";
 import * as dn from "dnum";
 import Link from "next/link";
 import { useVault } from "@/src/bitvault-utils";
 import { supportedChainIcons } from "@/src/config/chains";
+import { Field } from "@/src/comps/Field/Field";
+import { DNUM_0 } from "@/src/dnum-utils";
 
 export function VaultPositionSummary({
   prevEarnPosition,
@@ -109,7 +106,7 @@ export function VaultPositionSummary({
               display: "flex",
             })}
           >
-            <TokenIcon symbol={vaultAsset as TokenSymbol} size={34} />
+            <TokenIcon symbol={vaultAsset as TokenSymbol} size={42} />
           </div>
           <div
             className={css({
@@ -124,7 +121,15 @@ export function VaultPositionSummary({
                 flexDirection: "column",
               })}
             >
-              <div
+              <p
+                className={css({
+                  fontWeight: 600,
+                  fontSize: 20
+                })}
+              >
+                {vaultName}
+              </p>
+              <span
                 className={css({
                   display: "flex",
                   flexDirection: "row",
@@ -134,126 +139,46 @@ export function VaultPositionSummary({
                   src={supportedChainIcons[chainName.toLowerCase()]}
                   alt={chainName.toLowerCase()}
                   width={13}
-                  style={{ borderRadius: "50%", marginRight: "10px" }}
+                  style={{ borderRadius: "50%", margin: "0 4px 1px 0" }}
                 />
-                {vaultName}
-              </div>
-
-              <div
-                className={css({
-                  display: "flex",
-                  gap: 4,
-                  fontSize: 14,
-                })}
-                style={{
-                  color: `var(--fg-secondary-${active ? "active" : "inactive"
-                    })`,
-                }}
-              >
-                <div>TVL</div>
-                <div>
-                  <Amount
-                    fallback="-"
-                    format="compact"
-                    suffix={` ${vaultAsset}`}
-                    value={data?.totalDeposited}
-                  />
-                </div>
-                <InfoTooltip heading="Total Value Locked (TVL)">
-                  Total amount of {vaultAsset} deposited in this vault.
-                </InfoTooltip>
-              </div>
+                <p
+                  className={css({
+                    fontSize: 14,
+                    color: "contentAlt"
+                  })}
+                >
+                  Vault Tier 2
+                </p>
+              </span>
             </div>
             <div
               className={css({
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
+                flexDirection: "row",
+                gap: 16
               })}
             >
-              {txPreviewMode ? (
-                <TagPreview />
-              ) : (
-                <>
-                  <div
-                    className={css({
-                      display: "flex",
-                      gap: 6,
-                    })}
-                  >
-                    <div
-                      className={css({
-                        color: "contentAlt2",
-                      })}
-                    >
-                      30d APY
+              <Field
+                label="Bits"
+                field={
+                  <span
+                    className={css({ display: "flex", flexDirection: "row", content: "center" })}>
+                    <div className={css({ margin: "3px 4px 0 0" })}>
+                      <TokenIcon symbol="bvUSD" size="mini" />
                     </div>
-                    {
-                      dn.greaterThan(data?.apr7d, 0) ?
-                        <>
-                          <Amount
-                            fallback="-%"
-                            format="1z"
-                            percentage
-                            value={data?.apr30d}
-                          />
-                          <InfoTooltip
-                            content={{
-                              heading: "APY (last 30 days)",
-                              body:
-                                "The annualized rate sbvUSD " +
-                                "deposits earned over the past 30 days.",
-                              footerLink: {
-                                label: "Check Dune for more details",
-                                href: "https://dune.com/dna/bvusd",
-                              },
-                            }}
-                          />
-                        </>
-                        : <p>Coming Soon</p>
-                    }
-                  </div>
-                  <div
-                    className={css({
-                      display: "flex",
-                      gap: 4,
-                      fontSize: 14,
-                    })}
-                  >
-                    <div
-                      className={css({
-                        color: "contentAlt2",
-                      })}
-                    >
-                      7d APY
-                    </div>
-                    {
-                      dn.greaterThan(data?.apr7d, 0) ?
-                        <>
-                          <Amount
-                            fallback="-%"
-                            format="1z"
-                            percentage
-                            value={data?.apr7d}
-                          />
-                          <InfoTooltip
-                            content={{
-                              heading: "APY (last 7 days)",
-                              body:
-                                "The annualized percentage rate sbvUSD " +
-                                "deposits earned over the past 7 days.",
-                              footerLink: {
-                                label: "Check Dune for more details",
-                                href: "https://dune.com/dna/bvusd",
-                              },
-                            }}
-                          />
-                        </>
-                        : <p>Coming Soon</p>
-                    }
-                  </div>
-                </>
-              )}
+                    <p>20x</p>
+                  </span>
+                }
+              />
+              <Field
+                label="Rewards"
+                field={
+                  <TokenIcon.Group>
+                    <TokenIcon key={"symbol"} symbol={vaultSymbol as TokenSymbol} size="small" /><TokenIcon key={"symbol"} symbol={"bvUSD"} size="small" />
+                  </TokenIcon.Group>
+                } />
+              <Field label="30D APY" field={<p>{data.apr30d === DNUM_0 ? "TBD" : `${data.apr30d}%`}</p>} />
+              <Field label="TVL" field={<p>{fmtnum(dn.mul(data.totalDeposited, data.price))} BTC</p>} />
             </div>
           </div>
         </div>
@@ -282,7 +207,7 @@ export function VaultPositionSummary({
                     })`,
                 }}
               >
-                Deposit
+                Deposited
               </div>
               <div
                 className={css({

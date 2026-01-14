@@ -57,8 +57,8 @@ export function useVault({ chainId, vaultAddress, vaultSymbol}: { chainId: numbe
         : dnZero
 
       return {
-        apr7d: vaultSymbol !== "sbvUSD" ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
-        apr30d: vaultSymbol !== "sbvUSD" ? 0 : dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
+        apr7d: vaultSymbol !== "sbvUSD" ? DNUM_0 : dnumOrNull(Number(stats.sbvUSD[0].apy7d) / 100, 4),
+        apr30d: vaultSymbol !== "sbvUSD" ? DNUM_0 : dnumOrNull(Number(stats.sbvUSD[0].apy30d) / 100, 4),
         collateral,
         totalDeposited: totalAssets,
         price: totalSupply > dnZero && totalAssets > dnZero ? dn.div(totalAssets, totalSupply, decimals) : dnOne,

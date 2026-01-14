@@ -10,8 +10,8 @@ export function ProductCardGroup({
   summary,
 }: {
   children: ReactNode;
-  description: ReactNode;
-  icon: ReactNode;
+  description?: ReactNode;
+  icon?: ReactNode;
   name: ReactNode;
   summary?: {
     label: ReactNode;
@@ -23,7 +23,7 @@ export function ProductCardGroup({
       className={css({
         display: "flex",
         flexDirection: "column",
-        gap: 48,
+        gap: 24,
       })}
     >
       <header
@@ -47,20 +47,23 @@ export function ProductCardGroup({
               alignItems: "center",
               gap: 12,
               fontSize: 24,
-            })}
-          >
-            {icon}
-            {name}
-          </h1>
-          <p
-            className={css({
-              maxWidth: 328,
-              fontSize: 14,
               color: "contentAlt",
             })}
           >
-            {description}
-          </p>
+            {icon && icon}
+            {name}
+          </h1>
+          {description &&
+            <p
+              className={css({
+                maxWidth: 328,
+                fontSize: 14,
+                color: "contentAlt",
+              })}
+            >
+              {description}
+            </p>
+          }
         </div>
         {summary && (
           <div

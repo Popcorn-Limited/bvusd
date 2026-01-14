@@ -2,6 +2,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 
 import type { ReactNode as N } from "react";
+import css from "styled-jsx/css";
 
 export default {
   // Used in the top bar and other places
@@ -333,7 +334,7 @@ export default {
   vaultsHome: {
     headline: (tokensIcons: N) => (
       <>
-        Earn with BTC {tokensIcons}
+        <p>Earn with BTC</p> {tokensIcons}
       </>
     ),
     subheading: (
@@ -419,7 +420,7 @@ export default {
 
   // Buy screen
   buyScreen: {
-    headline: (tokensIcons: N,boldIcon: N) => (
+    headline: (tokensIcons: N, boldIcon: N) => (
       <>
         Buy {boldIcon} bvUSD with {tokensIcons} stablecoins
       </>
@@ -452,7 +453,7 @@ export default {
     headline: "Earn best-in-class yield on your stablecoins",
     subheading: (icons: N) => (
       <>
-       Managed by {icons}
+        Managed by {icons}
       </>
     ),
   },
