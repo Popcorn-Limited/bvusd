@@ -61,7 +61,7 @@ contract TroveNFT is HasWhitelist, ERC721, ITroveNFT {
 
     // adds receiver whitelist check
     function transferFrom(address from, address to, uint256 tokenId) public override(ERC721, IERC721) {
-        _requireWhitelisted(whitelist, to);
+        _requireWhitelisted(whitelist, this.transferFrom.selector, to);
         super.transferFrom(from, to, tokenId);
     }
 

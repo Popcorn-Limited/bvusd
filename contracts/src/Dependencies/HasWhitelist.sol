@@ -12,9 +12,21 @@ abstract contract HasWhitelist {
         whitelist = _whitelist;
     }
 
-    function _requireWhitelisted(IWhitelist _whitelist, address _user) internal view {
-        if (!_whitelist.isWhitelisted(address(this), _user)) {
+    function _requireWhitelisted(
+        IWhitelist _whitelist,
+        bytes4 _funcSig,
+        address _user
+    ) internal view {
+        if (!_whitelist.isWhitelisted(address(this), _funcSig, _user)) {
             revert NotWhitelisted(_user);
         }
+    }
+
+    modifier checkWhitelisted(bytes4 _funcSig) {
+        IWhitelist _whitelist = whitelist;
+        if (address(_whitelist) != address(0)) {
+            _requireWhitelisted(_whitelist, _funcSig, msg.sender);
+        }
+        _;
     }
 }

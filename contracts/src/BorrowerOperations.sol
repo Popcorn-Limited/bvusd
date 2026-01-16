@@ -238,7 +238,7 @@ contract BorrowerOperations is
     ) external override returns (uint256) {
         _requireValidAnnualInterestRate(_annualInterestRate);
 
-        _checkWhitelisted(_owner, msg.sender, _receiver);
+        _checkWhitelisted(this.openTrove.selector, _owner, msg.sender, _receiver);
 
         OpenTroveVars memory vars;
 
@@ -281,7 +281,12 @@ contract BorrowerOperations is
     ) external override returns (uint256) {
         _requireValidInterestBatchManager(_params.interestBatchManager);
 
-        _checkWhitelisted(_params.owner, msg.sender, _params.receiver);
+        _checkWhitelisted(
+            this.openTroveAndJoinInterestBatchManager.selector,
+            _params.owner,
+            msg.sender,
+            _params.receiver
+        );
 
         OpenTroveVars memory vars;
         vars.troveManager = troveManager;
@@ -733,7 +738,7 @@ contract BorrowerOperations is
         }
 
         // _requireNonZeroAdjustment(_troveChange);
-         if (
+        if (
             _troveChange.collIncrease == 0 &&
             _troveChange.collDecrease == 0 &&
             _troveChange.debtIncrease == 0 &&
@@ -2093,16 +2098,17 @@ contract BorrowerOperations is
     }
 
     function _checkWhitelisted(
+        bytes4 _funcSig,
         address _owner,
         address _sender,
         address _receiver
     ) internal view {
         IWhitelist _whitelist = whitelist;
         if (address(_whitelist) != address(0)) {
-            _requireWhitelisted(_whitelist, _owner);
-            _requireWhitelisted(_whitelist, _sender);
+            _requireWhitelisted(_whitelist, _funcSig, _owner);
+            _requireWhitelisted(_whitelist, _funcSig, _sender);
             if (_receiver != address(0)) {
-                _requireWhitelisted(whitelist, _receiver);
+                _requireWhitelisted(whitelist, _funcSig, _receiver);
             }
         }
     }

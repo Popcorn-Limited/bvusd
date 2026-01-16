@@ -22,8 +22,10 @@ contract WhitelistTestSetup is DevTestSetup {
         addressesRegistry.setWhitelist(whitelist);
     }
 
-    function _addToWhitelist(address callingContract, address who) internal {
-        vm.prank(owner);
-        whitelist.addToWhitelist(callingContract, who);
+    function _addToWhitelist(address callingContract, bytes4 funcSig, address who) internal {
+        vm.startPrank(owner);
+        whitelist.addWhitelistedFunc(callingContract, funcSig);
+        whitelist.addToWhitelist(callingContract, funcSig, who);
+        vm.stopPrank();
     }
 }
