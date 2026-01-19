@@ -1,7 +1,9 @@
+import content from "@/src/content";
 import { css } from "@/styled-system/css";
 import ReactMarkdown from "react-markdown";
+import { Address } from "viem";
 
-export function VaultFAQPanel() {
+export function VaultFAQPanel({ vaultAddress }: { vaultAddress: Address }) {
   return (
     <div
       className={css({
@@ -27,31 +29,48 @@ export function VaultFAQPanel() {
         </h2>
         <FactSheetPanel
           title="FactSheet"
-          content={`The BitVault BTC Yield Fund is an actively managed Bitcoin yield fund operated by BV Labs Ltd. The fund provides investors with access to institutional-grade yield strategies while maintaining full exposure to Bitcoin price performance.
-
-The fund tracks the performance of a diversified portfolio of both stablecoin-denominated and Bitcoin-denominated yield strategies. BV Labs Ltd. is responsible for portfolio construction, risk management, and capital allocation, with a focus on liquidity preservation, capital efficiency, and downside protection.
-
-The minimum investment is 1 BTC, positioning the fund for professional and institutional investors. The portfolio is exclusively composed of low-risk yield strategies, ensuring high credit quality, conservative risk exposure, and strong liquidity across market conditions.`} />
+          content={content.vaultScreen.faq.factsheet.content[vaultAddress] ?? content.vaultScreen.faq.factsheet.content.default}
+          items={content.vaultScreen.faq.factsheet.items[vaultAddress] ?? content.vaultScreen.faq.factsheet.items.default}
+        />
         <FactSheetPanel
           title="Strategy Composition"
-          items={[
-            { title: "Market-Neutral Arbitrage", subtitle: "Basis, Funding & Cross-Venue Arbitrage", content: "50%" },
-            { title: "Liquidity Provision & Market Making", subtitle: "DEX LPs, Pendle LP, Passive Market Making", content: "50%" },
-          ]} />
+          items={content.vaultScreen.faq.strategyComposition[vaultAddress] ?? content.vaultScreen.faq.strategyComposition.default} />
         <FactSheetPanel
           title="Fee Structure"
           items={[
-            { title: "Management Fee", subtitle: "0.50% per annum", content: "50%" },
-            { title: "Performance Fee", subtitle: "20% of net profits", content: "20%" },
-            { title: "Deposit Fee", subtitle: "", content: "0%" },
-            { title: "Withdrawal Fee", subtitle: "", content: "0%" },
+            {
+              title: "Management Fee",
+              subtitle: "per annum",
+              content: content.vaultScreen.faq.feeStructure.mangementFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.mangementFee.default
+            },
+            {
+              title: "Performance Fee",
+              subtitle: "of net profits",
+              content: content.vaultScreen.faq.feeStructure.performanceFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.performanceFee.default
+            },
+            {
+              title: "Deposit Fee",
+              subtitle: "",
+              content: content.vaultScreen.faq.feeStructure.depositFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.depositFee.default
+            },
+            {
+              title: "Withdrawal Fee",
+              subtitle: "",
+              content: content.vaultScreen.faq.feeStructure.withdrawalFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.withdrawalFee.default
+            },
           ]} />
+        <FactSheetPanel
+          title="Risk Disclosure"
+          items={content.vaultScreen.faq.riskDisclosure[vaultAddress] ?? content.vaultScreen.faq.riskDisclosure.default} />
+        <FactSheetPanel
+          title="Technical Details"
+          items={content.vaultScreen.faq.technicalDetails[vaultAddress] ?? content.vaultScreen.faq.technicalDetails.default} />
       </div>
     </div>
   );
 }
 
-function FactSheetPanel({ title, content, items}: { title: string, content?: string, items?: FactSheetItem[]}) {
+function FactSheetPanel({ title, content, items }: { title: string, content?: string, items?: FactSheetItem[] }) {
   return (
     <div
       className={css({

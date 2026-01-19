@@ -1,14 +1,10 @@
 "use client";
 
 import { Screen } from "@/src/comps/Screen/Screen";
-import { TokenIcon, TokenSymbol } from "@liquity2/uikit";
 import { VaultPanel } from "./VaultPanel";
 import { VaultFAQPanel } from "./VaultFAQPanel";
 import { getAllVaults } from "@/src/config/chains";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
-import { ProductCard } from "@/src/comps/ProductCard/ProductCard";
-import { ProductCardGroup } from "@/src/comps/ProductCard/ProductCardGroup";
-import { Field } from "@/src/comps/Field/Field";
 
 export function VaultPoolScreen({ asset }: { asset: string }) {
   const { chainConfig } = useChainConfig();
@@ -32,7 +28,7 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
       back={{ href: "/vaults", label: "Back to Vaults" }}
     >
       <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} chainName={chainName} />
-      <VaultFAQPanel />      
+      <VaultFAQPanel vaultAddress={vault?.address}/>      
     </Screen>
   );
 }

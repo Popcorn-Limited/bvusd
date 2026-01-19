@@ -99,6 +99,7 @@ export function HomeScreen() {
             </div>
           }
           path="/"
+          disableHover
         />
       </div>
       <ProductCardGroup

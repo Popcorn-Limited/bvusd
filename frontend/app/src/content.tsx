@@ -450,12 +450,62 @@ export default {
 
   // Vault screen
   vaultScreen: {
-    headline: "Earn best-in-class yield on your stablecoins",
-    subheading: (icons: N) => (
-      <>
-        Managed by {icons}
-      </>
-    ),
+    faq: {
+      factsheet: {
+        content: {
+          default: `he BitVault BTC Yield Fund is an actively managed Bitcoin yield fund operated by BV Labs Ltd. The fund provides investors with access to institutional-grade yield strategies while maintaining full exposure to Bitcoin price performance.
+
+The fund tracks the performance of a diversified portfolio of both stablecoin-denominated and Bitcoin-denominated yield strategies. BV Labs Ltd. is responsible for portfolio construction, risk management, and capital allocation, with a focus on liquidity preservation, capital efficiency, and downside protection.
+
+The minimum investment is 1 BTC, positioning the fund for professional and institutional investors. The portfolio is exclusively composed of low-risk yield strategies, ensuring high credit quality, conservative risk exposure, and strong liquidity across market conditions.`,
+        },
+        items: {
+          default: [
+            { title: "Token Standard", content: "ERC-4626" },
+            { title: "Network", content: "Ethereum" },
+            { title: "Inception Date", content: "January 2025" },
+            { title: "Minimum Investment", content: "None" },
+            { title: "Redemption Period", content: "T+1 (24 hours)" },
+            { title: "Target APY", content: "3%" }
+          ]
+        }
+      },
+      strategyComposition: {
+        default: [
+          { title: "Market-Neutral Arbitrage", subtitle: "Basis, Funding & Cross-Venue Arbitrage", content: "50%" },
+          { title: "Liquidity Provision & Market Making", subtitle: "DEX LPs, Pendle LP, Passive Market Making", content: "50%" },
+        ]
+      },
+      feeStructure: {
+        mangementFee: {
+          default: "1%"
+        },
+        performanceFee: {
+          default: "20%"
+        },
+        depositFee: {
+          default: "0%"
+        },
+        withdrawalFee: {
+          default: "0%"
+        },
+      },
+      riskDisclosure: {
+        default: [
+          { title: "Smart Contract Risk", subtitle: "All strategies utilize battle-tested protocols. Contracts are audited by leading security firms." },
+          { title: "Market Risk", subtitle: "BTC price volatility affects NAV. Yield strategies are market-neutral but underlying asset fluctuates." },
+          { title: "Liquidity Risk", subtitle: "Large redemptions may require T+1 settlement. Emergency withdrawals may incur slippage." },
+          { title: "Counterparty Risk", subtitle: "Exposure to wrapped BTC issuers (Bitget, Enzo, etc.). Fund diversifies across multiple wrappers." }
+        ]
+      },
+      technicalDetails: {
+        default: [
+          { title: "Vault Contract", content: "0x54C5515133Dd9Ced5c8F0bff834A2C004D9B7CCc" },
+          { title: "Management Safe Address", content: "0x..." },
+          { title: "Oracle Address", content: "0x..." },
+        ]
+      }
+    },
   },
 
   // Stake screen

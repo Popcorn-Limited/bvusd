@@ -15,6 +15,7 @@ export function ProductCard({
   children,
   hint,
   borderOverride,
+  disableHover,
 }: {
   path: string;
   headerTitle: ReactNode;
@@ -23,20 +24,23 @@ export function ProductCard({
   children?: ReactNode;
   hint?: ReactNode;
   borderOverride?: "green";
+  disableHover?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   const [active, setActive] = useState(false);
 
   const hoverSpring = useSpring({
-    progress: hovered ? 1 : 0,
+    progress: disableHover ? 0 : (hovered ? 1 : 0),
     transform: active
       ? "scale(1)"
-      : hovered
-        ? "scale(1.01)"
-        : "scale(1)",
-    boxShadow: hovered && !active
-      ? "0 2px 4px rgba(0, 0, 0, 0.1)"
-      : "0 2px 4px rgba(0, 0, 0, 0)",
+      : disableHover
+        ? "scale(1)"
+        : hovered
+          ? "scale(1.01)"
+          : "scale(1)",
+    boxShadow: disableHover || !hovered || active
+      ? "0 2px 4px rgba(0, 0, 0, 0)"
+      : "0 2px 4px rgba(0, 0, 0, 0.1)",
     immediate: active,
     config: {
       mass: 1,
@@ -48,8 +52,8 @@ export function ProductCard({
   return (
     <Link
       href={path}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => !disableHover && setHovered(true)}
+      onMouseLeave={() => !disableHover && setHovered(false)}
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
       onBlur={() => setActive(false)}
@@ -57,6 +61,7 @@ export function ProductCard({
         "group",
         css({
           outline: "none",
+          cursor: disableHover ? "default" : "pointer",
         }),
       )}
     >
@@ -68,11 +73,13 @@ export function ProductCard({
           background: "token(colors.infoSurface)",
           border: borderOverride === "green" ? "1px solid token(colors.green)" : "1px solid token(colors.neutral100)",
           borderRadius: 8,
-          _groupHover: {
-            position: "relative",
-            zIndex: 2,
-            background: "token(colors.infoSurface)",
-          },
+          ...(disableHover ? {} : {
+            _groupHover: {
+              position: "relative",
+              zIndex: 2,
+              background: "token(colors.infoSurface)",
+            },
+          }),
         })}
         style={{
           ...hoverSpring,
