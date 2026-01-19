@@ -78,6 +78,13 @@ export const CHAINS: Record<number, AppChainConfig> = {
         address: "0xdB06a9D79f5Ff660f611234c963c255E03Cb5554",
         inputDecimals: 8,
       },
+      WBTC: {
+        name: "Bluechip Bitcoin Vault",
+        outputSymbol: "sWBTC",
+        asset: "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+        address: "0xdb435E82b853c85dfbEc81dc1120558E77632A2a",
+        inputDecimals: 8,
+      }
     },
     TOKENS: {
       bgBTC: {

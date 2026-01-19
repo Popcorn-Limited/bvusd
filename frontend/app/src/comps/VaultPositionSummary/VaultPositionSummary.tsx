@@ -47,7 +47,6 @@ export function VaultPositionSummary({
   txPreviewMode?: boolean;
 }) {
   const { data } = useVault({ chainId, vaultAddress, vaultSymbol });
-
   // leftover from old liquity component structure
   let share = dn.from(0, 18);
   let prevShare = dn.from(0, 18);
@@ -174,7 +173,8 @@ export function VaultPositionSummary({
                 label="Rewards"
                 field={
                   <TokenIcon.Group>
-                    <TokenIcon key={"symbol"} symbol={vaultSymbol as TokenSymbol} size="small" /><TokenIcon key={"symbol"} symbol={"bvUSD"} size="small" />
+                    <TokenIcon key={"symbol"} symbol={vaultSymbol as TokenSymbol} size="small" />
+                    <TokenIcon key={"symbol"} symbol={"bvUSD"} size="small" />
                   </TokenIcon.Group>
                 } />
               <Field label="30D APY" field={<p>{data.apr30d === DNUM_0 ? "TBD" : `${data.apr30d}%`}</p>} />

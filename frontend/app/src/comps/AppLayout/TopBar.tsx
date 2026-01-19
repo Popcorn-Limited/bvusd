@@ -11,12 +11,8 @@ import { Menu } from "./Menu";
 import { TopBarLogo } from "@/src/comps/Logo/TopBarLogo";
 
 const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
-  [content.menu.earn, "/earn", IconEarn],
   [content.menu.buy, "/buy", IconEarn],
-  [content.menu.points, "/points", IconEarn],
-  [content.menu.portfolio, "/account", IconDashboard],
   [content.menu.vaults, "/vaults", IconEarn],
-  [content.menu.dashboard, "/dashboard", IconEarn],
 ];
 
 export function TopBar() {
@@ -76,7 +72,7 @@ export function TopBar() {
           >
           </div>
         </Link>
-        {/* <Menu menuItems={menuItems} /> */}
+        <Menu menuItems={menuItems} />
         <div
           className={css({
             display: "flex",

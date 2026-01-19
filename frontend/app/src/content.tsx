@@ -20,11 +20,11 @@ export default {
   menu: {
     points: "Points",
     portfolio: "Portfolio",
-    vaults: "Vaults",
+    vaults: "Exotic BTC",
     borrow: "Borrow",
     earn: "Earn",
     wrap: "Wrap",
-    buy: "Buy",
+    buy: "Mint bvUSD",
     dashboard: "Dashboard",
   },
 

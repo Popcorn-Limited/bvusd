@@ -22,10 +22,12 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
         : chainConfig.CHAIN_ID;
 
   const chainName = vault !== undefined ? vault.chainName : chainConfig.CHAIN_NAME;
+  const isHomeLink = ["sWBTC", undefined].includes(vault?.outputSymbol)
+  
   return (
     <Screen
       ready={true}
-      back={{ href: "/vaults", label: "Back to Vaults" }}
+      back={{ href: isHomeLink ? "/" : "/vaults", label: isHomeLink ? "Back to Home" : "Back to Vaults" }}
     >
       <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} chainName={chainName} />
       <VaultFAQPanel vaultAddress={vault?.address}/>      

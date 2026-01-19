@@ -11,9 +11,13 @@ import { Field } from "@/src/comps/Field/Field";
 import { Tag } from "@/src/comps/Tag/Tag";
 import { ProgressBar } from "@/src/comps/ProgressBar/ProgressBar";
 import Image from "next/image";
+import { useModal } from "@/src/services/ModalService";
+import { BorrowModal } from "./BorrowModal";
 
 export function HomeScreen() {
   const { vaults, vaultAssets, vaultsArray } = getAllVaults();
+  const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
+
 
   return (
     <Screen
@@ -108,6 +112,10 @@ export function HomeScreen() {
           <>
             {/* BTC Native */}
             <ProductCard
+              onClick={() => {
+                setModalContent(<BorrowModal />);
+                setModalVisibility(true);
+              }}
               headerTitle={
                 <ProductCard.Title
                   title={"Native Bitcoin"}
@@ -326,15 +334,15 @@ export function HomeScreen() {
                   </div>
                 </div>
               }
-              path="/"
+              path="/vaults/WBTC-1"
             />
-            {/* BTC Exotic */}
+            {/* sbvUSD Vault */}
             <ProductCard
               headerTitle={
                 <ProductCard.Title
-                  title={"Exotic Bitcoin"}
+                  title={"sbvUSD Vault"}
                   subtitle=""
-                  icon={<TokenIcon symbol={"bgBTC"} size={42} />}
+                  icon={<TokenIcon symbol={"sbvUSD"} size={42} />}
                 />
               }
               children={
@@ -381,7 +389,7 @@ export function HomeScreen() {
                         <p>
                           Vault Capacity
                         </p>
-                        <p>1100 BTC / 5,000 BTC</p>
+                        <p>1100 bvUSD / 5,000 bvUSD</p>
                       </div>
                       <div className={css({ marginTop: 8 })}>
                         <ProgressBar value={1100} max={5000} />
@@ -391,8 +399,7 @@ export function HomeScreen() {
                     <div>
                       <p>Accepted Assets</p>
                       <div className={css({ display: "flex", flexDirection: "row", gap: 8 })}>
-                        <Tag children="bgBTC" size="medium" />
-                        <Tag children="enzoBTC" size="medium" />
+                        <Tag children="bvUSD" size="medium" />
                       </div>
                     </div>
 
@@ -406,7 +413,7 @@ export function HomeScreen() {
                     })}
                   >
                     <Tag
-                      children="Tier 3"
+                      children="Stable"
                       size="medium"
                       css={{
                         borderRadius: 16,
@@ -431,7 +438,7 @@ export function HomeScreen() {
                   </div>
                 </div>
               }
-              path="/vaults"
+              path="/earn"
             />
           </>
         }

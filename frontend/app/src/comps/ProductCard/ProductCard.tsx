@@ -9,6 +9,7 @@ import { ProductCardGroup } from "./ProductCardGroup";
 
 export function ProductCard({
   path,
+  onClick,  
   headerTitle,
   headerChildren,
   headerDirection = "row",
@@ -17,7 +18,8 @@ export function ProductCard({
   borderOverride,
   disableHover,
 }: {
-  path: string;
+  path?: string;
+  onClick?: () => void;
   headerTitle: ReactNode;
   headerChildren?: ReactNode;
   headerDirection?: "row" | "column";
@@ -51,7 +53,7 @@ export function ProductCard({
 
   return (
     <Link
-      href={path}
+      href={path ?? "#"}
       onMouseEnter={() => !disableHover && setHovered(true)}
       onMouseLeave={() => !disableHover && setHovered(false)}
       onMouseDown={() => setActive(true)}
@@ -64,6 +66,7 @@ export function ProductCard({
           cursor: disableHover ? "default" : "pointer",
         }),
       )}
+      onClick={onClick ?? undefined}
     >
       <a.section
         className={css({

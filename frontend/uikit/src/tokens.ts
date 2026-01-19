@@ -118,6 +118,12 @@ export const sEnzoBTC: Token = {
   symbol: "sEnzoBTC" as const,
 } as const;
 
+export const sWBTC: Token = {
+  icon: btcb,
+  name: "sWBTC",
+  symbol: "sWBTC" as const,
+} as const;
+
 
 export const COLLATERALS: CollateralToken[] = [
   BVBTC
@@ -139,5 +145,6 @@ export const TOKENS_BY_SYMBOL = {
   snBTC,
   sWETH,
   enzoBTC,
-  sEnzoBTC
+  sEnzoBTC,
+  sWBTC
 } as const;

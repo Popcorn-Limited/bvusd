@@ -204,7 +204,7 @@ export function Screen({
         })}
         style={{
           gap,
-          width:"100%",
+          width: "100%",
           ...screenSpring,
         }}
       >
@@ -232,7 +232,9 @@ export function BackButton({
           whiteSpace: "nowrap",
         })}
       >
-        <IconArrowBack size={20} />
+        <div className={css({ margin: "1px 0 0 0" })}>
+          <IconArrowBack size={20} />
+        </div>
         {label}
       </a>
     </Link>
