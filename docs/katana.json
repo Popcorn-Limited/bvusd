@@ -1,5 +1,5 @@
 {
-  "time": "January 19, 2026 at 1:19 AM UTC",
+  "time": "January 20, 2026 at 1:14 AM UTC",
   "total_bold_supply": "5404105.137479000000000001",
   "sbvUSD": [
     {
@@ -851,28 +851,28 @@
       "vault": "0x9d3575469d9df8b5d2f4d7703f682221c044397d"
     }
   ],
-  "totalAllocations": "972.4030080950647",
+  "totalAllocations": "963.3866019507136",
   "allocations": [
     {
       "label": "Delta Neutral",
-      "usdValue": "898.5137089767885",
+      "usdValue": "890.1805949626138",
       "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
     },
     {
       "label": "Private Credit",
-      "usdValue": "48.95238901962609",
+      "usdValue": "48.49314906231371",
       "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
     },
     {
       "label": "Other",
-      "usdValue": "24.936910098650074",
+      "usdValue": "24.71285792578616",
       "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
     }
   ],
   "tokenAllocations": [
     {
       "asset": "AI Chain Coin",
-      "balance": "7860.539462143168",
+      "balance": "7772.552814921677",
       "logo": "",
       "chains": [
         "eth"
@@ -880,7 +880,7 @@
     },
     {
       "asset": "ETH",
-      "balance": "963.395096228725",
+      "balance": "954.3698369592465",
       "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
       "chains": [
         "eth",
@@ -888,29 +888,29 @@
       ]
     },
     {
-      "asset": "AVAX",
-      "balance": "6.059508055752317",
-      "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
-      "chains": [
-        "avax"
-      ]
-    },
-    {
       "asset": "Morpho Token",
-      "balance": "1.7539363225328952",
+      "balance": "1.7481731144632362",
       "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
       "chains": [
         "arb"
       ]
     },
     {
+      "asset": "AVAX",
+      "balance": "6.078683714156595",
+      "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
+      "chains": [
+        "avax"
+      ]
+    },
+    {
       "asset": "AUSD",
-      "balance": "1.001172758265715",
+      "balance": "1.0013788385401126",
       "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png",
       "chains": [
         "katana"
       ]
     }
   ],
-  "btcTVL": "18547652.099369936"
+  "btcTVL": "18546128.03099598"
 }
