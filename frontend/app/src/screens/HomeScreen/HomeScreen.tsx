@@ -26,9 +26,9 @@ export function HomeScreen() {
           <div
             className={css({
               display: "flex",
+              flexDirection: { base: "column", medium: "row" },
               alignItems: "center",
               justifyContent: "center",
-              padding: "16px 0 0 0",
               fontSize: 42,
               fontWeight: 700,
               gap: 8
@@ -36,7 +36,7 @@ export function HomeScreen() {
           >
             {content.vaultsHome.headline(
               <TokenIcon.Group size="large">
-                {[...vaultAssets].map((symbol) => {
+                {["BVBTC", "WBTC", "enzoBTC", "bgBTC", "cbBTC", "LBTC"].map((symbol) => {
                   return (<TokenIcon key={"symbol"} symbol={symbol as TokenSymbol} />)
 
                 })}
@@ -72,13 +72,13 @@ export function HomeScreen() {
                   <span
                     className={css({ display: "flex", flexDirection: "row", content: "center" })}>
                     <div className={css({ margin: "3px 4px 0 0" })}>
-                      <TokenIcon symbol="bvUSD" size="mini" />
+                      <TokenIcon symbol="Bit" size="mini" />
                     </div>
                     <p>20x</p>
                   </span>
                 }
               />
-              <Field label="Rewards" field={<TokenIcon.Group><TokenIcon key={"symbol"} symbol={"WBTC"} size="small" /><TokenIcon key={"symbol"} symbol={"bvUSD"} size="small" /></TokenIcon.Group>} />
+              <Field label="Rewards" field={<TokenIcon.Group><TokenIcon key={"symbol"} symbol={"BVBTC"} size="small" /><TokenIcon key={"symbol"} symbol={"bvUSD"} size="small" /></TokenIcon.Group>} />
               <Field label="30D APY" field={<p>4%</p>} />
               <Field label="TVL" field={<p>$20M</p>} />
             </div>
@@ -87,7 +87,7 @@ export function HomeScreen() {
             <div className={css({ display: "flex", flexDirection: "row", gap: 8, padding: "8px 0", color: "contentAlt", fontSize: 14 })}>
               <p>Deposit </p>
               <TokenIcon.Group>
-                {[...vaultAssets].map((symbol) => <TokenIcon key={"symbol"} symbol={symbol as TokenSymbol} size="small" />)}
+                {["BVBTC", "WBTC", "enzoBTC", "bgBTC", "cbBTC", "LBTC"].map((symbol) => <TokenIcon key={"symbol"} symbol={symbol as TokenSymbol} size="small" />)}
               </TokenIcon.Group>
               <p>on</p>
               <TokenIcon.Group>
@@ -235,7 +235,7 @@ export function HomeScreen() {
                 <ProductCard.Title
                   title={"Bluechip Bitcoin"}
                   subtitle=""
-                  icon={<TokenIcon symbol={"BVBTC"} size={42} />}
+                  icon={<TokenIcon symbol={"WBTC"} size={42} />}
                 />
               }
               children={

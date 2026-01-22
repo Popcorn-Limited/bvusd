@@ -9,6 +9,10 @@ import usdt from "./token-icons/usdt.svg";
 import usdc from "./token-icons/usdc.svg";
 import bgbtc from "./token-icons/bitgetbtc.svg";
 import enzobtc from "./token-icons/enzoBTC.svg";
+import bits from "./token-icons/bits.svg";
+import cbbtc from "./token-icons/cbBTC.svg";
+import wbtc from "./token-icons/wbtc.svg";
+import lbtc from "./token-icons/lbtc.svg";
 
 export type CollateralSymbol = "BVBTC";
 
@@ -59,7 +63,7 @@ export const BVBTC: CollateralToken = {
 } as const;
 
 export const WBTC: Token = {
-  icon: btcb,
+  icon: wbtc,
   name: "WBTC",
   symbol: "WBTC" as const,
 } as const;
@@ -119,9 +123,27 @@ export const sEnzoBTC: Token = {
 } as const;
 
 export const sWBTC: Token = {
-  icon: btcb,
+  icon: wbtc,
   name: "sWBTC",
   symbol: "sWBTC" as const,
+} as const;
+
+export const Bit: Token = {
+  icon: bits,
+  name: "Bit",
+  symbol: "Bit" as const,
+} as const;
+
+export const cbBTC: Token = {
+  icon: cbbtc,
+  name: "cbBTC",
+  symbol: "cbBTC" as const,
+} as const;
+
+export const LBTC: Token = {
+  icon: lbtc,
+  name: "LBTC",
+  symbol: "LBTC" as const,
 } as const;
 
 
@@ -146,5 +168,8 @@ export const TOKENS_BY_SYMBOL = {
   sWETH,
   enzoBTC,
   sEnzoBTC,
-  sWBTC
+  sWBTC,
+  Bit,
+  cbBTC,
+  LBTC
 } as const;

@@ -47,15 +47,15 @@ export function BottomBar() {
     <footer
       className={css({
         width: "100%",
-        padding: "0 24px",
       })}
     >
       <div
         className={css({
-          padding: "16px",
-          margin: "0 auto",
+          padding: "16px 0",
+          margin: "48px auto",
           fontSize: 14,
           borderTop: "1px solid var(--Neutral-100, #353945)",
+          borderBottom: "1px solid var(--Neutral-100, #353945)",
         })}
       >
         <HFlex gap={8} alignItems="center">
@@ -70,13 +70,16 @@ export function BottomBar() {
           display: "flex",
           flexDirection: "column",
           gap: 24,
-          borderTop: "1px solid var(--Neutral-100, #353945)",
           paddingTop: 24,
+          minWidth: { base: 0, medium: 1200 },
+          width: "80%",
+          margin: "0 auto",
         })}
       >
         <div
           className={css({
             display: "flex",
+            flexDirection: { base: "column", medium: "row" },
             justifyContent: "space-between",
             alignItems: "flex-start",
             gap: 32,
@@ -88,7 +91,6 @@ export function BottomBar() {
               display: "flex",
               flexDirection: "column",
               gap: 16,
-              minWidth: 220,
             })}
           >
             <TopBarLogo />
@@ -104,11 +106,10 @@ export function BottomBar() {
               display: "flex",
               gap: 48,
               flexWrap: "wrap",
-              minWidth: 260,
             })}
           >
             {FOOTER_LINKS.map((section) => (
-              <div key={section.title} className={css({ minWidth: 160 })}>
+              <div key={section.title}>
                 <div
                   className={css({
                     fontSize: 12,
@@ -162,17 +163,20 @@ export function BottomBar() {
           />
         </div>
 
-        <div
-          className={css({
-            borderTop: "1px solid var(--Neutral-100, #353945)",
-            paddingTop: 24,
-            marginTop: 40,
-            color: "#71717a",
-            fontSize: 12,
-            lineHeight: 1.7,
-          })}
-        >
-          <p className={css({ marginBottom: 16 })}>
+
+      </div>
+      <div
+        className={css({
+          borderTop: "1px solid var(--Neutral-100, #353945)",
+          paddingTop: 24,
+          marginTop: 40,
+          color: "#71717a",
+          fontSize: 12,
+          lineHeight: 1.7,
+        })}
+      >
+        <div className={css({ marginBottom: 16, width: "80%", minWidth: { base: 0, medium: 1200 }, margin: "0 auto" })}>
+          <p >
             <strong className={css({ color: "#a1a1aa" })}>Important Notice:</strong> This product is
             intended for sophisticated and professional investors only. This does not constitute
             investment, financial, legal, or tax advice. Past performance is not indicative of
@@ -202,7 +206,7 @@ function SocialLink({ href, label, icon }: { href: string; label: string; icon: 
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 8,
-        border: "1px solid token(colors.tableBorder)",
+        border: "1px solid #353945",
         color: "#71717a",
         transition: "all 0.15s",
         _hover: { color: "#f39c12", borderColor: "#f39c12" },

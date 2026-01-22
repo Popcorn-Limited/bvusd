@@ -2,6 +2,9 @@ import { Address } from "viem";
 import eth from "../../../uikit/src/token-icons/eth2.svg";
 import katana from "../../../uikit/src/token-icons/katana.svg";
 import hemi from "../../../uikit/src/token-icons/hemi.svg";
+import btcb from "../../../uikit/src/token-icons/btcb.svg";
+import arbitrum from "../../../uikit/src/token-icons/arbitrum.svg";
+import base from "../../../uikit/src/token-icons/base.svg";
 
 type ChainIcons = {
   [name: string]: any;
@@ -11,6 +14,9 @@ export const supportedChainIcons: ChainIcons = {
   katana: katana,
   ethereum: eth,
   hemi,
+  base,
+  bitcoin: btcb,
+  arbitrum,
 };
 
 export type Vault = {

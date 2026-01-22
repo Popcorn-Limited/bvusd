@@ -101,7 +101,7 @@ export function ProductCardGroup({
       <div
         className={css({
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: { base: "repeat(1, 1fr)", medium: "repeat(3, 1fr)" },
           gap: 16,
         })}
       >

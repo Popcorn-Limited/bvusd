@@ -20,6 +20,7 @@ import { useVault } from "@/src/bitvault-utils";
 import { supportedChainIcons } from "@/src/config/chains";
 import { Field } from "@/src/comps/Field/Field";
 import { DNUM_0 } from "@/src/dnum-utils";
+import content from "@/src/content";
 
 export function VaultPositionSummary({
   prevEarnPosition,
@@ -98,63 +99,76 @@ export function VaultPositionSummary({
               })`,
           }}
         >
-          <div
-            className={css({
-              flexGrow: 0,
-              flexShrink: 0,
-              display: "flex",
-            })}
-          >
-            <TokenIcon symbol={vaultAsset as TokenSymbol} size={42} />
-          </div>
+
           <div
             className={css({
               flexGrow: 1,
               display: "flex",
+              flexDirection: { base: "column", medium: "row" },
               justifyContent: "space-between",
             })}
           >
-            <div
-              className={css({
-                display: "flex",
-                flexDirection: "column",
-              })}
-            >
-              <p
-                className={css({
-                  fontWeight: 600,
-                  fontSize: 20
-                })}
-              >
-                {vaultName}
-              </p>
-              <span
-                className={css({
-                  display: "flex",
-                  flexDirection: "row",
-                })}
-              >
-                <Image
-                  src={supportedChainIcons[chainName.toLowerCase()]}
-                  alt={chainName.toLowerCase()}
-                  width={13}
-                  style={{ borderRadius: "50%", margin: "0 4px 1px 0" }}
-                />
-                <p
-                  className={css({
-                    fontSize: 14,
-                    color: "contentAlt"
-                  })}
-                >
-                  Vault Tier 2
-                </p>
-              </span>
-            </div>
+
             <div
               className={css({
                 display: "flex",
                 flexDirection: "row",
-                gap: 16
+              })}
+            >
+              <div
+                className={css({
+                  flexGrow: 0,
+                  flexShrink: 0,
+                  display: "flex",
+                  margin: "2px 8px 0 0"
+                })}
+              >
+                <TokenIcon symbol={vaultAsset as TokenSymbol} size={42} />
+              </div>
+              <div
+                className={css({
+                  display: "flex",
+                  flexDirection: "column",
+                })}
+              >
+                <p
+                  className={css({
+                    fontWeight: 600,
+                    fontSize: 20
+                  })}
+                >
+                  {vaultName}
+                </p>
+                <span
+                  className={css({
+                    display: "flex",
+                    flexDirection: "row",
+                  })}
+                >
+                  <Image
+                    src={supportedChainIcons[chainName.toLowerCase()]}
+                    alt={chainName.toLowerCase()}
+                    width={13}
+                    style={{ borderRadius: "50%", margin: "0 4px 1px 0" }}
+                  />
+                  <p
+                    className={css({
+                      fontSize: 14,
+                      color: "contentAlt"
+                    })}
+                  >
+                   {content.vaultScreen.subtitle[vaultName] ?? content.vaultScreen.subtitle.default}
+                  </p>
+                </span>
+              </div>
+            </div>
+
+            <div
+              className={css({
+                display: "flex",
+                flexDirection: "row",
+                gap: 16,
+                marginTop: { base: 12, medium: 0 }
               })}
             >
               <Field
@@ -178,7 +192,7 @@ export function VaultPositionSummary({
                   </TokenIcon.Group>
                 } />
               <Field label="30D APY" field={<p>{data.apr30d === DNUM_0 ? "TBD" : `${data.apr30d}%`}</p>} />
-              <Field label="TVL" field={<p>{fmtnum(dn.mul(data.totalDeposited, data.price))} BTC</p>} />
+              <Field label="TVL" field={<p>{fmtnum(dn.mul(data.totalDeposited, data.price))} {vaultName === "sbvUSD" ? "USD" : "BVBTC"}</p>} />
             </div>
           </div>
         </div>

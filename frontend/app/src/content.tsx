@@ -450,6 +450,9 @@ export default {
 
   // Vault screen
   vaultScreen: {
+    subtitle: {
+      default: "Vault Tier 2"
+    },
     faq: {
       factsheet: {
         content: {

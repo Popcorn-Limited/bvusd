@@ -101,7 +101,7 @@ export function ProductCard({
             className={css({
               flexGrow: 1,
               display: "flex",
-              flexDirection: headerDirection,
+              flexDirection: { base: "column", medium: headerDirection },
               justifyContent: "space-between",
               gap: 8
             })}

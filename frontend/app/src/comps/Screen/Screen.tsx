@@ -126,12 +126,7 @@ export function Screen({
         )}
       </header>
     )
-    : (
-      <div style={{ width: "100%" }}>
-        {/* @ts-ignore */}
-        {heading}
-      </div>
-    );
+    : null
 
   return (
     <div
@@ -144,7 +139,6 @@ export function Screen({
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
-          padding: 24,
           transformOrigin: "50% 0",
         }),
         className,
@@ -167,7 +161,7 @@ export function Screen({
               },
               zIndex: 1,
               alignItems: "start",
-              padding: "12px 0"
+              padding: "24px 0 12px 0"
             })}
             style={{
               transform: style.transform,
@@ -188,6 +182,7 @@ export function Screen({
             flexDirection: "column",
             width: "100%",
             alignItems: "center",
+            padding: "24px 0 12px 0"
           })}
           style={headingSpring}
         >

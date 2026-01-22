@@ -135,7 +135,7 @@ export function VaultPanel({
             <a.div
               className={css({
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: { base: "column", medium: "row" },
                 gap: 24,
                 width: "100%",
                 height: "fit-content"
@@ -144,7 +144,7 @@ export function VaultPanel({
                 opacity: style.opacity,
               }}
             >
-              <div className={css({ width: "40%" })}>
+              <div className={css({ width: { base: "100%", medium: "40%" } })}>
                 <PanelVaultUpdate
                   decimals={vaultDecimals}
                   vaultPrice={vaultPrice}
@@ -155,7 +155,7 @@ export function VaultPanel({
                     ?? EMPTY_REQUEST_BALANCE}
                 />
               </div>
-              <div className={css({ width: "60%" })}>
+              <div className={css({ width: { base: "100%", medium: "60%" } })}>
                 <div
                   className={css({
                     display: "flex",

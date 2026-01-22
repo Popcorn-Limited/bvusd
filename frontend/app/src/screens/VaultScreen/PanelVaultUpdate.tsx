@@ -422,7 +422,7 @@ export function PanelVaultUpdate({
           </>
         }
       />
-      <div
+      {/* <div
         className={css({
           display: "flex",
           flexDirection: "row",
@@ -437,7 +437,7 @@ export function PanelVaultUpdate({
         <Field label="Withdrawal Fee" field={content.vaultScreen.faq.feeStructure.withdrawalFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.withdrawalFee.default} />
         <Field label="Management Fee" field={content.vaultScreen.faq.feeStructure.mangementFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.mangementFee.default} />
         <Field label="Performance Fee" field={content.vaultScreen.faq.feeStructure.performanceFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.performanceFee.default} />
-      </div>
+      </div> */}
     </div>
   );
 }

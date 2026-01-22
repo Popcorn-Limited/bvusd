@@ -6,6 +6,7 @@ import { PanelConvert, STABLE_SYMBOLS } from "./PanelConvert";
 import content from "@/src/content";
 import { HFlex, TextButton, TokenIcon } from "@liquity2/uikit";
 import { useRouter } from "next/navigation";
+import { css } from "@/styled-system/css";
 
 export function BuyScreen() {
   const account = useAccount();
@@ -35,13 +36,20 @@ export function BuyScreen() {
               <TextButton label="Stake" onClick={() => {
                 router.push("/");
               }} />,
-              <TokenIcon symbol="bvUSD" size="mini"/>,
+              <TokenIcon symbol="bvUSD" size="mini" />,
             )}
           </HFlex>
         )
       }}
     >
-      <PanelConvert />
+      <div
+        className={css({
+          width: { base: "100%", medium: "50%" },
+          margin: "0 auto",
+        })}
+      >
+        <PanelConvert />
+      </div>
     </Screen>
   );
 }

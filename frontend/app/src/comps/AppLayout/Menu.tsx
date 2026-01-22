@@ -23,7 +23,7 @@ export function Menu({
           position: "relative",
           zIndex: 2,
           display: "flex",
-          gap: 8,
+          gap: 16,
           height: "100%",
         })}
       >
@@ -36,7 +36,6 @@ export function Menu({
                 className={css({
                   display: "flex",
                   height: "100%",
-                  padding: "0 8px",
                   _active: {
                     translate: "0 1px",
                   },

@@ -20,6 +20,9 @@ export type TokenSymbol =
   | "enzoBTC"
   | "sEnzoBTC"
   | "sWBTC"
+  | "Bit"
+  | "cbBTC"
+  | "LBTC"
   
 export type Token = {
   icon: string;

@@ -94,13 +94,18 @@ export function PanelConvert() {
 
   return (
     <div
-      style={{
+      className={css({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         width: "100%",
-        gap: 48,
-      }}
+        height: "100%",
+        background: `fieldSurface`,
+        border: "1px solid token(colors.fieldBorder)",
+        borderRadius: 8,
+        padding: 16,
+        gap: 16
+      })}
     >
       <Field
         field={
@@ -109,11 +114,11 @@ export function PanelConvert() {
               drawer={
                 insufficientBalance
                   ? {
-                      mode: "error",
-                      message: `Insufficient balance. You have ${fmtnum(
-                        balances[inputSymbol].data ?? 0
-                      )} ${inputSymbol}.`,
-                    }
+                    mode: "error",
+                    message: `Insufficient balance. You have ${fmtnum(
+                      balances[inputSymbol].data ?? 0
+                    )} ${inputSymbol}.`,
+                  }
                   : null
               }
               contextual={
@@ -195,8 +200,8 @@ export function PanelConvert() {
                     label={
                       dn.gt(balances[inputSymbol].data, 0)
                         ? `Max ${fmtnum(
-                            balances[inputSymbol].data
-                          )} ${inputSymbol}`
+                          balances[inputSymbol].data
+                        )} ${inputSymbol}`
                         : `Max 0.00 ${inputSymbol}`
                     }
                     onClick={() =>

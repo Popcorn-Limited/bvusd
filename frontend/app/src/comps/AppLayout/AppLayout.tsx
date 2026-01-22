@@ -51,7 +51,7 @@ export function AppLayout({
       </div>
       <div
         className={css({
-          display: { base: "none", medium: "grid" },
+          display: "grid" ,
           gridTemplateRows: "auto 1fr auto",
           gap: 4,
           maxWidth: `calc(${LAYOUT_WIDTH}px + 4px)`,
@@ -62,17 +62,16 @@ export function AppLayout({
         <TopBar />
         <div
           className={css({
-            width: "100%",
+            width: "80%",
             minHeight: 0,
-            padding: "0 24px",
+            minWidth: { base: 0, medium: 1200 },
+            margin: "0 auto",
           })}
         >
           {children}
         </div>
         <BottomBar />
       </div>
-
-      <MobileScreen />
 
     </div>
   );

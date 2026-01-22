@@ -21,67 +21,87 @@ export function TopBar() {
       className={css({
         position: "relative",
         zIndex: 1,
-        padding: "0 24px",
       })}
     >
       <div
         className={css({
           position: "relative",
           zIndex: 1,
-          display: "flex",
-          justifyContent: "space-between",
           maxWidth: 1440,
           height: "100%",
-          margin: "0 auto",
-          padding: "12px 24px",
+          margin: "8px auto",
           fontSize: 16,
           fontWeight: 500,
           borderBottom: "1px solid var(--Neutral-100, #353945)",
         })}
       >
-        <Link
-          href="/"
-          className={css({
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-            height: "100%",
-            paddingRight: 8,
-            _active: {
-              translate: "0 1px",
-            },
-            fontSize: 24,
-          })}
+        <div className={css({
+          width: "80%",
+          minWidth: { base: 0, medium: 1200 },
+          margin: "0 auto",
+        })}
         >
-          <div
-            className={css({
-              flexShrink: 0,
-            })}
-          >
-            <TopBarLogo />
+          <div className={css({
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          })}>
+            <Link
+              href="/"
+              className={css({
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                height: "100%",
+                paddingRight: 8,
+                _active: {
+                  translate: "0 1px",
+                },
+                fontSize: 24,
+              })}
+            >
+              <div
+                className={css({
+                  flexShrink: 0,
+                })}
+              >
+                <TopBarLogo />
+              </div>
+              <div
+                className={css({
+                  flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  whiteSpace: "nowrap",
+                })}
+              >
+              </div>
+            </Link>
+            <div className={css({ display: { base: "none", medium: "block" } })}>
+              <Menu menuItems={menuItems} />
+            </div>
+            <div
+              className={css({
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: { base: "100%", medium: 140 },
+              })}
+            >
+              <AccountButton />
+            </div>
           </div>
-          <div
-            className={css({
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              whiteSpace: "nowrap",
-            })}
-          >
-          </div>
-        </Link>
-        <Menu menuItems={menuItems} />
+        </div>
         <div
           className={css({
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            width: 140,
+            display: { base: "block", medium: "none" },
+            width: "80%",
+            margin: "8px auto 0 auto",
           })}
         >
-          <AccountButton />
+          <Menu menuItems={menuItems} />
         </div>
       </div>
     </header>
