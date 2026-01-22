@@ -2,6 +2,9 @@ import { Address } from "viem";
 import eth from "../../../uikit/src/token-icons/eth2.svg";
 import katana from "../../../uikit/src/token-icons/katana.svg";
 import hemi from "../../../uikit/src/token-icons/hemi.svg";
+import btcb from "../../../uikit/src/token-icons/btcb.svg";
+import arbitrum from "../../../uikit/src/token-icons/arbitrum.svg";
+import base from "../../../uikit/src/token-icons/base.svg";
 
 type ChainIcons = {
   [name: string]: any;
@@ -11,6 +14,9 @@ export const supportedChainIcons: ChainIcons = {
   katana: katana,
   ethereum: eth,
   hemi,
+  base,
+  bitcoin: btcb,
+  arbitrum,
 };
 
 export type Vault = {
@@ -78,6 +84,13 @@ export const CHAINS: Record<number, AppChainConfig> = {
         address: "0xdB06a9D79f5Ff660f611234c963c255E03Cb5554",
         inputDecimals: 8,
       },
+      WBTC: {
+        name: "Bluechip Bitcoin Vault",
+        outputSymbol: "sWBTC",
+        asset: "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+        address: "0xdb435E82b853c85dfbEc81dc1120558E77632A2a",
+        inputDecimals: 8,
+      }
     },
     TOKENS: {
       bgBTC: {

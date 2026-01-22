@@ -118,17 +118,17 @@ export function Tabs({
       container: {
         height: 44,
         padding: 4,
-        "--background": token("colors.fieldSurface"),
+        "--background": token("colors.controlSurface"),
         "--border": "0",
         borderRadius: 8,
       },
       activeTab: {
-        border: "1px solid token(colors.border)",
-        "--background": token("colors.controlSurface"),
+        "--background": token("colors.selected"),
         borderRadius: 8,
+        focus: "none"
       },
       activeTabContent: {
-        color: token(`colors.${selected ? "selected" : "interactive"}`),
+        color: token(`colors.${selected ? "controlSurface" : "controlSurface"}`),
       },
       tabsGap: 8,
     };
@@ -220,12 +220,12 @@ function Tab({
   const styles = compact
     ? {
       activeTabContent: {
-        color: selected ? token("colors.controlSurface") : token("colors.interactive"),
+        color: selected ? token("colors.controlSurface") : token("colors.contentAlt"),
       },
     }
     : {
       activeTabContent: {
-        color: selected ? token("colors.selected") : token("colors.interactive"),
+        color: selected ? token("colors.controlSurface") : token("colors.contentAlt"),
       },
     };
   return (
@@ -263,7 +263,7 @@ function Tab({
       style={{
         color: styles.activeTabContent.color,
         padding: compact ? "0 12px" : "0 16px",
-        outlineOffset: compact ? 1 : -2,
+        outline: "none",
         pointerEvents: disabled ? "none" : "auto",
         opacity: disabled ? 0.5 : 1,
       }}

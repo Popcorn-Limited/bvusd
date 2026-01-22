@@ -112,7 +112,7 @@ export function PanelVaultUpdate({
   const { setVisible: setModalVisibility, setContent: setModalContent } =
     useModal();
   const isWhitelisted = vaultOutput === "sbvUSD" ? useIsWhitelistedUser(CHAINS[chain]?.CONTRACT_CONVERTER || zeroAddress, "0xf45346dc", account.address) : true;
-  
+
   useEffect(() => {
     // Initial call
     getNextWithdrawalDate().then(setWithdrawalDate);
@@ -152,12 +152,12 @@ export function PanelVaultUpdate({
   });
 
   const outputAmount =
-    mode === "remove" 
+    mode === "remove"
       ? dn.mul(parsedValue, vaultPrice)
       :
-    chain === 43111
-      ? dn.mul(parsedValue, vaultPrice)
-      : parseInputFloatWithDecimals(
+      chain === 43111
+        ? dn.mul(parsedValue, vaultPrice)
+        : parseInputFloatWithDecimals(
           valOut,
           // @ts-ignore
           decimals
@@ -190,17 +190,20 @@ export function PanelVaultUpdate({
     parsedValue &&
     dn.gt(parsedValue, 0) &&
     !insufficientBalance &&
-    (chain === 43111 || mode === "remove" ||valOutStatus === "success");
+    (chain === 43111 || mode === "remove" || valOutStatus === "success");
 
   return (
     <div
-      style={{
+      className={css({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         width: "100%",
-        gap: 48,
-      }}
+        background: `fieldSurface`,
+        border: "1px solid token(colors.fieldBorder)",
+        borderRadius: 8,
+        padding: 16,
+      })}
     >
       <Field
         field={
@@ -209,11 +212,11 @@ export function PanelVaultUpdate({
               drawer={
                 insufficientBalance
                   ? {
-                      mode: "error",
-                      message: `Insufficient balance. You have ${fmtnum(
-                        balances[inputSymbol].data ?? 0
-                      )} ${inputSymbol}.`,
-                    }
+                    mode: "error",
+                    message: `Insufficient balance. You have ${fmtnum(
+                      balances[inputSymbol].data ?? 0
+                    )} ${inputSymbol}.`,
+                  }
                   : null
               }
               contextual={
@@ -244,13 +247,8 @@ export function PanelVaultUpdate({
               }
               id="input-deposit-change"
               label={{
-                start:
-                  mode === "add"
-                    ? content.earnScreen.depositPanel.label
-                    : content.earnScreen.withdrawPanel.label,
-                end: (
+                start: (
                   <Tabs
-                    compact
                     items={[
                       {
                         label: "Deposit",
@@ -281,8 +279,11 @@ export function PanelVaultUpdate({
                     selected={mode === "remove" ? 1 : 0}
                   />
                 ),
+                end: mode === "add"
+                  ? content.earnScreen.depositPanel.label
+                  : content.earnScreen.withdrawPanel.label,
               }}
-              labelHeight={32}
+              labelHeight={80}
               onFocus={() => setFocused(true)}
               onChange={setValue}
               onBlur={() => setFocused(false)}
@@ -308,8 +309,8 @@ export function PanelVaultUpdate({
                     label={
                       dn.gt(balances[inputSymbol].data, 0)
                         ? `Max ${fmtnum(
-                            balances[inputSymbol].data
-                          )} ${inputSymbol}`
+                          balances[inputSymbol].data
+                        )} ${inputSymbol}`
                         : `Max 0.00 ${inputSymbol}`
                     }
                     onClick={() =>
@@ -326,6 +327,7 @@ export function PanelVaultUpdate({
                 gap: 4,
                 color: "contentAlt2",
                 fontSize: "14px",
+                padding: "4px 0"
               })}
             >
               <p>Built with </p>
@@ -338,87 +340,104 @@ export function PanelVaultUpdate({
               />
               <p>Enso</p>
             </span>
+
+
+
+            {mode === "remove" &&
+              requestBalance &&
+              dn.gt(requestBalance.claimableAssets, 0) && (
+                <ClaimAssets chainId={chain} vaultAddress={vaultAddress} requestBalance={requestBalance} inputSymbol={vaultOutput} outputSymbol={vaultInput} />
+              )}
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 24,
+                width: "100%",
+              }}
+            >
+              {mode === "remove" && (
+                <p
+                  className={css({
+                    color: "content",
+                    fontSize: "16px",
+                    cursor: "none"
+                  })}
+                >
+                  Withdrawals requests will be processed every 30 days. Next
+                  withdrawals will be processed in {withdrawalDate.days} days,{" "}
+                  {withdrawalDate.hours} hours, {withdrawalDate.minutes} minutes,{" "}
+                  {withdrawalDate.seconds} seconds.
+                </p>
+              )}
+              <ConnectWarningBox />
+              {isWhitelisted ? (
+                <Button
+                  disabled={!allowSubmit}
+                  label={content.earnScreen.depositPanel.action}
+                  mode="primary"
+                  size="medium"
+                  shape="rectangular"
+                  wide
+                  onClick={() => {
+                    if (!account.address || !balances[inputSymbol].data) {
+                      return;
+                    }
+
+                    const backLink = vaultInput === "bvUSD" || vaultInput === "sbvUSD" ? "earn" : `/vaults/${vaultInput}-${chain}`
+
+                    txFlow.start({
+                      flowId: "vaultUpdate",
+                      backLink: [backLink, "Back to editing"],
+                      successLink: ["/", "Go to the home page"],
+                      successMessage: `Your ${mode === "add" ? "deposit" : "withdrawal request"
+                        } has been processed successfully.`,
+                      mode: mode,
+                      outputAmount: outputAmount,
+                      amount: parsedValue,
+                      inputToken: inputSymbol as TokenSymbol,
+                      outputToken: outputSymbol as TokenSymbol,
+                      vault: vaultAddress,
+                      slippage: 50,
+                      chainId: chain,
+                    });
+                  }}
+                />
+              ) : (
+                <Button
+                  label="Join the whitelist"
+                  mode="primary"
+                  size="medium"
+                  shape="rectangular"
+                  wide
+                  onClick={() => {
+                    setModalContent(<WhitelistModal />);
+                    setModalVisibility(true);
+                  }}
+                />
+              )}
+            </div>
           </>
         }
       />
-
-      {mode === "remove" &&
-        requestBalance &&
-        dn.gt(requestBalance.claimableAssets, 0) && (
-          <ClaimAssets chainId={chain} vaultAddress={vaultAddress} requestBalance={requestBalance} inputSymbol={vaultOutput} outputSymbol={vaultInput}/>
-        )}
-
-      <div
-        style={{
+      {/* <div
+        className={css({
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          gap: 24,
-          width: "100%",
-        }}
+          flexDirection: "row",
+          justifyContent: "space-between",
+          padding: "16px 0",
+          margin: "16px 0",
+          borderTop: "1px solid token(colors.fieldBorder)",
+          borderBottom: "1px solid token(colors.fieldBorder)",
+        })}
       >
-        {mode === "remove" && (
-          <p
-            className={css({
-              color: "content",
-              fontSize: "16px",
-              textAlign: "center",
-            })}
-          >
-            Withdrawals requests will be processed every 30 days. Next
-            withdrawals will be processed in {withdrawalDate.days} days,{" "}
-            {withdrawalDate.hours} hours, {withdrawalDate.minutes} minutes,{" "}
-            {withdrawalDate.seconds} seconds.
-          </p>
-        )}
-        <ConnectWarningBox />
-        {isWhitelisted ? (
-          <Button
-            disabled={!allowSubmit}
-            label={content.earnScreen.depositPanel.action}
-            mode="primary"
-            size="medium"
-            shape="rectangular"
-            wide
-            onClick={() => {
-              if (!account.address || !balances[inputSymbol].data) {
-                return;
-              }
-
-              const backLink = vaultInput === "bvUSD" || vaultInput === "sbvUSD" ? "earn" : `/vaults/${vaultInput}-${chain}`
-              
-              txFlow.start({
-                flowId: "vaultUpdate",
-                backLink: [backLink, "Back to editing"],
-                successLink: ["/", "Go to the home page"],
-                successMessage: `Your ${
-                  mode === "add" ? "deposit" : "withdrawal request"
-                } has been processed successfully.`,
-                mode: mode,
-                outputAmount: outputAmount,
-                amount: parsedValue,
-                inputToken: inputSymbol as TokenSymbol,
-                outputToken: outputSymbol as TokenSymbol,
-                vault: vaultAddress,
-                slippage: 50,
-                chainId: chain,
-              });
-            }}
-          />
-        ) : (
-          <Button
-            label="Join the whitelist"
-            mode="primary"
-            size="medium"
-            shape="rectangular"
-            wide
-            onClick={() => {
-              setModalContent(<WhitelistModal />);
-              setModalVisibility(true);
-            }}
-          />
-        )}
-      </div>
+        <Field label="Deposit Fee" field={content.vaultScreen.faq.feeStructure.depositFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.depositFee.default} />
+        <Field label="Withdrawal Fee" field={content.vaultScreen.faq.feeStructure.withdrawalFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.withdrawalFee.default} />
+        <Field label="Management Fee" field={content.vaultScreen.faq.feeStructure.mangementFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.mangementFee.default} />
+        <Field label="Performance Fee" field={content.vaultScreen.faq.feeStructure.performanceFee[vaultAddress] ?? content.vaultScreen.faq.feeStructure.performanceFee.default} />
+      </div> */}
     </div>
   );
 }

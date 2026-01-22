@@ -6,7 +6,6 @@ import {
   TokenIcon,
   TokenSymbol,
 } from "@liquity2/uikit";
-import { useTransition } from "@react-spring/web";
 import { VaultPositionSummary } from "@/src/comps/VaultPositionSummary/VaultPositionSummary";
 import { DNUM_0 } from "@/src/dnum-utils";
 import { css } from "@/styled-system/css";
@@ -18,8 +17,10 @@ export function EarnPoolsListScreen() {
   const account = useAccount();
   const {vaults, vaultAssets, vaultsArray} = getAllVaults();
 
+  let filteredVaultsArray = vaultsArray.filter(([symbol]) => symbol !== "WBTC-1");
+
   let vaultPositions = [];
-  let queries = vaultsArray.map(([, vault]) =>
+  let queries = filteredVaultsArray.map(([, vault]) =>
     useVaultPosition(account.address, vault.inputDecimals, vault.chainId, vault.address)
   );
 
@@ -29,7 +30,7 @@ export function EarnPoolsListScreen() {
     vaultPositions = queries.map(q => q.data)
 
   let vaultReqPositions = [];
-  queries = vaultsArray.map(([, vault]) =>
+  queries = filteredVaultsArray.map(([, vault]) =>
     useVaultRequestPosition(account.address, vault.inputDecimals, vault.chainId, vault.address)
   );
 
@@ -37,21 +38,6 @@ export function EarnPoolsListScreen() {
 
   if(allSuccess)
     vaultReqPositions = queries.map(q => q.data)
-
-  const poolsTransition = useTransition(
-    Object.entries(vaults).map(([symbol, vault]) => symbol),
-    {
-      from: { opacity: 0, transform: "scale(1.1) translateY(64px)" },
-      enter: { opacity: 1, transform: "scale(1) translateY(0px)" },
-      leave: { opacity: 0, transform: "scale(1) translateY(0px)" },
-      trail: 80,
-      config: {
-        mass: 1,
-        tension: 1800,
-        friction: 140,
-      },
-    }
-  );
 
   return (
     <Screen
@@ -68,7 +54,7 @@ export function EarnPoolsListScreen() {
             {content.vaultsHome.headline(
               <TokenIcon.Group>
                 {[...vaultAssets].map((symbol) => {
-                  return (<TokenIcon key={"symbol"} symbol={symbol as TokenSymbol} />)
+                  return (<TokenIcon key={symbol} symbol={symbol as TokenSymbol} />)
                   
                 })}
               </TokenIcon.Group>
@@ -80,7 +66,7 @@ export function EarnPoolsListScreen() {
       width={67 * 8}
       gap={16}
     >
-      {vaultsArray.map(([symbol, vault], index) => {
+      {filteredVaultsArray.map(([symbol, vault], index) => {
         return (
           <VaultPositionSummary
             earnPosition={vaultPositions[index]?? null}

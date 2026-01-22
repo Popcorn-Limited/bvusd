@@ -51,29 +51,27 @@ export function AppLayout({
       </div>
       <div
         className={css({
-          display: { base: "none", medium: "grid" },
+          display: "grid" ,
           gridTemplateRows: "auto 1fr auto",
-          gap: 48,
-          maxWidth: `calc(${LAYOUT_WIDTH}px + 48px)`,
+          gap: 4,
+          maxWidth: `calc(${LAYOUT_WIDTH}px + 4px)`,
           margin: "0 auto",
-          padding: "24px 0",
           width: "100%",
         })}
       >
         <TopBar />
         <div
           className={css({
-            width: "100%",
+            width: "80%",
             minHeight: 0,
-            padding: "0 24px",
+            minWidth: { base: 0, medium: 1200 },
+            margin: "0 auto",
           })}
         >
           {children}
         </div>
         <BottomBar />
       </div>
-
-      <MobileScreen />
 
     </div>
   );
@@ -106,13 +104,11 @@ function MobileScreen() {
           gap: 16,
           width: "90%",
           height: "48px",
-          margin: "16px auto",
+          margin: "0px auto",
           padding: "0 16px",
           fontSize: 16,
           fontWeight: 500,
-          background: "fieldSurface",
-          border: "1px solid token(colors.fieldBorder)",
-          borderRadius: 16,
+          borderBottom: "1px solid token(colors.fieldBorder)",
         })}
       >
         <Link
@@ -166,7 +162,7 @@ function MobileScreen() {
       <div
         className={css({
           width: "90%",
-          margin: "0 auto",
+          margin: "12px auto",
           display: "flex",
           flexDirection: "column",
           gap: 24,
