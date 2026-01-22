@@ -50858,5 +50858,140 @@
       "17813491.16286404"
     ],
     "prevTime": "January 20, 2026 at 1:14 AM UTC"
+  },
+  "January 22, 2026 at 1:17 AM UTC": {
+    "totalAllocations": [
+      "898.5592872007161",
+      "914.29335559922"
+    ],
+    "allocations": [
+      [
+        {
+          "label": "Delta Neutral",
+          "usdValue": "830.241927638722",
+          "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+        },
+        {
+          "label": "Private Credit",
+          "usdValue": "45.209185115901285",
+          "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
+        },
+        {
+          "label": "Other",
+          "usdValue": "23.10817444609283",
+          "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
+        }
+      ],
+      [
+        {
+          "label": "Delta Neutral",
+          "usdValue": "844.7871966788452",
+          "wallet": "0x353F009029f35D743d4d14D390d66813d28FE4E6"
+        },
+        {
+          "label": "Private Credit",
+          "usdValue": "46.00820405509711",
+          "wallet": "0xCB04cD15967DD4c725dE5DE487e3715b39f75f42"
+        },
+        {
+          "label": "Other",
+          "usdValue": "23.497954865277624",
+          "wallet": "0xe9B663624C9a970e19B7bb8463e3E386C3f64D21"
+        }
+      ]
+    ],
+    "tokenAllocations": [
+      [
+        {
+          "asset": "AVAX",
+          "balance": "5.8917210447148705",
+          "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
+          "chains": [
+            "avax"
+          ]
+        },
+        {
+          "asset": "Morpho Token",
+          "balance": "1.5920176196234275",
+          "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
+          "chains": [
+            "arb"
+          ]
+        },
+        {
+          "asset": "ETH",
+          "balance": "889.7489081375215",
+          "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+          "chains": [
+            "arb",
+            "eth"
+          ]
+        },
+        {
+          "asset": "AI Chain Coin",
+          "balance": "7250.346249013266",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "AUSD",
+          "balance": "1.0020793741339207",
+          "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png",
+          "chains": [
+            "katana"
+          ]
+        }
+      ],
+      [
+        {
+          "asset": "AVAX",
+          "balance": "6.011568909741617",
+          "logo": "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png",
+          "chains": [
+            "avax"
+          ]
+        },
+        {
+          "asset": "Morpho Token",
+          "balance": "1.6345555839471013",
+          "logo": "https://static.debank.com/image/arb_token/logo_url/0x40bd670a58238e6e230c430bbb5ce6ec0d40df48/07437b846e96807ea48fe4d88dd999cc.png",
+          "chains": [
+            "arb"
+          ]
+        },
+        {
+          "asset": "ETH",
+          "balance": "905.4629779446497",
+          "logo": "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png",
+          "chains": [
+            "arb",
+            "eth"
+          ]
+        },
+        {
+          "asset": "AI Chain Coin",
+          "balance": "7380.734719142448",
+          "logo": "",
+          "chains": [
+            "eth"
+          ]
+        },
+        {
+          "asset": "AUSD",
+          "balance": "1.0014734435543786",
+          "logo": "https://static.debank.com/image/katana_token/logo_url/0x00000000efe302beaa2b3e6e1b18d08d69a9012a/5f66aee80915b4cd036701ae51aa47cc.png",
+          "chains": [
+            "katana"
+          ]
+        }
+      ]
+    ],
+    "btcTVL": [
+      "17813491.16286404",
+      "18020692.458491683"
+    ],
+    "prevTime": "January 21, 2026 at 1:17 AM UTC"
   }
 }
