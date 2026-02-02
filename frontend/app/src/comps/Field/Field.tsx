@@ -43,12 +43,12 @@ export function Field({
             className={css({
               display: "flex",
               flexDirection: "column",
-              gap: 8,
             })}
           >
             <div
               className={css({
                 color: "contentAlt",
+                fontSize: 14
               })}
             >
               {label}

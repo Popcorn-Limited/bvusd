@@ -8,33 +8,41 @@ import { useState } from "react";
 import { ProductCardGroup } from "./ProductCardGroup";
 
 export function ProductCard({
+  path,
+  onClick,  
+  headerTitle,
+  headerChildren,
+  headerDirection = "row",
   children,
   hint,
-  icon,
-  path,
-  tag,
-  title,
+  borderOverride,
+  disableHover,
 }: {
+  path?: string;
+  onClick?: () => void;
+  headerTitle: ReactNode;
+  headerChildren?: ReactNode;
+  headerDirection?: "row" | "column";
   children?: ReactNode;
   hint?: ReactNode;
-  icon: ReactNode;
-  path: string;
-  tag?: ReactNode;
-  title: ReactNode;
+  borderOverride?: "green";
+  disableHover?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   const [active, setActive] = useState(false);
 
   const hoverSpring = useSpring({
-    progress: hovered ? 1 : 0,
+    progress: disableHover ? 0 : (hovered ? 1 : 0),
     transform: active
       ? "scale(1)"
-      : hovered
-      ? "scale(1.01)"
-      : "scale(1)",
-    boxShadow: hovered && !active
-      ? "0 2px 4px rgba(0, 0, 0, 0.1)"
-      : "0 2px 4px rgba(0, 0, 0, 0)",
+      : disableHover
+        ? "scale(1)"
+        : hovered
+          ? "scale(1.01)"
+          : "scale(1)",
+    boxShadow: disableHover || !hovered || active
+      ? "0 2px 4px rgba(0, 0, 0, 0)"
+      : "0 2px 4px rgba(0, 0, 0, 0.1)",
     immediate: active,
     config: {
       mass: 1,
@@ -45,9 +53,9 @@ export function ProductCard({
 
   return (
     <Link
-      href={path}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      href={path ?? "#"}
+      onMouseEnter={() => !disableHover && setHovered(true)}
+      onMouseLeave={() => !disableHover && setHovered(false)}
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
       onBlur={() => setActive(false)}
@@ -55,85 +63,56 @@ export function ProductCard({
         "group",
         css({
           outline: "none",
-          height: 150,
+          cursor: disableHover ? "default" : "pointer",
         }),
       )}
+      onClick={onClick ?? undefined}
     >
       <a.section
         className={css({
           display: "flex",
           flexDirection: "column",
           padding: 16,
-          background: "background",
-          border: "1px solid token(colors.border)",
+          background: "token(colors.infoSurface)",
+          border: borderOverride === "green" ? "1px solid token(colors.green)" : "1px solid token(colors.neutral100)",
           borderRadius: 8,
-          _groupHover: {
-            position: "relative",
-            zIndex: 2,
-            background: "hint",
-          },
-          _groupFocusVisible: {
-            outlineOffset: 2,
-            outline: "2px solid token(colors.focused)",
-          },
+          ...(disableHover ? {} : {
+            _groupHover: {
+              position: "relative",
+              zIndex: 2,
+              background: "token(colors.infoSurface)",
+            },
+          }),
         })}
-        style={hoverSpring}
+        style={{
+          ...hoverSpring,
+        }}
       >
         <div
           className={css({
             display: "flex",
-            justifyContent: "space-between",
-            paddingBottom: 16,
-            color: "interactive",
+            alignItems: "center",
+            gap: 16,
+            paddingBottom: 8,
+            borderBottom: "1px solid token(colors.neutral100)"
           })}
         >
-          <h1
+          <div
             className={css({
+              flexGrow: 1,
               display: "flex",
-              gap: 8,
-              fontSize: 20,
-              fontWeight: 500,
-              color: "interactive",
+              flexDirection: { base: "column", medium: headerDirection },
+              justifyContent: "space-between",
+              gap: 8
             })}
           >
-            {icon}
-            <div
-              className={css({
-                display: "flex",
-                marginTop: -2,
-              })}
-            >
-              {title}
-            </div>
-          </h1>
-          {tag && (
-            <div
-              className={css({
-                display: "flex",
-                alignItems: "center",
-                height: 18,
-                padding: "0 4px 1px",
-                fontSize: 12,
-                textTransform: "uppercase",
-                color: "accent",
-                background: "background",
-                border: "1px solid token(colors.accent)",
-                borderRadius: 4,
-              })}
-            >
-              {tag}
-            </div>
-          )}
+            {headerTitle}
+            {headerChildren}
+          </div>
         </div>
-
         <div
           className={css({
-            display: "flex",
-            gap: 16,
-            marginTop: -1,
-            padding: "20px 0 8px",
-            color: "contentAlt",
-            borderTop: "1px solid token(colors.border)",
+            paddingTop: 8,
           })}
         >
           {children}
@@ -168,7 +147,7 @@ export function ProductCard({
           </a.div>
         )}
       </a.section>
-    </Link>
+    </Link >
   );
 }
 
@@ -213,5 +192,51 @@ export function ProductCardInfo({
   );
 }
 
+export function ProductCardTitle({ title, subtitle, icon }: { title: ReactNode, subtitle: ReactNode, icon: ReactNode }) {
+  return (
+    <div
+      className={css({
+        display: "flex",
+        flexDirection: "row",
+      })}
+    >
+      <div
+        className={css({
+          flexGrow: 0,
+          flexShrink: 0,
+          display: "flex",
+          margin: "2px 8px 0 0"
+        })}
+      >
+        {icon}
+      </div>
+      <div
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+        })}
+      >
+        <p
+          className={css({
+            fontWeight: 600,
+            fontSize: 20
+          })}
+        >
+          {title}
+        </p>
+        <p
+          className={css({
+            fontSize: 14,
+            color: "contentAlt"
+          })}
+        >
+          {subtitle}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 ProductCard.Group = ProductCardGroup;
 ProductCard.Info = ProductCardInfo;
+ProductCard.Title = ProductCardTitle

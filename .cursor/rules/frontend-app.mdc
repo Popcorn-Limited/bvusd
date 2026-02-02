@@ -1,0 +1,37 @@
+---
+description: Match existing React/TypeScript and formatting style used in frontend/app
+globs: frontend/app/**/*.{ts,tsx,js,jsx}
+alwaysApply: true
+---
+
+- **General TypeScript / imports**
+  - Use TypeScript with explicit types on public APIs and utility functions where it adds clarity; allow inference for simple component return types.
+  - Prefer `export function Name()` for components and utilities; use `export default function` for Next.js `page.tsx`/`layout.tsx`.
+  - Use **named imports** grouped and ordered: framework/libs (`react`, `next/*`), then aliased app imports (`@/src/...`, `@/styled-system/...`), then relative imports (`./Something`).
+  - Use **double quotes** for imports and strings in TS/TSX, and **semicolons** consistently.
+  - Prefer narrow types: literal template types for addresses (e.g. `` `0x${string}` ``) and specific maps (`Record<number, AppChainConfig>`, `{ [symbol: string]: Vault }`).
+
+- **React components**
+  - For client components, start with `"use client";` on the first line when hooks or browser APIs are used.
+  - Declare props inline for small components: `export function Comp({ x }: { x: string }) { ... }`; use separate interfaces/types only when props are reused or complex.
+  - Place hooks at the top of the component in a logical order: data/config hooks, then price/balance hooks, then modal/router hooks.
+  - Keep JSX **return blocks compact and declarative**: minimal logic in JSX; derive values above and pass them down as props.
+  - Use descriptive, PascalCase component and screen names (`VaultPoolScreen`, `AppLayout`, `MobileScreen`).
+
+- **JSX & styling**
+  - Use `className={css({ ... })}` for styling with JS object syntax and camelCased CSS keys; keep style objects relatively flat and readable.
+  - When JSX props span multiple lines, format one prop per line and end the prop list with a trailing comma where allowed.
+  - Prefer semantic, readable JSX structure: outer layout wrapper(s), then main content, then panels/cards/sections; avoid deeply nested inline logic.
+  - For long JSX blocks (e.g. cards, panels), pass callbacks and configuration via props instead of inlining large chunks of logic inside the component.
+
+- **Utilities & data structures**
+  - Implement utilities as pure functions in `utils`-style modules with clear naming (`debounce`, `roundToDecimal`, `jsonStringifyWithBigInt`, `bigIntAbs`).
+  - Use small, focused helpers for domain operations (e.g. `getAllVaults` that returns `{ vaults, vaultAssets, vaultsArray }`) rather than mixing data derivation with rendering.
+  - Prefer `type` aliases for structured data (`Vault`, `Token`, `AppChainConfig`) and maps (`VaultMap`, `TokenMap`) and keep them grouped at the top of config files.
+
+- **Formatting & readability**
+  - Use 2-space indentation, trailing commas in multiline argument/prop lists and object literals, and break long expressions across lines for clarity.
+  - Keep comments minimal and purposeful (e.g. short behavioral notes like `// switch to mainnet if it's a bvUSD vault`), not redundant with the code.
+  - Keep files focused: screens/components in `screens` directories, layout in `AppLayout`, configuration in `config`/`env`, and services in `services`.
+
+I’ll follow this rule set for any future edits or new code under `frontend/app` so that my changes match the existing style and conventions.

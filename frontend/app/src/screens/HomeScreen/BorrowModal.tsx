@@ -116,8 +116,8 @@ export function BorrowModal() {
             </label>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
               <AssetButton label="BTC" symbol="BVBTC" active={assets.btc} onClick={() => setAssets({ ...assets, btc: !assets.btc })} />
-              <AssetButton label="USDC" symbol="USDC" active={assets.usdc} onClick={() => setAssets({ ...assets, usdc: !assets.usdc })} />
-              <AssetButton label="USDT" symbol="USDT" active={assets.usdt} onClick={() => setAssets({ ...assets, usdt: !assets.usdt })} />
+              {/* <AssetButton label="USDC" symbol="USDC" active={assets.usdc} onClick={() => setAssets({ ...assets, usdc: !assets.usdc })} />
+              <AssetButton label="USDT" symbol="USDT" active={assets.usdt} onClick={() => setAssets({ ...assets, usdt: !assets.usdt })} /> */}
             </div>
           </div>
 
