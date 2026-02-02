@@ -52,3 +52,10 @@ export function track(
     Object.entries(props).map(([k, v]) => ({ name: k, value: v }))
   );
 }
+
+export const REFERRAL_STORAGE_KEY = "bvusd:referral_code";
+
+export function getLocalReferralCode(): string | null {                                                                                                                               
+  if (typeof window === "undefined") return null;                                                                                                                                
+  return localStorage.getItem(REFERRAL_STORAGE_KEY);                                                                                                                             
+}   

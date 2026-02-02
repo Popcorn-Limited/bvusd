@@ -129,7 +129,7 @@ export function VaultPanel({
                 vaultSymbol={vaultSymbol}
               />
             </a.div>
-          ),
+          )
       )}
       {tabsTransition(
         (style, item) =>
@@ -153,9 +153,11 @@ export function VaultPanel({
                   vaultAddress={vaultAddress}
                   vaultInput={symbol}
                   vaultOutput={vaultSymbol}
-                  requestBalance={(requestBalance.data as RequestBalance)
-                    ?? EMPTY_REQUEST_BALANCE}
-                    referralCode={referralCode}
+                  requestBalance={
+                    (requestBalance.data as RequestBalance) ??
+                    EMPTY_REQUEST_BALANCE
+                  }
+                  referralCode={referralCode}
                 />
               </div>
               <div className={css({ width: { base: "100%", medium: "60%" } })}>
@@ -170,7 +172,7 @@ export function VaultPanel({
                     border: "1px solid token(colors.fieldBorder)",
                     borderRadius: 8,
                     padding: 16,
-                    gap: 16
+                    gap: 16,
                   })}
                 >
                   <p>Historical Returns</p>
@@ -190,11 +192,51 @@ export function VaultPanel({
                     <line x1="50" y1="150" x2="580" y2="150" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
                     <line x1="50" y1="210" x2="580" y2="210" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
 
-                    <text x="590" y="35" fill="#71717a" font-size="11" text-anchor="start">10%</text>
-                    <text x="590" y="95" fill="#71717a" font-size="11" text-anchor="start">8%</text>
-                    <text x="590" y="155" fill="#71717a" font-size="11" text-anchor="start">6%</text>
-                    <text x="590" y="215" fill="#71717a" font-size="11" text-anchor="start">4%</text>
-                    <text x="590" y="275" fill="#71717a" font-size="11" text-anchor="start">2%</text>
+                    <text
+                      x="590"
+                      y="35"
+                      fill="#71717a"
+                      font-size="11"
+                      text-anchor="start"
+                    >
+                      10%
+                    </text>
+                    <text
+                      x="590"
+                      y="95"
+                      fill="#71717a"
+                      font-size="11"
+                      text-anchor="start"
+                    >
+                      8%
+                    </text>
+                    <text
+                      x="590"
+                      y="155"
+                      fill="#71717a"
+                      font-size="11"
+                      text-anchor="start"
+                    >
+                      6%
+                    </text>
+                    <text
+                      x="590"
+                      y="215"
+                      fill="#71717a"
+                      font-size="11"
+                      text-anchor="start"
+                    >
+                      4%
+                    </text>
+                    <text
+                      x="590"
+                      y="275"
+                      fill="#71717a"
+                      font-size="11"
+                      text-anchor="start"
+                    >
+                      2%
+                    </text>
 
                     <text x="50" y="295" fill="#71717a" font-size="11" text-anchor="middle">Oct</text>
                     <text x="140" y="295" fill="#71717a" font-size="11" text-anchor="middle">Nov</text>
@@ -210,27 +252,106 @@ export function VaultPanel({
                       </linearGradient>
                     </defs>
 
-                    <path d="M50,204 L100,186 L160,168 L220,178 L280,150 L340,138 L400,156 L460,176 L520,154 L570,162 L570,270 L50,270 Z" fill="url(#chartGradient)"></path>
+                    <path
+                      d="M50,204 L100,186 L160,168 L220,178 L280,150 L340,138 L400,156 L460,176 L520,154 L570,162 L570,270 L50,270 Z"
+                      fill="url(#chartGradient)"
+                    ></path>
 
-                    <path d="M50,204 L100,186 L160,168 L220,178 L280,150 L340,138 L400,156 L460,176 L520,154 L570,162" fill="none" stroke="#f39c12" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path
+                      d="M50,204 L100,186 L160,168 L220,178 L280,150 L340,138 L400,156 L460,176 L520,154 L570,162"
+                      fill="none"
+                      stroke="#f39c12"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
 
-                    <circle cx="50" cy="204" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="100" cy="186" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="160" cy="168" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="220" cy="178" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="280" cy="150" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="340" cy="138" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="400" cy="156" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="460" cy="176" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="520" cy="154" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
-                    <circle cx="570" cy="162" r="5" fill="#f39c12" stroke="#fff" stroke-width="2"></circle>
+                    <circle
+                      cx="50"
+                      cy="204"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="100"
+                      cy="186"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="160"
+                      cy="168"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="220"
+                      cy="178"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="280"
+                      cy="150"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="340"
+                      cy="138"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="400"
+                      cy="156"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="460"
+                      cy="176"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="520"
+                      cy="154"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
+                    <circle
+                      cx="570"
+                      cy="162"
+                      r="5"
+                      fill="#f39c12"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></circle>
                   </svg>
                 </div>
               </div>
             </a.div>
-          ),
-      )
-      }
-    </div >
+          )
+      )}
+    </div>
   );
 }

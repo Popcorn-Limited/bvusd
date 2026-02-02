@@ -1,13 +1,12 @@
 "use client";
 
+import { getLocalReferralCode } from "@/src/utils";
 import { VaultPoolScreen } from "@/src/screens/VaultScreen/VaultScreen";
-import { useSearchParams } from "next/navigation";
 
 type Params = { symbol: string };
 
 export default function VaultPage({ params }: { params: Params }) {
-  const searchParams = useSearchParams();
-  const referralCode = searchParams.get("referralCode");
+  const referral_code = getLocalReferralCode();
 
-  return <VaultPoolScreen asset={params.symbol} referralCode={referralCode ?? ""} />;
+  return <VaultPoolScreen asset={params.symbol} referralCode={referral_code ?? ""} />;
 }

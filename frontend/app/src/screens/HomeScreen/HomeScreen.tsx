@@ -2,7 +2,7 @@
 
 import { ProductCardGroup } from "@/src/comps/ProductCard/ProductCardGroup";
 import { ProductCard } from "@/src/comps/ProductCard/ProductCard";
-import { TokenIcon, TokenSymbol } from "@liquity2/uikit";
+import { Button, TokenIcon, TokenSymbol } from "@liquity2/uikit";
 import { Screen } from "@/src/comps/Screen/Screen";
 import content from "@/src/content";
 import { css } from "@/styled-system/css";
@@ -13,11 +13,23 @@ import { ProgressBar } from "@/src/comps/ProgressBar/ProgressBar";
 import Image from "next/image";
 import { useModal } from "@/src/services/ModalService";
 import { BorrowModal } from "./BorrowModal";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { REFERRAL_STORAGE_KEY } from "@/src/utils";
 
 export function HomeScreen() {
   const { vaults, vaultAssets, vaultsArray } = getAllVaults();
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
 
+  const searchParams = useSearchParams();
+  const referralCode = searchParams.get("referralCode");
+
+  // Store referral code in localStorage when present                                                                                                                            
+  useEffect(() => {
+    if (referralCode) {
+      localStorage.setItem(REFERRAL_STORAGE_KEY, referralCode);
+    }
+  }, [referralCode]);
 
   return (
     <Screen
