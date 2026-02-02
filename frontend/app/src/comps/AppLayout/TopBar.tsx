@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 
 import content from "@/src/content";
 import { css } from "@/styled-system/css";
-import { IconDashboard, IconEarn } from "@liquity2/uikit";
+import { IconEarn } from "@liquity2/uikit";
 import Link from "next/link";
 import { AccountButton } from "./AccountButton";
 import { Menu } from "./Menu";
@@ -12,7 +12,6 @@ import { TopBarLogo } from "@/src/comps/Logo/TopBarLogo";
 
 const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
   [content.menu.buy, "/buy", IconEarn],
-  [content.menu.vaults, "/vaults", IconEarn],
 ];
 
 export function TopBar() {
