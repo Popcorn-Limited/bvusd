@@ -11,7 +11,7 @@ import { readContract, sendTransaction } from "wagmi/actions";
 import { fmtnum } from "../formatting";
 import { STABLE_SYMBOLS } from "../screens/BuyScreen/PanelConvert";
 import { Vault } from "../abi/Vault";
-import { getEnsoRoute } from "@/src/actions";
+import { addReferral, getEnsoRoute } from "@/src/actions";
 
 const RequestSchema = createRequestSchema("vaultUpdate", {
   amount: vDnum(),
@@ -22,6 +22,7 @@ const RequestSchema = createRequestSchema("vaultUpdate", {
   mode: v.union([v.literal("remove"), v.literal("add"), v.literal("claim")]),
   slippage: v.number(),
   chainId: v.number(),
+  referralCode: v.string(),
 });
 
 export type VaultUpdateRequest = v.InferOutput<typeof RequestSchema>;
@@ -124,6 +125,8 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       },
       async verify(ctx, hash) {
         await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
+        if(ctx.request.referralCode !== "")
+          await addReferral(ctx.request.referralCode, ctx.account.toLowerCase());
       },
     },
 
@@ -163,6 +166,8 @@ export const vaultUpdate: FlowDeclaration<VaultUpdateRequest> = {
       },
       async verify(ctx, hash) {
         await verifyTransaction(ctx.wagmiConfig, ctx.account, hash, ctx.isSafe);
+        if(ctx.request.referralCode !== "")
+          await addReferral(ctx.request.referralCode, ctx.account.toLowerCase());
       },
     },
 

@@ -78,6 +78,7 @@ export function PanelVaultUpdate({
   vaultInput,
   vaultOutput,
   decimals,
+  referralCode,
 }: {
   decimals: number;
   requestBalance: RequestBalance;
@@ -85,6 +86,7 @@ export function PanelVaultUpdate({
   vaultAddress: Address;
   vaultInput: string;
   vaultOutput: string;
+  referralCode: string;
 }) {
   const chain = useChainId();
   const account = useAccount();
@@ -402,6 +404,7 @@ export function PanelVaultUpdate({
                       vault: vaultAddress,
                       slippage: 50,
                       chainId: chain,
+                      referralCode: referralCode,
                     });
                   }}
                 />

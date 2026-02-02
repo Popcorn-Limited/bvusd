@@ -6,7 +6,7 @@ import { VaultFAQPanel } from "./VaultFAQPanel";
 import { getAllVaults } from "@/src/config/chains";
 import { useChainConfig } from "@/src/services/ChainConfigProvider";
 
-export function VaultPoolScreen({ asset }: { asset: string }) {
+export function VaultPoolScreen({ asset, referralCode }: { asset: string, referralCode: string }) {
   const { chainConfig } = useChainConfig();
 
   const vaultAsset = asset ? asset.split("-")[0] : "bvUSD";
@@ -29,7 +29,7 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
       ready={true}
       back={{ href: isHomeLink ? "/" : "/vaults", label: isHomeLink ? "Back to Home" : "Back to Vaults" }}
     >
-      <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} chainName={chainName} />
+      <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} chainName={chainName} referralCode={referralCode} />
       <VaultFAQPanel vaultAddress={vault?.address}/>      
     </Screen>
   );

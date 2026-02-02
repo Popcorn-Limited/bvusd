@@ -1,13 +1,13 @@
+"use client";
+
 import { VaultPoolScreen } from "@/src/screens/VaultScreen/VaultScreen";
+import { useSearchParams } from "next/navigation";
 
-export function generateStaticParams() {
-    return [
-      { pool: "bvbtc" }
-    ];
-  }
-  
-  type Params = { symbol: string };
+type Params = { symbol: string };
 
-  export default function VaultPage({params} : {params: Params}) {
-    return <VaultPoolScreen asset={params.symbol}/>;
+export default function VaultPage({ params }: { params: Params }) {
+  const searchParams = useSearchParams();
+  const referralCode = searchParams.get("referralCode");
+
+  return <VaultPoolScreen asset={params.symbol} referralCode={referralCode ?? ""} />;
 }

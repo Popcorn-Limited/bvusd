@@ -28,11 +28,13 @@ export function VaultPanel({
   symbol,
   chainId,
   chainName,
+  referralCode,
 }: {
   vault: Vault;
   symbol: string;
   chainId: number;
   chainName: string;
+  referralCode: string;
 }) {
   const { switchChainAsync } = useSwitchChain();
   const walletChainId = useChainId();
@@ -153,6 +155,7 @@ export function VaultPanel({
                   vaultOutput={vaultSymbol}
                   requestBalance={(requestBalance.data as RequestBalance)
                     ?? EMPTY_REQUEST_BALANCE}
+                    referralCode={referralCode}
                 />
               </div>
               <div className={css({ width: { base: "100%", medium: "60%" } })}>

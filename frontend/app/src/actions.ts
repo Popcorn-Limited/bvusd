@@ -22,9 +22,15 @@ interface EnsoRouteProps {
   slippage?: number;
 }
 
-export async function getOutputValue(
-  { chainConfig, inputValue, inputAddress, outputAddress, decimals, account, slippage = 50 }: EnsoRouteProps & { decimals:number },
-): Promise<EnsoForecast> {
+export async function getOutputValue({
+  chainConfig,
+  inputValue,
+  inputAddress,
+  outputAddress,
+  decimals,
+  account,
+  slippage = 50,
+}: EnsoRouteProps & { decimals: number }): Promise<EnsoForecast> {
   if (!inputValue || inputValue === "0") {
     return { value: "0", status: "success" };
   }
@@ -236,5 +242,70 @@ export async function postWhitelistRequest(
   } catch {
     console.log("3");
     return { error: "Invalid body" };
+  }
+}
+
+export async function addReferral(
+  referrerAddress: string,
+  userAddress: string
+): Promise<any> {
+  console.log(process.env.SUPABASE_URL);
+  try {
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_KEY
+    );
+
+    // check if user has already a referral
+    const { data: existingRefs } = await supabase
+      .from("referalls")
+      .select("*")
+      .eq("user", userAddress);
+
+    if (existingRefs.length === 0) {
+      const { error } = await supabase.from("referalls").insert([
+        {
+          referrer: referrerAddress,
+          user: userAddress,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        console.log("Error adding referral", error);
+        return { error: "Error adding referral" };
+      }
+
+      return { data: "Ref added" };
+    } else {
+      console.log("Already referred")
+      return { data: "Already referred" };
+    }
+  } catch (error) {
+    console.log("Error adding referral", error);
+    return { error: "Error adding referral" };
+  }
+}
+
+export async function getUserReferrals(userAddress: string): Promise<any> {
+  try {
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_KEY
+    );
+
+    const { data: ref, error } = await supabase
+      .from("referalls")
+      .select("*")
+      .eq("user", userAddress);
+
+    if (error) {
+      console.log("Error fetching referral", error);
+      return { error: "Error fetching referral" };
+    }
+    return ref;
+  } catch (error) {
+    console.log("Error fetching referral 2", error);
+    return { error: "Error fetching referral" };
   }
 }
