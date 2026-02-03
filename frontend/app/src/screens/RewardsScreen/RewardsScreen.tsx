@@ -29,7 +29,7 @@ export function RewardsScreen() {
     <Screen
       back={{
         href: "/",
-        label: "Back",
+        label: "Home",
       }}
       gap={24}
     >

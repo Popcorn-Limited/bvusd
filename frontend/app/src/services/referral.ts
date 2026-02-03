@@ -40,13 +40,13 @@ export async function addReferral(
       process.env.SUPABASE_KEY
     );
 
-    // Check if user has already a referral
     const { data: existingRefs } = await supabase
       .from("referalls")
       .select("*")
       .eq("user", userAddress);
 
-    if (existingRefs && existingRefs.length === 0) {
+    // Check if user has already a referral and is not referring himself
+    if (existingRefs && existingRefs.length === 0 && refCode !== generateRefCode(userAddress)) {
       const { error } = await supabase.from("referalls").insert([
         {
           referrer: refCode,
@@ -83,7 +83,8 @@ export async function getReferralByAddress(userAddress: string): Promise<Referra
     const { data: ref, error } = await supabase
       .from("referalls")
       .select("*")
-      .eq("referrer", refCode);
+      .eq("referrer", refCode)
+      .returns<Referral[]>();
 
     if (error) {
       console.log("Error fetching referral", error);
