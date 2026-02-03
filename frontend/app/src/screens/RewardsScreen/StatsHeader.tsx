@@ -4,6 +4,7 @@ import { css } from "@/styled-system/css";
 import { Button } from "@liquity2/uikit";
 import { useState } from "react";
 import { RulesModal } from "./RulesModal";
+import { CalculatorModal } from "./CalculatorModal";
 
 const mockStats = {
   totalPoints: 1166,
@@ -67,6 +68,7 @@ function StatCard({
 
 export function StatsHeader() {
   const [showRules, setShowRules] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
 
   return (
     <>
@@ -101,7 +103,7 @@ export function StatsHeader() {
               gap: 8,
             })}
           >
-            <Button label="Calculator" mode="primary" size="small" />
+            <Button label="Calculator" mode="primary" size="small" onClick={() => setShowCalculator(true)} />
             <Button label="Rules" mode="primary" size="small" onClick={() => setShowRules(true)} />
           </div>
         </div>
@@ -120,6 +122,7 @@ export function StatsHeader() {
       </div>
 
       {showRules && <RulesModal onClose={() => setShowRules(false)} />}
+      {showCalculator && <CalculatorModal onClose={() => setShowCalculator(false)} />}
     </>
   );
 }
