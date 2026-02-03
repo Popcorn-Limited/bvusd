@@ -22,14 +22,14 @@ export function HomeScreen() {
   const { setVisible: setModalVisibility, setContent: setModalContent } = useModal()
 
   const searchParams = useSearchParams();
-  const referralCode = searchParams.get("referralCode");
+  const ref = searchParams.get("ref");
 
-  // Store referral code in localStorage when present                                                                                                                            
+  // Store referral code in localStorage when present
   useEffect(() => {
-    if (referralCode) {
-      localStorage.setItem(REFERRAL_STORAGE_KEY, referralCode);
+    if (ref) {
+      localStorage.setItem(REFERRAL_STORAGE_KEY, ref);
     }
-  }, [referralCode]);
+  }, [ref]);
 
   return (
     <Screen

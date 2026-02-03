@@ -218,6 +218,12 @@ type WhitelistRequest = {
   newsletter: boolean;
 };
 
+export type Referral = {
+  referrer: string;
+  user: string;
+  created_at: string;
+};
+
 export async function postWhitelistRequest(
   req: WhitelistRequest
 ): Promise<any> {
@@ -287,7 +293,7 @@ export async function addReferral(
   }
 }
 
-export async function getUserReferrals(userAddress: string): Promise<any> {
+export async function getUserReferrals(userAddress: string): Promise<Referral[]> {
   try {
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -301,11 +307,11 @@ export async function getUserReferrals(userAddress: string): Promise<any> {
 
     if (error) {
       console.log("Error fetching referral", error);
-      return { error: "Error fetching referral" };
+      return [];
     }
     return ref;
   } catch (error) {
     console.log("Error fetching referral 2", error);
-    return { error: "Error fetching referral" };
+    return [];
   }
 }
