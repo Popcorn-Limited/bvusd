@@ -27,10 +27,6 @@ export function RewardsScreen() {
 
   return (
     <Screen
-      heading={{
-        title: "Rewards",
-        subtitle: "Track your points and earn more through referrals",
-      }}
       back={{
         href: "/",
         label: "Back",
