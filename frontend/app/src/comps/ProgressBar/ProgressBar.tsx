@@ -7,10 +7,12 @@ export function ProgressBar({
   value,
   max = 100,
   height = 8,
+  color,
 }: {
   value: number;
   max?: number;
   height?: number;
+  color?: string;
 }) {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
@@ -38,11 +40,11 @@ export function ProgressBar({
       <a.div
         className={css({
           height: "100%",
-          background: "token(colors.positive)",
           borderRadius: 4,
         })}
         style={{
           width: progressSpring.width.to((w) => `${w}%`),
+          background: color || "var(--colors-positive)",
         }}
       />
     </div>

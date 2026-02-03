@@ -5,7 +5,8 @@ import { Button, InfoTooltip } from "@liquity2/uikit";
 import { Tag } from "@/src/comps/Tag/Tag";
 import { ProgressBar } from "@/src/comps/ProgressBar/ProgressBar";
 import { useAccount } from "@/src/wagmi-utils";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { generateRefCode } from "@/src/services/referral";
 
 const mockStats = {
   refereeCount: 8,
@@ -15,8 +16,13 @@ export function ShareAndEarn() {
   const account = useAccount();
   const [copied, setCopied] = useState(false);
 
-  const referralUrl = account.address
-    ? `https://app.bitvault.finance/?ref=${account.address}`
+  const refCode = useMemo(() => {
+    if (!account.address) return null;
+    return generateRefCode(account.address);
+  }, [account.address]);
+
+  const referralUrl = refCode
+    ? `https://app.bitvault.finance/?ref=${refCode}`
     : "Connect wallet to get your referral link";
 
   const handleCopy = async () => {
@@ -179,7 +185,7 @@ export function ShareAndEarn() {
           <span>Today's Progress</span>
           <span>266 / 500 points</span>
         </div>
-        <ProgressBar value={266} max={500} height={8} />
+        <ProgressBar value={266} max={500} height={8} color="#F7931A" />
       </div>
     </div>
   );

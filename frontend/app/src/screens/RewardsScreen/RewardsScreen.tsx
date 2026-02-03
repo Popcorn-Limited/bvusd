@@ -4,7 +4,7 @@ import { Screen } from "@/src/comps/Screen/Screen";
 import { css } from "@/styled-system/css";
 import { useAccount } from "@/src/wagmi-utils";
 import { useEffect, useState } from "react";
-import { getUserReferrals, type Referral } from "@/src/actions";
+import { getReferralByAddress, type Referral } from "@/src/services/referral";
 import { StatsHeader } from "./StatsHeader";
 import { ShareAndEarn } from "./ShareAndEarn";
 import { YourDeposits } from "./YourDeposits";
@@ -19,7 +19,7 @@ export function RewardsScreen() {
     if (!account.address) return;
 
     const fetchReferrals = async () => {
-      const r = await getUserReferrals(account.address);
+      const r = await getReferralByAddress(account.address);
       setUserReferrals(r);
     };
     fetchReferrals();

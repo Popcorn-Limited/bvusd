@@ -56,7 +56,7 @@ function StatCard({
         className={css({
           fontSize: 24,
           fontWeight: 700,
-          color: highlight ? "positive" : "content",
+          color: highlight ? "#F7931A" : "content",
           fontVariantNumeric: "tabular-nums",
         })}
       >
