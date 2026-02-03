@@ -4,7 +4,7 @@ import { Screen } from "@/src/comps/Screen/Screen";
 import { css } from "@/styled-system/css";
 import { useAccount } from "@/src/wagmi-utils";
 import { useEffect, useState } from "react";
-import { getReferralByAddress, type Referral } from "@/src/services/referral";
+import { getReferralByAddress, type Referral } from "@/src/actions";
 import { StatsHeader } from "./StatsHeader";
 import { ShareAndEarn } from "./ShareAndEarn";
 import { YourDeposits } from "./YourDeposits";

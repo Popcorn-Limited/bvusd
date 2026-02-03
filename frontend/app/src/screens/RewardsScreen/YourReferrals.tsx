@@ -2,6 +2,8 @@
 
 import { css } from "@/styled-system/css";
 import type { Referral } from "@/src/actions";
+import { getAllVaults } from "@/src/config/chains";
+import { useVaultPosition } from "@/src/bitvault-utils";
 
 function formatUsd(num: number): string {
   return `$${num.toLocaleString()}`;
@@ -17,8 +19,49 @@ function getInitials(address: string): string {
   return address.slice(2, 4).toUpperCase();
 }
 
+export const multiplierByVault: Record<string, number> = {
+  "0xdb435e82b853c85dfbec81dc1120558e77632a2a": 3,
+  "0x54c5515133dd9ced5c8f0bff834a2c004d9b7ccc": 2,
+};
+
+type ReferralDeposit = {
+  address: string;
+  vaultAsset: string;
+  deposit: number;
+  earnings: number;
+  multiplier: number;
+};
+
 export function YourReferrals({ refs }: { refs: Referral[] }) {
   const totalEarnings = refs.reduce((sum) => sum + 10, 0); // Mock 10 pts per referral
+  const vaults = getAllVaults();
+
+  let allReferralsDeposits: ReferralDeposit[] = [];
+
+  // get for all referrals all the vaults balances
+  refs.map((r) => {
+    let queries = vaults.vaultsArray.map((v) =>
+      useVaultPosition(
+        r.user as `0x${string}`,
+        v[1].inputDecimals,
+        v[1].chainId,
+        v[1].address,
+      ),
+    );
+
+    let allSuccess = queries.every((q) => q.status === "success");
+
+    if (allSuccess)
+      queries.map((q, idx) => {
+        allReferralsDeposits.push({
+          address: r.user,
+          vaultAsset: vaults.vaultsArray[idx][0],
+          earnings: 10,
+          multiplier: multiplierByVault[vaults.vaultsArray[idx][1].address],
+          deposit: Number(q.data.deposit),
+        });
+      });
+  });
 
   return (
     <div
@@ -113,8 +156,8 @@ export function YourReferrals({ refs }: { refs: Referral[] }) {
           gap: 16,
         })}
       >
-        {refs.length > 0 ? (
-          refs.map((referral, idx) => (
+        {allReferralsDeposits.length > 0 ? (
+          allReferralsDeposits.map((referral, idx) => (
             <div
               key={idx}
               className={css({
@@ -147,7 +190,7 @@ export function YourReferrals({ refs }: { refs: Referral[] }) {
                     flexShrink: 0,
                   })}
                 >
-                  {getInitials(referral.user)}
+                  {getInitials(referral.address)}
                 </div>
                 <div
                   className={css({
@@ -162,7 +205,7 @@ export function YourReferrals({ refs }: { refs: Referral[] }) {
                       fontFamily: "monospace",
                     })}
                   >
-                    {truncateAddress(referral.user)}
+                    {truncateAddress(referral.address)}
                   </span>
                   <div
                     className={css({
@@ -189,8 +232,10 @@ export function YourReferrals({ refs }: { refs: Referral[] }) {
                   width: "fit-content",
                 })}
               >
-                <span>BTC</span>
-                <span className={css({ color: "positive" })}>5X</span>
+                <span>{referral.vaultAsset}</span>
+                <span className={css({ color: "positive" })}>
+                  {referral.multiplier}
+                </span>
               </div>
 
               {/* Deposit */}
@@ -200,7 +245,7 @@ export function YourReferrals({ refs }: { refs: Referral[] }) {
                   fontWeight: 500,
                 })}
               >
-                {formatUsd(97500)}
+                {formatUsd(referral.deposit)}
               </span>
 
               {/* Earnings */}
@@ -211,7 +256,7 @@ export function YourReferrals({ refs }: { refs: Referral[] }) {
                   color: "positive",
                 })}
               >
-                +7.5
+                {referral.earnings}
               </span>
             </div>
           ))

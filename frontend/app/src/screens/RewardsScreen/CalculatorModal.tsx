@@ -7,7 +7,7 @@ type CalculatorModalProps = {
   onClose: () => void;
 };
 
-const assetTypes = [
+export const assetTypes = [
   { label: "Native BTC (5X)", multiplier: 5 },
   { label: "WBTC (3X)", multiplier: 3 },
   { label: "Exotic BTC (2X)", multiplier: 2 },

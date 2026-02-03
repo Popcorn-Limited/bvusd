@@ -1,7 +1,11 @@
 "use client";
 
+import { useVaultPosition } from "@/src/bitvault-utils";
+import { getAllVaults } from "@/src/config/chains";
+import { useAccount } from "@/src/wagmi-utils";
 import { css } from "@/styled-system/css";
 import { Button, TokenIcon } from "@liquity2/uikit";
+import { multiplierByVault } from "./YourReferrals";
 
 const mockDeposits = [
   {
@@ -24,12 +28,42 @@ const mockDeposits = [
   },
 ];
 
+type Deposit = {
+  vault: string;
+  deposit: number;
+};
+
 function formatUsd(num: number): string {
   return `$${num.toLocaleString()}`;
 }
 
 export function YourDeposits() {
-  const totalValue = mockDeposits.reduce((sum, d) => sum + d.deposit, 0);
+  const account = useAccount();
+  const vaults = getAllVaults();
+
+  let allDeposits: Deposit[] = [];
+  let queries = vaults.vaultsArray.map((v) =>
+    useVaultPosition(
+      account.address,
+      v[1].inputDecimals,
+      v[1].chainId,
+      v[1].address,
+    ),
+  );
+
+  let allSuccess = queries.every((q) => q.status === "success");
+  console.log(allSuccess)
+  if (allSuccess)
+    queries.map((q, idx) => {
+      allDeposits.push({
+        vault: vaults.vaultsArray[idx][1].name,
+        deposit: Number(q.data.deposit),
+      });
+    });
+
+  const totalValue = allDeposits.reduce((sum, d) => sum + 1, 0);
+
+  console.log(allDeposits)
 
   return (
     <div
@@ -125,41 +159,63 @@ export function YourDeposits() {
           gap: 16,
         })}
       >
-        {mockDeposits.map((deposit, idx) => (
-          <div
-            key={idx}
-            className={css({
-              display: "grid",
-              gridTemplateColumns: "1.5fr 1fr 0.8fr 0.8fr 80px",
-              gap: 12,
-              alignItems: "center",
-            })}
-          >
-            {/* Vault */}
+        {allDeposits.length > 0 ?
+          allDeposits.map((deposit, idx) => (
             <div
+              key={idx}
               className={css({
-                display: "flex",
+                display: "grid",
+                gridTemplateColumns: "1.5fr 1fr 0.8fr 0.8fr 80px",
+                gap: 12,
                 alignItems: "center",
-                gap: 10,
               })}
             >
+              {/* Vault */}
               <div
                 className={css({
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  background: "#F7931A",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: "white",
-                  flexShrink: 0,
+                  gap: 10,
                 })}
               >
-                {deposit.icon}
+                <div
+                  className={css({
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    background: "#F7931A",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "white",
+                    flexShrink: 0,
+                  })}
+                >
+                  {mockDeposits[0].icon}
+                </div>
+                <div>
+                  <div
+                    className={css({
+                      fontSize: 14,
+                      fontWeight: 500,
+                    })}
+                  >
+                    {deposit.vault}
+                  </div>
+                  <div
+                    className={css({
+                      fontSize: 12,
+                      color: "contentAlt",
+                    })}
+                  >
+                    {multiplierByVault[deposit.vault]} Points
+                  </div>
+                </div>
               </div>
+
+              {/* Deposit */}
               <div>
                 <div
                   className={css({
@@ -167,7 +223,7 @@ export function YourDeposits() {
                     fontWeight: 500,
                   })}
                 >
-                  {deposit.vault}
+                  {formatUsd(deposit.deposit)}
                 </div>
                 <div
                   className={css({
@@ -175,53 +231,44 @@ export function YourDeposits() {
                     color: "contentAlt",
                   })}
                 >
-                  {deposit.multiplier} Points
+                  {deposit.deposit}
                 </div>
               </div>
-            </div>
 
-            {/* Deposit */}
-            <div>
-              <div
+              {/* APY */}
+              <span
                 className={css({
                   fontSize: 14,
+                  color: "positive",
                   fontWeight: 500,
                 })}
               >
-                {formatUsd(deposit.deposit)}
-              </div>
-              <div
-                className={css({
-                  fontSize: 12,
-                  color: "contentAlt",
-                })}
-              >
-                {deposit.amount}
-              </div>
+                {mockDeposits[0].apy}%
+              </span>
+
+              {/* Rewards */}
+              <TokenIcon.Group size="small">
+                {mockDeposits[0].rewards.map((r) => (
+                  <TokenIcon key={r} symbol={r as any} size="small" />
+                ))}
+              </TokenIcon.Group>
+
+              {/* Action */}
+              <Button label="Deposit" mode="primary" size="mini" />
             </div>
-
-            {/* APY */}
-            <span
-              className={css({
-                fontSize: 14,
-                color: "positive",
-                fontWeight: 500,
-              })}
-            >
-              {deposit.apy}%
-            </span>
-
-            {/* Rewards */}
-            <TokenIcon.Group size="small">
-              {deposit.rewards.map((r) => (
-                <TokenIcon key={r} symbol={r as any} size="small" />
-              ))}
-            </TokenIcon.Group>
-
-            {/* Action */}
-            <Button label="Deposit" mode="primary" size="mini" />
+          )
+          ) : (
+          <div
+            className={css({
+              fontSize: 14,
+              color: "contentAlt",
+              textAlign: "center",
+              padding: "20px 0",
+            })}
+          >
+            No deposits yet
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
