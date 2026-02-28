@@ -146,10 +146,13 @@ contract troveNFTTest is WhitelistTestSetup {
         // whitelist users
         whitelistedUsers = [A, B, C, D, E];
         for (uint8 i = 0; i < 5; i++) {
-            _addToWhitelist(address(borrowerOperations), whitelistedUsers[i]);
-            _addToWhitelist(address(stabilityPool), whitelistedUsers[i]);
-            _addToWhitelist(address(troveManager), whitelistedUsers[i]);
-            _addToWhitelist(address(troveNFTWETH), whitelistedUsers[i]);
+            _addToWhitelist(address(borrowerOperations), BorrowerOperations.openTrove.selector, whitelistedUsers[i]);
+            _addToWhitelist(address(borrowerOperations), BorrowerOperations.openTroveAndJoinInterestBatchManager.selector, whitelistedUsers[i]);
+            _addToWhitelist(address(borrowerOperations), AddRemoveManagers.setRemoveManagerWithReceiver.selector, whitelistedUsers[i]);
+            _addToWhitelist(address(stabilityPool), IStabilityPool.provideToSP.selector, whitelistedUsers[i]);
+            _addToWhitelist(address(troveManager), TroveManager.urgentRedemption.selector, whitelistedUsers[i]);
+            _addToWhitelist(address(troveManager), TroveManager.redeemCollateral.selector, whitelistedUsers[i]);
+            _addToWhitelist(address(troveNFTWETH), TroveNFT.transferFrom.selector, whitelistedUsers[i]);
         }
 
         // set a non whitelisted address
