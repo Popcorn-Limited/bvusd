@@ -200,6 +200,14 @@ export const CHAINS: Record<number, AppChainConfig> = {
   },
 };
 
+// Explicit vault display order: Hemi vaults first (bgBTC, nBTC), then Ethereum
+const VAULT_ORDER = [
+  "bgBTC-43111",  // Bitget BTC on Hemi - first
+  "nBTC-43111",   // nBTC on Hemi - second
+  "bgBTC-1",      // Bitget BTC on Ethereum
+  "enzoBTC-1",    // Enzo BTC on Ethereum
+];
+
 export function getAllVaults() {
   let vaultAssets = [];
 
@@ -219,7 +227,15 @@ export function getAllVaults() {
     {} as Record<string, { chainId: number; chainName: string } & Vault>
   );
 
-  const vaultsArray = Object.entries(vaults);
+  // Sort vaults by explicit order, unknown vaults go to the end
+  const vaultsArray = Object.entries(vaults).sort(([a], [b]) => {
+    const orderA = VAULT_ORDER.indexOf(a);
+    const orderB = VAULT_ORDER.indexOf(b);
+    // If not in order list, put at end
+    const posA = orderA === -1 ? VAULT_ORDER.length : orderA;
+    const posB = orderB === -1 ? VAULT_ORDER.length : orderB;
+    return posA - posB;
+  });
 
   return { vaults, vaultAssets, vaultsArray };
 }
