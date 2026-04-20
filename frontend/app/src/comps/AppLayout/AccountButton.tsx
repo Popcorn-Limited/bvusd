@@ -10,7 +10,7 @@ import { match, P } from "ts-pattern";
 import { MenuItem } from "./MenuItem";
 import { supportedChainIcons } from "@/src/config/chains";
 
-export function AccountButton({ size = "small" }: { size?: "small" | "mini" }) {
+export function AccountButton({ size = "mini" }: { size?: "small" | "mini" }) {
   return (
     <ShowAfter delay={500}>
       <ConnectKitButton.Custom>

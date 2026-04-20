@@ -162,17 +162,12 @@ const InputField = forwardRef<HTMLInputElement, {
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          background: `fieldSurface`,
-          border: "1px solid token(colors.fieldBorder)",
-          borderRadius: 8,
-          padding: 16,
         })}
       >
         <div
           className={css({
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            flexDirection: "column",
             gap: 16,
             fontSize: 16,
             fontWeight: 500,
@@ -241,7 +236,10 @@ const InputField = forwardRef<HTMLInputElement, {
             position: "relative",
             zIndex: 2,
             display: "flex",
-            height: 40,
+            height: 72,
+            background: "controlSurface",
+            padding: "0 12px",
+            borderRadius: 10
           })}
         >
           <input
@@ -276,6 +274,7 @@ const InputField = forwardRef<HTMLInputElement, {
                 color: "content",
                 background: "transparent",
                 border: 0,
+                outline: "none",
                 _placeholder: {
                   color: "dimmed",
                 },
@@ -308,7 +307,7 @@ const InputField = forwardRef<HTMLInputElement, {
               className={css({
                 position: "absolute",
                 zIndex: 2,
-                inset: `50% 0 auto auto`,
+                inset: `50% 12px auto auto`,
                 transform: "translateY(-50%)",
               })}
             >
@@ -368,19 +367,6 @@ const InputField = forwardRef<HTMLInputElement, {
             )}
           </div>
         )}
-        <div
-          className={css({
-            display: "none",
-            position: "absolute",
-            inset: -1,
-            border: "2px solid token(colors.fieldBorderFocused)",
-            borderRadius: 8,
-            pointerEvents: "none",
-          })}
-          style={{
-            display: focused ? "block" : "none",
-          }}
-        />
       </div>
       <Drawer drawer={drawer} />
     </div>
@@ -412,14 +398,10 @@ function Drawer({
   const modeSpring = useSpring({
     to: drawer?.mode === "error"
       ? {
-        color: "#82301A",
-        background: "#FEF5F2",
-        border: "#FFE7E1",
+        color: "#F36740",
       }
       : {
         color: "#2C231E",
-        background: "#FAF9F7",
-        border: "#EFECE5",
       },
     config: diffSpringConfig,
   });
@@ -430,25 +412,18 @@ function Drawer({
         className={css({
           position: "relative",
           zIndex: 1,
-          marginTop: -8,
         })}
       >
         <a.div
           className={css({
             display: "flex",
             alignItems: "center",
-            padding: "8px 16px 0",
             height: 48,
-            fontSize: 14,
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderRadius: "0 0 8px 8px",
+            fontSize: 16,
           })}
           style={{
             marginTop,
             color: modeSpring.color,
-            background: modeSpring.background,
-            borderColor: modeSpring.border,
           }}
         >
           <a.div
@@ -478,7 +453,7 @@ export function InputFieldBadge({
       className={css({
         display: "flex",
         alignItems: "center",
-        gap: 8,
+        gap: 16,
         height: size === "small" ? 32 : 40,
         padding: "0 16px",
         paddingLeft: icon ? 8 : 16,

@@ -1,9 +1,6 @@
 "use client";
 
 import { Screen } from "@/src/comps/Screen/Screen";
-import content from "@/src/content";
-import { css } from "@/styled-system/css";
-import { HFlex } from "@liquity2/uikit";
 import { VaultPanel } from "./VaultPanel";
 import { VaultFAQPanel } from "./VaultFAQPanel";
 import { getAllVaults } from "@/src/config/chains";
@@ -25,52 +22,15 @@ export function VaultPoolScreen({ asset }: { asset: string }) {
         : chainConfig.CHAIN_ID;
 
   const chainName = vault !== undefined ? vault.chainName : chainConfig.CHAIN_NAME;
+  const isHomeLink = ["sWBTC", undefined].includes(vault?.outputSymbol)
+  
   return (
     <Screen
       ready={true}
-      heading={{
-        title:
-          vaultAsset === "bvUSD"
-            ? content.vaultScreen.headline
-            : "Put your BTC to Work",
-        subtitle: (
-          <HFlex gap={16}>
-            {vaultAsset === "bvUSD"
-              ? content.vaultScreen.subheading(
-                <HFlex gap={16}>
-                  <img
-                    src="/investors/fasanara.svg"
-                    alt="Fasanara"
-                    className={css({
-                      width: 85,
-                      height: 24,
-                    })}
-                  />
-                  <img
-                    src="/investors/LM5.svg"
-                    alt="LM5"
-                    className={css({
-                      width: 125,
-                      height: 24,
-                    })}
-                  />
-                  <img
-                    src="/investors/M1.svg"
-                    alt="M1"
-                    className={css({
-                      width: 56,
-                      height: 24,
-                    })}
-                  />
-                </HFlex>
-              )
-              : "Deposit your BTC Wrapped Token"}
-          </HFlex>
-        ),
-      }}
+      back={{ href: isHomeLink ? "/" : "/vaults", label: isHomeLink ? "Back to Home" : "Back to Vaults" }}
     >
       <VaultPanel vault={vault} symbol={vaultAsset} chainId={chainId} chainName={chainName} />
-      <VaultFAQPanel />
+      <VaultFAQPanel vaultAddress={vault?.address}/>      
     </Screen>
   );
 }
